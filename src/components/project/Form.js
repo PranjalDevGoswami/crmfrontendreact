@@ -14,6 +14,8 @@ const Form = ({onSubmit}) => {
     Cost_Per_Interview: "",
     Setup_fee: "",
     Operation_team: "",
+    Start_Date:'',
+    End_Date:''
   });
 
   const handleInputChange = (e) => {
@@ -29,26 +31,26 @@ const Form = ({onSubmit}) => {
     e.preventDefault();
     onSubmit(formData)
     console.log("Form data:", formData);
-    // setFormData({ Project_id: "",
-    // Project_Name: "",
-    // Project_Type: "",
-    // Client: "",
-    // Sample: "",
-    // Cost_Per_Interview: "",
-    // Setup_fee: "",
-    // Operation_team: "", });
+    setFormData({ Project_id: "",
+    Project_Name: "",
+    Project_Type: "",
+    Client: "",
+    Sample: "",
+    Cost_Per_Interview: "",
+    Setup_fee: "",
+    Operation_team: "", });
   };
 
   return (
     <div >
       <form onSubmit={handleSubmit} className="flex flex-col w-full bg-gray-300 shadow-md p-8 border gap-4">
-        <Label labelName={"Project ID"} />
+        {/* <Label labelName={"Project ID"} />
         <Input
           name={"Project_id"}
           type={"number"}
           className={"border p-4"}
-          onchange={handleInputChange}
-        />
+          onchange={handleInputChange} disabled
+        /> */}
         <Label labelName={"Project Name"} />
         <Input
           type={"text"}
@@ -109,17 +111,26 @@ const Form = ({onSubmit}) => {
           className={"border p-4"}
           onchange={handleInputChange}
         />
-        {/* <div className="flex flex-col justify-between w-full gap-4">
-        <Label labelName={"Duration"} />
+        <div className="flex flex-col justify-between w-full gap-4">
+        <Label labelName={"Start Date"} />
         <Input
-        name={'duration'}
-          type={"time"}
-          placeholder={"00:00"}
+        name={'Start_Date'}
+          type={"date"}
+          placeholder={"dd/mm/yyyy"}
           className={"w-full p-4"}
-          onchange={handleTimeChange}
-          value={duration}
+          onchange={handleInputChange}
         />
-      </div> */}
+      </div>
+      <div className="flex flex-col justify-between w-full gap-4">
+        <Label labelName={"End Date"} />
+        <Input
+        name={'End_Date'}
+          type={"date"}
+          placeholder={"dd/mm/yyyy"}
+          className={"w-full p-4"}
+          onchange={handleInputChange}
+        />
+      </div>
         <Button className="bg-green-500 p-4 mt-2" name={"Submit"} />
       </form>
     </div>
