@@ -26,11 +26,9 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => 
     }
     setAddOptionItem([...addOptionItem, addOptionValue]);
     const item = addOptionItem.filter((val,index)=>{
-        console.log('val',val);
-        console.log('index',index);
         return val === addOptionValue;
     })
-    console.log('item',item);
+    // console.log('item',item);
   };
 
   const HandleDropdownOnchange = (e) =>{

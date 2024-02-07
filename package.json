@@ -22,10 +22,12 @@
   },
   "homepage": "https://github.com/PranjalDevGoswami/crmfrontendreact#readme",
   "dependencies": {
+    "chart.js": "^4.4.1",
     "moment-duration-format": "^2.3.2",
     "node": "^21.6.1",
     "parcel": "^2.11.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-icon": "^1.0.0",
     "react-icons": "^5.0.1",

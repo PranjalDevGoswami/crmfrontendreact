@@ -1,7 +1,7 @@
 import React from 'react'
 
 const ProjectDetail = ({data}) => {
-    console.log("data",data);
+    // console.log("data",data);
 const projectID = Math.floor(Math.random()*90000) + 10000;
  
   return (
@@ -18,10 +18,30 @@ const projectID = Math.floor(Math.random()*90000) + 10000;
             </tr>
             </tbody>
             <tbody>
+                <tr className='border-b border-gray-500'>
+                    <td>{55765}</td>
+                    <td>Test</td>
+                    <td>ABCDE</td>
+                    <td>D</td>
+                    <td>01/02/2024</td>
+                    <td>04/03/2024</td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr className='border-b border-gray-500'>
+                    <td>{75676}</td>
+                    <td>XYZA</td>
+                    <td>Test2</td>
+                    <td>E</td>
+                    <td>01/04/2024</td>
+                    <td>04/05/2024</td>
+                </tr>
+            </tbody>
+            <tbody>
                 {
                     data.map((value,index)=>{
                         console.log("freshvalue",value.Project_id);
-                       return( <tr key={index} className='border-b border-[#F66A3E]'>
+                       return( <tr key={index} className='border-b border-gray-500 last:border-none'>
                                     <td>{projectID}</td>
                                     <td>{value.Project_Name}</td>
                                     <td>{value.Project_Type}</td>
