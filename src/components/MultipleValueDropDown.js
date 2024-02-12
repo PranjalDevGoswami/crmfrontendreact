@@ -6,7 +6,11 @@ const MultipleValueDropDown = ({options}) => {
     
   return (
     <div>
-  <Select options={options} />
+  <Select>
+    {options.map((value,index)=>{
+      <option key={index}>{value}</option>
+    })}
+  </Select>
       
     </div>
   )

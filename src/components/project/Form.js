@@ -162,10 +162,10 @@ const Form = ({ onSubmit }) => {
                   onChange={SelectOptionHandler}
                 /> 
 
-{/* 
-<Label labelName={"Cost 1 "} className={""} />
+
+              <Label labelName={"Other Cost"} className={""} />
                 
-                <MultipleValueDropDown options={['1,2,3,4,5']}/> */}
+                <MultipleValueDropDown options={['1,2,3,4,5']}/>
               
               {/* Additional fields based on checkbox selection */}
               {otherCost && (
