@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import Input from "./InputField";
+import AddClient from "./AddClient";
 
-const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => {
+const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name,multiple}) => {
 
   const [addOptionValue, setAddOptionValue] = useState("");
   const [openOptionField, setOpenOptionField] = useState(false);
@@ -28,7 +29,6 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => 
     const item = addOptionItem.filter((val,index)=>{
         return val === addOptionValue;
     })
-    // console.log('item',item);
   };
 
   const HandleDropdownOnchange = (e) =>{
@@ -37,15 +37,15 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => 
   }
 
   return (
-    <div className="flex w-full">
-     <div className="relative w-full">
-     <select className={className} onChange={HandleDropdownOnchange} name={name}>
+    <div className="w-full">
+      <div className="relative">
+     <select className={className} onChange={HandleDropdownOnchange} name={name} multiple={multiple}>
         {addOptionItem.map((option,index) => {
           return <option key={index} className="p-4 text-xl" value={option}>{option}</option>;
         })}
       </select>
-      {requireAddButton?<Button
-        className="bg-green-300 p-2 absolute right-0 top-[3.3rem] text-sm"
+       {requireAddButton?<Button
+        className="bg-green-300 p-2 absolute right-0 top-[3.3rem] translate-y-[-0%] text-sm"
         name="add client"
         onClick={OpenOptionFieldHandler}
       />:''}
@@ -53,9 +53,9 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => 
      </div>
      
       {openOptionField ? (
-        <div className="fixed bg-gray-300 bg-opacity-80 w-1/2 left-1/2 h-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%] duration-500 border border-black rounded">
-          <div className="flex justify-center items-center w-full h-full">
-            <Input
+        <div className="fixed bg-[#686868] w-1/2 left-1/2 h-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%] duration-500 border border-black rounded">
+          <div className="flex flex-col justify-center items-center w-full h-full">
+          {/* <Input
               type="text"
               className="p-4"
               value={addOptionValue}
@@ -66,6 +66,8 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name}) => 
               className="p-4 bg-green-400"
               onClick={SubmitInputValueHandler}
             />
+          </div> */}
+          <AddClient />
           </div>
           <Button
             name="X"

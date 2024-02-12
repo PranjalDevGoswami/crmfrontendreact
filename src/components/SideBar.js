@@ -12,13 +12,15 @@ import { FaChartLine } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
 
 const SideBar = () =>{
-    const [sideBarOpen, SetSideBarOpen] = useState(false);
+    const [sideBarOpen, SetSideBarOpen] = useState(true);
     return(
-        <div className="shadow-slate-400 flex ">
+        <div className="shadow-slate-400 sticky top-0">
+          <div className="logo ">
+          </div>
             <div
         className={`${
           sideBarOpen ? "w-52" : "w-16"
-        }  bg-slate-200 h-screen duration-300 boder-solid border-2 relative flex flex-col gap-4 `}
+        }  bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-4 pl-4`}
       >
         <div className="flex justify-start overflow-hidden mt-4">
           <MdDashboard className="text-2xl group" />

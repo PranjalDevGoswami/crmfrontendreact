@@ -11,6 +11,7 @@ import SalesDashboard from './src/components/dashboard/SalesDashboard';
 import AmDashboard from './src/components/dashboard/AmDashboard';
 import DirectorDashboard from './src/components/dashboard/DirectorDashboard';
 import OperationDashboard from './src/components/dashboard/OperationDashboard';
+import EntryForm from './src/components/project/EntryForm';
 
 const App = () => {
   return (
@@ -56,6 +57,9 @@ const appRouter = createBrowserRouter([
       {
         path: "/director-dashboard",
         element: <DirectorDashboard />,
+      },{
+        path: "/entry-page",
+        element: <EntryForm />,
       },
       
     ],

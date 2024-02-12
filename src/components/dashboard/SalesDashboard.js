@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Sidebar from "../SideBar";
 import { FaRegUserCircle } from "react-icons/fa";
 import Input from "../InputField";
@@ -7,12 +8,34 @@ import Button from "../Button.js";
 import Form from "../project/Form.js";
 import { CiSearch } from "react-icons/ci";
 import Dropdown from "../DropDown.js";
+import BarChart from "../BarChart.js";
+import { UserData } from "../../../utils/Data.js";
 
 const SalesDashboard = () => {
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
   const [formDataList, setFormDataList] = useState([]);
   const [optionSelected, setOptionSelected] = useState();
   const [SearchItemFiled, setSearchItemFiled] = useState([]);
+  const [labelsYears, setLabelsYears] = useState([]);
+  const [chartData, setChartData] = useState(
+    {
+    labels: UserData.map((data) => data.year), 
+    datasets: [
+      {
+        label: "Users Gained ",
+        data: UserData.map((data) => data.userGain),
+        backgroundColor: [
+          "rgba(75,192,192,1)",
+          "#50AF95",
+          "#f3ba2f",
+          "#2a71d0"
+        ],
+        borderColor: "black",
+        borderWidth: 2
+      }
+    ]
+  }
+  );
 
   const AddProjectHandler = () => {
     setIsAddProjectOpen(true);
@@ -33,7 +56,7 @@ const SalesDashboard = () => {
   }, [optionSelected]);
 
   const SearchFilterHandler = () => {
-    
+    console.log("searching....",data);
   };
 
   return (
@@ -73,27 +96,26 @@ const SalesDashboard = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-around">
+            <div className="">
+              <Link to={'/entry-page'}>
               <Button
                 name={"Add Project"}
                 onClick={AddProjectHandler}
                 className={"border border-black rounded-lg bg-yellow-200 p-2"}
               />
-              {isAddProjectOpen ? (
-                <div className="fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-9/12 h-4/5 overflow-y-scroll">
-                  <Form
-                    onSubmit={handleFormSubmit}
-                    HandleCloseForm={HandleCloseForm}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
+               </Link>
+              
             </div>
           </div>
         </div>
-        <div className="flex justify-center w-full">
-          <ProjectDetail data={formDataList} />
+        <div className="flex justify-between m-8 mb-8">
+          <div className="w-2/3">
+            <h2 className="p-4 text-4xl underline">All Project Details</h2>
+          <ProjectDetail/>
+          </div>
+          <div className="w-1/3">
+          <BarChart chartData={chartData} />
+          </div>
         </div>
       </div>
     </div>
