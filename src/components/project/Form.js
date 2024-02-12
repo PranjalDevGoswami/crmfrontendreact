@@ -5,6 +5,7 @@ import Dropdown from "../DropDown";
 import Button from "../Button";
 import CheckboxList from "../Checkbox";
 import { Link } from "react-router-dom";
+import MultipleValueDropDown from "../MultipleValueDropDown";
 
 const Form = ({ onSubmit }) => {
   const [showOtherCostDetails, setShowOtherCostDetails] = useState(false);
@@ -161,17 +162,10 @@ const Form = ({ onSubmit }) => {
                   onChange={SelectOptionHandler}
                 /> 
 
-
+{/* 
+<Label labelName={"Cost 1 "} className={""} />
                 
-                <Dropdown
-                  name={"Cost"}
-                  className={"p-4 outline-none cursor-pointer w-[100%] relative"}
-                  Option_Name={["-- Choose Cost --", "Other Cost", "Translator Cost"]}
-                  RequireAddButton={false}
-                  required
-                  onChange={SelectOptionHandler}
-                  multiple={'multiple'}
-                />
+                <MultipleValueDropDown options={['1,2,3,4,5']}/> */}
               
               {/* Additional fields based on checkbox selection */}
               {otherCost && (
