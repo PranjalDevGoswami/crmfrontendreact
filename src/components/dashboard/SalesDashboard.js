@@ -40,10 +40,10 @@ const SalesDashboard = () => {
   const AddProjectHandler = () => {
     setIsAddProjectOpen(true);
   };
-  const handleFormSubmit = (formData) => {
-    setFormDataList([...formDataList, formData]);
-    setIsAddProjectOpen(false);
-  };
+  // const handleFormSubmit = (formData) => {
+  //   setFormDataList([...formDataList, formData]);
+  //   setIsAddProjectOpen(false);
+  // };
   const HandleCloseForm = () => {
     setIsAddProjectOpen(false);
   };
@@ -56,7 +56,7 @@ const SalesDashboard = () => {
   }, [optionSelected]);
 
   const SearchFilterHandler = () => {
-    console.log("searching....",data);
+    console.log("searching....",);
   };
 
   return (
@@ -65,7 +65,7 @@ const SalesDashboard = () => {
         <Sidebar />
       </div>
       <div className="w-full">
-        <div className="flex justify-between w-full h-24 p-4 border-b-2 border-[#F66A3E] bg-white">
+        <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white">
           <div className="w-11/12"></div>
           <div className="w-1/12 text-right flex items-center">
             <span className="m-2">UserName</span>
@@ -111,7 +111,7 @@ const SalesDashboard = () => {
         <div className="flex justify-between m-8 mb-8">
           <div className="w-2/3">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
-          <ProjectDetail/>
+          <ProjectDetail data={formDataList}/>
           </div>
           <div className="w-1/3">
           <BarChart chartData={chartData} />

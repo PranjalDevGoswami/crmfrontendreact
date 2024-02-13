@@ -19,6 +19,7 @@ const CheckboxList = ({ InputItems, onCheckboxChange }) => {
             name={item}
             checked={checkedItems[item] || false}
             onChange={handleCheckboxChange}
+            className="mr-4"
           />
           <label>{item}</label>
         </div>
