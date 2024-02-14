@@ -3,16 +3,18 @@ import Sidebar from "../SideBar";
 import { FaRegUserCircle } from "react-icons/fa";
 import Form from "../project/Form.js";
 
-const EntryForm = ({entryFormData}) => {
+
+const EntryForm = ({onSubmit}) => {
   const [entryFormData,setEntryFormData] = useState()
 
 
     const handleSubmit = (formData) =>{
       setEntryFormData(formData)
+      onSubmit(formData)
       console.log("formDataformData",entryFormData);
     }
 
-
+    
   return (
     <div className="flex bg-[#d9d9d9]">
       <div className="">

@@ -1,6 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { formReducer } from "./reducers/formReducer";
+// store.js
+let formData = [];
 
-const store = configureStore(formReducer);
+export const setFormData1 = (data) => {
+  formData = data;
+};
 
-export default store;
+export const getFormData = () => {
+  return formData;
+};
