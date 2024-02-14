@@ -1,33 +1,62 @@
 import React, { useState } from "react";
 import { getFormData } from "../store";
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
+import Button from "./Button.js";
+import Label from "./Label";
 
-const ProjectDetail = ({ data }) => {
-
-// const [isNull,setIsNull] = useState(false)
-
-    const projectID =  Math.floor(Math.random() * 90000) + 10000;
-
+const ProjectDetail = () => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [editedIndex, setEditedIndex] = useState();
+  const [editedValue, setEditedValue] = useState({});
 
   const formData = getFormData();
-  console.log('formmmmm',formData);
-
-  // Ensure formData is an object
-//   if (typeof formData !== "object" || formData === null) {
-//     console.error("formData is not an object:", formData);
-//     return null; // Render nothing if formData is not an object
-//   }
 
   const { Project_Name, Client, Start_Date, End_Date, AM } = formData;
+  const Project_id = Math.floor(Math.random() * 90000) + 10000;
+  const [newFormData, SetNewFormData] = useState([
+    {
+      Project_id: Project_id,
+      Project_Name: "test",
+      Client: "client4",
+      Start_Date: "2024-02-15",
+      End_Date: "2024-04-23",
+      AM: "AM4",
+    },
+    {
+      Project_id: Project_id,
+      Project_Name: "test2",
+      Client: "client5",
+      Start_Date: "2024-02-25",
+      End_Date: "2024-07-08",
+      AM: "AM6",
+    },
+    { Project_Name, Client, Start_Date, End_Date, AM },
+  ]);
 
+  const handleEditField = (index) => {
+    setIsEdit(true);
+    setEditedIndex(index);
+    newFormData.forEach((value, existingIndex) => {
+      if (index == existingIndex) {
+        setEditedValue(value);
+      }
+    });
+  };
+  const handleDeleteField = () => {
+    const FilteredFormData = newFormData.filter((val, ind) => {
+      if (editedIndex !== ind) {
+        return val;
+      }
+    });
+    SetNewFormData(FilteredFormData);
+  };
 
-  const handleEditField = () =>{
-    console.log('edit clicked',formData);
-  }
+  const handleEditUpdate = () => {
 
-  const handleDeleteField = () =>{
-    console.log('deleted');
-  }
+  };
+  const handleCancelUpdate = () => {
+    setIsEdit(false);
+  };
 
   return (
     <div className="border shadow-xl border-black w-11/12 rounded-lg">
@@ -45,56 +74,61 @@ const ProjectDetail = ({ data }) => {
           </tr>
         </tbody>
         <tbody>
-          <tr className="border-b border-gray-500">
-            <td>{55765}</td>
-            <td>Test</td>
-            <td>ABCDE</td>
-            <td>D</td>
-            <td>2024-02-15</td>
-            <td>2024-04-23</td>
-            <td>
-              <MdModeEditOutline className="cursor-pointer" onClick={handleEditField}/>
-            </td>
-            <td>
-              <MdDelete className="cursor-pointer" onClick={handleDeleteField}/>
-            </td>
-          </tr>
-        </tbody>
-        <tbody>
-           
-                <tr className="border-b border-gray-500">
-                <td>{75676}</td>
-                <td>XYZA</td>
-                <td>Test2</td>
-                <td>E</td>
-                <td>2024-01-24</td>
-                <td>2024-03-15</td>
+          {newFormData.map((value, index) => {
+            return (
+              <tr key={index} className="border-b border-gray-500">
+                <td>{Math.floor(Math.random() * 90000) + 10000}</td>
+                <td>{value.Project_Name}</td>
+                <td>{value.AM}</td>
+                <td>{value.Client}</td>
+                <td>{value.Start_Date}</td>
+                <td>{value.End_Date}</td>
                 <td>
-                  <MdModeEditOutline className="cursor-pointer" onClick={handleEditField}/>
+                  <MdModeEditOutline
+                    className="cursor-pointer"
+                    onClick={() => handleEditField(index)}
+                  />
                 </td>
                 <td>
-                  <MdDelete className="cursor-pointer" onClick={handleDeleteField}/>
+                  <MdDelete
+                    className="cursor-pointer"
+                    onClick={handleDeleteField}
+                  />
                 </td>
               </tr>
-         
-        </tbody>
-        <tbody>
-                <tr className="border-b border-gray-500 last:border-none">
-                <td>{projectID}</td>
-                <td>{Project_Name}</td>
-                <td>{AM}</td>
-                <td>{Client}</td>
-                <td>{Start_Date}</td>
-                <td>{End_Date}</td>
-                <td>
-                  <MdModeEditOutline className="cursor-pointer" onClick={handleEditField}/>
-                </td>
-                <td>
-                  <MdDelete className="cursor-pointer" onClick={handleDeleteField}/>
-                </td>
-              </tr>
+            );
+          })}
         </tbody>
       </table>
+      {isEdit ? (
+        <div className="absolute top-1/2 left-1/2 bg-white w-3/12 h-8/12 p-8 border shadow-lg translate-x-[-50%] translate-y-[-50%]">
+          {Object.keys(editedValue).map((val, ind) => {
+            return (
+              <div className="flex gap-4" key={ind}>
+                <Label labelName={val} className={"p-2 w-4/12"} />
+                <input
+                  value={editedValue[val]}
+                  className="p-2 border m-2 w-9/12"
+                />
+              </div>
+            );
+          })}
+          <div className="flex justify-between">
+          <Button
+            name={"update"}
+            className={"bg-green-300 p-4 m-2 w-full"}
+            onClick={handleEditUpdate}
+          />
+          <Button
+            name={"cancel"}
+            className={"bg-red-300 p-4 m-2 w-full"}
+            onClick={handleCancelUpdate}
+          />
+            </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
