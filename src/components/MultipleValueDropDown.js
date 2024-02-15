@@ -17,7 +17,7 @@ const setSelectedOption = (e)=>{
 
     
   return (
-    <div className="App">
+    <div className="flex flex-col">
       <Select
       className={className}
         // defaultValue={'Other Cost'}

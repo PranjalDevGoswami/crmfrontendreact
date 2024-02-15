@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function MultipleFileUpload() {
+function MultipleFileUpload({className}) {
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleFileChange = (event) => {
@@ -10,11 +10,12 @@ function MultipleFileUpload() {
 
   return (
     <div>
-      <h2>Multiple File Upload</h2>
+      {/* <h2>Multiple File Upload</h2> */}
       <input
         type="file"
         multiple
         onChange={handleFileChange}
+        className={className}
       />
       <div>
         {selectedFiles.length > 0 && (

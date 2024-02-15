@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { getFormData } from "../store";
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
+import { GrFormView } from "react-icons/gr";
 import Button from "./Button.js";
 import Label from "./Label";
 
@@ -42,15 +43,17 @@ const ProjectDetail = () => {
       }
     });
   };
-  const handleDeleteField = () => {
-    const FilteredFormData = newFormData.filter((val, ind) => {
-      if (editedIndex !== ind) {
-        return val;
-      }
-    });
-    SetNewFormData(FilteredFormData);
-  };
+//   const handleDeleteField = () => {
+//     const FilteredFormData = newFormData.filter((val, ind) => {
+//       if (editedIndex !== ind) {
+//         return val;
+//       }
+//     });
+//     SetNewFormData(FilteredFormData);
+//   };
+const handleViewField = () =>{
 
+}
   const handleEditUpdate = () => {
 
   };
@@ -59,16 +62,30 @@ const ProjectDetail = () => {
   };
 
   return (
-    <div className="border shadow-xl border-black w-11/12 rounded-lg">
-      <table className="text-2xl  w-full shadow-black shadow">
+    <div className="border shadow-xl border-black rounded-lg w-full">
+      <table className="text-2xl shadow-black shadow">
         <tbody>
           <tr className="bg-[#686868] text-left text-white">
+            <th className="p-2">Sr. No.</th>
             <th className="p-2">Project ID</th>
-            <th className="p-2">Project Name</th>
-            <th className="p-2">AM Name</th>
             <th className="p-2">Client Name</th>
+            <th className="p-2">Project Name</th>
+            <th className="p-2">Type</th>
             <th className="p-2">Start Date</th>
             <th className="p-2">End Date</th>
+            <th className="p-2">Status</th>
+            <th className="p-2">Project Target</th>
+            <th className="p-2">Achieved Target</th>
+            <th className="p-2">Remaining Target</th>
+            <th className="p-2">CPI</th>
+            <th className="p-2">CBR Status</th>
+            <th className="p-2">SOW Costing</th>
+            <th className="p-2">Actual Costing</th>
+            <th className="p-2">SOW Status</th>
+            <th className="p-2">Mandays Till Date</th>
+            <th className="p-2">Remarks</th>
+            <th className="p-2">Project Manager</th>
+            <th className="p-2">PSF PROJECTS</th>
             <th className="p-2"></th>
             <th className="p-2"></th>
           </tr>
@@ -90,11 +107,16 @@ const ProjectDetail = () => {
                   />
                 </td>
                 <td>
+                <GrFormView className="cursor-pointer"
+                    onClick={handleViewField}/>
+
+                </td>
+                {/* <td>
                   <MdDelete
                     className="cursor-pointer"
                     onClick={handleDeleteField}
                   />
-                </td>
+                </td> */}
               </tr>
             );
           })}
@@ -103,6 +125,7 @@ const ProjectDetail = () => {
       {isEdit ? (
         <div className="absolute top-1/2 left-1/2 bg-white w-3/12 h-8/12 p-8 border shadow-lg translate-x-[-50%] translate-y-[-50%]">
           {Object.keys(editedValue).map((val, ind) => {
+            
             return (
               <div className="flex gap-4" key={ind}>
                 <Label labelName={val} className={"p-2 w-4/12"} />

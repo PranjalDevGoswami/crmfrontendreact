@@ -10,7 +10,6 @@ import MultipleFileUpload from "../MultipleFileUpload";
 import { setFormData1 } from "../../store";
 
 const Form = ({ onSubmit }) => {
-
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
@@ -48,7 +47,7 @@ const Form = ({ onSubmit }) => {
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
-  const handleSubmit =  (e) => {
+  const handleSubmit = (e) => {
     setFormData1(formData);
     setFormData({
       Project_id: "",
@@ -119,86 +118,99 @@ const Form = ({ onSubmit }) => {
 
   return (
     <div className="relative">
-      <form onSubmit={handleSubmit} className="flex flex-col w-full p-8 gap-4">
-        <Label labelName={"Project Name"} className={""} required />
-        <Input
-          type={"text"}
-          name={"Project_Name"}
-          className={"border p-2"}
-          onchange={handleInputChange}
-          min_lenght={"1"}
-          max_lenght={"50"}
-          required
-        />
-
-        <Label labelName={"Project Type"} className={""} required />
-        <Dropdown
-          name={"Project_Type"}
-          className={
-            "p-2 outline-none cursor-pointer w-[100%] bg-transparent border"
-          }
-          Option_Name={["-- Choose Project Type --", "A", "B"]}
-          RequireAddButton={false}
-          required
-          onChange={SelectOptionHandler}
-        />
-
-        <Label labelName={"Client"} className={""} />
-        <Dropdown
-          name={"Client"}
-          className={
-            "p-2 outline-none cursor-pointer w-[100%] relative bg-transparent border"
-          }
-          Option_Name={["-- Choose Client --", "Client 1", "Client 2"]}
-          RequireAddButton={true}
-          required
-          onChange={SelectOptionHandler}
-        />
-
-        <Label labelName={"Sample"} className={""} />
-        <Input
-          name={"Sample"}
-          type={"number"}
-          className={"border p-2"}
-          onchange={handleInputChange}
-          required
-        />
-
-        <Label labelName={"Cost Per Interview"} className={""} />
-        <Input
-          name={"Cost_Per_Interview"}
-          type={"text"}
-          className={"border p-2"}
-          onchange={handleInputChange}
-          required
-        />
-
-        <div className="relative">
-          <Label labelName={"Setup Fee "} className={""} />
+      <form onSubmit={handleSubmit} className="p-8">
+        <div className="flex flex-wrap  w-full gap-4">
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Project Name"} className={"pt-4 pb-2"} required />
+          <Input
+            type={"text"}
+            name={"Project_Name"}
+            className={"border p-2 bg-[#f3eded]"}
+            onchange={handleInputChange}
+            min_lenght={"1"}
+            max_lenght={"50"}
+            required
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Project Type"} className={"pt-4 pb-2"} required />
+          <Dropdown
+            name={"Project_Type"}
+            className={
+              "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+            }
+            Option_Name={["-- Choose Project Type --", "A", "B"]}
+            RequireAddButton={false}
+            required
+            onChange={SelectOptionHandler}
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Client"} className={"pt-4 pb-2"} />
+          <Dropdown
+            name={"Client"}
+            className={
+              "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+            }
+            Option_Name={["-- Choose Client --", "Client 1", "Client 2"]}
+            RequireAddButton={true}
+            required
+            onChange={SelectOptionHandler}
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Sample"} className={"pt-4 pb-2"} />
+          <Input
+            name={"Sample"}
+            type={"number"}
+            className={"border p-2 bg-[#f3eded]"}
+            onchange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
+          <Input
+            name={"Cost_Per_Interview"}
+            type={"number"}
+            className={"border p-2 bg-[#f3eded]"}
+            onchange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="flex flex-col w-[32%] relative">
+          {/* <div className="flex"> */}
+          <Label labelName={"Setup Fee "} className={"pt-4 pb-2"} />
           <Input
             name={"Setup_fee"}
-            type={"text"}
-            className={"border p-2 w-full"}
+            type={"number"}
+            className={"border p-2 bg-[#f3eded] w-full"}
             onchange={handleInputChange}
             required
           />
           <Button
             className={
-              "bg-green-300 p-2 absolute right-0 top-[5.1rem] translate-y-[-0%] text-sm"
+              "bg-green-300 p-2 absolute right-0 top-[4.2rem] translate-y-[-50%] text-xl"
             }
-            name={"Add Other Fee"}
+            name={"+"}
             onClick={OpenOtherFee}
           />
         </div>
+        {/* <div className="flex flex-col w-[32%] relative"> */}
         {isOtherFee ? (
-          <div className="w-1/2 h-1/3 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%">
+          <div className="w-1/2 h-2/3 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%">
             <div className="bg-white w-full h-full flex items-center justify-center relative">
-              <Label labelName={"Other Cost"} className={"p-2"} />
+              <div className="flex flex-col w-2/3 relative">
+                <Label
+                  labelName={"Other Cost"}
+                  className={"pt-4 pb-2"}
+                />
 
-              <MultipleValueDropDown
-                onChange={MultipleValueSection}
-                className={"w-full"}
-              />
+                <MultipleValueDropDown
+                  onChange={MultipleValueSection}
+                  className={"w-full bg-[#f3eded]"}
+                />
+              </div>
               <Button
                 name={"X"}
                 className={
@@ -213,87 +225,100 @@ const Form = ({ onSubmit }) => {
         )}
         {/* Additional fields based on checkbox selection */}
         {otherCost ? (
-          <>
-            <Label labelName={"Other Cost"} className={""} />
+          <div className="flex flex-col w-[32%]">
+            <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
             <Input
-              type={"text"}
+              type={"number"}
               name={"Other_Cost"}
               // value={formData.Other_Cost}
-              className={"border p-2"}
+              className={"border p-2 bg-[#f3eded]"}
               onChange={handleInputChange}
               required
             />
-          </>
+          </div>
         ) : (
           ""
         )}
         {translationCost && (
-          <>
-            <Label labelName={"Translator Cost"} className={""} />
+          <div className="flex flex-col w-[32%]">
+            <Label labelName={"Translator Cost"} className={"pt-4 pb-2"} />
             <Input
-              type={"text"}
+              type={"number"}
               name={"Translator_Cost"}
               // value={formData.Translator_Cost}
-              className={"border p-2"}
+              className={"border p-2 bg-[#f3eded]"}
               onChange={handleInputChange}
               required
             />
-          </>
+          </div>
         )}
-        <Label labelName={"Select AM  "} className={""} />
-        <Dropdown
-          name={"AM"}
-          className={
-            "p-2 outline-none cursor-pointer w-[100%] relative bg-transparent border"
-          }
-          Option_Name={["-- Choose AM --", "AM 1", "AM 2"]}
-          RequireAddButton={false}
-          required
-          onChange={SelectOptionHandler}
-        />
-
-        <Label labelName={"Start Date"} className={""} />
-        <Input
-          name={"Start_Date"}
-          type={"date"}
-          placeholder={"dd/mm/yyyy"}
-          className={" p-2 border"}
-          onchange={handleInputChange}
-          min={minDate.toISOString().split("T")[0]}
-          required
-        />
-
-        <Label labelName={"End Date"} className={""} />
-        <Input
-          name={"End_Date"}
-          type={"date"}
-          placeholder={"dd/mm/yyyy"}
-          className={"p-2 border"}
-          onchange={handleInputChange}
-          min={minDate.toISOString().split("T")[0]}
-          required
-        />
-        <CheckboxList
-          InputItems={["Advanced Payment Required"]}
-          onCheckboxChange={handleCheckboxChange}
-        />
-        <Label labelName={"SOW File"} className={"pt-4"} />
-        <MultipleFileUpload />
-        <div className="flex justify-around">
-          <Link
-            to={isFormValid() ? "/sales-dashboard" : ""}
-            className="inline-block w-1/2 mr-2"
-          >
-            <Button
-              className={`bg-green-500 p-4 mt-8 w-full ${
-                isFormValid() ? "" : "opacity-50 cursor-not-allowed"
-              }`}
-              name={"Submit"}
-              onClick={() => handleSubmit(formData)}
-            />
-          </Link>
-          <Button className="bg-red-500 p-4 mt-8 w-1/2" name={"Cancel"} />
+        {/* </div> */}
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Select AM  "} className={"pt-4 pb-2"} />
+          <Dropdown
+            name={"AM"}
+            className={
+              "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+            }
+            Option_Name={["-- Choose AM --", "AM 1", "AM 2"]}
+            RequireAddButton={false}
+            required
+            onChange={SelectOptionHandler}
+          />
         </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"Start Date"} className={"pt-4 pb-2"} />
+          <Input
+            name={"Start_Date"}
+            type={"date"}
+            placeholder={"dd/mm/yyyy"}
+            className={" p-2 border bg-[#f3eded]"}
+            onchange={handleInputChange}
+            min={minDate.toISOString().split("T")[0]}
+            required
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"End Date"} className={"pt-4 pb-2"} />
+          <Input
+            name={"End_Date"}
+            type={"date"}
+            placeholder={"dd/mm/yyyy"}
+            className={"p-2 border bg-[#f3eded]"}
+            onchange={handleInputChange}
+            min={minDate.toISOString().split("T")[0]}
+            required
+          />
+        </div>
+        <div className="flex flex-col w-[32%]">
+          <Label labelName={"SOW File"} className={"pt-4 pb-2"} />
+          <MultipleFileUpload className={'p-1 border bg-[#f3eded] w-full'}/>
+        </div>
+        
+        </div>
+        <div className="flex flex-col w-[32%] pt-8 pb-2">
+          <CheckboxList
+            InputItems={["Advanced Payment Required"]}
+            onCheckboxChange={handleCheckboxChange}
+          />
+        </div>
+        {/* <div className="flex flex-col w-[32%]"> */}
+          <div className="flex justify-around pt-4 pb-2">
+            <Link
+              to={isFormValid() ? "/sales-dashboard" : ""}
+              className="inline-block w-1/2 mr-2"
+            >
+              <Button
+                className={`bg-green-500 p-4 mt-8 w-full text-white ${
+                  isFormValid() ? "" : "opacity-50 cursor-not-allowed"
+                }`}
+                name={"Submit"}
+                onClick={() => handleSubmit(formData)}
+              />
+            </Link>
+            <Button className="bg-red-500 p-4 mt-8 w-1/2 text-white" name={"Cancel"} />
+          </div>
+        {/* </div> */}
       </form>
     </div>
   );
