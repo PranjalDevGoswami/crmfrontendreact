@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'hero-pattern': "url('./src/assets/rm314-adj-02.jpg')"
+        'hero-pattern': "url('./src/assets/HS-blog-post-20-2048x1075.png')",
+        
       },
       // colors:{
       //   primary: '#bd1d1d',

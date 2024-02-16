@@ -32,7 +32,7 @@ const EntryForm = ({onSubmit}) => {
         <div className="bg- m-8">
           <Breadcrumbs />
             <div className="w-full border rounded-lg shadow-gray-500 bg-white mt-8 mb-16">
-                <h2 className="text-3xl border-color-gray-500 border-b-2 p-8">Add Project Details</h2>
+                <h2 className="text-3xl border-color-gray-500 border-b-2 p-2 pl-8">Add Project Details</h2>
               <div className="p-4">
                 <Form onSubmit={handleSubmit} />
               </div>

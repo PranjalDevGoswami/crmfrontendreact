@@ -118,8 +118,8 @@ const Form = ({ onSubmit }) => {
 
   return (
     <div className="relative">
-      <form onSubmit={handleSubmit} className="p-8">
-        <div className="flex flex-wrap  w-full gap-4">
+      <form onSubmit={handleSubmit} className="p-2 pl-8">
+        <div className="flex flex-wrap w-full gap-4">
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Project Name"} className={"pt-4 pb-2"} required />
           <Input
@@ -139,7 +139,7 @@ const Form = ({ onSubmit }) => {
             className={
               "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
             }
-            Option_Name={["-- Choose Project Type --", "A", "B"]}
+            Option_Name={["-- Select Project Type --", "A", "B"]}
             RequireAddButton={false}
             required
             onChange={SelectOptionHandler}
@@ -152,7 +152,7 @@ const Form = ({ onSubmit }) => {
             className={
               "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
             }
-            Option_Name={["-- Choose Client --", "Client 1", "Client 2"]}
+            Option_Name={["-- Select Client --", "Client 1", "Client 2"]}
             RequireAddButton={true}
             required
             onChange={SelectOptionHandler}
@@ -190,9 +190,9 @@ const Form = ({ onSubmit }) => {
           />
           <Button
             className={
-              "bg-green-300 p-2 absolute right-0 top-[4.2rem] translate-y-[-50%] text-xl"
+              "bg-green-300 p-1 absolute right-0 top-[4.7rem] translate-y-[50%] text-sm"
             }
-            name={"+"}
+            name={"Other Fee"}
             onClick={OpenOtherFee}
           />
         </div>
@@ -260,7 +260,7 @@ const Form = ({ onSubmit }) => {
             className={
               "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
             }
-            Option_Name={["-- Choose AM --", "AM 1", "AM 2"]}
+            Option_Name={["-- Select AM --", "AM 1", "AM 2"]}
             RequireAddButton={false}
             required
             onChange={SelectOptionHandler}
@@ -309,14 +309,14 @@ const Form = ({ onSubmit }) => {
               className="inline-block w-1/2 mr-2"
             >
               <Button
-                className={`bg-green-500 p-4 mt-8 w-full text-white ${
+                className={`bg-green-500 p-4 mt-8 w-full text-white font-bold ${
                   isFormValid() ? "" : "opacity-50 cursor-not-allowed"
                 }`}
                 name={"Submit"}
                 onClick={() => handleSubmit(formData)}
               />
             </Link>
-            <Button className="bg-red-500 p-4 mt-8 w-1/2 text-white" name={"Cancel"} />
+            <Button className="bg-red-500 p-4 mt-8 w-1/2 text-white font-bold" name={"Cancel"} />
           </div>
         {/* </div> */}
       </form>

@@ -6,29 +6,37 @@ import Button from '../Button'
 
 const Reset = () => {
   return (
-    <div className="bg-[url('./assets/rm314-adj-02.jpg')] w-full h-screen bg-cover">
-    <div className="flex items-center h-full">
-      <div className="w-1/2 p-8 pl-8">
-        <h2 className="text-4xl text-white ">Welcome To UNIMRKT</h2>
-        <p className="text-xl text-white  py-4"> Lorem Ispum Lorem Ispum Lorem Ispum Lorem Ispum Lorem Ispum Lorem Ispum</p>
-      </div>
-      <div className="w-1/2 ">
-        <div className="w-2/3 h-1/3 border-black border rounded-lg shadow-gray-600 shadow-lg bg-white">
-          <div className="flex flex-col gap-2 p-4">
-            <h1 className="text-5xl underline p-8 ">Forgot Password</h1>
+    <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">
+     <div className="flex h-full">
+        <div className="w-2/3 h-2/3 flex flex-col items-center justify-center p-8 pl-8">
+          <h2 className="text-4xl text-white ">Welcome To UNIMRKT</h2>
+          <p className="text-xl text-white w-2/3 pt-8">
+            {" "}
+            Lorem IspumLorem IspumLorem IspumLorem IspumLorem IspumLorem
+            IspumLorem IspumLorem IspumLorem Ispum
+          </p>
+        </div>
+        <div className="w-1/3">
+          <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
+            <div className="flex flex-col gap-4 p-4 w-9/12">
+            <h1 className="text-5xl p-8 ">Forgot Password</h1>
             <Input
-              type={"email"}
-              className={"p-4 border outline-none rounded-md focus:border-cyan-600"}
-              required={"required"}
-              placeholder={"userId or email address"}
-            />
-            <Button className={"p-4 bg-[#e7251e]"} name={"Reset"} />
-            <div className="flex justify-center">
+                type={"email"}
+                className={
+                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
+                }
+                required={"required"}
+                placeholder={"email"}
+              />
+              <div className="flex justify-center pt-4">
+            <Button  className={"p-4 bg-[#e7251e] w-1/2 rounded-full text-white "} name={"Reset"} />
+            </div>
+            <div className="flex flex-col items-center">
               <Link to='/login'>
-              <Button className={"p-4 underline"} name={"Have a account? Login"} />
+              <Button className={"p-2"} name={"Have a account? Login"} />
               </Link>
               <Link to='/register'>
-                <Button className={"underline p-4 "} name={"Create Account"} />
+                <Button className={"p-2"} name={"Create Account"} />
                 </Link>
             </div>
           </div>
