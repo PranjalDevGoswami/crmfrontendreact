@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Label from "../Label";
 import Input from "../InputField";
 import Dropdown from "../DropDown";
@@ -15,6 +15,7 @@ const Form = ({ onSubmit }) => {
   const [isOtherFee, setIsOtherFee] = useState(false);
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
+  const [clientListData,setClientListData] = useState([])
   const [formData, setFormData] = useState({
     Project_id: "",
     Project_Name: "",
@@ -70,6 +71,17 @@ const Form = ({ onSubmit }) => {
     console.log("formData", formData);
   };
 
+useEffect(()=>{
+  ClientList();
+},[])
+
+  const ClientList = async () =>{
+   const clientData =  await fetch('http://65.1.93.34:8000/api/project/clients/');
+    const clientDataJson = await clientData.json();
+    const clientDataItems = clientDataJson.map((val)=>{return val.name})
+    setClientListData(clientDataItems)
+  }
+
   const OpenOtherFee = () => {
     setIsOtherFee(true);
     // console.log("other fee");
@@ -116,6 +128,8 @@ const Form = ({ onSubmit }) => {
     );
   };
 
+  const Amlist = ["AM 1", "AM 2"]
+
   return (
     <div className="relative">
       <form onSubmit={handleSubmit} className="p-2 pl-8">
@@ -147,16 +161,19 @@ const Form = ({ onSubmit }) => {
         </div>
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Client"} className={"pt-4 pb-2"} />
-          <Dropdown
+          {
+            clientListData.length>0? <Dropdown
             name={"Client"}
             className={
               "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
             }
-            Option_Name={["-- Select Client --", "Client 1", "Client 2"]}
+            Option_Name={["-- Select Client --",...clientListData]}
             RequireAddButton={true}
             required
             onChange={SelectOptionHandler}
-          />
+          />:''
+          }
+         
         </div>
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Sample"} className={"pt-4 pb-2"} />
@@ -260,7 +277,7 @@ const Form = ({ onSubmit }) => {
             className={
               "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
             }
-            Option_Name={["-- Select AM --", "AM 1", "AM 2"]}
+            Option_Name={["-- Select AM --", ...Amlist]}
             RequireAddButton={false}
             required
             onChange={SelectOptionHandler}
@@ -303,7 +320,7 @@ const Form = ({ onSubmit }) => {
           />
         </div>
         {/* <div className="flex flex-col w-[32%]"> */}
-          <div className="flex justify-around pt-4 pb-2">
+          <div className="flex justify-around pt-4 pb-2 w-4/12">
             <Link
               to={isFormValid() ? "/sales-dashboard" : ""}
               className="inline-block w-1/2 mr-2"

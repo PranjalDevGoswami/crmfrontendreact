@@ -18,11 +18,11 @@ const EntryForm = ({onSubmit}) => {
     
   return (
     <div className="flex bg-[#d9d9d9]">
-      <div className="">
+      <div className="sticky top-0 h-full">
         <Sidebar />
       </div>
       <div className="w-full">
-        <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white  sticky z-50 top-0">
+        <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white">
           <div className="w-11/12"></div>
           <div className="w-1/12 text-right flex items-center ">
             <FaRegUserCircle className="text-4xl cursor-pointer" />

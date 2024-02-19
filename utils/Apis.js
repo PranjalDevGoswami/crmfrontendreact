@@ -1,0 +1,1 @@
+export const DEPARTMENTSAPIS = 'http://65.1.93.34:8000/api/user/department/';

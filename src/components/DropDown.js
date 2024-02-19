@@ -8,7 +8,7 @@ const Dropdown = ({ className, onChange ,Option_Name,RequireAddButton,name,multi
   const [addOptionValue, setAddOptionValue] = useState("");
   const [openOptionField, setOpenOptionField] = useState(false);
   const [requireAddButton] = useState(RequireAddButton)
-  const [addOptionItem, setAddOptionItem] = useState(Option_Name);
+  const [addOptionItem, setAddOptionItem] = useState(Option_Name.slice());
 
   const OpenOptionFieldHandler = () => {
     setAddOptionValue("");

@@ -16,12 +16,12 @@ const Login = () => {
     <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">
       <div className="flex h-full">
         <div className="w-2/3 h-2/3 flex flex-col items-center justify-center p-8 pl-8">
-          <h2 className="text-4xl text-white ">Welcome To UNIMRKT</h2>
+          {/* <h2 className="text-4xl text-white ">Welcome To UNIMRKT</h2>
           <p className="text-xl text-white w-2/3 pt-8">
             {" "}
             Lorem IspumLorem IspumLorem IspumLorem IspumLorem IspumLorem
             IspumLorem IspumLorem IspumLorem Ispum
-          </p>
+          </p> */}
         </div>
         <div className="w-1/3">
           <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">

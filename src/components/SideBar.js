@@ -15,8 +15,8 @@ import { MdDashboard } from "react-icons/md";
 const SideBar = () => {
   const [sideBarOpen, SetSideBarOpen] = useState(true);
   return (
-    <div className="shadow-slate-400 sticky top-0 ">
-      <div className="bg-white p-2 h-full">
+    <div className="shadow-slate-400 sticky top-0 h-screen">
+      <div className="bg-white p-2">
         <img src={logo} alt="logo" className="w-[210px] h-[110px]" />
       </div>
       <div
