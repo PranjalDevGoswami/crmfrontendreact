@@ -8,7 +8,7 @@ import MultipleValueDropDown from "../MultipleValueDropDown";
 import CheckboxList from "../Checkbox";
 import MultipleFileUpload from "../MultipleFileUpload";
 import { useDispatch } from "react-redux";
-import { addFormDataArray } from "../features/projectData/projectDataSlice";
+import { addFormData } from "../features/projectData/projectDataSlice";
 import { CLIENTDATAAPIS } from "../../../utils/Apis";
 
 const Form = ({ onSubmit }) => {
@@ -54,7 +54,8 @@ const Form = ({ onSubmit }) => {
     setFormData({ ...formData, [name]: value });
   };
   const handleSubmit = (e) => {
-    dispatch(addFormDataArray(formData));
+    const formDataArray = [formData];
+    dispatch(addFormData(formDataArray));
     setFormData({
       id: "",
       name: "",

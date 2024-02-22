@@ -7,18 +7,21 @@ const FormSlice = createSlice({
   },
   reducers: {
     addFormData: (state, action) => {
-      action.payload.forEach(item => {
-        state.items.push(item);
-      })
-    },
-    addFormDataArray : (state,action)=>{
-      state.items.push(action.payload);
+      // Ensure action.payload is an array
+      const newData = Array.isArray(action.payload) ? action.payload : [];
+      // Filter out any items that already exist in the state
+      const uniqueData = newData.filter(item => !state.items.some(existingItem => existingItem.id === item.id));
+      // Concatenate the new data with the existing state
+      state.items = state.items.concat(uniqueData);
     },
     deleteFormData: (state, action) => {
-      state.items.pop(action.payload);
+      // Filter out the item to delete
+      state.items = state.items.filter(item => item.id !== action.payload);
     },
   },
 });
 
-export const { addFormData, deleteFormData,addFormDataArray } = FormSlice.actions;
+
+
+export const { addFormData, deleteFormData } = FormSlice.actions;
 export default FormSlice.reducer;

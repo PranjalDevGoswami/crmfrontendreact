@@ -200,7 +200,7 @@ const ProjectDetail = ({ data }) => {
         ""
       )}
       {viewProjectDetails ? (
-        <div className="fixed top-1/2 bg-white w-2/3  left-1/2 translate-x-[-50%] translate-y-[-50%] p-16 border border-red-200">
+        <div className="fixed top-1/2 bg-white w-full h-full left-1/2 translate-x-[-50%] translate-y-[-50%] p-16 border border-red-200">
           {Object.keys(editedValue).map((val, ind) => {
             return (
               <div className="flex gap-2" key={ind}>

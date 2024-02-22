@@ -80,9 +80,6 @@ const SalesDashboard = () => {
           </div>
         </div>
         <div className=" m-8 mb-8">
-          {/* <div className="w-1/3">
-          <BarChart chartData={chartData} />
-          </div> */}
           <div className="">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
           <ProjectDetail data={formDataList}/>
