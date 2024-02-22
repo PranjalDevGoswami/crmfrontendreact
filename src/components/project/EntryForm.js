@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../SideBar";
-import { FaRegUserCircle } from "react-icons/fa";
 import Form from "../project/Form.js";
 import Breadcrumbs from "../Breadcrumbs.js";
+import Header from "../partials/Header.js";
 
 
 const EntryForm = ({onSubmit}) => {
@@ -22,13 +22,7 @@ const EntryForm = ({onSubmit}) => {
         <Sidebar />
       </div>
       <div className="w-full">
-        <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white">
-          <div className="w-11/12"></div>
-          <div className="w-1/12 text-right flex items-center ">
-            <FaRegUserCircle className="text-4xl cursor-pointer" />
-            <span className="m-2">UserName</span>
-          </div>
-        </div>
+        <Header />
         <div className="bg- m-8">
           <Breadcrumbs />
             <div className="w-full border rounded-lg shadow-gray-500 bg-white mt-8 mb-16">

@@ -11,7 +11,7 @@ const Breadcrumbs = () => {
       {breadcrumbs.map(({ breadcrumb, match }, index) => (
         <React.Fragment key={match.url}>
           {index > 0 && " >> "} {/* Add "/" between breadcrumbs */}
-          <Link
+          <Link key={index}
             to={match.url}
             className={location.pathname === match.url ? "bg-red-400" : ""}
           >

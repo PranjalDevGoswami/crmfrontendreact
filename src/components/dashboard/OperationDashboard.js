@@ -1,50 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../SideBar";
-import { FaRegUserCircle } from "react-icons/fa";
 import Input from "../InputField";
 import ProjectDetail from "../ProjectDetail.js";
 import Button from "../Button.js";
-import Form from "../project/Form.js";
 import { CiSearch } from "react-icons/ci";
 import Dropdown from "../DropDown.js";
-import BarChart from "../BarChart.js";
-import { UserData } from "../../../utils/Data.js";
 import Breadcrumbs from "../Breadcrumbs.js";
+import Header from "../partials/Header.js";
 
 const OperationDashboard = () => {
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
   const [formDataList, setFormDataList] = useState([]);
   const [optionSelected, setOptionSelected] = useState();
   const [SearchItemFiled, setSearchItemFiled] = useState([]);
-  const [labelsYears, setLabelsYears] = useState([]);
-  const [chartData, setChartData] = useState(
-    {
-    labels: UserData.map((data) => data.year), 
-    datasets: [
-      {
-        label: "Users Gained ",
-        data: UserData.map((data) => data.userGain),
-        backgroundColor: [
-          "rgba(75,192,192,1)",
-          "#50AF95",
-          "#f3ba2f",
-          "#2a71d0"
-        ],
-        borderColor: "black",
-        borderWidth: 2
-      }
-    ]
-  }
-  );
-
-  const AddProjectHandler = () => {
-    setIsAddProjectOpen(true);
-  };
-  // const handleFormSubmit = (formData) => {
-  //   setFormDataList([...formDataList, formData]);
-  //   setIsAddProjectOpen(false);
+  // const AddProjectHandler = () => {
+  //   setIsAddProjectOpen(true);
   // };
+
   const HandleCloseForm = () => {
     setIsAddProjectOpen(false);
   };
@@ -66,16 +39,9 @@ const OperationDashboard = () => {
         <Sidebar />
       </div>
       <div className="w-full">
-        <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white">
-          <div className="w-11/12"></div>
-          <div className="w-1/12 text-right flex items-center">
-            <span className="m-2">UserName</span>
-            <FaRegUserCircle className="text-4xl cursor-pointer" />
-          </div>
-        </div>
+        <Header />
         <div className="m-auto">
           <div className="p-8">
-
           <Breadcrumbs />
           </div>
           <div className="flex justify-between m-8 mb-8">
@@ -101,7 +67,7 @@ const OperationDashboard = () => {
                 />
               </div>
             </div>
-            <div className="">
+            {/* <div className="">
               <Link to={'/entry-page'}>
               <Button
                 name={"Add Project"}
@@ -110,14 +76,14 @@ const OperationDashboard = () => {
               />
                </Link>
               
-            </div>
+            </div> */}
           </div>
         </div>
-        <div className="w-full m-8 mb-8">
-          <div className="w-1/3">
+        <div className=" m-8 mb-8">
+          {/* <div className="w-1/3">
           <BarChart chartData={chartData} />
-          </div>
-          <div className="w-1/2 overflow-x-scroll">
+          </div> */}
+          <div className="">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
           <ProjectDetail data={formDataList}/>
           </div>

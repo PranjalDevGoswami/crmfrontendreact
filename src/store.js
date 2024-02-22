@@ -1,10 +1,10 @@
-// store.js
-let formData = [];
+import { configureStore } from '@reduxjs/toolkit'
+import formReducer from './components/features/projectData/projectDataSlice.js'
+import loginReducer from './components/features/login/loginSlice.js'
 
-export const setFormData1 = (data) => {
-  formData = data;
-};
-
-export const getFormData = () => {
-  return formData;
-};
+export default configureStore({
+  reducer: {
+    login: loginReducer,
+    FormData:formReducer
+  },
+})

@@ -7,9 +7,13 @@ import { Link } from "react-router-dom";
 import MultipleValueDropDown from "../MultipleValueDropDown";
 import CheckboxList from "../Checkbox";
 import MultipleFileUpload from "../MultipleFileUpload";
-import { setFormData1 } from "../../store";
+import { useDispatch } from "react-redux";
+import { addFormDataArray } from "../features/projectData/projectDataSlice";
+import { CLIENTDATAAPIS } from "../../../utils/Apis";
 
 const Form = ({ onSubmit }) => {
+
+  const dispatch = useDispatch();
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
@@ -17,13 +21,13 @@ const Form = ({ onSubmit }) => {
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData,setClientListData] = useState([])
   const [formData, setFormData] = useState({
-    Project_id: "",
-    Project_Name: "",
-    Project_Type: "",
-    Client: "",
+    id: "",
+    name: "",
+    project_type: "",
+    clients: "",
     AM: "",
-    Sample: "",
-    Cost_Per_Interview: "",
+    sample: "",
+    cpi: "",
     Setup_fee: "",
     Operation_team: "",
     Start_Date: "",
@@ -34,6 +38,7 @@ const Form = ({ onSubmit }) => {
     Translator_Cost_Details: "",
     Advance_payment_required: advancePAyment,
   });
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,15 +54,15 @@ const Form = ({ onSubmit }) => {
     setFormData({ ...formData, [name]: value });
   };
   const handleSubmit = (e) => {
-    setFormData1(formData);
+    dispatch(addFormDataArray(formData));
     setFormData({
-      Project_id: "",
-      Project_Name: "",
-      Project_Type: "",
-      Client: "",
+      id: "",
+      name: "",
+      project_type: "",
+      clients: "",
       AM: "",
-      Sample: "",
-      Cost_Per_Interview: "",
+      sample: "",
+      cpi: "",
       Setup_fee: "",
       Operation_team: "",
       Start_Date: "",
@@ -68,15 +73,15 @@ const Form = ({ onSubmit }) => {
       Translator_Cost_Details: "",
       Advance_payment_required: advancePAyment,
     });
-    console.log("formData", formData);
   };
 
 useEffect(()=>{
   ClientList();
 },[])
 
+
   const ClientList = async () =>{
-   const clientData =  await fetch('http://65.1.93.34:8000/api/project/clients/');
+   const clientData =  await fetch(CLIENTDATAAPIS);
     const clientDataJson = await clientData.json();
     const clientDataItems = clientDataJson.map((val)=>{return val.name})
     setClientListData(clientDataItems)
@@ -117,11 +122,11 @@ useEffect(()=>{
 
   const isFormValid = () => {
     return (
-      formData.Project_Name !== "" &&
-      formData.Project_Type !== "" &&
-      formData.Client !== "" &&
-      formData.Sample !== "" &&
-      formData.Cost_Per_Interview !== "" &&
+      formData.name !== "" &&
+      formData.project_type !== "" &&
+      formData.clients !== "" &&
+      formData.sample !== "" &&
+      formData.cpi !== "" &&
       formData.Setup_fee !== "" &&
       formData.Start_Date !== "" &&
       formData.End_Date !== ""
@@ -138,7 +143,7 @@ useEffect(()=>{
           <Label labelName={"Project Name"} className={"pt-4 pb-2"} required />
           <Input
             type={"text"}
-            name={"Project_Name"}
+            name={"name"}
             className={"border p-2 bg-[#f3eded]"}
             onchange={handleInputChange}
             min_lenght={"1"}
@@ -149,7 +154,7 @@ useEffect(()=>{
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Project Type"} className={"pt-4 pb-2"} required />
           <Dropdown
-            name={"Project_Type"}
+            name={"project_type"}
             className={
               "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
             }
@@ -163,7 +168,7 @@ useEffect(()=>{
           <Label labelName={"Client"} className={"pt-4 pb-2"} />
           {
             clientListData.length>0? <Dropdown
-            name={"Client"}
+            name={"clients"}
             className={
               "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
             }
@@ -178,7 +183,7 @@ useEffect(()=>{
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Sample"} className={"pt-4 pb-2"} />
           <Input
-            name={"Sample"}
+            name={"sample"}
             type={"number"}
             className={"border p-2 bg-[#f3eded]"}
             onchange={handleInputChange}
@@ -188,7 +193,7 @@ useEffect(()=>{
         <div className="flex flex-col w-[32%]">
           <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
           <Input
-            name={"Cost_Per_Interview"}
+            name={"cpi"}
             type={"number"}
             className={"border p-2 bg-[#f3eded]"}
             onchange={handleInputChange}

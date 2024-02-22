@@ -1,105 +1,132 @@
-import React, { useState } from "react";
-import { getFormData } from "../store";
+import React, { useEffect, useState } from "react";
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import { GrFormView } from "react-icons/gr";
 import Button from "./Button.js";
 import Label from "./Label";
+import ViewProjectDetails from "./ViewProjectDetails.js";
+import { useDispatch, useSelector } from "react-redux";
+import { addFormData } from "./features/projectData/projectDataSlice.js";
+import { PROJECTDATAAPIS } from "../../utils/Apis.js";
 
-const ProjectDetail = () => {
+const ProjectDetail = ({ data }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editedIndex, setEditedIndex] = useState();
   const [editedValue, setEditedValue] = useState({});
+  const [totalMandays, setTotalMandays] = useState(0);
+  const [mandaysEnrty, setMandaysEnrty] = useState(0);
+  const [CalculateEnrty, setCalculateEnrty] = useState(0);
+  const [isOperationPerson, setIsOperationPerson] = useState(true);
+  const [viewProjectDetails, setViewProjectDetails] = useState(false);
+  const [projectDataFetch, setProjectDataFetch] = useState([]);
 
-  const formData = getFormData();
+  const dispatchProjectData = useDispatch();
 
-  const { Project_Name, Client, Start_Date, End_Date, AM } = formData;
-  const Project_id = Math.floor(Math.random() * 90000) + 10000;
-  const [newFormData, SetNewFormData] = useState([
-    {
-      Project_id: Project_id,
-      Project_Name: "test",
-      Client: "client4",
-      Start_Date: "2024-02-15",
-      End_Date: "2024-04-23",
-      AM: "AM4",
-    },
-    {
-      Project_id: Project_id,
-      Project_Name: "test2",
-      Client: "client5",
-      Start_Date: "2024-02-25",
-      End_Date: "2024-07-08",
-      AM: "AM6",
-    },
-    { Project_Name, Client, Start_Date, End_Date, AM },
-  ]);
+  useEffect(() => {
+    const fetchDataFromApi = async () => {
+      try {
+        const projectData = await fetch(PROJECTDATAAPIS);
+        const projectDataJson = await projectData.json();
+        const projectDataObject = projectDataJson.map((val) => {
+          return val;
+        });
 
+        dispatchProjectData(addFormData(projectDataObject));
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+      }
+    };
+
+    fetchDataFromApi();
+  }, []);
+
+  const Formdata1 = useSelector((store) => store.FormData.items);
+
+  console.log("data from store", Formdata1);
+
+  const manDays = 10;
   const handleEditField = (index) => {
     setIsEdit(true);
     setEditedIndex(index);
-    newFormData.forEach((value, existingIndex) => {
+    Formdata1.forEach((value, existingIndex) => {
       if (index == existingIndex) {
         setEditedValue(value);
       }
     });
   };
-//   const handleDeleteField = () => {
-//     const FilteredFormData = newFormData.filter((val, ind) => {
-//       if (editedIndex !== ind) {
-//         return val;
-//       }
-//     });
-//     SetNewFormData(FilteredFormData);
-//   };
-const handleViewField = () =>{
 
-}
+  const handleViewField = (index) => {
+    setViewProjectDetails(true);
+    setEditedIndex(index);
+    Formdata1.forEach((value, existingIndex) => {
+      if (index == existingIndex) {
+        setEditedValue(value);
+      }
+    });
+  };
+  const handleViewProjectClose = () => {
+    setViewProjectDetails(false);
+  };
   const handleEditUpdate = () => {
-
+    let AddMandays = mandaysEnrty;
+    setTotalMandays(AddMandays);
+    setMandaysEnrty("");
   };
   const handleCancelUpdate = () => {
     setIsEdit(false);
   };
 
+  const handleMandays = (e) => {
+    setMandaysEnrty(e.target.value);
+  };
+
   return (
-    <div className="border shadow-xl border-black rounded-lg w-full">
-      <table className="text-2xl shadow-black shadow">
+    <div className="border shadow-xl border-black rounded-lg max-w-screen ">
+      <table className=" shadow-black shadow ">
         <tbody>
-          <tr className="bg-[#686868] text-left text-white">
-            <th className="p-2">Sr. No.</th>
-            <th className="p-2">Project ID</th>
-            <th className="p-2">Client Name</th>
-            <th className="p-2">Project Name</th>
-            <th className="p-2">Type</th>
-            <th className="p-2">Start Date</th>
-            <th className="p-2">End Date</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Project Target</th>
-            <th className="p-2">Achieved Target</th>
-            <th className="p-2">Remaining Target</th>
-            <th className="p-2">CPI</th>
-            <th className="p-2">CBR Status</th>
-            <th className="p-2">SOW Costing</th>
-            <th className="p-2">Actual Costing</th>
-            <th className="p-2">SOW Status</th>
-            <th className="p-2">Mandays Till Date</th>
-            <th className="p-2">Remarks</th>
-            <th className="p-2">Project Manager</th>
-            <th className="p-2">PSF PROJECTS</th>
-            <th className="p-2"></th>
-            <th className="p-2"></th>
+          <tr className=" [&>*]:border [&>*]:border-solid [&>*]:border-gray-200 [&>*]:py-3 [&>*]:text-sm [&>*]:uppercase [&>*]:border-l-0 [&>*]:border-r-0 [&>*]:whitespace-no-wrap [&>*]:font-semibold [&>*]:text-center">
+            <th className="ml-8 bg-[#bd1d1d] text-white">Sr. No.</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Project ID</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Client Name</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Project Name</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Type</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Start Date</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">End Date</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Status</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Project Target</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Achieved Target</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Remaining Target</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">CPI</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">SOW Costing</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Actual Costing</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Mandays Till Date</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white">Project Manager</th>
+            <th className="ml-8 bg-[#bd1d1d] text-white"></th>
+            <th className="ml-8 bg-[#bd1d1d] text-white"></th>
           </tr>
         </tbody>
         <tbody>
-          {newFormData.map((value, index) => {
+          {Formdata1.map((value, index) => {
             return (
-              <tr key={index} className="border-b border-gray-500">
-                <td>{Math.floor(Math.random() * 90000) + 10000}</td>
-                <td>{value.Project_Name}</td>
-                <td>{value.AM}</td>
-                <td>{value.Client}</td>
-                <td>{value.Start_Date}</td>
-                <td>{value.End_Date}</td>
+              <tr
+                key={index}
+                className=" [&>*]:text-black [&>*]:border [&>*]:border-solid [&>*]:border-gray-200 [&>*]:py-3 [&>*]:text-xs [&>*]:uppercase [&>*]:border-l-0 [&>*]:border-r-0 [&>*]:whitespace-no-wrap [&>*]:font-semibold [&>*]:text-center even:bg-gray-100 even:text-white"
+              >
+                <td>{index + 1}</td>
+                <td>{value.id}</td>
+                <td>{value.clients}</td>
+                <td>{value.name}</td>
+                <td>{value.project_type}</td>
+                <td>25/02/2024</td>
+                <td className="ml-4">04/06/2024</td>
+                <td>in Process..</td>
+                <td>{value.other_cost}</td>
+                <td>800</td>
+                <td>200</td>
+                <td>CSBR</td>
+                <td>200</td>
+                <td>hold</td>
+                <td>{totalMandays}</td>
+                <td>TEST</td>
                 <td>
                   <MdModeEditOutline
                     className="cursor-pointer"
@@ -107,47 +134,91 @@ const handleViewField = () =>{
                   />
                 </td>
                 <td>
-                <GrFormView className="cursor-pointer"
-                    onClick={handleViewField}/>
-
-                </td>
-                {/* <td>
-                  <MdDelete
+                  <GrFormView
                     className="cursor-pointer"
-                    onClick={handleDeleteField}
+                    onClick={() => handleViewField(index)}
                   />
-                </td> */}
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
       {isEdit ? (
-        <div className="absolute top-1/2 left-1/2 bg-white w-3/12 h-8/12 p-8 border shadow-lg translate-x-[-50%] translate-y-[-50%]">
+        <div className="absolute top-1/2 left-1/2 bg-white w-9/12 h-8/12 p-8 border shadow-lg translate-x-[-50%] translate-y-[-50%] p-26">
+          <div className="flex flex-wrap w-full">
+            {Object.keys(editedValue).map((val, ind) => {
+              return (
+                <div className="flex w-[30%]" key={ind}>
+                  <Label labelName={val} className={"p-2 w-5/12"} />
+                  <input
+                    value={editedValue[val]}
+                    className="p-2 border m-2 w-7/12 bg-gray-100 cursor-not-allowed"
+                    disabled="true"
+                  />
+                </div>
+              );
+            })}
+          </div>
+          {isOperationPerson ? (
+            <div className="flex ">
+              <div className="flex w-[30%]">
+                <Label labelName={"manDays"} className={"p-2 w-5/12"} />
+                <input
+                  value={mandaysEnrty}
+                  onChange={handleMandays}
+                  className="p-2 border m-2 w-7/12"
+                />
+              </div>
+
+              <div className="flex  w-[30%]">
+                <Label labelName={"Achieve Target"} className={"p-2 w-5/12"} />
+                <input
+                  value={mandaysEnrty}
+                  onChange={handleMandays}
+                  className="p-2 border m-2 w-7/12"
+                />
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          <div className="flex justify-between w-6/12">
+            <Button
+              name={"update"}
+              className={"bg-green-300 p-4 m-2 w-full"}
+              onClick={handleEditUpdate}
+            />
+            <Button
+              name={"cancel"}
+              className={"bg-red-300 p-4 m-2 w-full"}
+              onClick={handleCancelUpdate}
+            />
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      {viewProjectDetails ? (
+        <div className="fixed top-1/2 bg-white w-2/3  left-1/2 translate-x-[-50%] translate-y-[-50%] p-16 border border-red-200">
           {Object.keys(editedValue).map((val, ind) => {
-            
             return (
-              <div className="flex gap-4" key={ind}>
-                <Label labelName={val} className={"p-2 w-4/12"} />
+              <div className="flex gap-2" key={ind}>
+                <Label labelName={val} className={"p-2 w-2/12"} />
                 <input
                   value={editedValue[val]}
-                  className="p-2 border m-2 w-9/12"
+                  className="p-2 border m-2 w-10/12 bg-gray-100 cursor-not-allowed"
+                  disabled="true"
                 />
               </div>
             );
           })}
-          <div className="flex justify-between">
-          <Button
-            name={"update"}
-            className={"bg-green-300 p-4 m-2 w-full"}
-            onClick={handleEditUpdate}
-          />
-          <Button
-            name={"cancel"}
-            className={"bg-red-300 p-4 m-2 w-full"}
-            onClick={handleCancelUpdate}
-          />
-            </div>
+          <div
+            className="absolute top-2 right-2 rounded-xl border p-2 bg-red-400 cursor-pointer"
+            onClick={handleViewProjectClose}
+          >
+            X
+          </div>
         </div>
       ) : (
         ""

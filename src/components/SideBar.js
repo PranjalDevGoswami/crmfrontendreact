@@ -9,7 +9,7 @@ import { GoProjectRoadmap } from "react-icons/go";
 import { TbReport } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import logo from "../assets/mainlogo.png";
-
+import {Link} from 'react-router-dom'
 import { MdDashboard } from "react-icons/md";
 
 const SideBar = () => {
@@ -31,7 +31,9 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4 float-right`}
           >
+            <Link to='/'>
             Dashboard
+            </Link>
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -41,7 +43,9 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
+            <Link to='/project'>
             Project
+            </Link>
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -51,7 +55,9 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
+            <Link to='/report'>
             Report
+            </Link>
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -61,7 +67,9 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
+            <Link to='/chart'>
             Chart
+            </Link>
           </div>
         </div>
       </div>
