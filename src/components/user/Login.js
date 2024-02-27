@@ -45,71 +45,43 @@ const Login = () => {
       console.error("Error fetching project data:", error);
     }
   };
-  
-  const RedirectUser = async() => {
-const userList = await fetch('http://65.1.93.34:8000/api/user/api/users-list/')
-const userListJson =await userList.json();
-console.log('userListJson',userListJson);
 
+  const RedirectUser = async () => {
+    const userList = await fetch(
+      "http://65.1.93.34:8000/api/user/api/users-list/"
+    );
+    const userListJson = await userList.json();
 
+    let loginUser = localStorage.getItem("user");
 
-let loginUser = localStorage.getItem('user')
+    const userData = [userListJson.users];
 
-const allUserEmail = userListJson.users.map((value)=>{
-  return value.email
-})
-const allUserDepartment = userListJson.users.map((value)=>{
-  return value.user_department
-})
-const userDetails = allUserEmail.filter((val)=>{
-  if(val===loginUser){
-    return val
-  }
-})
-console.log('select',userDetails);
-// console.log('allUserEmail',allUserEmail,allUserDepartment);
-if(userDetails==loginUser){
-  // const user_department = userListJson.user_department
-  console.log('userListJson','user_department');
-  // if (allUserDepartment === "1") {
-  //         // Redirect to sales dashboard
-  //         navigate("/sales-dashboard");
-  //       } else {
-  //         // Redirect to operation dashboard
-  //         navigate("/operation-dashboard");
-  //       }
-  //     } else {
-  //       navigate("/login");
-      }
+    function getUserByEmail(email) {
+      return userData[0].filter((user) => user.email === email);
+    }
 
-    // Check if user is already logged in, then redirect to desired URL
-    // const userData = localStorage.getItem('userData');
-    //   const userLogin = localStorage.getItem("isLoggedIn");
-    // if (userData) {
-    //   const parsedUserData = JSON.parse(userData);
-    //   if (userLogin) {
-    //     if (parsedUserData.user_department === "1") {
-    //       // Redirect to sales dashboard
-    //       navigate("/sales-dashboard");
-    //     } else {
-    //       // Redirect to operation dashboard
-    //       navigate("/operation-dashboard");
-    //     }
-    //   } else {
-    //     navigate("/login");
-    //   }
-    // }
-  }
+    const email = loginUser;
+    const userDetails = getUserByEmail(email);
 
-  const handleLogin = async() => {
+    if (userDetails[0].user_department === 1) {
+      // Redirect to sales dashboard
+      navigate("/sales-dashboard");
+    } else if (userDetails[0].user_department === 2) {
+      // Redirect to operation dashboard
+      navigate("/operation-dashboard");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const handleLogin = async () => {
     dispatch(login(loginData));
-    localStorage.setItem('user',loginData.email);
+    localStorage.setItem("user", loginData.email);
     // localStorage.setItem('userData',loginData);
     await PostLoginData1(loginData);
     RedirectUser();
-    };
-     
-       
+  };
+
   return (
     <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">
       <div className="flex h-full">
