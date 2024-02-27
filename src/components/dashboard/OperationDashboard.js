@@ -80,20 +80,12 @@ const OperationDashboard = () => {
             </div> */}
           </div>
         </div>
-        <div className=" m-8 mb-8">
-          {/* <div className="w-1/3">
-          <BarChart chartData={chartData} />
-          </div> */}
-          <div className="">
+          <div className="m-8 mb-8">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
-          <ProjectDetail data={formDataList}/>
-          </div>
-          <div>
             <ProjectDataTable />
           </div>
         </div>
       </div>
-    </div>
   );
 };
 

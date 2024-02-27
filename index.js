@@ -16,13 +16,13 @@ import { Provider } from 'react-redux';
 import store from './src/store';
 
 const App = () => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn')
+  // const isLoggedIn = localStorage.getItem('isLoggedIn')
   return (
     <>
     <Provider store={store}>
-    {isLoggedIn?
+    {/* {isLoggedIn? */}
       <Outlet />
-      :<Login />}
+      {/* :<Login />} */}
      </Provider>
     </>
   );
