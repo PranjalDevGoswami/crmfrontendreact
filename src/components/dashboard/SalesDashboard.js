@@ -34,13 +34,15 @@ const SalesDashboard = () => {
   };
 
   return (
+    <div>
+    <div className="w-full sticky top-0 z-20">
+    <Header />
+    </div>
     <div className="flex bg-[#d9d9d9]">
-      <div className="">
+      <div className="sticky top-32 h-screen">
         <Sidebar />
       </div>
-      <div className="w-full">
-        <Header />
-        <div className="m-auto">
+        <div className="">
           <div className="p-8">
           <Breadcrumbs />
           </div>
@@ -78,14 +80,17 @@ const SalesDashboard = () => {
               
             </div>
           </div>
-        </div>
         <div className=" m-8 mb-8">
+          {/* <div className="w-1/3">
+          <BarChart chartData={chartData} />
+          </div> */}
           <div className="">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
           <ProjectDetail data={formDataList}/>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

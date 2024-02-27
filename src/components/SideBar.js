@@ -8,16 +8,15 @@ import {
 import { GoProjectRoadmap } from "react-icons/go";
 import { TbReport } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
-import logo from "../assets/mainlogo.png";
 import {Link} from 'react-router-dom'
 import { MdDashboard } from "react-icons/md";
 
 const SideBar = () => {
   const [sideBarOpen, SetSideBarOpen] = useState(true);
   return (
-    <div className="shadow-slate-400 sticky top-0 h-screen">
-      <div className="bg-white p-2">
-        <img src={logo} alt="logo" className="w-[210px] h-[110px]" />
+    <div className="shadow-slate-400">
+      <div className="bg-white">
+        {/* <img src={logo} alt="logo" className="w-[210px] h-[110px]" /> */}
       </div>
       <div
         className={`${
@@ -77,7 +76,7 @@ const SideBar = () => {
         {sideBarOpen ? (
           <PiCaretDoubleLeftLight
             className={`${
-              sideBarOpen ? "top-28 left-52" : "left-16 top-28"
+              sideBarOpen ? "top-0 left-52" : "left-16 top-0"
             } text-2xl text-black mr-4 mt-4 cursor-pointer absolute duration-300 font-extralight`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
@@ -86,7 +85,7 @@ const SideBar = () => {
         ) : (
           <PiCaretDoubleRightLight
             className={`${
-              sideBarOpen ? "top-28 left-52" : "left-16 top-28"
+              sideBarOpen ? "top-0 left-52" : "left-16 top-0"
             } text-2xl text-black mr-4 mt-4 cursor-pointer absolute duration-300 font-extralight`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
