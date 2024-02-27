@@ -9,6 +9,7 @@ import { addFormData } from "./features/projectData/projectDataSlice.js";
 import { GetProjectData } from "./fetchApis/projects/getProjectData/GetProjectData.js";
 import LableAndInput from "./LableAndInput.js";
 
+
 const ProjectDetail = ({ data }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editedIndex, setEditedIndex] = useState();
@@ -23,6 +24,7 @@ const ProjectDetail = ({ data }) => {
   const [achieveTarget,setAchieveTarget] = useState()
 
   const dispatchProjectData = useDispatch();
+
 
   useEffect(() => {
     const fetchProjectData = async () => {

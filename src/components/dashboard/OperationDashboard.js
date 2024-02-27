@@ -8,6 +8,7 @@ import { CiSearch } from "react-icons/ci";
 import Dropdown from "../DropDown.js";
 import Breadcrumbs from "../Breadcrumbs.js";
 import Header from "../partials/Header.js";
+import ProjectDataTable from "../project/ProjectDataTable.js";
 
 const OperationDashboard = () => {
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
@@ -86,6 +87,9 @@ const OperationDashboard = () => {
           <div className="">
             <h2 className="p-4 text-4xl underline">All Project Details</h2>
           <ProjectDetail data={formDataList}/>
+          </div>
+          <div>
+            <ProjectDataTable />
           </div>
         </div>
       </div>
