@@ -30,6 +30,7 @@ const ProjectDetail = ({ data }) => {
     const fetchProjectData = async () => {
       try {
         const fetchDataFromApi2 = await GetProjectData();
+        // console.log("fetchDataFromApi2",fetchDataFromApi2);
         const projectDataObject = fetchDataFromApi2.map((val) => {
           return val;
         });

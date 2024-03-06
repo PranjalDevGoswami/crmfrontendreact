@@ -10,6 +10,7 @@ import { PostLoginData } from "../fetchApis/login/PostLoginData";
 import { login } from "../features/login/loginSlice";
 import Input from "../InputField";
 import Label from "../Label.js";
+import { USERLIST } from "../../../utils/Apis";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -47,8 +48,7 @@ const Login = () => {
   };
 
   const RedirectUser = async () => {
-    const userList = await fetch(
-      "http://65.1.93.34:8000/api/user/api/users-list/"
+    const userList = await fetch(USERLIST
     );
     const userListJson = await userList.json();
 
@@ -76,6 +76,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     dispatch(login(loginData));
+    
     localStorage.setItem("user", loginData.email);
     // localStorage.setItem('userData',loginData);
     await PostLoginData1(loginData);

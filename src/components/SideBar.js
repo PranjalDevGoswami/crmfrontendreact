@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import logo from '../../src/assets/mainlogo.png'
 // import { PiCaretDoubleLeftLight, PiCaretDoubleRightLight } from "react-icons/fa";
 import {
   PiCaretDoubleLeftLight,

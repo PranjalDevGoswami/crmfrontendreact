@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaRegUserCircle } from "react-icons/fa";
+import { MdDarkMode } from "react-icons/md";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../../assets/mainlogo.png";
 import { logout } from "../features/login/loginSlice";
+import { toggleDarkMode } from "../features/darkmode/DarkmodeSlice";
 
 const Header = () => {
+  const isDarkMode = useSelector((state) => state.darkmode);
   const loginData = localStorage.getItem('user')
-  console.log('loginData',loginData);
   const [isProfileSetting, setIsProfileSetting] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,12 +22,22 @@ const Header = () => {
   // const storedUserDataString = localStorage.getItem("userData");
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
+  const HandleThemeColor = () =>{
+    dispatch(toggleDarkMode());
+  {console.log('darkMode',isDarkMode)}
+
+  }
+
+
   return (
-    <div className="flex justify-between w-full h-32 p-4 border-b-2 border-[#F66A3E] bg-white">
-      <div className="w-10/12">
-        <img src={logo} alt="logo" className="w-[210px] h-[110px]" />
+    <div className="flex justify-between w-full h-28 p-4 border-b-2 border-[#F66A3E] bg-white">
+      <div className="w-2/12">
+        <img src={logo} alt="logo" className="w-[210px] h-[90px]" />
+       
+
       </div>
-      <div className="w-2/12 text-right flex items-center">
+      <div className="w-2/12 text-right flex flex-wrap items-center">
+      <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/>
         {isLoggedIn ? (
           <div className="flex flex-wrap">
             <span className="m-2">{loginData ? loginData : "User"}</span>

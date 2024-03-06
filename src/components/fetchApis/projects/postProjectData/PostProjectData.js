@@ -1,7 +1,7 @@
 import { POSTPROJECTDATAAPIS } from "../../../../../utils/Apis";
 
 export const PostFormData = async (data) => {
-    console.log('data is data',data);
+  console.log("data from postFormData components",JSON.stringify(data));
   try {
     const response = await fetch(POSTPROJECTDATAAPIS, {
       method: "POST",
@@ -17,6 +17,6 @@ export const PostFormData = async (data) => {
       return response.json();
     }
   } catch (error) {
-    console.log("data push successfully!", error);
+    console.log("data push unsuccessfully!", error);
   }
 };

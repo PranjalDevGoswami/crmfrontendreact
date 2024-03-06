@@ -9,7 +9,7 @@ const Breadcrumbs = () => {
   return (
     <React.Fragment>
       {breadcrumbs.map(({ breadcrumb, match }, index) => (
-        <React.Fragment key={match.url}>
+        <React.Fragment key={index} >
           {index > 0 && " >> "} {/* Add "/" between breadcrumbs */}
           <Link key={index}
             to={match.url}

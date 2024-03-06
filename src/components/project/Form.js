@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Label from "../Label";
-import Input from "../InputField";
 import Dropdown from "../DropDown";
 import Button from "../Button";
 import { Link } from "react-router-dom";
@@ -12,9 +11,11 @@ import { addFormData } from "../features/projectData/projectDataSlice";
 import LableAndInput from "../LableAndInput";
 import { ClientList } from "../fetchApis/clientList/ClientList";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
+import Input from "../InputField";
+import { TiPlus } from "react-icons/ti";
 
-
-const Form = ({ onSubmit }) => {
+const Form = () => {
   const dispatch = useDispatch();
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
@@ -22,32 +23,52 @@ const Form = ({ onSubmit }) => {
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
-  let count =+ 1;
+  const [currency,setCurrency]= useState('$');
+  const [SecondOptioncurrency,setSecondOptionCurrency]= useState("₹");
+  const optionValue = [currency,SecondOptioncurrency];
+  const [projectCode,setProjectCode] = useState()
+
   const [formData, setFormData] = useState({
-    id: count,
+    project_code:("UNI"+Math.floor((Math.random() * 20000) + 20000)),
     name: "",
-    project_type: "",
-    clients: "",
+    project_type: {
+      id:'',
+      name:''
+    },
+    clients: {
+      id:'',
+      name:''
+    },
     AM: "",
     sample: "",
     cpi: "",
     Setup_fee: "",
     Operation_team: "",
-    tentative_start_date: "",
-    tentative_end_date: "",
+    // tentative_start_date: "",
+    // tentative_end_date: "",
+    tentative_start_date: "2024-03-05T15:30:00Z",
+      tentative_end_date: "2024-04-26T15:30:00Z",
     Other_Cost: "",
     Translator_Cost: "",
     Other_Cost_Details: "", // Additional field for Other Cost Details
     Translator_Cost_Details: "",
     Advance_payment_required: advancePAyment,
-    mandaysEntry: "",
+    mandaysEntry: "admin1115@gmail.com",
+    user_email:'1',
+    project_manager:'1'
   });
-  
+ 
+  // const project_code = Math.floor(Math.random() * 20000) + 20000;
+  // setProjectCode(project_code)
+ 
+
+
+// console.log('selected',currency);
+
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
         const fetchDataFromApiProject = await GetProjectData();
-        // const fetchDataFromApiProjectJson = fetchDataFromApiProject.json();
         const projectDataObject = fetchDataFromApiProject.map((val) => {
           return val;
         });
@@ -56,11 +77,13 @@ const Form = ({ onSubmit }) => {
       }
     };
     fetchProjectData();
+   
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+   
   };
 
   const handleCheckboxChange = (name, checked) => {
@@ -70,42 +93,77 @@ const Form = ({ onSubmit }) => {
 
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
+    if(name==='currency'){
+      setCurrency(value);
+      console.log('value',value);
+      setSecondOptionCurrency(value === '₹' ? '$' : '₹');
+    }
+    console.log("client ",name,value);
+    if(name==='clients'){
+      setFormData({ ...formData, [name]: {id:1,name:value} });
+    }
+    if(name==='project_type'){
+      setFormData({ ...formData, [name]: {id:1,name:value} });
+    }
   };
+
+  const PostProjectData = async (data) => {
+    try {
+      await PostFormData(data);
+    } catch (error) {
+      console.error("Error fetching project data:", error);
+    }
+  };
+
+
+
+  
   const handleSubmit = (e) => {
     const formDataArray = [formData];
     dispatch(addFormData(formDataArray));
     setFormData({
-      id: "",
+      project_code:'',
       name: "",
-      project_type: "",
-      clients: "",
+      project_type: {
+        id:'',
+        name:''
+      },
+      clients: {
+        id:'',
+        name:''
+      },
       AM: "",
       sample: "",
       cpi: "",
       Setup_fee: "",
       Operation_team: "",
-      tentative_start_date: "",
-      tentative_end_date: "",
+      // tentative_start_date: "",
+      // tentative_end_date: "",
+      tentative_start_date: "2024-03-05T15:30:00Z",
+      tentative_end_date: "2024-04-26T15:30:00Z",
       Other_Cost: "",
       Translator_Cost: "",
       Other_Cost_Details: "", // Additional field for Other Cost Details
       Translator_Cost_Details: "",
       Advance_payment_required: advancePAyment,
       mandaysEntry: "",
+    project_manager:''
+
     });
+    console.log(formData);
+    PostProjectData(formData);
   };
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
         //clint Data List
-        const ClientData = await ClientList(); 
+        const ClientData = await ClientList();
         const clientDataItems = ClientData.map((val) => {
           return val.name;
         });
         setClientListData(clientDataItems);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     fetchDataFromApi();
   }, []);
@@ -145,8 +203,8 @@ const Form = ({ onSubmit }) => {
   const isFormValid = () => {
     return (
       formData.name !== "" &&
-      formData.project_type !== "" &&
-      formData.clients !== "" &&
+      formData.project_type?.name !== "" &&
+      formData.clients?.name !== "" &&
       formData.sample !== "" &&
       formData.cpi !== "" &&
       formData.Setup_fee !== "" &&
@@ -170,8 +228,8 @@ const Form = ({ onSubmit }) => {
               required={"required"}
               InputMin_lenght={"1"}
               InputMax_lenght={"50"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
+              inputClassName={"p-2 border bg-[#f3eded]"}
+              labelClassName={"pt-4 pb-2"}
             />
           </div>
           <div className="flex flex-col w-[32%]">
@@ -205,7 +263,16 @@ const Form = ({ onSubmit }) => {
                 onChange={SelectOptionHandler}
               />
             ) : (
-              ""
+              <Dropdown
+              name={"clients"}
+              className={
+                "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+              }
+              Option_Name={["-- Select Client --","demo1","demo2"]}
+              RequireAddButton={true}
+              required
+              onChange={SelectOptionHandler}
+            />
             )}
           </div>
           <div className="flex flex-col w-[32%]">
@@ -215,51 +282,80 @@ const Form = ({ onSubmit }) => {
               InputType={"number"}
               inputChange={handleInputChange}
               required={"required"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
+              inputClassName={"p-2 border bg-[#f3eded]"}
+              labelClassName={"pt-4 pb-2"}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
-            <LableAndInput
-              labelName={"Cost Per Interview"}
-              InputName={"cpi"}
-              InputType={"number"}
-              inputChange={handleInputChange}
-              required={"required"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
-            />
+          <div className="w-[32%] flex flex-col">
+            <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
+            <div className="flex w-full">
+              <div className="w-[90%] inline-block">
+                <Input
+                  name={"cpi"}
+                  type={"number"}
+                  onchange={handleInputChange}
+                  required={"required"}
+                  className={"p-2 border bg-[#f3eded] w-full"}
+                  // value={"12"}
+                />
+              </div>
+              <div className="w-[10%] inline-block">
+                <Dropdown
+                  name={"currency"}
+                  className={
+                    "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
+                  }
+                  // value={currency}
+                  Option_Name={[...optionValue]}
+                  RequireAddButton={false}
+                  required
+                  onChange={SelectOptionHandler}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col w-[32%] relative">
-            <LableAndInput
-              labelName={"Setup Fee "}
-              InputName={"Setup_fee"}
-              InputType={"number"}
-              inputChange={handleInputChange}
-              required={"required"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
-            />
-            <Button
-              className={
-                "bg-green-300 p-1 absolute right-0 top-[4.7rem] translate-y-[50%] text-sm"
-              }
-              name={"Other Fee"}
-              onClick={OpenOtherFee}
-            />
+          <div className="w-[32%] flex flex-col relative">
+            <Label labelName={"Setup Fee"} className={"pt-4 pb-2"} />
+            <div className="flex w-full items-center">
+              <div className="w-[83%] inline-block">
+                <Input
+                  name={"Setup_fee"}
+                  type={"number"}
+                  onchange={handleInputChange}
+                  required={"required"}
+                  className={"p-2 border bg-[#f3eded] w-full"}
+                  // value={"12"}
+                />
+              </div>
+              <div className="w-[10%]">
+                <Dropdown
+                  name={"currency"}
+                  className={
+                    "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
+                  }
+                  // value={currency}
+                  Option_Name={[...optionValue]}
+                  RequireAddButton={false}
+                  required
+                  onChange={SelectOptionHandler}
+                />
+              </div>
+              <div className="w-[7%] bg-yellow-200">
+                <button onClick={OpenOtherFee} className="inline-block p-[13px]">
+                  <TiPlus />
+                </button>
+              </div>
+            </div>
           </div>
           {isOtherFee ? (
-            <div className="w-1/2 h-2/3 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%">
+            <div className="w-1/2 h-2/3 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
               <div className="bg-white w-full h-full flex items-center justify-center relative">
                 <div className="flex flex-col w-2/3 relative">
                   <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
 
                   <MultipleValueDropDown
                     onChange={MultipleValueSection}
-                    className={"w-full bg-[#f3eded]"}
+                    className={"w-full bg-[#f3eded] "}
                   />
                 </div>
                 <Button
@@ -276,33 +372,65 @@ const Form = ({ onSubmit }) => {
           )}
           {/* Additional fields based on checkbox selection */}
           {otherCost ? (
-            <div className="flex flex-col w-[32%]">
-              <LableAndInput
-                labelName={"Other Cost"}
-                InputName={"Other_Cost"}
-                InputType={"number"}
-                inputChange={handleInputChange}
-                required={"required"}
-                inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
-              />
+            <div className="w-[32%] flex flex-col">
+              <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
+              <div className="flex w-full">
+                <div className="w-[90%] inline-block">
+                  <Input
+                    InputName={"Other_Cost"}
+                    type={"number"}
+                    onchange={handleInputChange}
+                    required={"required"}
+                    className={"p-2 border bg-[#f3eded] w-full"}
+                    // value={"12"}
+                  />
+                </div>
+                <div className="w-[10%] inline-block">
+                  <Dropdown
+                    name={"currency"}
+                    className={
+                      "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
+                    }
+                    Option_Name={[...optionValue]}
+                    RequireAddButton={false}
+                    required
+                    onChange={SelectOptionHandler}
+                    value={currency}
+                  />
+                </div>
+              </div>
             </div>
           ) : (
             ""
           )}
           {translationCost && (
             <div className="flex flex-col w-[32%]">
-              <LableAndInput
-                labelName={"Translator Cost"}
-                InputName={"Translator_Cost"}
-                InputType={"number"}
-                inputChange={handleInputChange}
-                required={"required"}
-                inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
-              />
+              <Label labelName={"Translator Cost"} className={"pt-4 pb-2"} />
+              <div className="flex w-full">
+                <div className="w-[90%] inline-block">
+                  <Input
+                    InputName={"Translator_Cost"}
+                    type={"number"}
+                    onchange={handleInputChange}
+                    required={"required"}
+                    className={"p-2 border bg-[#f3eded] w-full"}
+                    // value={"12"}
+                  />
+                </div>
+                <div className="w-[10%] inline-block">
+                  <Dropdown
+                    name={"currency"}
+                    className={
+                      "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
+                    }
+                    Option_Name={[...optionValue]}
+                    RequireAddButton={false}
+                    required
+                    onChange={SelectOptionHandler}
+                    value={currency}
+                  />
+                </div>
+              </div>
             </div>
           )}
           <div className="flex flex-col w-[32%]">
@@ -327,9 +455,8 @@ const Form = ({ onSubmit }) => {
               inputChange={handleInputChange}
               min={minDate.toISOString().split("T")[0]}
               required={"required"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
+              inputClassName={"p-2 border bg-[#f3eded]"}
+              labelClassName={"pt-4 pb-2"}
             />
           </div>
           <div className="flex flex-col w-[32%]">
@@ -341,9 +468,8 @@ const Form = ({ onSubmit }) => {
               inputChange={handleInputChange}
               min={minDate.toISOString().split("T")[0]}
               required={"required"}
-              inputClassName={'p-2 border bg-[#f3eded]'}
-              labelClassName={'pt-4 pb-2'}
-
+              inputClassName={"p-2 border bg-[#f3eded]"}
+              labelClassName={"pt-4 pb-2"}
             />
           </div>
           <div className="flex flex-col w-[32%]">

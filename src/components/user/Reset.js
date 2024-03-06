@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Input from '../InputField'
 import Button from '../Button'
+import { RESETPASSWORD } from '../../../utils/Apis'
 
 
 const Reset = () => {
@@ -11,7 +12,7 @@ const Reset = () => {
 
 
     const forgotPassword = async () =>{
-      forgotPasswordResponse = await fetch('http://65.1.93.34:8000/api/user/reset-password/',{
+      forgotPasswordResponse = await fetch(RESETPASSWORD,{
         method:'POST',
         headers:{
           "Content-Type": "Application/Json",
