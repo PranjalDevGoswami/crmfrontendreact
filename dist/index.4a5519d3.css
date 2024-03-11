@@ -1,0 +1,22 @@
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.faZveH {
+  min-width: 50px !important;
+}
+
+.lnOUep {
+  white-space: pre-wrap !important;
+}
+/*# sourceMappingURL=index.4a5519d3.css.map */
