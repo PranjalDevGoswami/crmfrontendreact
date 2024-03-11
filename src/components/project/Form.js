@@ -14,6 +14,7 @@ import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectD
 import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
 import Input from "../InputField";
 import { TiPlus } from "react-icons/ti";
+import {ProjectTypeList} from '../fetchApis/projects/projectType/ProjectTypeList'
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -23,47 +24,38 @@ const Form = () => {
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
-  const [currency,setCurrency]= useState('$');
-  const [SecondOptioncurrency,setSecondOptionCurrency]= useState("₹");
-  const optionValue = [currency,SecondOptioncurrency];
-  const [projectCode,setProjectCode] = useState()
+  const [currency, setCurrency] = useState("$");
+  const [SecondOptioncurrency, setSecondOptionCurrency] = useState("₹");
+  const optionValue = [currency, SecondOptioncurrency];
+  const [projectTypeData,setProjectTypeData] = useState([])
 
   const [formData, setFormData] = useState({
-    project_code:("UNI"+Math.floor((Math.random() * 20000) + 20000)),
+    project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
     name: "",
-    project_type: {
-      id:'',
-      name:''
-    },
-    clients: {
-      id:'',
-      name:''
-    },
-    AM: "",
+    project_type: "",
+    clients: "",
+    Manager: "",
     sample: "",
     cpi: "",
-    Setup_fee: "",
+    set_up_fee: 1,
     Operation_team: "",
-    // tentative_start_date: "",
-    // tentative_end_date: "",
-    tentative_start_date: "2024-03-05T15:30:00Z",
-      tentative_end_date: "2024-04-26T15:30:00Z",
-    Other_Cost: "",
+    tentative_start_date: "",
+    tentative_end_date: "",
+    other_cost: "",
     Translator_Cost: "",
-    Other_Cost_Details: "", // Additional field for Other Cost Details
+    other_cost_Details: "", // Additional field for Other Cost Details
     Translator_Cost_Details: "",
     Advance_payment_required: advancePAyment,
-    mandaysEntry: "admin1115@gmail.com",
-    user_email:'1',
-    project_manager:'1'
+    mandaysEntry: "1",
+    user_email: "test1@novusinsights.com",
+    project_manager: 1,
+    operation_select: true,
+    finance_select: true,
+    user_id: 1,
+    project_manager: 1,
   });
- 
-  // const project_code = Math.floor(Math.random() * 20000) + 20000;
-  // setProjectCode(project_code)
- 
 
-
-// console.log('selected',currency);
+  const ProjectTypeListData = projectTypeData;
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -77,12 +69,52 @@ const Form = () => {
       }
     };
     fetchProjectData();
-   
+    const FetchProjectType = async () =>{
+      try {
+        const ProjectType = await ProjectTypeList();
+        const ProjectTypeObject = ProjectType.map((val) => {
+          return val.name;
+        });
+        setProjectTypeData(ProjectTypeObject)
+      } catch (error) {
+        console.error("Error fetching project type List:", error);
+        
+      }
+    }
+    FetchProjectType()
   }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === "tentative_start_date") {
+      const tst = value;
+      const parts = tst.split("/");
+      const isoDate = new Date(
+        `${parts[2]}-${parts[1]}-${parts[0]}`
+      ).toISOString();
+      setFormData({ ...formData, [name]: isoDate });
+    }
+    if (name === "tentative_end_date") {
+      const tst = value;
+      const parts = tst.split("/");
+      const isoDate = new Date(
+        `${parts[2]}-${parts[1]}-${parts[0]}`
+      ).toISOString();
+      setFormData({ ...formData, [name]: isoDate });
+    }
+    if(name==="set_up_fee"){
+      setFormData({ ...formData, [name]: parseInt(value) });
+    }
+    if(name==="sample"){
+      e.preventDefault();
+      if (/^\d*$/.test(value)) {
+        setFormData({...formData, [name]:value});
+        console.log('value',value);
+      }else{
+        alert(`'Sample value can't be in decimal'`)
+      }
+    }
    
   };
 
@@ -93,17 +125,16 @@ const Form = () => {
 
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
-    if(name==='currency'){
+    if (name === "currency") {
       setCurrency(value);
-      console.log('value',value);
-      setSecondOptionCurrency(value === '₹' ? '$' : '₹');
     }
-    console.log("client ",name,value);
-    if(name==='clients'){
-      setFormData({ ...formData, [name]: {id:1,name:value} });
+    if (name === "clients") {
+      const clientIndex = clientListData.indexOf(value);
+      setFormData({ ...formData, [name]: clientIndex + 1 });
     }
-    if(name==='project_type'){
-      setFormData({ ...formData, [name]: {id:1,name:value} });
+    if (name === "project_type") {
+      const ProjectTypeIndex = projectTypeData.indexOf(value);
+      setFormData({ ...formData, [name]: ProjectTypeIndex + 1 });
     }
   };
 
@@ -115,42 +146,34 @@ const Form = () => {
     }
   };
 
-
-
-  
   const handleSubmit = (e) => {
     const formDataArray = [formData];
     dispatch(addFormData(formDataArray));
     setFormData({
-      project_code:'',
-      name: "",
-      project_type: {
-        id:'',
-        name:''
-      },
-      clients: {
-        id:'',
-        name:''
-      },
-      AM: "",
-      sample: "",
-      cpi: "",
-      Setup_fee: "",
-      Operation_team: "",
-      // tentative_start_date: "",
-      // tentative_end_date: "",
-      tentative_start_date: "2024-03-05T15:30:00Z",
-      tentative_end_date: "2024-04-26T15:30:00Z",
-      Other_Cost: "",
-      Translator_Cost: "",
-      Other_Cost_Details: "", // Additional field for Other Cost Details
-      Translator_Cost_Details: "",
-      Advance_payment_required: advancePAyment,
-      mandaysEntry: "",
-    project_manager:''
-
+      project_code: '',
+    name: "",
+    project_type: "",
+    clients: "",
+    Manager: "",
+    sample: "",
+    cpi: "",
+    set_up_fee: 1,
+    Operation_team: "",
+    tentative_start_date: "",
+    tentative_end_date: "",
+    other_cost: "",
+    Translator_Cost: "",
+    other_cost_Details: "", // Additional field for Other Cost Details
+    Translator_Cost_Details: "",
+    Advance_payment_required: advancePAyment,
+    mandaysEntry: "1",
+    user_email: "test1@novusinsights.com",
+    project_manager: 1,
+    operation_select: "",
+    finance_select: "",
+    user_id: 1,
+    project_manager: 1,
     });
-    console.log(formData);
     PostProjectData(formData);
   };
 
@@ -207,13 +230,13 @@ const Form = () => {
       formData.clients?.name !== "" &&
       formData.sample !== "" &&
       formData.cpi !== "" &&
-      formData.Setup_fee !== "" &&
+      formData.set_up_fee !== "" &&
       formData.tentative_start_date !== "" &&
       formData.tentative_end_date !== ""
     );
   };
 
-  const Amlist = ["AM 1", "AM 2"];
+  const Amlist = ["Manager 1", "Manager 2"];
 
   return (
     <div className="relative">
@@ -238,16 +261,25 @@ const Form = () => {
               className={"pt-4 pb-2"}
               required
             />
-            <Dropdown
+           {projectTypeData.length>0? <Dropdown
               name={"project_type"}
               className={
                 "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
               }
-              Option_Name={["-- Select Project Type --", "A", "B"]}
+              Option_Name={["-- Select Project Type --", ...ProjectTypeListData]}
               RequireAddButton={false}
               required
               onChange={SelectOptionHandler}
-            />
+            />:<Dropdown
+            name={"project_type"}
+            className={
+              "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+            }
+            Option_Name={["-- Select Project Type --", "CATI","CAWI"]}
+            RequireAddButton={false}
+            required
+            onChange={SelectOptionHandler}
+          />}
           </div>
           <div className="flex flex-col w-[32%]">
             <Label labelName={"Client"} className={"pt-4 pb-2"} />
@@ -264,15 +296,15 @@ const Form = () => {
               />
             ) : (
               <Dropdown
-              name={"clients"}
-              className={
-                "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
-              }
-              Option_Name={["-- Select Client --","demo1","demo2"]}
-              RequireAddButton={true}
-              required
-              onChange={SelectOptionHandler}
-            />
+                name={"clients"}
+                className={
+                  "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+                }
+                Option_Name={["-- Select Client --", "demo1", "demo2"]}
+                RequireAddButton={true}
+                required
+                onChange={SelectOptionHandler}
+              />
             )}
           </div>
           <div className="flex flex-col w-[32%]">
@@ -319,7 +351,7 @@ const Form = () => {
             <div className="flex w-full items-center">
               <div className="w-[83%] inline-block">
                 <Input
-                  name={"Setup_fee"}
+                  name={"set_up_fee"}
                   type={"number"}
                   onchange={handleInputChange}
                   required={"required"}
@@ -341,7 +373,10 @@ const Form = () => {
                 />
               </div>
               <div className="w-[7%] bg-yellow-200">
-                <button onClick={OpenOtherFee} className="inline-block p-[13px]">
+                <button
+                  onClick={OpenOtherFee}
+                  className="inline-block p-[13px]"
+                >
                   <TiPlus />
                 </button>
               </div>
@@ -377,7 +412,7 @@ const Form = () => {
               <div className="flex w-full">
                 <div className="w-[90%] inline-block">
                   <Input
-                    InputName={"Other_Cost"}
+                    InputName={"other_cost"}
                     type={"number"}
                     onchange={handleInputChange}
                     required={"required"}
@@ -434,13 +469,13 @@ const Form = () => {
             </div>
           )}
           <div className="flex flex-col w-[32%]">
-            <Label labelName={"Select AM  "} className={"pt-4 pb-2"} />
+            <Label labelName={"Manager  "} className={"pt-4 pb-2"} />
             <Dropdown
-              name={"AM"}
+              name={"manager"}
               className={
                 "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
               }
-              Option_Name={["-- Select AM --", ...Amlist]}
+              Option_Name={["-- Select Manager --", ...Amlist]}
               RequireAddButton={false}
               required
               onChange={SelectOptionHandler}

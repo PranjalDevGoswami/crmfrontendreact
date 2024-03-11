@@ -16,18 +16,7 @@ const OperationDashboard = ({showEdit}) => {
   const [optionSelected, setOptionSelected] = useState();
   const [SearchItemFiled, setSearchItemFiled] = useState([]);
   const [operationDepartment] = useState(true)
-  // const AddProjectHandler = () => {
-  //   setIsAddProjectOpen(true);
-  // };
-
-  // useEffect(()=>{
-  //   const Project = async () =>{
-  //     const response = await fetch('http://13.232.192.123:8000/api/project/projects/');
-  //     const json= await response.json()
-  //     console.log("response",json);
-  //   }
-  //   Project()
-  // },[])
+ 
 
   const HandleCloseForm = () => {
     setIsAddProjectOpen(false);
