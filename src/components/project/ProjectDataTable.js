@@ -299,7 +299,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   }));
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden max-w-full">
       <h2 className="p-2 text-4xl underline">All Project Details</h2>
       <div className="flex justify-end mb-4 w-full">
         <div className="flex items-center">

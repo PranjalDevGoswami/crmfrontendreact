@@ -14,7 +14,7 @@ import OperationDashboard from './src/components/dashboard/OperationDashboard';
 import EntryForm from './src/components/project/EntryForm';
 import { Provider, useSelector } from 'react-redux';
 import store from './src/store';
-
+import { ThemeProvider } from "@material-tailwind/react";
 const App = () => {
   // const isLoggedIn = localStorage.getItem('isLoggedIn')
  
