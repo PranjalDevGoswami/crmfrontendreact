@@ -1,4 +1,4 @@
-const BASEURL = 'http://3.110.122.39:8000/'
+const BASEURL = 'http://15.206.95.141:8000/'
 export const DEPARTMENTSAPIS = BASEURL+'/api/user/department/';
 export const GETPROJECTDATAAPIS = BASEURL+'/api/project/projects/';
 export const CLIENTDATAAPIS = BASEURL+'/api/project/clients/';
@@ -8,4 +8,4 @@ export const POSTMANDAYSDATA = BASEURL+'/api/operation/projects/estimate/';
 export const RESETPASSWORD = BASEURL+'/api/user/reset-password/';
 export const USERLIST = BASEURL+'/api/user/api/users-list/';
 export const MANDAYSUPDATE = BASEURL + '/api/operation/projects/estimate/'
-export const PROJECTTYPES = BASEURL + '/api/project/project_type'
+export const PROJECTTYPES = BASEURL + '/api/project/project_type/'

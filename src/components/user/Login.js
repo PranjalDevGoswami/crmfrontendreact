@@ -55,6 +55,7 @@ const Login = () => {
     let loginUser = localStorage.getItem("user");
 
     const userData = [userListJson.users];
+    console.log('userData',userData);
 
     function getUserByEmail(email) {
       return userData[0].filter((user) => user.email === email);

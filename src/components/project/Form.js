@@ -389,6 +389,11 @@ const Form = () => {
                   <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
 
                   <MultipleValueDropDown
+                  options={[
+                    { value: "Other Cost", label: "Other Cost" },
+                    { value: "Translation Cost", label: "Translation Cost" },
+                    // { value: 'Cost', label: 'Cost' },
+                  ]}
                     onChange={MultipleValueSection}
                     className={"w-full bg-[#f3eded] "}
                   />

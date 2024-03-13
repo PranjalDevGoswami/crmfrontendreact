@@ -9,6 +9,17 @@ import Button from "../Button";
 import { PostMandaysData } from "../fetchApis/projects/mandays/PostMandaysData.js";
 import Input from "../InputField.js";
 import { MdOutlineMoreVert } from "react-icons/md";
+import Dropdown from "../DropDown.js";
+import {
+  Data,
+  DummyData,
+  Dummycolumns,
+  customStyles,
+  editedColumns,
+} from "../../../utils/DataTablesData";
+import { ClientList } from "../fetchApis/clientList/ClientList";
+import MultipleValueDropDown from "../MultipleValueDropDown";
+import { AddManDays } from "./addManDays";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [viewEdit, setViewEdit] = useState(false);
@@ -25,6 +36,10 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [getFormDataApi, setGetFormDataApi] = useState([]);
+  const [clientsListArray, setClientsListArray] = useState([]);
+  const [isMultiEdit, setIsMultiEdit] = useState(false);
+  const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -35,8 +50,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.map((val) => {
           return val;
         });
-        setGetFormDataApi(projectDataObject); 
-        dispatch(addFormData(projectDataObject)); 
+        setGetFormDataApi(projectDataObject);
+        dispatch(addFormData(projectDataObject));
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
@@ -44,18 +59,39 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     fetchProjectData();
   }, [dispatch]);
 
- 
   const Formdata1 = useSelector((store) => store?.FormData?.items);
 
   useEffect(() => {
     dispatch(addFormData(getFormDataApi));
   }, [getFormDataApi, dispatch]);
 
+  useEffect(() => {
+    const fetchClientList = async () => {
+      try {
+        const response = await ClientList();
+        const responseArray = response.map((val) => {
+          return val.name;
+        });
+        setClientsListArray(responseArray);
+      } catch (error) {
+        console.log("error is", error);
+      }
+    };
+    fetchClientList();
+  }, []);
+
+  const ClientOptions = clientsListArray.map((val) => {
+    return {
+      value: val,
+      label: val,
+    };
+  });
 
   const handleCancelUpdate = () => {
     setViewEdit(false);
+    setIsMultiEdit(false);
+    setMultiEditFieldOpen(false);
   };
-
 
   const HandleOnEdit = (record) => {
     setViewEdit(true);
@@ -64,6 +100,10 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       ...updatedValue,
       project_code: record?.project_code,
     });
+  };
+
+  const handleFilterOption = (name, value) => {
+    console.log("e", name, value);
   };
 
   const HandleCloseProjectDetails = () => {
@@ -100,6 +140,24 @@ const ProjectDataTable = ({ PersonDepartment }) => {
 
   const handleEditUpdate = () => {
     PostUpdateEditData(updatedValue);
+  };
+
+  const handleSelectedRowsChange = (row) => {
+    const inCompletedTask = row.selectedRows.filter((item) => {
+      return item.status === null || item.status === "";
+    });
+    console.log("row.status", row.selectedRows);
+    if (row.selectedCount > 0) {
+      setIsMultiEdit(true);
+      setSelectedRow(inCompletedTask);
+    } else {
+      setIsMultiEdit(false);
+    }
+  };
+  const handleMutiEdit = () => {
+    console.log("this is select", selectedRow);
+    console.log("multiedit");
+    setMultiEditFieldOpen(!multiEditFieldOpen);
   };
 
   const columns = [
@@ -164,6 +222,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       sortable: true,
     },
     {
+      name: "status",
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
       name: "Actions",
       key: "action",
       text: "Action",
@@ -200,107 +263,19 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     },
   ];
 
-  const Dummycolumns = [
-    {
-      name: "Sr.No.",
-      selector: (row) => row.id,
-      sortable: true,
-    },
-    {
-      name: "Project Code",
-      selector: (row) => row.project_code,
-      sortable: true,
-    },
-    {
-      name: "Client Name",
-      selector: (row) => row.clients,
-      sortable: true,
-    },
-    {
-      name: "Project Name",
-      selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: "Type",
-      selector: (row) => row.project_type,
-      sortable: true,
-    },
-    {
-      name: "Start Date",
-      selector: (row) => row.tentative_start_date,
-      sortable: true,
-    },
-    {
-      name: "End Date",
-      selector: (row) => row.tentative_end_date,
-      sortable: true,
-    },
-    {
-      name: "CPI",
-      selector: (row) => row.cpi,
-      sortable: true,
-    },
-    {
-      name: "Project Target",
-      selector: (row) => row.sample,
-      sortable: true,
-    },
-    {
-      name: "Achieved Target",
-      selector: (row) => row.achiev_Target,
-      sortable: true,
-    },
-    {
-      name: "Remaining Target",
-      selector: (row) => row.Remaining_Target,
-      sortable: true,
-    },
-    {
-      name: "T. Man Days",
-      selector: (row) => row.mandays,
-      sortable: true,
-    },
-    {
-      name: "Actions",
-    },
-  ];
-
-  const customStyles = {
-    rows: {
-      style: {
-        backgroundColor: "#fff", // override the row height
-        textAlign: "center",
-      },
-    },
-    headCells: {
-      style: {
-        color: "#fff",
-        backgroundColor: "#bd1d1d",
-        fontSize: "14px",
-        textAlign: "center",
-        whiteSpace: "pre-wrap",
-        wordWrap: "break-word",
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: "20px", // override the cell padding for data cells
-        paddingRight: "20px",
-        textAlign: "center",
-      },
-      stripedStyle: {
-        color: "NORMALCOLOR",
-        backgroundColor: "NORMALCOLOR",
-      },
-    },
-  };
-
   const filteredData = getFormDataApi.filter((item) =>
-    Object.values(item).some(
-      (val) =>
-        val && val.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    Object.values(item).some((val) => {
+      if (typeof val === "object" && val !== null) {
+        // If the value is an object, check its properties
+        return Object.values(val).some((propVal) =>
+          propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (val) {
+        // For other types of values (non-object), perform the search
+        return val.toString().toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false; // Exclude null or undefined values from the search
+    })
   );
   const data = filteredData.map((item, index) => ({
     id: index + 1,
@@ -320,82 +295,46 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     total_achievement: item?.total_achievement,
     remaining_interview: item.remaining_interview,
     man_days: item.man_days,
+    status: item.status,
   }));
-  const dummyData = [
-    {
-      id: "",
-      project_code: "",
-      cpi: "",
-      clients: "",
-      operation_select: "",
-      project_type: "",
-      other_cost: "",
-      set_up_fee: "",
-      tentative_start_date: "",
-      tentative_end_date: "",
-      sample: "",
-      name: "No data Found",
-    },
-  ];
-
-  //     {
-  //       id: "1",
-  //       project_code: "project001",
-  //       name: "Demo",
-  //       cpi: "300",
-  //       clients: "clients",
-  //       project_type: "project_type",
-  //       other_cost: "200",
-  //       set_up_fee: "200",
-  //       tentative_end_date: "2024/02/28",
-  //       tentative_start_date: "2024/02/28",
-  //       tentative_end_date: "2024/04/28",
-  //       sample: "1000",
-  //       mandays: "20",
-  //       achiev_Target: "200",
-  //       Remaining_Target: "100",
-  //     },
-  //     {
-  //       id: "2",
-  //       project_code: "project002",
-  //       name: "Demo",
-  //       cpi: "300",
-  //       clients: "clients",
-  //       project_type: "project_type",
-  //       other_cost: "200",
-  //       set_up_fee: "200",
-  //       tentative_end_date: "2024/02/28",
-  //       tentative_start_date: "2024/02/28",
-  //       tentative_end_date: "2024/04/28",
-  //       sample: "1000",
-  //       mandays: "20",
-  //       achiev_Target: "200",
-  //       Remaining_Target: "100",
-  //     },
-  //     {
-  //       id: "3",
-  //       project_code: "project003",
-  //       name: "Demo",
-  //       cpi: "300",
-  //       clients: "clients",
-  //       project_type: "project_type",
-  //       other_cost: "200",
-  //       set_up_fee: "200",
-  //       tentative_end_date: "2024/02/28",
-  //       tentative_start_date: "2024/02/28",
-  //       tentative_end_date: "2024/04/28",
-  //       sample: "1000",
-  //       mandays: "20",
-  //       achiev_Target: "200",
-  //       Remaining_Target: "100",
-  //       manDaysEntryDate: "",
-  //     },
-  //   ];
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between mb-4">
-        <h2 className="p-2 text-4xl underline">All Project Details</h2>
+    <div className="w-full overflow-hidden">
+      <h2 className="p-2 text-4xl underline">All Project Details</h2>
+      <div className="flex justify-end mb-4 w-full">
+        <div className="flex items-center">
+          <Dropdown
+            Option_Name={["--Select Clients--", "am", "am2"]}
+            onChange={handleFilterOption}
+            name={"Client"}
+            className={"p-4 m-1 border border-black rounded"}
+          />
+          {/* {clientsListArray.length > 0 ? (
+            <MultipleValueDropDown
+              options={ClientOptions}
+              onChange={handleFilterOption}
+              name={"Client"}
+              className={"p-4 m-1 border border-black rounded w-fit"}
+            />
+          ) : (
+            <MultipleValueDropDown
+              options={[
+                { value: "--Select Clients--", label: "--Select Clients--" },
+                { value: "Client1", label: "Client1" },
+                { value: "Client2", label: "Client2" },
+              ]}
+              onChange={handleFilterOption}
+              name={"Client"}
+              className={"w-full p-2 bg-white border border-black rounded"}
+            />
+          )} */}
+          <Dropdown
+            Option_Name={["Inprogress", "Hold", "Completed"]}
+            onChange={handleFilterOption}
+            name={"Client"}
+            className={"p-4 m-1 border border-black rounded"}
+          />
+        </div>
         <Input
           type="text"
           placeholder="Search..."
@@ -404,14 +343,16 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           className={"p-2 m-1 border border-black rounded focus:outline-none"}
         />
       </div>
+
       {data.length > 0 ? (
-        <div>
+        <div className="relative">
           <DataTable
             columns={columns}
             data={data}
             pagination
             customStyles={customStyles}
             selectableRows
+            onSelectedRowsChange={handleSelectedRowsChange}
             // subHeader
           />
           {isOperationPerson && (
@@ -610,12 +551,26 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       ) : (
         <DataTable
           columns={Dummycolumns}
-          data={dummyData}
+          data={DummyData}
           // pagination
           customStyles={customStyles}
           // selectableRows
         />
       )}
+      {isMultiEdit ? (
+        <Button
+          name={"Add Man Days"}
+          className={
+            "p-2 bg-yellow-200 border rounded-full rounded-tr-none rounded-br-none border-black absolute right-0 top-1/2"
+          }
+          onClick={handleMutiEdit}
+        />
+      ) : (
+        ""
+      )}
+      <div className="overflow-hidden">
+      {multiEditFieldOpen ? <AddManDays selectedRow={selectedRow}/> : ""}
+      </div>
     </div>
   );
 };

@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/PranjalDevGoswami/crmfrontendreact#readme",
   "dependencies": {
+    "@material-tailwind/react": "^2.1.9",
     "@reduxjs/toolkit": "^2.2.1",
     "chart.js": "^4.4.1",
     "moment-duration-format": "^2.3.2",
