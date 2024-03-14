@@ -40,6 +40,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [isMultiEdit, setIsMultiEdit] = useState(false);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
+  const [isDrawerOpen,setIsDrawerOpen] = useState(false)
 
   const dispatch = useDispatch();
 
@@ -91,6 +92,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setViewEdit(false);
     setIsMultiEdit(false);
     setMultiEditFieldOpen(false);
+    document.body.classList.remove('DrawerBody');
   };
 
   const HandleOnEdit = (record) => {
@@ -136,6 +138,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       man_days: "",
       total_achievement: "",
     });
+    document.body.classList.remove('DrawerBody');
+    setIsDrawerOpen(false)
   };
 
   const handleEditUpdate = () => {
@@ -155,9 +159,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     }
   };
   const handleMutiEdit = () => {
-    console.log("this is select", selectedRow);
-    console.log("multiedit");
-    setMultiEditFieldOpen(!multiEditFieldOpen);
+    setMultiEditFieldOpen(true);
+    setIsDrawerOpen(true);
+    document.body.classList.toggle('DrawerBody');
   };
 
   const columns = [
@@ -298,8 +302,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     status: item.status,
   }));
 
-  return (
-    <div className="w-full overflow-hidden max-w-full">
+  return (<>    <div className={`${isDrawerOpen?"opacity-30 relative overflow-hidden":"opacity-100"}"`}>
       <h2 className="p-2 text-4xl underline">All Project Details</h2>
       <div className="flex justify-end mb-4 w-full">
         <div className="flex items-center">
@@ -568,10 +571,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       ) : (
         ""
       )}
-      <div className="overflow-hidden">
-      {multiEditFieldOpen ? <AddManDays selectedRow={selectedRow}/> : ""}
-      </div>
     </div>
+      <div className="">
+      {multiEditFieldOpen ? <AddManDays selectedRow={selectedRow} setIsDrawerOpen={setIsDrawerOpen} setMultiEditFieldOpen={setMultiEditFieldOpen}/> : ""}
+      </div>
+      </>
+
   );
 };
 

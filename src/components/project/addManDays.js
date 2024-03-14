@@ -7,7 +7,7 @@ import { customStyles, editedColumns } from "../../../utils/DataTablesData";
 import Dropdown from "../DropDown";
 import { BulkUpdateManDaysData } from "../fetchApis/projects/mandays/bulkUpdateManDays";
 
-export function AddManDays({ selectedRow }) {
+export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }) {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [mandaysData, setMandaysData] = useState(
@@ -27,7 +27,10 @@ export function AddManDays({ selectedRow }) {
     setMandaysData(updatedMandaysData);
     
   };
-
+  const today = new Date();
+  // Subtract one day from today's date
+  const minDate = new Date(today);
+  minDate.setDate(minDate.getDate() - 1);
   const handleManDayStatus = (index, name, value) => {
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], status: value };
@@ -112,7 +115,13 @@ export function AddManDays({ selectedRow }) {
   ];
 
   const openDrawerRight = () => setOpenRight(true);
-  const closeDrawerRight = () => setOpenRight(false);
+  const closeDrawerRight = () => {
+    document.body.classList.remove('DrawerBody');
+    setIsDrawerOpen(false)
+    setMultiEditFieldOpen(false)
+    setOpenRight(false);
+    
+}
 
   const finalData = mandaysData.map((item, index) => ({
     ...selectedEditData[index],
@@ -160,7 +169,7 @@ export function AddManDays({ selectedRow }) {
         placement="right"
         open={openRight}
         onClose={closeDrawerRight}
-        className="p-4 top-32"
+        className="p-4 top-32 !h-[90%] !overflow-scroll"
         size="1200px"
       >
         <div className="mb-6 w-1/3">
@@ -175,6 +184,7 @@ export function AddManDays({ selectedRow }) {
               inputClassName={"p-2 border w-full bg-gray-300"}
               labelClassName={"pt-4 pb-2"}
               inputChange={handleDate}
+              min={minDate.toISOString().split("T")[0]}
             />
           </div>
         </div>
