@@ -23,6 +23,8 @@ const Header = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   const HandleThemeColor = () =>{
+    document.body.classList.toggle('DarkMode')
+    // document.body.classList.remove('DrawerBody');
     dispatch(toggleDarkMode());
   {console.log('darkMode',isDarkMode)}
 

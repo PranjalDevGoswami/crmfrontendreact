@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Drawer, Button } from "@material-tailwind/react";
-import LableAndInput from "../LableAndInput";
+import LableAndInput from "../../LableAndInput";
 import DataTable from "react-data-table-component";
-import { customStyles, editedColumns } from "../../../utils/DataTablesData";
+import { customStyles, editedColumns } from "../../../../utils/DataTablesData";
 
-import Dropdown from "../DropDown";
-import { BulkUpdateManDaysData } from "../fetchApis/projects/mandays/bulkUpdateManDays";
+import Dropdown from "../../DropDown";
+import { BulkUpdateManDaysData } from "../../fetchApis/projects/mandays/bulkUpdateManDays";
 
 export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }) {
   const [openRight, setOpenRight] = useState(true);
@@ -153,8 +153,8 @@ export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }
     };
     setMandaysData(updatedMandaysData);
     setEditIndex(null);
-    console.log("DataToSend", DataToSend);
     BulkUpdateManDays(DataToSend);
+    closeDrawerRight();
   };
   const BulkUpdateManDays = async (data) => {
     try {

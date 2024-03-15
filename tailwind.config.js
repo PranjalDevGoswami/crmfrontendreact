@@ -18,6 +18,18 @@ module.exports = {
         'hero-pattern': "url('./src/assets/HS-blog-post-20-2048x1075.png')",
         
       },
+       // that is animation class
+       animation: {
+        fade: 'fadeOut 5s ease-in-out',
+      },
+
+      // that is actual animation
+      keyframes: theme => ({
+        fadeOut: {
+          '0%': { top: theme('-1rem') },
+          '100%': { top: theme('0rem') },
+        },
+      }),
     },
   },
   plugins: [],

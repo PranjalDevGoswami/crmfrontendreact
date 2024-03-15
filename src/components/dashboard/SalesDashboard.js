@@ -66,7 +66,6 @@ const SalesDashboard = () => {
           <BarChart chartData={chartData} />
           </div> */}
           <div className="">
-            
           <ProjectDataTable PersonDepartment={salesDepartment}/>
           </div>
         </div>

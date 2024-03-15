@@ -64,7 +64,40 @@ export const Data =[
     {
       name:'status',
       selector:(row) => row.status,
-      sortable:true
+      sortable:true,
+      right:true,
+      conditionalCellStyles: [
+        {
+          when: row => row.status === 'completed',
+          style: {
+            backgroundColor: 'rgba(63, 195, 128, 0.9)',
+            color: 'white',
+            '&:hover': {
+              cursor: 'pointer',
+            },
+          },
+        },
+        {
+          when: row => row.status === 'undefined',
+          style: {
+            backgroundColor: 'rgba(248, 148, 6, 0.9)',
+            color: 'white',
+            '&:hover': {
+              cursor: 'pointer',
+            },
+          },
+        },
+        {
+          when: row => row.status === null,
+          style: {
+            backgroundColor: 'rgba(242, 38, 19, 0.9)',
+            color: 'white',
+            '&:hover': {
+              cursor: 'not-allowed',
+            },
+          },
+        },
+      ],
     },
     {
       name: "Actions",
@@ -195,6 +228,14 @@ export const Data =[
         textAlign: "center",
       },
     },
+    rows: {
+      highlightOnHoverStyle: {
+        backgroundColor: 'rgb(230, 244, 244)',
+        borderBottomColor: '#FFFFFF',
+        borderRadius: '25px',
+        outline: '1px solid #FFFFFF',
+      },
+    },
     headCells: {
       style: {
         color: "#fff",
@@ -240,8 +281,8 @@ export const Data =[
       sortable: true,
     },
     {
-      name: "CPI",
-      selector: (row) => row.cpi,
+      name: "Sample",
+      selector: (row) => row.sample,
       sortable: true,
     },
     {

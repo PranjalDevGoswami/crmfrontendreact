@@ -8,5 +8,5 @@ export const POSTMANDAYSDATA = BASEURL+'/api/operation/projects/estimate/';
 export const RESETPASSWORD = BASEURL+'/api/user/reset-password/';
 export const USERLIST = BASEURL+'/api/user/api/users-list/';
 export const MANDAYSUPDATE = BASEURL + '/api/operation/projects/estimate/'
-export const PROJECTTYPES = BASEURL + '/api/project/project_type/';
+export const PROJECTTYPES = BASEURL + '/api/project/project_type';
 export const BULKUPDATEMANDAYS = BASEURL+ '/api/operation/projects/estimate/'

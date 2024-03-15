@@ -25,3 +25,20 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
   /* opacity: 0.5; */
 }
+.DarkMode{
+  /* background-color:rgba(0,0,0,0.5) !important;
+  color:red */
+}
+.AddManDaysAnimation{
+  animation-name: animated_mandays;
+  animation-duration: 1s;
+}
+@keyframes animated_mandays {
+  0%   {left:0px; top:-5rem;}
+
+  100% {left:0px; top:-3.7rem;}
+}
+.removeManDaysAnimation{
+  animation-name: animated_mandays_remove;
+  animation-duration: 1s;
+}

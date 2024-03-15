@@ -24,9 +24,9 @@ const Form = () => {
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
-  const [currency, setCurrency] = useState("$");
-  const [SecondOptioncurrency, setSecondOptionCurrency] = useState("₹");
-  const optionValue = [currency, SecondOptioncurrency];
+  // const [currency, setCurrency] = useState("$");
+  // const [SecondOptioncurrency, setSecondOptionCurrency] = useState("₹");
+  // const optionValue = [currency, SecondOptioncurrency];
   const [projectTypeData,setProjectTypeData] = useState([])
 
   const [formData, setFormData] = useState({
@@ -125,9 +125,9 @@ const Form = () => {
 
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
-    if (name === "currency") {
-      setCurrency(value);
-    }
+    // if (name === "currency") {
+    //   setCurrency(value);
+    // }
     if (name === "clients") {
       const clientIndex = clientListData.indexOf(value);
       setFormData({ ...formData, [name]: clientIndex + 1 });
@@ -136,6 +136,10 @@ const Form = () => {
       const ProjectTypeIndex = projectTypeData.indexOf(value);
       setFormData({ ...formData, [name]: ProjectTypeIndex + 1 });
     }
+    // if (name === "project_type") {
+    //   // const ProjectTypeIndex = projectTypeData.indexOf(value);
+    //   setFormData({ ...formData, [name]:value });
+    // }
   };
 
   const PostProjectData = async (data) => {
@@ -321,7 +325,7 @@ const Form = () => {
           <div className="w-[32%] flex flex-col">
             <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
             <div className="flex w-full">
-              <div className="w-[90%] inline-block">
+              <div className="w-full inline-block">
                 <Input
                   name={"cpi"}
                   type={"number"}
@@ -331,7 +335,7 @@ const Form = () => {
                   // value={"12"}
                 />
               </div>
-              <div className="w-[10%] inline-block">
+              {/* <div className="w-[10%] inline-block">
                 <Dropdown
                   name={"currency"}
                   className={
@@ -343,13 +347,13 @@ const Form = () => {
                   required
                   onChange={SelectOptionHandler}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="w-[32%] flex flex-col relative">
             <Label labelName={"Setup Fee"} className={"pt-4 pb-2"} />
             <div className="flex w-full items-center">
-              <div className="w-[83%] inline-block">
+              <div className="w-full inline-block">
                 <Input
                   name={"set_up_fee"}
                   type={"number"}
@@ -359,7 +363,7 @@ const Form = () => {
                   // value={"12"}
                 />
               </div>
-              <div className="w-[10%]">
+              {/* <div className="w-[10%]">
                 <Dropdown
                   name={"currency"}
                   className={
@@ -371,7 +375,7 @@ const Form = () => {
                   required
                   onChange={SelectOptionHandler}
                 />
-              </div>
+              </div> */}
               <div className="w-[7%] bg-yellow-200">
                 <button
                   onClick={OpenOtherFee}
@@ -415,7 +419,7 @@ const Form = () => {
             <div className="w-[32%] flex flex-col">
               <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
               <div className="flex w-full">
-                <div className="w-[90%] inline-block">
+                <div className="w-full inline-block">
                   <Input
                     InputName={"other_cost"}
                     type={"number"}
@@ -425,7 +429,7 @@ const Form = () => {
                     // value={"12"}
                   />
                 </div>
-                <div className="w-[10%] inline-block">
+                {/* <div className="w-[10%] inline-block">
                   <Dropdown
                     name={"currency"}
                     className={
@@ -437,7 +441,7 @@ const Form = () => {
                     onChange={SelectOptionHandler}
                     value={currency}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           ) : (
@@ -447,7 +451,7 @@ const Form = () => {
             <div className="flex flex-col w-[32%]">
               <Label labelName={"Translator Cost"} className={"pt-4 pb-2"} />
               <div className="flex w-full">
-                <div className="w-[90%] inline-block">
+                <div className="w-full inline-block">
                   <Input
                     InputName={"Translator_Cost"}
                     type={"number"}
@@ -457,7 +461,7 @@ const Form = () => {
                     // value={"12"}
                   />
                 </div>
-                <div className="w-[10%] inline-block">
+                {/* <div className="w-[10%] inline-block">
                   <Dropdown
                     name={"currency"}
                     className={
@@ -469,7 +473,7 @@ const Form = () => {
                     onChange={SelectOptionHandler}
                     value={currency}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           )}
