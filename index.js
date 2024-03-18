@@ -14,6 +14,8 @@ import OperationDashboard from './src/components/dashboard/OperationDashboard';
 import EntryForm from './src/components/project/EntryForm';
 import { Provider, useSelector } from 'react-redux';
 import store from './src/store';
+import Error from './src/components/Error';
+import ViewDashboard from './src/components/dashboard/ViewDashboard';
 const App = () => {
   // const isLoggedIn = localStorage.getItem('isLoggedIn')
  
@@ -32,7 +34,7 @@ const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // errorElement: <Error />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -69,7 +71,10 @@ const appRouter = createBrowserRouter([
         path: "/entry-page",
         element: <EntryForm />,
       },
-      
+      {
+        path:'/view',
+        element:<ViewDashboard />
+      }
     ],
   },
 ]);

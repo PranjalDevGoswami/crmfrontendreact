@@ -1,15 +1,15 @@
-// import React from "react";
-// import Body from "./components/Body";
+import React from "react";
+import Body from "./components/Body";
 
-// function App() {
+function App() {
 
-//   return (
-//     <div className="App">
-//       <div className="">
-//         <Body />
-//       </div>
-//     </div>
-//   );
-// }
+  return (
+    <div className="App">
+      <div className="">
+        <Body />
+      </div>
+    </div>
+  );
+}
 
-// export default App;
+export default App;

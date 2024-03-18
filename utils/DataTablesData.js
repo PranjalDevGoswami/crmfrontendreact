@@ -200,14 +200,38 @@ export const Data =[
     },
     {
       name: "Actions",
+      key: "action",
+      text: "Action",
+      className: "action",
+      width: 100,
+      align: "left",
+      sortable: false,
+      cell: (record, index) => {
+        return (
+          <div className="relative w-full">
+            <div className="flex items-center">
+              <button
+                // onClick={() => handleAddEditOperation(record, index)}
+                className="border p-2 rounded-md mr-2 cursor-pointer"
+              >
+              edit              </button>
+              {/* {isOperationPerson && openDropdownIndex === index ? (
+                <OpereationButton record={record} />
+              ) : (
+                ""
+              )} */}
+            </div>
+          </div>
+        );
+      },
     },
   ];
 
   export const DummyData = [
     {
-            id: "",
-            project_code: "",
-            cpi: "",
+            id: "1",
+            project_code: "dummyCode",
+            cpi: "dummycpi",
             clients: "",
             operation_select: "",
             project_type: "",
@@ -217,7 +241,7 @@ export const Data =[
             tentative_end_date: "",
             sample: "",
             name: "No data Found",
-            status:""
+            status:"dummy"
           },
   ];
 
@@ -226,6 +250,7 @@ export const Data =[
       style: {
         backgroundColor: "#fff", // override the row height
         textAlign: "center",
+        position:'relative'
       },
     },
     rows: {
@@ -302,4 +327,16 @@ export const Data =[
     }
   ];
 
-  
+  export const conditionalRowStyles = [
+    {
+      when: row => row.status == 'completed',
+      style: {
+        backgroundColor: 'rgba(63, 195, 128, 0.9)',
+        color: 'white',
+        '&:hover': {
+          cursor: 'pointer',
+        },
+      },
+    },
+    
+  ]

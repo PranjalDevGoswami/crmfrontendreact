@@ -8,7 +8,7 @@ import { logout } from "../features/login/loginSlice";
 import { toggleDarkMode } from "../features/darkmode/DarkmodeSlice";
 
 const Header = () => {
-  const isDarkMode = useSelector((state) => state.darkmode);
+  // const isDarkMode = useSelector((state) => state.darkmode);
   const loginData = localStorage.getItem('user')
   const [isProfileSetting, setIsProfileSetting] = useState(false);
   const navigate = useNavigate();
@@ -23,10 +23,10 @@ const Header = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   const HandleThemeColor = () =>{
-    document.body.classList.toggle('DarkMode')
+    // document.body.classList.toggle('DarkMode')
     // document.body.classList.remove('DrawerBody');
-    dispatch(toggleDarkMode());
-  {console.log('darkMode',isDarkMode)}
+    // dispatch(toggleDarkMode());
+  // {console.log('darkMode',isDarkMode)}
 
   }
 
@@ -39,7 +39,7 @@ const Header = () => {
 
       </div>
       <div className="w-2/12 text-right flex flex-wrap items-center">
-      <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/>
+      {/* <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/> */}
         {isLoggedIn ? (
           <div className="flex flex-wrap">
             <span className="m-2">{loginData ? loginData : "User"}</span>

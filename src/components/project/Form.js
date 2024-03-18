@@ -14,7 +14,7 @@ import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectD
 import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
 import Input from "../InputField";
 import { TiPlus } from "react-icons/ti";
-import {ProjectTypeList} from '../fetchApis/projects/projectType/ProjectTypeList'
+import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Form = () => {
   // const [currency, setCurrency] = useState("$");
   // const [SecondOptioncurrency, setSecondOptionCurrency] = useState("₹");
   // const optionValue = [currency, SecondOptioncurrency];
-  const [projectTypeData,setProjectTypeData] = useState([])
+  const [projectTypeData, setProjectTypeData] = useState([]);
 
   const [formData, setFormData] = useState({
     project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
@@ -69,19 +69,18 @@ const Form = () => {
       }
     };
     fetchProjectData();
-    const FetchProjectType = async () =>{
+    const FetchProjectType = async () => {
       try {
         const ProjectType = await ProjectTypeList();
         const ProjectTypeObject = ProjectType.map((val) => {
           return val.name;
         });
-        setProjectTypeData(ProjectTypeObject)
+        setProjectTypeData(ProjectTypeObject);
       } catch (error) {
         console.error("Error fetching project type List:", error);
-        
       }
-    }
-    FetchProjectType()
+    };
+    FetchProjectType();
   }, []);
 
   const handleInputChange = (e) => {
@@ -103,19 +102,18 @@ const Form = () => {
       ).toISOString();
       setFormData({ ...formData, [name]: isoDate });
     }
-    if(name==="set_up_fee"){
+    if (name === "set_up_fee") {
       setFormData({ ...formData, [name]: parseInt(value) });
     }
-    if(name==="sample"){
+    if (name === "sample") {
       e.preventDefault();
       if (/^\d*$/.test(value)) {
-        setFormData({...formData, [name]:value});
-        console.log('value',value);
-      }else{
-        alert(`'Sample value can't be in decimal'`)
+        setFormData({ ...formData, [name]: value });
+        console.log("value", value);
+      } else {
+        alert(`'Sample value can't be in decimal'`);
       }
     }
-   
   };
 
   const handleCheckboxChange = (name, checked) => {
@@ -154,29 +152,29 @@ const Form = () => {
     const formDataArray = [formData];
     dispatch(addFormData(formDataArray));
     setFormData({
-      project_code: '',
-    name: "",
-    project_type: "",
-    clients: "",
-    Manager: "",
-    sample: "",
-    cpi: "",
-    set_up_fee: 1,
-    Operation_team: "",
-    tentative_start_date: "",
-    tentative_end_date: "",
-    other_cost: "",
-    Translator_Cost: "",
-    other_cost_Details: "", // Additional field for Other Cost Details
-    Translator_Cost_Details: "",
-    Advance_payment_required: advancePAyment,
-    mandaysEntry: "1",
-    user_email: "test1@novusinsights.com",
-    project_manager: 1,
-    operation_select: "",
-    finance_select: "",
-    user_id: 1,
-    project_manager: 1,
+      project_code: "",
+      name: "",
+      project_type: "",
+      clients: "",
+      Manager: "",
+      sample: "",
+      cpi: "",
+      set_up_fee: 1,
+      Operation_team: "",
+      tentative_start_date: "",
+      tentative_end_date: "",
+      other_cost: "",
+      Translator_Cost: "",
+      other_cost_Details: "", // Additional field for Other Cost Details
+      Translator_Cost_Details: "",
+      Advance_payment_required: advancePAyment,
+      mandaysEntry: "1",
+      user_email: "test1@novusinsights.com",
+      project_manager: 1,
+      operation_select: "",
+      finance_select: "",
+      user_id: 1,
+      project_manager: 1,
     });
     PostProjectData(formData);
   };
@@ -203,23 +201,19 @@ const Form = () => {
   };
 
   const today = new Date();
-  // Subtract one day from today's date
   const minDate = new Date(today);
   minDate.setDate(minDate.getDate() - 1);
 
   const MultipleValueSection = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setOtherFeeValue(selectedValues);
-    // console.log("other", otherFeeValue);
 
-    // Check if 'Other Cost' is selected
     if (selectedValues.includes("Other Cost")) {
       setOtherCost(true);
     } else {
       setOtherCost(false);
     }
 
-    // Check if 'Translation Cost' is selected
     if (selectedValues.includes("Translation Cost")) {
       setTranslationCost(true);
     } else {
@@ -265,25 +259,32 @@ const Form = () => {
               className={"pt-4 pb-2"}
               required
             />
-           {projectTypeData.length>0? <Dropdown
-              name={"project_type"}
-              className={
-                "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
-              }
-              Option_Name={["-- Select Project Type --", ...ProjectTypeListData]}
-              RequireAddButton={false}
-              required
-              onChange={SelectOptionHandler}
-            />:<Dropdown
-            name={"project_type"}
-            className={
-              "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
-            }
-            Option_Name={["-- Select Project Type --", "CATI","CAWI"]}
-            RequireAddButton={false}
-            required
-            onChange={SelectOptionHandler}
-          />}
+            {projectTypeData.length > 0 ? (
+              <Dropdown
+                name={"project_type"}
+                className={
+                  "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+                }
+                Option_Name={[
+                  "-- Select Project Type --",
+                  ...ProjectTypeListData,
+                ]}
+                RequireAddButton={false}
+                required
+                onChange={SelectOptionHandler}
+              />
+            ) : (
+              <Dropdown
+                name={"project_type"}
+                className={
+                  "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+                }
+                Option_Name={["-- Select Project Type --", "CATI", "CAWI"]}
+                RequireAddButton={false}
+                required
+                onChange={SelectOptionHandler}
+              />
+            )}
           </div>
           <div className="flex flex-col w-[32%]">
             <Label labelName={"Client"} className={"pt-4 pb-2"} />
@@ -393,11 +394,11 @@ const Form = () => {
                   <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
 
                   <MultipleValueDropDown
-                  options={[
-                    { value: "Other Cost", label: "Other Cost" },
-                    { value: "Translation Cost", label: "Translation Cost" },
-                    // { value: 'Cost', label: 'Cost' },
-                  ]}
+                    options={[
+                      { value: "Other Cost", label: "Other Cost" },
+                      { value: "Translation Cost", label: "Translation Cost" },
+                      // { value: 'Cost', label: 'Cost' },
+                    ]}
                     onChange={MultipleValueSection}
                     className={"w-full bg-[#f3eded] "}
                   />

@@ -10,3 +10,4 @@ export const USERLIST = BASEURL+'/api/user/api/users-list/';
 export const MANDAYSUPDATE = BASEURL + '/api/operation/projects/estimate/'
 export const PROJECTTYPES = BASEURL + '/api/project/project_type';
 export const BULKUPDATEMANDAYS = BASEURL+ '/api/operation/projects/estimate/'
+export const RAISECBR = BASEURL +'/api/operation/project_code/CBR/'

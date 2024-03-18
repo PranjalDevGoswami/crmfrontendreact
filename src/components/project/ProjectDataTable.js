@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import DataTable from "react-data-table-component";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addFormData } from "../features/projectData/projectDataSlice";
-import { MdEdit } from "react-icons/md";
-import LableAndInput from "../LableAndInput.js";
 import Button from "../Button";
-import { PostMandaysData } from "../fetchApis/projects/mandays/PostMandaysData.js";
 import Input from "../InputField.js";
 import { MdOutlineMoreVert } from "react-icons/md";
 import Dropdown from "../DropDown.js";
@@ -15,21 +12,18 @@ import {
   Data,
   DummyData,
   Dummycolumns,
+  conditionalRowStyles,
   customStyles,
-  editedColumns,
 } from "../../../utils/DataTablesData";
 import { ClientList } from "../fetchApis/clientList/ClientList";
-import MultipleValueDropDown from "../MultipleValueDropDown";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
-import Label from "../Label";
+import View from "./projectCRUDOperations/View.js";
+import Edit from "./projectCRUDOperations/Edit.js";
+import OpereationButton from "./projectCRUDOperations/OpereationButton.js";
+import Status from "./projectCRUDOperations/Status.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
-  const [viewEdit, setViewEdit] = useState(false);
-  const [isView, setisView] = useState(false);
-  const [viewRecord, setViewRecord] = useState();
-  const [viewEditRecord, setEditRecord] = useState();
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
-  const [showDate, setShowDate] = useState();
   const [updatedValue, setUpdatedValue] = useState({
     project_code: "",
     date: "",
@@ -46,10 +40,15 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [isViewOptionOpen, setIsViewOptionOpen] = useState(false);
   const [isViewOptionIndex, setIsViewOptionIndex] = useState();
   const [openDropdownIndex, setOpenDropdownIndex] = useState(-1);
-
+  const [isView, setisView] = useState(false);
+  const [isEdit, setisEdit] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState();
+  const [selectedIndex, setSelectedIndex] = useState();
+  const [closeView, setCloseView] = useState(false);
+  const [isStatus, setIsStatus] = useState(false);
 
   const dispatch = useDispatch();
-
+  const dropdownRef = useRef(null);
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -94,23 +93,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     };
   });
 
-  const handleCancelUpdate = () => {
-    setViewEdit(false);
-    setIsMultiEdit(false);
-    setMultiEditFieldOpen(false);
-    document.body.classList.remove("DrawerBody");
-  };
-
-  const HandleOnEdit = (record) => {
-    setViewEdit(true);
-    setEditRecord(record);
-    setUpdatedValue({
-      ...updatedValue,
-      project_code: record?.project_code,
-      name: record?.name,
-    });
-  };
-
   const handleFilterOption = (name, value) => {
     console.log("e", name, value);
     if (name === "status")
@@ -120,51 +102,10 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       });
   };
 
-  const HandleCloseProjectDetails = () => {
-    setisView(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setUpdatedValue({
-      ...updatedValue,
-      [name]: value,
-    });
-    if (name === "date") {
-      setShowDate(value);
-      const DateVAlue = new Date(value);
-      const formattedDate = DateVAlue.toISOString();
-      setUpdatedValue({
-        ...updatedValue,
-        date: formattedDate,
-      });
-    }
-  };
-  const PostUpdateEditData = async (data) => {
-    await PostMandaysData(data);
-    setViewEdit(false);
-    setUpdatedValue({
-      project_code: "",
-      name: "",
-      date: "",
-      man_days: "",
-      total_achievement: "",
-    });
-    document.body.classList.remove("DrawerBody");
-    setIsDrawerOpen(false);
-  };
-
-  const handleEditUpdate = () => {
-    console.log("updatedValue", updatedValue);
-    PostUpdateEditData(updatedValue);
-  };
-
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
       return item.status === null || item.status === "";
     });
-    console.log("row.status", row.selectedRows);
     if (row.selectedCount > 0) {
       setIsMultiEdit(true);
       setSelectedRow(inCompletedTask);
@@ -177,16 +118,28 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setIsDrawerOpen(true);
     document.body.classList.toggle("DrawerBody");
   };
-  const handleViewField = (record, index) => {
-    setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
-
-    console.log("record", index);
-    setIsViewOptionIndex(index);
-        setIsViewOptionOpen(!isViewOptionOpen);
-    // document.body.classList.add('DrawerBody');
-    console.log("record[isViewOptionIndex] ", record);
+  const handleAddEditOperation = (record, index) => {
+    if (record.status !== "completed") {
+      setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
+      setIsViewOptionIndex(index);
+      setIsViewOptionOpen(!isViewOptionOpen);
+      setSelectedRecord(record);
+      setSelectedIndex(index);
+    }
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdownIndex(-1);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const columns = [
     {
       name: "Sr.No.",
@@ -252,7 +205,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       name: "status",
       selector: (row) => row.status,
       sortable: true,
-      right:true,
     },
     {
       name: "Actions",
@@ -267,26 +219,26 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           <div className="relative w-full">
             <div className="flex items-center">
               <button
-                onClick={() => handleViewField(record, index)}
+                onClick={() => handleAddEditOperation(record, index)}
                 className="border p-2 rounded-md mr-2 cursor-pointer"
               >
                 <MdOutlineMoreVert />
               </button>
               {isOperationPerson && openDropdownIndex === index ? (
-                <div className="absolute right-0 top-3.5 w-40 h-54 z-50 bg-yellow-200 overflow-visible rounded-md">
-                  <div className="flex flex-col p-2 ml-4 mr-4 text-sm">
-                    <button className="border-b border-black">View</button>
-                    <button className="border-b border-black">Add Mandays</button>
-                    <button className="border-b border-black"
-                      onClick={() => {
-                        HandleOnEdit(record);
-                      }}
-                    >
-                      Edit Request/Edit
-                    </button>
-                    <button className="border-b border-black">Status Update</button>
-                    <button className="">Raise CBR</button>
-                  </div>
+                <div
+                  className={`${
+                    index <= 5
+                      ? "absolute right-20 top-0"
+                      : "absolute right-20 bottom-0"
+                  }`}
+                >
+                  <OpereationButton
+                    record={selectedRecord}
+                    isView={isView}
+                    setisView={setisView}
+                    setisEdit={setisEdit}
+                    setIsStatus={setIsStatus}
+                  />
                 </div>
               ) : (
                 ""
@@ -297,19 +249,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       },
     },
   ];
-  const conditionalRowStyles = [
-    {
-      when: row => row.status == 'completed',
-      style: {
-        backgroundColor: 'rgba(63, 195, 128, 0.9)',
-        color: 'white',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      },
-    },
-    
-  ]
+
   const filteredData = getFormDataApi.filter((item) =>
     Object.values(item).some((val) => {
       if (typeof val === "object" && val !== null) {
@@ -345,32 +285,31 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     status: item.status,
   }));
 
-const desabledRowData = data.map((item)=>{
-  let desabled = false
-  if((item.status)==='completed'){
-    desabled = true
-  }
-  return {...item,desabled}
-})
+  const desabledRowData = data.map((item) => {
+    let desabled = false;
+    if (item.status === "completed") {
+      desabled = true;
+    }
+    return { ...item, desabled };
+  });
   return (
     <>
-      {" "}
       <div
         className={`${
           isDrawerOpen ? "opacity-30 relative overflow-hidden" : "opacity-100"
         }"`}
       >
         <div className="flex items-center h-40 w-full overflow-visible">
-        <h2 className="p-2 text-4xl underline w-3/12">All Project Details</h2>
-        <div className="flex justify-end mb-4 w-9/12">
-          <div className="flex items-center">
-            <Dropdown
-              Option_Name={["--Select Clients--", "am", "am2"]}
-              onChange={handleFilterOption}
-              name={"Client"}
-              className={"p-4 m-1 border border-black rounded"}
-            />
-            {/* {clientsListArray.length > 0 ? (
+          <h2 className="p-2 text-4xl underline w-3/12">All Project Details</h2>
+          <div className="flex justify-end mb-4 w-9/12">
+            <div className="flex items-center">
+              <Dropdown
+                Option_Name={["--Select Clients--", "am", "am2"]}
+                onChange={handleFilterOption}
+                name={"Client"}
+                className={"p-4 m-1 border border-black rounded"}
+              />
+              {/* {clientsListArray.length > 0 ? (
             <MultipleValueDropDown
               options={ClientOptions}
               onChange={handleFilterOption}
@@ -389,43 +328,46 @@ const desabledRowData = data.map((item)=>{
               className={"w-full p-2 bg-white border border-black rounded"}
             />
           )} */}
-            <Dropdown
-              Option_Name={["Inprogress", "Hold", "Completed"]}
-              onChange={handleFilterOption}
-              name={"Client"}
-              className={"p-4 m-1 border border-black rounded"}
+              <Dropdown
+                Option_Name={["Inprogress", "Hold", "Completed"]}
+                onChange={handleFilterOption}
+                name={"Client"}
+                className={"p-4 m-1 border border-black rounded"}
+              />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onchange={(e) => setSearchTerm(e.target.value)}
+              className={
+                "p-2 m-1 border border-black rounded focus:outline-none"
+              }
             />
           </div>
-          <Input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onchange={(e) => setSearchTerm(e.target.value)}
-            className={"p-2 m-1 border border-black rounded focus:outline-none"}
-          />
-        </div>
         </div>
         {data.length > 0 ? (
           <div className="relative">
             {isMultiEdit && (
-               <div
-               className={`${
-                 isMultiEdit
-                   ? "AddManDaysAnimation opacity-100 flex items-center justify-between bg-[#bd1d1d] border absolute right-0 top-[-3.7rem] w-full z-50 p-2"
-                   : " opacity-0"
-               }`}
-             >
-           {/* <div className={`flex items-center justify-between bg-[#bd1d1d] border absolute right-0 top-[-3.5rem] w-full z-50 p-2 transition ease-in-out duration-500 ${isMultiEdit ? 'opacity-100' : 'opacity-0'}`}> */}
-            <span className="text-white text-xl">row selected ({selectedRow.length}) </span>
-          <Button
-            name={"Add Man Days"}
-            className={'p-2 bg-yellow-200 border rounded-md border-black'
-              // "p-2 bg-yellow-200 border rounded-full rounded-tr-none rounded-br-none border-black absolute right-0 top-1/2"
-            }
-            onClick={handleMutiEdit}
-          />
-          </div>
-        )}
+              <div
+                className={`${
+                  isMultiEdit
+                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-3.7rem] w-full z-50 p-2"
+                    : " opacity-0"
+                }`}
+              >
+                <span className="text-white text-xl">
+                  row selected ({selectedRow.length}){" "}
+                </span>
+                <Button
+                  name={"Add Man Days"}
+                  className={
+                    "p-2 bg-yellow-200 border rounded-md border-black ml-4"
+                  }
+                  onClick={handleMutiEdit}
+                />
+              </div>
+            )}
             <DataTable
               columns={columns}
               data={desabledRowData}
@@ -434,225 +376,39 @@ const desabledRowData = data.map((item)=>{
               selectableRows
               onSelectedRowsChange={handleSelectedRowsChange}
               enableMultiRowSelection
-              selectableRowDisabled={row =>row.desabled}
+              selectableRowDisabled={(row) => row.desabled}
               conditionalRowStyles={conditionalRowStyles}
-              // subHeader
             />
+
             {isOperationPerson && (
               <>
-                {viewEdit ? (
-                  <div className="absolute top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-50%]">
-                    <h3 className="text-xl underline pb-4">
-                      Fill Man Days and Achieve Target
-                    </h3>
-                    <div className="flex items-center flex-col justify-between">
-                      <div className="w-11/12">
-                        <LableAndInput
-                          labelName={"Project Code"}
-                          Inputvalue={viewEditRecord.project_code}
-                          desabled={true}
-                          inputClassName={
-                            "cursor-not-allowed p-2 border bg-[#f3eded]"
-                          }
-                          labelClassName={"pt-4 pb-2"}
-                          inputChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="w-11/12">
-                        <LableAndInput
-                          labelName={"Project Name"}
-                          Inputvalue={viewEditRecord.name}
-                          desabled={true}
-                          inputClassName={
-                            "cursor-not-allowed p-2 border bg-[#f3eded]"
-                          }
-                          labelClassName={"pt-4 pb-2"}
-                          inputChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="w-11/12">
-                        <LableAndInput
-                          labelName={"Date"}
-                          InputName={"date"}
-                          InputType={"date"}
-                          inputClassName={"p-2 border w-full"}
-                          labelClassName={"pt-4 pb-2"}
-                          Inputvalue={showDate}
-                          inputChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="w-11/12 mt-4">
-                        <Label labelName={"Status"} className={"pb-2 mt-4"} />
-                        <Dropdown
-                          Option_Name={["inprogress", "hold", "complete"]}
-                          onChange={(name, value) =>
-                            handleFilterOption(name, value)
-                          }
-                          className={"p-2 mt-2 border w-full"}
-                          name={"status"}
-                        />
-                      </div>
-                      <div className="w-11/12">
-                        <LableAndInput
-                          labelName={"Man Days"}
-                          InputName={"man_days"}
-                          InputType={"number"}
-                          inputClassName={"p-2 border"}
-                          labelClassName={"pt-4 pb-2"}
-                          Inputvalue={updatedValue.man_days}
-                          inputChange={handleInputChange}
-                          InputMax_lenght={2}
-                        />
-                      </div>
-                      <div className="w-11/12">
-                        <LableAndInput
-                          labelName={"Achieve Target"}
-                          InputType={"number"}
-                          InputName={"total_achievement"}
-                          inputClassName={"p-2 border"}
-                          labelClassName={"pt-4 pb-2"}
-                          Inputvalue={updatedValue.total_achievement}
-                          inputChange={handleInputChange}
-                          InputMax_lenght={3}
-                        />
-                      </div>
-                      <div className="flex pt-10">
-                        <button
-                          onClick={handleEditUpdate}
-                          className={
-                            "bg-green-300 p-4 m-2 flex items-center w-full rounded text-white hover:bg-green-500"
-                          }
-                        >
-                          Update
-                        </button>
-                        <button
-                          onClick={handleCancelUpdate}
-                          className={
-                            "bg-red-300 p-4 m-2 flex items-center w-full rounded text-white hover:bg-red-500"
-                          }
-                        >
-                          {" "}
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                {isEdit ? (
+                  <Edit viewRecord={selectedRecord} setisEdit={setisEdit} />
                 ) : (
                   ""
                 )}
               </>
             )}
             {isView ? (
-              <div className="absolute top-32 left-1/2 bg-white w-6/12 h-6/12 p-16 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] ">
-                {/* <ViewProjectDetails viewRecordData={viewRecord} /> */}
-                <ul className="flex flex-col text-left border">
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Project Code</span>{" "}
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.project_code}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between ">
-                    <span className="text-xl mr-8 w-5/12">Project name</span>{" "}
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.name}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">
-                      Cost Per Interview{" "}
-                    </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.cpi}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">Clients </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.clients}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Project type </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.project_type}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">Other Cost </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.other_cost}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Set Up Fee </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.set_up_fee}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">
-                      Tentative Start Date
-                    </span>
-                    <span className="w-2/12">:</span>{" "}
-                    <span className="w-5/12">
-                      {viewRecord?.tentative_start_date?.split("T")[0]}
-                    </span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">
-                      Tentative End Date{" "}
-                    </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">
-                      {viewRecord?.tentative_end_date.split("T")[0]}
-                    </span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">
-                      Project Manager{" "}
-                    </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">
-                      {viewRecord?.project_manager}
-                    </span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Sample </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.sample}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">Other Cost </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.other_cost}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Operation Team</span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.operation_team}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">Finance Team </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.finance_team}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Total Man Days</span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.man_days}</span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between">
-                    <span className="text-xl mr-8 w-5/12">Achiev Target </span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">
-                      {viewRecord?.total_achievement}
-                    </span>
-                  </li>
-                  <li className="border p-1 flex items-center text-xl bg-white justify-between odd:bg-gray-100">
-                    <span className="text-xl mr-8 w-5/12">Status</span>
-                    <span className="w-2/12">:</span>
-                    <span className="w-5/12">{viewRecord?.status}</span>
-                  </li>
-                </ul>
-                <Button
-                  onClick={HandleCloseProjectDetails}
-                  className={"p-2 bg-red-300 rounded absolute top-4 right-4"}
-                  name={"X"}
-                />
+              <div className="z-50">
+                {" "}
+                <View
+                  viewRecord={selectedRecord}
+                  closeView={closeView}
+                  setisView={setisView}
+                />{" "}
+              </div>
+            ) : (
+              ""
+            )}
+            {isStatus ? (
+              <div className="z-50">
+                {" "}
+                <Status
+                  viewRecord={selectedRecord}
+                  closeView={closeView}
+                  setIsStatus={setIsStatus}
+                />{" "}
               </div>
             ) : (
               ""
@@ -662,12 +418,9 @@ const desabledRowData = data.map((item)=>{
           <DataTable
             columns={Dummycolumns}
             data={DummyData}
-            // pagination
             customStyles={customStyles}
-            // selectableRows
           />
         )}
-        
       </div>
       <div className="">
         {multiEditFieldOpen ? (
