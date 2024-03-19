@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import LableAndInput from "../../LableAndInput";
 import Dropdown from "../../DropDown";
 import Label from "../../Label";
-import { POSTMANDAYSDATA } from "../../../../utils/Apis";
+import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 
 const Edit = ({ viewRecord, setisEdit }) => {
-  // const [viewEdit, setViewEdit] = useState(false);
+  const [showDate, setShowDate] = useState();
   const [updatedValue, setUpdatedValue] = useState({
-    project_code: "",
+    name:viewRecord.name,
+    project_code: viewRecord.project_code,
     date: "",
     man_days: "",
     total_achievement: "",
@@ -20,30 +21,30 @@ const Edit = ({ viewRecord, setisEdit }) => {
     });
   };
   
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUpdatedValue({
-  //     ...updatedValue,
-  //     [name]: value,
-  //   });
-  //   if (name === "date") {
-  //     setShowDate(value);
-  //     const DateVAlue = new Date(value);
-  //     const formattedDate = DateVAlue.toISOString();
-  //     setUpdatedValue({
-  //       ...updatedValue,
-  //       date: formattedDate,
-  //     });
-  //   }
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUpdatedValue({
       ...updatedValue,
       [name]: value,
     });
+    if (name === "date") {
+      setShowDate(value);
+      const DateVAlue = new Date(value);
+      const formattedDate = DateVAlue.toISOString();
+      setUpdatedValue({
+        ...updatedValue,
+        date: formattedDate,
+      });
+    }
   };
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUpdatedValue({
+  //     ...updatedValue,
+  //     [name]: value,
+  //   });
+  // };
  
 
   const handleDateFocus = (e) => {
@@ -91,7 +92,8 @@ const Edit = ({ viewRecord, setisEdit }) => {
   };
 
   const PostUpdateEditData = async (data) => {
-    await POSTMANDAYSDATA(data);
+    console.log("updatedValue", data);
+    await PostMandaysData(data);
     // setViewEdit(false);
     setUpdatedValue({
       project_code: "",
@@ -105,7 +107,6 @@ const Edit = ({ viewRecord, setisEdit }) => {
   };
 
   const handleEditUpdate = () => {
-    // console.log("updatedValue", updatedValue);
     PostUpdateEditData(updatedValue);
   };
 
@@ -142,7 +143,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
             InputType={"date"}
             inputClassName={"p-2 border w-full"}
             labelClassName={"pt-4 pb-2"}
-            // Inputvalue={showDate}
+            Inputvalue={showDate}
             inputChange={handleInputChange}
             min={getMinDate()}
             max={getMaxDate()}

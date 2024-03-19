@@ -4,7 +4,8 @@ import LableAndInput from "../../LableAndInput";
 import DataTable from "react-data-table-component";
 import { customStyles, editedColumns } from "../../../../utils/DataTablesData";
 import Dropdown from "../../DropDown";
-import { BulkUpdateManDaysData } from "../../fetchApis/projects/mandays/bulkUpdateManDays";
+import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
+// import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 
 export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }) {
   const [openRight, setOpenRight] = useState(true);
@@ -22,17 +23,20 @@ export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
     const updatedMandaysData = [...mandaysData];
-    updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
+    updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };  
     setMandaysData(updatedMandaysData);
-    
   };
+  
+  
   const today = new Date();
   // Subtract one day from today's date
   const minDate = new Date(today);
   minDate.setDate(minDate.getDate() - 1);
+
   const handleManDayStatus = (index, name, value) => {
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], status: value };
+   
     setMandaysData(updatedMandaysData);
   };
 
@@ -131,17 +135,18 @@ export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }
     date: item.date,
   }));
   const DataToSend = finalData.map((item, index) => {
-    if(item.project_code !== null){
-        return {
+    if (item.project_code !== null && item.man_days !== "" && item.total_achievement !== "") {
+      return {
         project_code: item.project_code,
         name: item.name,
         man_days: parseInt(item.man_days),
         total_achievement: item.total_achievement,
-        status: item.status,
+        status: item.status|| "inprogress",
         date: item.date,
-      }
-    };
-  });
+      };
+    }
+  }).filter(item => item !== undefined);;
+  
   const HandleAddManDays = () => {
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[editIndex] = {
@@ -156,8 +161,9 @@ export function AddManDays({ selectedRow,setIsDrawerOpen,setMultiEditFieldOpen }
     closeDrawerRight();
   };
   const BulkUpdateManDays = async (data) => {
+    console.log('data is',data);
     try {
-      await BulkUpdateManDaysData(data);
+      await PostMandaysData(data);
     } catch (error) {
       console.error("Error fetching project data:", error);
     }

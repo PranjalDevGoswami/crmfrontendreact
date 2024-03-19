@@ -119,13 +119,13 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     document.body.classList.toggle("DrawerBody");
   };
   const handleAddEditOperation = (record, index) => {
-    if (record.status !== "completed") {
+    // if (record.status !== "completed") {
       setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
       setIsViewOptionIndex(index);
       setIsViewOptionOpen(!isViewOptionOpen);
       setSelectedRecord(record);
       setSelectedIndex(index);
-    }
+    // }
   };
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -228,8 +228,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 <div
                   className={`${
                     index <= 5
-                      ? "absolute right-20 top-0"
-                      : "absolute right-20 bottom-0"
+                      ? "absolute right-[57px] top-0"
+                      : "absolute right-[57px] bottom-0"
                   }`}
                 >
                   <OpereationButton

@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import View from "./View";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
 
 const OpereationButton = ({ record, isView, setisView,setisEdit,isEdit,setIsStatus }) => {
+  const navigate = useNavigate();
+
   const [viewEditRecord, setEditRecord] = useState();
 
   const [updatedValue, setUpdatedValue] = useState({
@@ -25,14 +29,14 @@ const OpereationButton = ({ record, isView, setisView,setisEdit,isEdit,setIsStat
 
   const handleViewProject = () => {
     setisView(true);
-    // setisEdit(true);
-
+    navigate('/view',{state:record});
   };
   const handleRaiseCBR = (record) => {
     PostRaiseCBR(record.project_code);
   };
 
   const PostRaiseCBR = async (data) => {
+    console.log("data is",data);
     try {
       await RaiseCBRPostApi(data);
     } catch (error) {
@@ -50,26 +54,29 @@ const handleStatus = (record) =>{
     <div className="relative">
       <div className="w-40 h-54 z-50  text-white overflow-visible rounded-md rounded-tr-none">
         <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
-          <button className="border-b border-black bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={handleViewProject}>
-            <Link to={'/view'}>
+          <button className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={handleViewProject}>
+            {/* <Link to={'/view'}> */}
             View
-            </Link>
+            {/* </Link> */}
+          
           </button>
-          <button className="border-b border-black bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={HandleAddManDays}>
+          {record.status !=='completed'?
+          <button className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={HandleAddManDays}>
             Add Mandays
-          </button>
+          </button>:''}
+          {record.status !=='completed'?
           <button
-            className="border-b border-black bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
             onClick={() => {
               HandleOnEdit(record);
             }}
           >
             Edit Target Request
-          </button>
-          <button className="border-b border-black bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={()=>handleStatus(record)}>Status Update</button>
-          <button className="border-black bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={() => handleRaiseCBR(record)}>
+            </button>:''}
+            {record.status !=='completed'?<button className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={()=>handleStatus(record)}>Status Update</button>:''}
+            {record.status ==='completed'?<button className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm" onClick={() => handleRaiseCBR(record)}>
             Raise CBR
-          </button>
+          </button>:''}
         </div>
       </div>
     </div>
