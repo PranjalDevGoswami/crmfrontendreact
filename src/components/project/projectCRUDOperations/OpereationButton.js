@@ -31,8 +31,9 @@ const OpereationButton = ({ record, isView, setisView,setisEdit,isEdit,setIsStat
     setisView(true);
     navigate('/view',{state:record});
   };
+
   const handleRaiseCBR = (record) => {
-    PostRaiseCBR(record.project_code);
+    PostRaiseCBR({project_code:record.project_code});
   };
 
   const PostRaiseCBR = async (data) => {

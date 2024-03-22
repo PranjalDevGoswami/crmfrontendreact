@@ -1,6 +1,4 @@
 import React from "react";
-import Header from "./partials/Header";
-import SideBar from "./SideBar.js";
 
 
 const Error = () => {

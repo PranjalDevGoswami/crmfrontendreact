@@ -1,14 +1,11 @@
-import React from "react";
-import Body from "./components/Body";
+import AuthProvider from "./provider/authProvider";
+import Routes from "./routes";
 
 function App() {
-
   return (
-    <div className="App">
-      <div className="">
-        <Body />
-      </div>
-    </div>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
 

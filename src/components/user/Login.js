@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Button from "../Button";
 
+import { useNavigate } from "react-router-dom";
+
 import { Link } from "react-router-dom";
 import { BiShow } from "react-icons/bi";
 import object7 from "../../assets/object7.png";
@@ -11,16 +13,18 @@ import { login } from "../features/login/loginSlice";
 import Input from "../InputField";
 import Label from "../Label.js";
 import { USERLIST } from "../../../utils/Apis";
+import { useAuth } from "../../provider/authProvider.js";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, setShowPasswordIcon] = useState(false);
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
   const location = useLocation();
 
   const handleOnchange = (e) => {
@@ -38,51 +42,65 @@ const Login = () => {
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  const PostLoginData1 = async (loginData) => {
-    try {
-      await PostLoginData(loginData);
-      // alert('login!!')
-    } catch (error) {
-      console.error("Error fetching project data:", error);
-    }
-  };
-
+  
   const RedirectUser = async () => {
-    const userList = await fetch(USERLIST
-    );
-    const userListJson = await userList.json();
-
-    let loginUser = localStorage.getItem("user");
-
-    const userData = [userListJson.users];
-    console.log('userData',userData);
-
-    function getUserByEmail(email) {
-      return userData[0].filter((user) => user.email === email);
+    try {
+      const userList = await fetch(USERLIST);
+      const userListJson = await userList.json();
+  
+      let loginUser = localStorage.getItem("user");
+  
+      const userData = userListJson.users;
+      console.log('userData', userData);
+  
+      function getUserByEmail(email) {
+        return userData.filter((user) => user.email === email);
+      }
+  
+      const email = loginUser;
+      const userDetails = getUserByEmail(email);
+  
+      if (userDetails.length > 0) {
+        const department = userDetails[0].user_department;
+        if (department === 1) {
+          // Redirect to sales dashboard
+          navigate("/sales-dashboard");
+        } else if (department === 2) {
+          // Redirect to operation dashboard
+          navigate("/operation-dashboard");
+        } else {
+          // Redirect to default page or handle other cases
+          navigate("/default-page");
+        }
+      } else {
+        console.error("User details not found");
+      }
+    } catch (error) {
+      console.error("Error redirecting user:", error);
+      // Handle error, display error message, etc.
     }
+  };
 
-    const email = loginUser;
-    const userDetails = getUserByEmail(email);
-
-    if (userDetails[0].user_department === 1) {
-      // Redirect to sales dashboard
-      navigate("/sales-dashboard");
-    } else if (userDetails[0].user_department === 2) {
-      // Redirect to operation dashboard
-      navigate("/operation-dashboard");
+const handleLogin = async () => {
+  try {
+    const response = await PostLoginData(loginData);
+    if (response && response.success) {
+   setToken(response.access)
+   localStorage.setItem('refreshToken', response.refresh);
+   localStorage.setItem('user',loginData.email)
+      console.log("Login successful",response);
+      RedirectUser()
+      // Redirect user or perform other actions
     } else {
-      navigate("/login");
+      // Handle login failure, display error message, etc.
+      console.error("Login failed:", response.error);
     }
-  };
+  } catch (error) {
+    console.error("Error logging in:", error);
+    // Handle error, display error message, etc.
+  }
+};
 
-  const handleLogin = async () => {
-    dispatch(login(loginData));
-    
-    localStorage.setItem("user", loginData.email);
-    // localStorage.setItem('userData',loginData);
-    await PostLoginData1(loginData);
-    RedirectUser();
-  };
 
   return (
     <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">

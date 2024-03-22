@@ -10,13 +10,13 @@ export const PostLoginData = async (data) => {
       },
       body: JSON.stringify(data),
     });
-    if (response.ok) {
-      const userData = await response.json();
-      // Save user data to localStorage
-      localStorage.setItem('token', JSON.stringify(userData.token));
-      localStorage.setItem('isLoggedIn', JSON.stringify(true));
+    if (!response.ok) {
+      // If response is not successful, throw an error
+      throw new Error('Network response was not ok');
     }
-   
+
+    // Assuming you want to return the JSON response
+    return await response.json();
   } catch (error) {
     // Display an alert for login error
     alert("An error occurred. Please try again.");

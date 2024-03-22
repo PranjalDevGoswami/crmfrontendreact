@@ -12,7 +12,7 @@ export const RaiseCBRPostApi = async (data) => {
       body: JSON.stringify(data),
     });
     if (response.ok) {
-      prompt('CBR hasbeen Raised !!!')
+      alert('CBR hasbeen Raised !!!')
       console.log("data push successfully!");
         return response.json();
     }

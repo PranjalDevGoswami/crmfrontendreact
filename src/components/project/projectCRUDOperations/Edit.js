@@ -38,15 +38,6 @@ const Edit = ({ viewRecord, setisEdit }) => {
     }
   };
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUpdatedValue({
-  //     ...updatedValue,
-  //     [name]: value,
-  //   });
-  // };
- 
-
   const handleDateFocus = (e) => {
     const selectedDate = new Date(e.target.value);
     

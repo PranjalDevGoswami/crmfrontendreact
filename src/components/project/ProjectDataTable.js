@@ -47,7 +47,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [closeView, setCloseView] = useState(false);
   const [isStatus, setIsStatus] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const dropdownRef = useRef(null);
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -57,19 +57,19 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           return val;
         });
         setGetFormDataApi(projectDataObject);
-        dispatch(addFormData(projectDataObject));
+        // dispatch(addFormData(projectDataObject));
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
-  }, [dispatch]);
+  }, []);
 
-  const Formdata1 = useSelector((store) => store?.FormData?.items);
+  // const Formdata1 = useSelector((store) => store?.FormData?.items);
 
   useEffect(() => {
-    dispatch(addFormData(getFormDataApi));
-  }, [getFormDataApi, dispatch]);
+    // dispatch(addFormData(getFormDataApi));
+  }, [getFormDataApi]);
 
   useEffect(() => {
     const fetchClientList = async () => {

@@ -1,48 +1,31 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdDarkMode } from "react-icons/md";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../../assets/mainlogo.png";
-import { logout } from "../features/login/loginSlice";
-import { toggleDarkMode } from "../features/darkmode/DarkmodeSlice";
+import { useAuth } from "../../provider/authProvider";
+import { username } from "../user/userProfile.js";
 
 const Header = () => {
-  // const isDarkMode = useSelector((state) => state.darkmode);
-  const loginData = localStorage.getItem('user')
+  const { token,setToken } = useAuth();
   const [isProfileSetting, setIsProfileSetting] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const handleLogout = () => {
-    localStorage.setItem("isLoggedIn", false);
-    dispatch(logout());
-    localStorage.removeItem("token");
-    navigate("/login");
+    setToken();
+    navigate("/", { replace: true });
   };
-  // const storedUserDataString = localStorage.getItem("userData");
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
-  const HandleThemeColor = () =>{
-    // document.body.classList.toggle('DarkMode')
-    // document.body.classList.remove('DrawerBody');
-    // dispatch(toggleDarkMode());
-  // {console.log('darkMode',isDarkMode)}
-
-  }
-
+  const HandleThemeColor = () => {};
 
   return (
     <div className="flex justify-between w-full h-28 p-4 border-b-2 border-[#F66A3E] bg-white">
       <div className="w-2/12">
         <img src={logo} alt="logo" className="w-[210px] h-[90px]" />
-       
-
       </div>
       <div className="w-2/12 text-right flex flex-wrap items-center">
-      {/* <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/> */}
-        {isLoggedIn ? (
+        {/* <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/> */}
+        {token ? (
           <div className="flex flex-wrap">
-            <span className="m-2">{loginData ? loginData : "User"}</span>
+            <span className="m-2">{username ? username : "User"}</span>
             <div className="relative">
               <FaRegUserCircle
                 className="text-4xl cursor-pointer"

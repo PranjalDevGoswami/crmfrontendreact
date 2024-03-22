@@ -2,93 +2,83 @@ import React, { useState, useEffect } from "react";
 import Input from "../InputField";
 import Dropdown from "../DropDown";
 import Button from "../Button";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { DEPARTMENTSAPIS, REGISTER } from "../../.././utils/Apis";
 
 const SignUp = () => {
   const [departmentId, setDepartmentId] = useState([]);
   const [departmentName, setDepartmentName] = useState([]);
-
-
-  // const [departmentList, setDepartmentList] = useState([]);
- 
-  // const isDepartmentLoaded = departmentId.length > 0;
   const [registerData, setRegisterData] = useState({
     username: "",
     email: "",
     password: "",
     phone: null,
-    gender: '',
+    gender: "",
     user_department: 2,
   });
   const navigate = useNavigate();
 
   useEffect(() => {
     getDepartments();
-  },[]);
+  }, []);
 
   const getDepartments = async () => {
-    const department = await fetch(
-      "http://65.1.93.34:8000/api/user/department/"
-    );
+    const department = await fetch(DEPARTMENTSAPIS);
     const departmentJson = await department.json();
     const depName = await departmentJson.map((dep) => String(dep.name));
-    const departmentDetails = await departmentJson.map((dep) => (dep));
+    const departmentDetails = await departmentJson.map((dep) => dep);
     setDepartmentName(depName);
-    setDepartmentId(departmentDetails)    
+    setDepartmentId(departmentDetails);
   };
 
   const handleregisterDataSubmit = async (e) => {
     e.preventDefault();
-
+    if (registerData.password !== registerData["confirm password"]) {
+      // Password and confirm password do not match
+      alert("Password and confirm password do not match");
+      return;
+    }
     try {
-      const response = await fetch(
-        "http://65.1.93.34:8000/api/user/register/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(registerData),
-          
-        }
-      );
-      navigate("/login");
-
-      if (!response.ok) {
+      const response = await fetch(REGISTER, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(registerData),
+      });
+      if (response.ok) {
+        navigate("/login");
+      }else {
         const errorData = await response.json();
-        // console.error("Registration error:", errorData);
-        // Handle and display validation errors to the user
-      } else {
-        // Handle success
-        // console.log("User registered successfully");
+        console.error("Registration failed:", errorData);
+        if(errorData.email){
+          alert(errorData.email)
+        }else{
+          alert(errorData.password)
+        }
       }
     } catch (error) {
-      // console.error("Registration error:", error.message);
     }
   };
 
-  // console.log("registerDataregisterData",registerData);
-
-  const handleDropdownChange = (e, dropdownType,value) => {
-      if (dropdownType === "gender") {
+  const handleDropdownChange = (e, dropdownType, value) => {
+    if (dropdownType === "gender") {
+      setRegisterData((prevData) => ({
+        ...prevData,
+        gender: value,
+      }));
+    } else if (dropdownType === "user_department") {
+      const selectedDepartment = departmentId.find((dep) => dep.name === value);
+      if (selectedDepartment) {
         setRegisterData((prevData) => ({
           ...prevData,
-          gender: value,
+          user_department: selectedDepartment.id,
         }));
-      } else if (dropdownType === "user_department") {
-        const selectedDepartment = departmentId.find(dep => dep.name === value);
-        if (selectedDepartment) {
-          setRegisterData((prevData) => ({
-            ...prevData,
-            user_department: selectedDepartment.id,
-          }));
-        }
       }
     }
-
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -142,6 +132,16 @@ const SignUp = () => {
                 onchange={handleInputChange}
               />
               <Input
+                type={"password"}
+                className={
+                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
+                }
+                required={"required"}
+                placeholder={"confirm password"}
+                name={"confirm password"}
+                onchange={handleInputChange}
+              />
+              <Input
                 type={"number"}
                 className={
                   "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
@@ -158,16 +158,20 @@ const SignUp = () => {
                 }
                 Option_Name={["select gender", "Male", "Female", "Other"]}
                 RequireAddButton={false}
-                onChange={(e,value) => handleDropdownChange(e, "gender",value)}
+                onChange={(e, value) =>
+                  handleDropdownChange(e, "gender", value)
+                }
               />
-             {departmentName.length > 0 && (
+              {departmentName.length > 0 && (
                 <Dropdown
                   className={
                     "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full pr-4"
                   }
-                  Option_Name={['Select department',...departmentName]}
+                  Option_Name={["Select department", ...departmentName]}
                   RequireAddButton={false}
-                  onChange={(e,value) => handleDropdownChange(e, "user_department",value)}
+                  onChange={(e, value) =>
+                    handleDropdownChange(e, "user_department", value)
+                  }
                 />
               )}
               <div className="flex justify-center">
