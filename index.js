@@ -4,11 +4,14 @@ import "./src/index.css";
 import App from "./src/App";
 import { Provider, useSelector } from "react-redux";
 import store from "./src/store";
+import { BrowserRouter } from "react-router-dom";
 const App = () => {
   return (
     <>
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     </>
   );

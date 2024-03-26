@@ -1,13 +1,13 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
-import Login from "../components/user/Login.js";
-import OperationDashboard from "../components/dashboard/OperationDashboard.js";
-import SignUp from "../components/user/SignUp.js";
-import SalesDashboard from "../components/dashboard/SalesDashboard.js";
-import Reset from "../components/user/Reset.js";
-import Error from '../components/Error'
-import UserProfile from "../components/user/userProfile.js";
+import Login from "../user/Login.js";
+import OperationDashboard from "../dashboard/OperationDashboard.js";
+import SignUp from "../user/SignUp.js";
+import SalesDashboard from "../dashboard/SalesDashboard.js";
+import Reset from "../user/Reset.js";
+import Error from "../components/Error";
+// import UserProfile from "../user/userProfile.js";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -23,9 +23,9 @@ const Routes = () => {
       element: <SignUp />,
     },
     {
-        path: "/reset",
-        element: <Reset />,
-      },
+      path: "/reset",
+      element: <Reset />,
+    },
   ];
 
   const routesForAuthenticatedOnly = [
@@ -38,9 +38,9 @@ const Routes = () => {
           element: <OperationDashboard />,
         },
         {
-            path: "/sales-dashboard",
-            element: <SalesDashboard />,
-          },
+          path: "/sales-dashboard",
+          element: <SalesDashboard />,
+        },
         {
           path: "/logout",
           element: <div>Logout</div>,
@@ -49,7 +49,7 @@ const Routes = () => {
         //     path:"/user",
         //     element:<UserProfile />
         // },
-        { path: "*", element: <Error /> }
+        { path: "*", element: <Error /> },
       ],
     },
   ];
