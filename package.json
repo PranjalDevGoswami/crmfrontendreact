@@ -6,12 +6,14 @@
   "devDependencies": {
     "buffer": "^6.0.3",
     "events": "^3.3.0",
+"postcss": "^8.4.38",
     "process": "^0.11.10",
     "stream-http": "^3.2.0",
+"tailwindcss": "^3.4.3",
     "url": "^0.11.3"
   },
   "scripts": {
-    "start": "parcel ./public/index.html --port 3030",
+    "start": "parcel ./public/index.html --port 4000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -49,7 +51,6 @@
     "react-select": "^5.8.0",
     "redux": "^5.0.1",
     "styled-components": "^6.1.8",
-    "tailwindcss": "^3.4.1",
-    "use-react-router-breadcrumbs": "^4.0.1"
+        "use-react-router-breadcrumbs": "^4.0.1"
   }
 }

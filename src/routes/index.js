@@ -7,6 +7,8 @@ import SignUp from "../user/SignUp.js";
 import SalesDashboard from "../dashboard/SalesDashboard.js";
 import Reset from "../user/Reset.js";
 import Error from "../components/Error";
+import Form from "../project/Form.js";
+import View from "../project/projectCRUDOperations/View";
 // import UserProfile from "../user/userProfile.js";
 
 const Routes = () => {
@@ -26,6 +28,7 @@ const Routes = () => {
       path: "/reset",
       element: <Reset />,
     },
+    { path: "*", element: <Error /> },
   ];
 
   const routesForAuthenticatedOnly = [
@@ -42,13 +45,17 @@ const Routes = () => {
           element: <SalesDashboard />,
         },
         {
+          path: "/entry-page",
+          element: <Form />,
+        },
+        {
           path: "/logout",
           element: <div>Logout</div>,
         },
-        // {
-        //     path:"/user",
-        //     element:<UserProfile />
-        // },
+        {
+          path: "/view",
+          element: <View />,
+        },
         { path: "*", element: <Error /> },
       ],
     },

@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
-import { PROJECTTYPES } from '../../../../../utils/Apis'
+import React, { useEffect } from "react";
+import { PROJECTTYPES } from "../../../../utils/urls.js";
+import { getWithAuth } from "../../../provider/helper/axios.js";
 
-export const ProjectTypeList =  async () =>{
-            const response = await fetch(PROJECTTYPES);
-            const responseJson = await response.json()
-            return responseJson;
-        }
+export const ProjectTypeList = async () => {
+  return await getWithAuth(PROJECTTYPES);
+};

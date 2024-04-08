@@ -1,13 +1,15 @@
-import { RAISECBR } from "../../../../utils/Apis";
+import { RAISECBR } from "../../../../utils/urls";
 
 export const RaiseCBRPostApi = async (data) => {
   console.log("data from postFormData components", JSON.stringify(data));
+  let token = localStorage.getItem("token");
   try {
     const response = await fetch(RAISECBR, {
       method: "POST",
       headers: {
         "Content-Type": "Application/Json",
         Accept: "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });

@@ -1,4 +1,4 @@
-import { LOGINPOSTAPIS } from "../../../utils/Apis";
+import { LOGINPOSTAPIS } from "../../../utils/urls";
 
 export const PostLoginData = async (data) => {
   try {

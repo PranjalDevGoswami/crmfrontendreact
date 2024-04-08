@@ -6,7 +6,7 @@ export const userDetails = () => {
   const decoded = jwtDecode(token);
   //   const { user_id, username, role } = decoded;
   const decodedHeader = jwtDecode(token, { header: true });
-  return decoded, decodedHeader;
+  return decoded;
 };
 /* prints:
  * {

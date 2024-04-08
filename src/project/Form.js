@@ -17,7 +17,7 @@ import { TiPlus } from "react-icons/ti";
 import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
 
 const Form = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
@@ -34,7 +34,6 @@ const Form = () => {
     name: "",
     project_type: "",
     clients: "",
-    Manager: "",
     sample: "",
     cpi: "",
     set_up_fee: 1,
@@ -52,7 +51,6 @@ const Form = () => {
     operation_select: true,
     finance_select: true,
     user_id: 1,
-    project_manager: 1,
   });
 
   const ProjectTypeListData = projectTypeData;
@@ -61,7 +59,7 @@ const Form = () => {
     const fetchProjectData = async () => {
       try {
         const fetchDataFromApiProject = await GetProjectData();
-        const projectDataObject = fetchDataFromApiProject.map((val) => {
+        const projectDataObject = fetchDataFromApiProject?.data?.map((val) => {
           return val;
         });
       } catch (error) {
@@ -72,8 +70,8 @@ const Form = () => {
     const FetchProjectType = async () => {
       try {
         const ProjectType = await ProjectTypeList();
-        const ProjectTypeObject = ProjectType.map((val) => {
-          return val.name;
+        const ProjectTypeObject = ProjectType?.data?.map((val) => {
+          return val?.name;
         });
         setProjectTypeData(ProjectTypeObject);
       } catch (error) {
@@ -150,13 +148,12 @@ const Form = () => {
 
   const handleSubmit = (e) => {
     const formDataArray = [formData];
-    dispatch(addFormData(formDataArray));
+    // dispatch(addFormData(formDataArray));
     setFormData({
       project_code: "",
       name: "",
       project_type: "",
       clients: "",
-      Manager: "",
       sample: "",
       cpi: "",
       set_up_fee: 1,
@@ -174,7 +171,6 @@ const Form = () => {
       operation_select: "",
       finance_select: "",
       user_id: 1,
-      project_manager: 1,
     });
     PostProjectData(formData);
   };
@@ -184,7 +180,7 @@ const Form = () => {
       try {
         //clint Data List
         const ClientData = await ClientList();
-        const clientDataItems = ClientData.map((val) => {
+        const clientDataItems = ClientData?.data?.map((val) => {
           return val.name;
         });
         setClientListData(clientDataItems);
@@ -234,10 +230,11 @@ const Form = () => {
     );
   };
 
-  const Amlist = ["Manager 1", "Manager 2"];
+  const Amlist = ["Manager 1", "Manager2", "1"];
 
   return (
     <div className="relative">
+      <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
       <form onSubmit={handleSubmit} className="p-2 pl-8">
         <div className="flex flex-wrap w-full gap-4">
           <div className="flex flex-col w-[32%]">

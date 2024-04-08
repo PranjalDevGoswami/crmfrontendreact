@@ -1,12 +1,10 @@
-import { CLIENTDATAAPIS } from "../../../utils/Apis";
+import axios from "axios";
+import { CLIENTDATAAPIS } from "../../../utils/urls";
+import { getWithAuth } from "../../provider/helper/axios";
 
 export const ClientList = async () => {
   try {
-    const clientData = await fetch(CLIENTDATAAPIS);
-    const clientDataJson = await clientData.json();
-    return clientDataJson;
-    //  const clientDataItems = clientDataJson.map((val)=>{return val.name})
-    //  setClientListData(clientDataItems)
+    return getWithAuth(CLIENTDATAAPIS);
   } catch (error) {
     console.error("Error fetching project data:", error);
     throw error;

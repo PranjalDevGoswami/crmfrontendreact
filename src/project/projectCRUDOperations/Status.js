@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LableAndInput from "../../components/LableAndInput";
 import Dropdown from "../../components/DropDown";
-import { POSTMANDAYSDATA } from "../../../utils/Apis";
+import { POSTMANDAYSDATA } from "../../../utils/urls";
 import Label from "../../components/Label";
 
 const Status = ({ viewRecord, setIsStatus }) => {

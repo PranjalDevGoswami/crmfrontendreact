@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
-import { useDispatch, useSelector } from "react-redux";
-import { addFormData } from "../features/projectData/projectDataSlice";
 import Button from "../components/Button";
 import Input from "../components/InputField.js";
 import { MdOutlineMoreVert } from "react-icons/md";
 import Dropdown from "../components/DropDown.js";
-
 import {
   Data,
   DummyData,
@@ -47,34 +44,36 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [closeView, setCloseView] = useState(false);
   const [isStatus, setIsStatus] = useState(false);
 
-  // const dispatch = useDispatch();
   const dropdownRef = useRef(null);
+
+  let token = localStorage.getItem("token");
+
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
         const fetchDataFromApi2 = await GetProjectData();
+        console.log(
+          "🚀 ~ fetchProjectData ~ fetchDataFromApi2:",
+          fetchDataFromApi2
+        );
         const projectDataObject = fetchDataFromApi2?.map((val) => {
           return val;
         });
         setGetFormDataApi(projectDataObject);
-        // dispatch(addFormData(projectDataObject));
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
-  }, []);
+  }, [token]);
 
-  // const Formdata1 = useSelector((store) => store?.FormData?.items);
-
-  useEffect(() => {
-    // dispatch(addFormData(getFormDataApi));
-  }, [getFormDataApi]);
+  useEffect(() => {}, [getFormDataApi]);
 
   useEffect(() => {
     const fetchClientList = async () => {
       try {
         const response = await ClientList();
+        console.log("🚀 ~ fetchClientList ~ response:", response);
         const responseArray = response.map((val) => {
           return val.name;
         });
@@ -253,15 +252,13 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const filteredData = getFormDataApi.filter((item) =>
     Object.values(item).some((val) => {
       if (typeof val === "object" && val !== null) {
-        // If the value is an object, check its properties
         return Object.values(val).some((propVal) =>
           propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
         );
       } else if (val) {
-        // For other types of values (non-object), perform the search
         return val.toString().toLowerCase().includes(searchTerm.toLowerCase());
       }
-      return false; // Exclude null or undefined values from the search
+      return false;
     })
   );
   const data = filteredData.map((item, index) => ({
@@ -329,9 +326,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             />
           )} */}
               <Dropdown
-                Option_Name={["Inprogress", "Hold", "Completed"]}
+                Option_Name={["Inprogress", "Hold", "Completed", "New"]}
                 onChange={handleFilterOption}
-                name={"Client"}
+                name={"Status"}
                 className={"p-4 m-1 border border-black rounded"}
               />
             </div>

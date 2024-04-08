@@ -12,11 +12,11 @@ import { PostLoginData } from "../fetchApis/login/PostLoginData";
 import { login } from "../features/login/loginSlice.js";
 import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
-import { USERLIST } from "../../utils/Apis.js";
+import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
 
 const Login = () => {
-  const { setToken } = useAuth();
+  const { token, setToken } = useAuth();
   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -80,7 +80,9 @@ const Login = () => {
       // Handle error, display error message, etc.
     }
   };
-
+  useEffect(() => {
+    RedirectUser();
+  }, [token]);
   const handleLogin = async () => {
     try {
       const response = await PostLoginData(loginData);
@@ -89,7 +91,6 @@ const Login = () => {
         localStorage.setItem("refreshToken", response.refresh);
         localStorage.setItem("user", loginData.email);
         console.log("Login successful", response);
-        RedirectUser();
         // Redirect user or perform other actions
       } else {
         // Handle login failure, display error message, etc.

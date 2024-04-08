@@ -5,20 +5,20 @@ import App from "./src/App";
 import { Provider, useSelector } from "react-redux";
 import store from "./src/store";
 import { BrowserRouter } from "react-router-dom";
-const App = () => {
+const MainApp = () => {
   return (
     <>
       <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        {/* <BrowserRouter> */}
+        <App />
+        {/* </BrowserRouter> */}
       </Provider>
     </>
   );
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(<MainApp />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

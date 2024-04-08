@@ -82,7 +82,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
 
   const PostUpdateEditData = async (data) => {
     console.log("updatedValue", data);
-    await POSTMANDAYSDATA(data);
+    await PostMandaysData(data);
     // setViewEdit(false);
     setUpdatedValue({
       project_code: "",

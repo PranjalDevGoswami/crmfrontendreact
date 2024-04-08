@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../components/InputField";
 import Button from "../components/Button";
-import { RESETPASSWORD } from "../../utils/Apis";
+import { RESETPASSWORD } from "../../utils/urls";
 
 const Reset = () => {
   const [email, setEmail] = useState({

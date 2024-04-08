@@ -15,7 +15,8 @@ const Header = () => {
     localStorage.setItem("user", null);
     navigate("/", { replace: true });
   };
-
+  const username = userDetails();
+  // console.log(userDetails());
   const HandleThemeColor = () => {};
 
   return (
@@ -27,7 +28,9 @@ const Header = () => {
         {/* <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/> */}
         {token ? (
           <div className="flex flex-wrap">
-            {/* <span className="m-2">{username ? username : "User"}</span> */}
+            <span className="m-2">
+              {username.username ? username.username : "User"}
+            </span>
             <div className="relative">
               <FaRegUserCircle
                 className="text-4xl cursor-pointer"

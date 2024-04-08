@@ -4,7 +4,7 @@ import Dropdown from "../components/DropDown";
 import Button from "../components/Button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { DEPARTMENTSAPIS, REGISTER } from "../.././utils/Apis";
+import { DEPARTMENTSAPIS, REGISTER } from "../../utils/urls";
 
 const SignUp = () => {
   const [departmentId, setDepartmentId] = useState([]);

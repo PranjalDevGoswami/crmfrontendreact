@@ -1,7 +1,6 @@
-import { GETPROJECTDATAAPIS } from "../../../../utils/Apis";
+import { GETPROJECTDATAAPIS } from "../../../../utils/urls";
+import { getWithAuth } from "../../../provider/helper/axios";
 
 export const GetProjectData = async () => {
-  const ProjectData = await fetch(GETPROJECTDATAAPIS);
-  const ProjectDataJson = await ProjectData?.json();
-  return ProjectDataJson;
+  return getWithAuth(GETPROJECTDATAAPIS);
 };
