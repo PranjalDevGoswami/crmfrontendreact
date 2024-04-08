@@ -3,7 +3,7 @@ node_modules/*
 build/*
 dist/*
 .cache/
-dist/
+# dist/
 .parcel-cache/*
 .parcel-cache/data.mdb
 .git/
