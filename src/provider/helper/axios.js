@@ -3,7 +3,7 @@ import { REFRESH_TOKEN } from "../../../utils/urls.js";
 import { Route } from "react-router-dom";
 
 export const checkForTokenExpiredError = (error) => {
-  const { status } = error.response;
+  const { status } = error?.response;
   return status === 401;
 };
 
@@ -21,7 +21,7 @@ const refreshTokenAndSetAuth = async (callback) => {
     refresh: refreshToken,
   });
   const { access } = response?.data;
-  if (access && response.status == 200) {
+  if (response.status == 200) {
     localStorage.setItem("token", access);
     return callback();
   } else {
@@ -44,7 +44,26 @@ export const postWithAuth = (url, data) => {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   };
-  return axios.post(url, data, { headers });
+  // return axios.post(url, data, { headers });
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, data, { headers })
+      .then((response) => {
+        if (response && response.data) {
+          resolve({ status: true, data: response.data });
+        }
+      })
+      .catch((ex) => {
+        if (checkForTokenExpiredError(ex)) {
+          const callback = () => getWithAuth(url);
+          refreshTokenAndSetAuth(callback).then((data) => {
+            return resolve(data);
+          });
+          return;
+        }
+        resolve({ status: false, message: ex.message });
+      });
+  });
 };
 
 export const getWithAuth = (url) => {
@@ -64,7 +83,9 @@ export const getWithAuth = (url) => {
       .catch((ex) => {
         if (checkForTokenExpiredError(ex)) {
           const callback = () => getWithAuth(url);
-          refreshTokenAndSetAuth(callback).then((data) => resolve(data));
+          refreshTokenAndSetAuth(callback).then((data) => {
+            return resolve(data);
+          });
           return;
         }
         resolve({ status: false, message: ex.message });

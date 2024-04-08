@@ -52,11 +52,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     const fetchProjectData = async () => {
       try {
         const fetchDataFromApi2 = await GetProjectData();
-        console.log(
-          "🚀 ~ fetchProjectData ~ fetchDataFromApi2:",
-          fetchDataFromApi2
-        );
-        const projectDataObject = fetchDataFromApi2?.map((val) => {
+        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
         setGetFormDataApi(projectDataObject);
@@ -73,8 +69,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     const fetchClientList = async () => {
       try {
         const response = await ClientList();
-        console.log("🚀 ~ fetchClientList ~ response:", response);
-        const responseArray = response.map((val) => {
+        const responseArray = response?.data?.map((val) => {
           return val.name;
         });
         setClientsListArray(responseArray);

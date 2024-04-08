@@ -318,6 +318,7 @@ const Form = () => {
               required={"required"}
               inputClassName={"p-2 border bg-[#f3eded]"}
               labelClassName={"pt-4 pb-2"}
+              min={1}
             />
           </div>
           <div className="w-[32%] flex flex-col">
