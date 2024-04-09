@@ -10,8 +10,10 @@ import { TbReport } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
+import { userDetails } from "../user/userProfile";
 
 const SideBar = () => {
+  const userRole = userDetails();
   const [sideBarOpen, SetSideBarOpen] = useState(true);
   return (
     <div className="shadow-slate-400 flex">
@@ -30,7 +32,11 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4 float-right`}
           >
-            <Link to="/">Dashboard</Link>
+            {userRole.role === "OperationTeamLead" ? (
+              <Link to="/operation-dashboard">Dashboard</Link>
+            ) : (
+              <Link to="/sales-dashboard">Dashboard</Link>
+            )}
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -40,7 +46,11 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            <Link to="/project">Project</Link>
+            {userRole.role === "OperationTeamLead" ? (
+              <Link to="/operation-dashboard">Project</Link>
+            ) : (
+              <Link to="/sales-dashboard">Project</Link>
+            )}
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -50,7 +60,11 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            <Link to="/report">Report</Link>
+            {userRole.role === "OperationTeamLead" ? (
+              <Link to="/operation-dashboard">Report</Link>
+            ) : (
+              <Link to="/sales-dashboard">Report</Link>
+            )}
           </div>
         </div>
         <div className="flex justify-start overflow-hidden pl-4">
@@ -60,7 +74,11 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            <Link to="/chart">Chart</Link>
+            {userRole.role === "OperationTeamLead" ? (
+              <Link to="/operation-dashboard">Chart</Link>
+            ) : (
+              <Link to="/sales-dashboard">Chart</Link>
+            )}
           </div>
         </div>
       </div>

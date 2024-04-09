@@ -1,17 +1,18 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { PerDaysManWork } from "../../fetchApis/projects/perDayManWork/perDaysManWork";
 // import Button from "../../Button.js";
 
 const View = ({ viewRecord, closeView, setisView }) => {
   const location = useLocation();
-  const data = location.state
+  const data = location.state;
 
-  const handleViewDetails = () =>{
-    
-  }
+  const handleViewDetails = async (data) => {
+    const perDayDetails = await PerDaysManWork(data);
+  };
   return (
     <div className="w-full bg-white  p-4 pl-8 pr-8 rounded-sm border border-black drop-shadow-lg shadow-2xl shadow-slate-400">
-     <h3 className="text-3xl p-4 underline pl-0">Project View</h3>
+      <h3 className="text-3xl p-4 underline pl-0">Project View</h3>
       <ul className="flex flex-wrap text-left border w-full justify-between">
         <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2 odd:bg-gray-100">
           <span className="text-xl mr-8 w-5/12">Project Code</span>
@@ -91,7 +92,11 @@ const View = ({ viewRecord, closeView, setisView }) => {
           <span className="text-xl mr-8 w-5/12">Total Man Days</span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.man_days}</span>
-          <span className="absolute top-0 right-0 bg-green-200 p-1 border border-black rounded-sm"><button onClick={handleViewDetails}>Show Details</button></span>
+          <span className="absolute top-0 right-0 bg-green-200 p-1 border border-black rounded-sm">
+            <button onClick={handleViewDetails(data?.project_code)}>
+              Show Details
+            </button>
+          </span>
         </li>
         <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
           <span className="text-xl mr-8 w-5/12">Achiev Target </span>

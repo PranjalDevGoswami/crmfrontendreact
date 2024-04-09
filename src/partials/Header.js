@@ -24,7 +24,7 @@ const Header = () => {
       <div className="w-2/12">
         <img src={logo} alt="logo" className="w-[210px] h-[90px]" />
       </div>
-      <div className="w-2/12 text-right flex flex-wrap items-center">
+      <div className="w-2/12 text-right justify-end mr-8 flex flex-wrap items-center">
         {/* <MdDarkMode onClick={HandleThemeColor} className="cursor-pointer font-xl"/> */}
         {token ? (
           <div className="flex flex-wrap">

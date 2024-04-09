@@ -18,6 +18,7 @@ import View from "./projectCRUDOperations/View.js";
 import Edit from "./projectCRUDOperations/Edit.js";
 import OpereationButton from "./projectCRUDOperations/OpereationButton.js";
 import Status from "./projectCRUDOperations/Status.js";
+import { userDetails } from "../user/userProfile.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -43,9 +44,13 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [selectedIndex, setSelectedIndex] = useState();
   const [closeView, setCloseView] = useState(false);
   const [isStatus, setIsStatus] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
 
   const dropdownRef = useRef(null);
 
+  const userRole = userDetails();
+  console.log("🚀 ~ ProjectDataTable ~ userRole:", userRole);
   let token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -80,25 +85,26 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     fetchClientList();
   }, []);
 
-  const ClientOptions = clientsListArray.map((val) => {
-    return {
-      value: val,
-      label: val,
-    };
-  });
-
   const handleFilterOption = (name, value) => {
     console.log("e", name, value);
-    if (name === "status")
+
+    if (name === "status") {
+      setSelectedStatus(value);
       setUpdatedValue({
         ...updatedValue,
         status: value,
       });
+    }
+    if (name === "clients") setSelectedClient(value);
   };
 
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
-      return item.status === null || item.status === "";
+      return (
+        item.status === null ||
+        item.status === "" ||
+        item.status === "to_be_started"
+      );
     });
     if (row.selectedCount > 0) {
       setIsMultiEdit(true);
@@ -218,7 +224,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
               >
                 <MdOutlineMoreVert />
               </button>
-              {isOperationPerson && openDropdownIndex === index ? (
+              {openDropdownIndex === index ? (
                 <div
                   className={`${
                     index <= 5
@@ -244,18 +250,25 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     },
   ];
 
-  const filteredData = getFormDataApi.filter((item) =>
-    Object.values(item).some((val) => {
-      if (typeof val === "object" && val !== null) {
-        return Object.values(val).some((propVal) =>
-          propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      } else if (val) {
-        return val.toString().toLowerCase().includes(searchTerm.toLowerCase());
-      }
-      return false;
-    })
+  const filteredData = getFormDataApi.filter(
+    (item) =>
+      (selectedStatus ? item.status === selectedStatus : true) &&
+      (selectedClient ? item.clients.name === selectedClient : true) &&
+      Object.values(item).some((val) => {
+        if (typeof val === "object" && val !== null) {
+          return Object.values(val).some((propVal) =>
+            propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        } else if (val) {
+          return val
+            .toString()
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        }
+        return false;
+      })
   );
+  console.log("filter", filteredData);
   const data = filteredData.map((item, index) => ({
     id: index + 1,
     project_code: item?.project_code,
@@ -292,36 +305,38 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         }"`}
       >
         <div className="flex items-center h-40 w-full overflow-visible">
-          <h2 className="p-2 text-4xl underline w-3/12">All Project Details</h2>
+          <h2 className="p-2 text-3xl underline w-3/12">All Project Details</h2>
           <div className="flex justify-end mb-4 w-9/12">
             <div className="flex items-center">
-              <Dropdown
+              {/* <Dropdown
                 Option_Name={["--Select Clients--", "am", "am2"]}
                 onChange={handleFilterOption}
                 name={"Client"}
                 className={"p-4 m-1 border border-black rounded"}
-              />
-              {/* {clientsListArray.length > 0 ? (
-            <MultipleValueDropDown
-              options={ClientOptions}
-              onChange={handleFilterOption}
-              name={"Client"}
-              className={"p-4 m-1 border border-black rounded w-fit"}
-            />
-          ) : (
-            <MultipleValueDropDown
-              options={[
-                { value: "--Select Clients--", label: "--Select Clients--" },
-                { value: "Client1", label: "Client1" },
-                { value: "Client2", label: "Client2" },
-              ]}
-              onChange={handleFilterOption}
-              name={"Client"}
-              className={"w-full p-2 bg-white border border-black rounded"}
-            />
-          )} */}
+              /> */}
+              {clientsListArray.length > 0 ? (
+                <Dropdown
+                  Option_Name={["select Client", ...clientsListArray]}
+                  onChange={handleFilterOption}
+                  name={"Client"}
+                  className={"p-4 m-1 border border-black rounded"}
+                />
+              ) : (
+                <Dropdown
+                  Option_Name={["--Select Clients--", "am", "am2"]}
+                  onChange={handleFilterOption}
+                  name={"Client"}
+                  className={"p-4 m-1 border border-black rounded"}
+                />
+              )}
               <Dropdown
-                Option_Name={["Inprogress", "Hold", "Completed", "New"]}
+                Option_Name={[
+                  "Inprogress",
+                  "Hold",
+                  "Completed",
+                  "New",
+                  "To be Started",
+                ]}
                 onChange={handleFilterOption}
                 name={"Status"}
                 className={"p-4 m-1 border border-black rounded"}
@@ -360,17 +375,30 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 />
               </div>
             )}
-            <DataTable
-              columns={columns}
-              data={desabledRowData}
-              pagination
-              customStyles={customStyles}
-              selectableRows
-              onSelectedRowsChange={handleSelectedRowsChange}
-              enableMultiRowSelection
-              selectableRowDisabled={(row) => row.desabled}
-              conditionalRowStyles={conditionalRowStyles}
-            />
+            {userRole.role === "OperationTeamLead" ? (
+              <DataTable
+                columns={columns}
+                data={desabledRowData}
+                pagination
+                customStyles={customStyles}
+                selectableRows
+                onSelectedRowsChange={handleSelectedRowsChange}
+                enableMultiRowSelection
+                selectableRowDisabled={(row) => row.desabled}
+                conditionalRowStyles={conditionalRowStyles}
+              />
+            ) : (
+              <DataTable
+                columns={columns}
+                data={desabledRowData}
+                pagination
+                customStyles={customStyles}
+                onSelectedRowsChange={handleSelectedRowsChange}
+                enableMultiRowSelection
+                selectableRowDisabled={(row) => row.desabled}
+                conditionalRowStyles={conditionalRowStyles}
+              />
+            )}
 
             {isOperationPerson && (
               <>

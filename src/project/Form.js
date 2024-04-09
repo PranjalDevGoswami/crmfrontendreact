@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
 import CheckboxList from "../components/Checkbox.js";
 import MultipleFileUpload from "../components/MultipleFileUpload.js";
-import { useDispatch } from "react-redux";
-import { addFormData } from "../features/projectData/projectDataSlice";
 import LableAndInput from "../components/LableAndInput.js";
 import { ClientList } from "../fetchApis/clientList/ClientList";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
@@ -133,9 +131,6 @@ const Form = () => {
 
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
-    // if (name === "currency") {
-    //   setCurrency(value);
-    // }
     if (name === "clients") {
       const clientIndex = clientListData.indexOf(value);
       setFormData({
@@ -192,7 +187,6 @@ const Form = () => {
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
-        //clint Data List
         const ClientData = await ClientList();
         const clientDataItems = ClientData?.data?.map((val) => {
           return val.name;
@@ -203,7 +197,8 @@ const Form = () => {
     fetchDataFromApi();
   }, []);
 
-  const OpenOtherFee = () => {
+  const OpenOtherFee = (e) => {
+    e.preventDefault();
     setIsOtherFee(true);
   };
   const CloseOtherFeehandler = () => {
@@ -257,7 +252,6 @@ const Form = () => {
               InputName={"name"}
               InputType={"text"}
               inputChange={handleInputChange}
-              required={"required"}
               InputMin_lenght={"1"}
               InputMax_lenght={"50"}
               inputClassName={"p-2 border bg-[#f3eded]"}
@@ -329,7 +323,6 @@ const Form = () => {
               InputName={"sample"}
               InputType={"number"}
               inputChange={handleInputChange}
-              required={"required"}
               inputClassName={"p-2 border bg-[#f3eded]"}
               labelClassName={"pt-4 pb-2"}
               min={0}
@@ -343,25 +336,11 @@ const Form = () => {
                   name={"cpi"}
                   type={"number"}
                   onchange={handleInputChange}
-                  required={"required"}
                   className={"p-2 border bg-[#f3eded] w-full"}
                   // value={"12"}
                   min={0}
                 />
               </div>
-              {/* <div className="w-[10%] inline-block">
-                <Dropdown
-                  name={"currency"}
-                  className={
-                    "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
-                  }
-                  // value={currency}
-                  Option_Name={[...optionValue]}
-                  RequireAddButton={false}
-                  required
-                  onChange={SelectOptionHandler}
-                />
-              </div> */}
             </div>
           </div>
           <div className="w-[32%] flex flex-col relative">
@@ -372,25 +351,11 @@ const Form = () => {
                   name={"set_up_fee"}
                   type={"number"}
                   onchange={handleInputChange}
-                  required={"required"}
                   className={"p-2 border bg-[#f3eded] w-full"}
                   min={0}
                   // value={"12"}
                 />
               </div>
-              {/* <div className="w-[10%]">
-                <Dropdown
-                  name={"currency"}
-                  className={
-                    "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
-                  }
-                  // value={currency}
-                  Option_Name={[...optionValue]}
-                  RequireAddButton={false}
-                  required
-                  onChange={SelectOptionHandler}
-                />
-              </div> */}
               <div className="w-[7%] bg-yellow-200">
                 <button
                   onClick={OpenOtherFee}
@@ -439,25 +404,11 @@ const Form = () => {
                     InputName={"other_cost"}
                     type={"number"}
                     onchange={handleInputChange}
-                    required={"required"}
                     className={"p-2 border bg-[#f3eded] w-full"}
                     min={0}
                     // value={"12"}
                   />
                 </div>
-                {/* <div className="w-[10%] inline-block">
-                  <Dropdown
-                    name={"currency"}
-                    className={
-                      "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
-                    }
-                    Option_Name={[...optionValue]}
-                    RequireAddButton={false}
-                    required
-                    onChange={SelectOptionHandler}
-                    value={currency}
-                  />
-                </div> */}
               </div>
             </div>
           ) : (
@@ -472,25 +423,11 @@ const Form = () => {
                     InputName={"Translator_Cost"}
                     type={"number"}
                     onchange={handleInputChange}
-                    required={"required"}
                     className={"p-2 border bg-[#f3eded] w-full"}
                     min={0}
                     // value={"12"}
                   />
                 </div>
-                {/* <div className="w-[10%] inline-block">
-                  <Dropdown
-                    name={"currency"}
-                    className={
-                      "p-2.5 outline-none cursor-pointer relative bg-[#f3eded] border w-full"
-                    }
-                    Option_Name={[...optionValue]}
-                    RequireAddButton={false}
-                    required
-                    onChange={SelectOptionHandler}
-                    value={currency}
-                  />
-                </div> */}
               </div>
             </div>
           )}
@@ -515,7 +452,6 @@ const Form = () => {
               placeholder={"dd/mm/yyyy"}
               inputChange={handleInputChange}
               min={minDate.toISOString().split("T")[0]}
-              required={"required"}
               inputClassName={"p-2 border bg-[#f3eded]"}
               labelClassName={"pt-4 pb-2"}
             />
@@ -528,7 +464,6 @@ const Form = () => {
               placeholder={"dd/mm/yyyy"}
               inputChange={handleInputChange}
               min={minDate.toISOString().split("T")[0]}
-              required={"required"}
               inputClassName={"p-2 border bg-[#f3eded]"}
               labelClassName={"pt-4 pb-2"}
             />
