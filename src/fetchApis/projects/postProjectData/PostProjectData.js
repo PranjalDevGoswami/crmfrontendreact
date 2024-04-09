@@ -6,11 +6,8 @@ export const PostFormData = async (data) => {
 
   let token = localStorage.getItem("token");
   try {
-    const response = await fetch(POSTPROJECTDATAAPIS, {
+    const response = await postWithAuth(POSTPROJECTDATAAPIS, data, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: JSON.stringify(data),
     });
     if (response.ok) {

@@ -7,6 +7,7 @@ function App() {
   let token = localStorage.getItem("token");
   return (
     <AuthProvider>
+      {/* {token ? <RoutesForProtected /> : <RoutesForPublic />} */}
       <Routes />
     </AuthProvider>
   );

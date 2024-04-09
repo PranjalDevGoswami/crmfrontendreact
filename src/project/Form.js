@@ -17,35 +17,31 @@ import { TiPlus } from "react-icons/ti";
 import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
 
 const Form = () => {
-  // const dispatch = useDispatch();
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
-  // const [currency, setCurrency] = useState("$");
-  // const [SecondOptioncurrency, setSecondOptionCurrency] = useState("₹");
-  // const optionValue = [currency, SecondOptioncurrency];
   const [projectTypeData, setProjectTypeData] = useState([]);
 
   const [formData, setFormData] = useState({
-    project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
+    // project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
     name: "",
     project_type: "",
     clients: "",
     sample: "",
     cpi: "",
     set_up_fee: 1,
-    Operation_team: "",
+    // Operation_team: "",
     tentative_start_date: "",
     tentative_end_date: "",
     other_cost: "",
-    Translator_Cost: "",
-    other_cost_Details: "", // Additional field for Other Cost Details
-    Translator_Cost_Details: "",
-    Advance_payment_required: advancePAyment,
-    mandaysEntry: "1",
+    // Translator_Cost: "",
+    // other_cost_Details: "", // Additional field for Other Cost Details
+    // Translator_Cost_Details: "",
+    // operation_select: advancePAyment,
+    // mandaysEntry: "1",
     user_email: "test1@novusinsights.com",
     project_manager: 1,
     operation_select: true,
@@ -101,7 +97,23 @@ const Form = () => {
       setFormData({ ...formData, [name]: isoDate });
     }
     if (name === "set_up_fee") {
-      setFormData({ ...formData, [name]: parseInt(value) });
+      // setFormData({ ...formData, [name]: parseInt(value) });
+      e.preventDefault();
+      if (/^\d*$/.test(value)) {
+        setFormData({ ...formData, [name]: parseInt(value) });
+        console.log("value", value);
+      } else {
+        alert(`'Sample value can't be in decimal'`);
+      }
+    }
+    if (name === "cpi") {
+      // setFormData({ ...formData, [name]: parseInt(value) });
+      e.preventDefault();
+      if (/^\d*$/.test(value)) {
+        setFormData({ ...formData, [name]: value });
+      } else {
+        alert(`'Sample value can't be in decimal'`);
+      }
     }
     if (name === "sample") {
       e.preventDefault();
@@ -126,16 +138,18 @@ const Form = () => {
     // }
     if (name === "clients") {
       const clientIndex = clientListData.indexOf(value);
-      setFormData({ ...formData, [name]: clientIndex + 1 });
+      setFormData({
+        ...formData,
+        [name]: clientIndex + 1,
+      });
     }
     if (name === "project_type") {
       const ProjectTypeIndex = projectTypeData.indexOf(value);
-      setFormData({ ...formData, [name]: ProjectTypeIndex + 1 });
+      setFormData({
+        ...formData,
+        [name]: ProjectTypeIndex + 1,
+      });
     }
-    // if (name === "project_type") {
-    //   // const ProjectTypeIndex = projectTypeData.indexOf(value);
-    //   setFormData({ ...formData, [name]:value });
-    // }
   };
 
   const PostProjectData = async (data) => {
@@ -150,7 +164,7 @@ const Form = () => {
     const formDataArray = [formData];
     // dispatch(addFormData(formDataArray));
     setFormData({
-      project_code: "",
+      // project_code: "",
       name: "",
       project_type: "",
       clients: "",
@@ -318,7 +332,7 @@ const Form = () => {
               required={"required"}
               inputClassName={"p-2 border bg-[#f3eded]"}
               labelClassName={"pt-4 pb-2"}
-              min={1}
+              min={0}
             />
           </div>
           <div className="w-[32%] flex flex-col">
@@ -332,6 +346,7 @@ const Form = () => {
                   required={"required"}
                   className={"p-2 border bg-[#f3eded] w-full"}
                   // value={"12"}
+                  min={0}
                 />
               </div>
               {/* <div className="w-[10%] inline-block">
@@ -359,6 +374,7 @@ const Form = () => {
                   onchange={handleInputChange}
                   required={"required"}
                   className={"p-2 border bg-[#f3eded] w-full"}
+                  min={0}
                   // value={"12"}
                 />
               </div>
@@ -425,6 +441,7 @@ const Form = () => {
                     onchange={handleInputChange}
                     required={"required"}
                     className={"p-2 border bg-[#f3eded] w-full"}
+                    min={0}
                     // value={"12"}
                   />
                 </div>
@@ -457,6 +474,7 @@ const Form = () => {
                     onchange={handleInputChange}
                     required={"required"}
                     className={"p-2 border bg-[#f3eded] w-full"}
+                    min={0}
                     // value={"12"}
                   />
                 </div>

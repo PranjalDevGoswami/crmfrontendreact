@@ -47,7 +47,7 @@ export const postWithAuth = (url, data) => {
   // return axios.post(url, data, { headers });
   return new Promise((resolve, reject) => {
     axios
-      .get(url, data, { headers })
+      .post(url, data, { headers })
       .then((response) => {
         if (response && response.data) {
           resolve({ status: true, data: response.data });
