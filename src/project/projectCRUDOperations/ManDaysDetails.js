@@ -1,26 +1,44 @@
 import React from "react";
+import DataTable from "react-data-table-component";
+import {
+  conditionalRowStyles,
+  customStyles,
+} from "../../../utils/DataTablesData";
 
-const ManDaysDetails = () => {
+const ManDaysDetails = ({ perDayDetailsData }) => {
+  if (!Array.isArray(perDayDetailsData)) {
+    return <p>No man days data available</p>;
+  }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(); // Adjust locale and formatting options as needed
+  };
+
+  const columns = [
+    {
+      name: "Date",
+      selector: (row) => formatDate(row.date),
+      sortable: true,
+    },
+    {
+      name: "Total Man",
+      selector: (row) => row.man_days,
+      sortable: true,
+    },
+  ];
+  const data = perDayDetailsData.map((item, index) => ({
+    date: formatDate(item?.date),
+    man_days: item?.man_days,
+  }));
+
   return (
     <div>
-      <table className="border ">
-        <thead>
-          <tr className="border">
-            <th className="border">Date</th>
-            <th className="border">Work Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="border">
-            <td className="border">2024-04-09</td>
-            <td className="border">Meeting with client</td>
-          </tr>
-          <tr className="border">
-            <td className="border">2024-04-10</td>
-            <td className="border">Designing UI mockups</td>
-          </tr>
-        </tbody>
-      </table>
+      <DataTable
+        columns={columns}
+        data={data}
+        customStyles={customStyles}
+        conditionalRowStyles={conditionalRowStyles}
+      />
     </div>
   );
 };

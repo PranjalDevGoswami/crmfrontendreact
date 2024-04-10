@@ -50,7 +50,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const dropdownRef = useRef(null);
 
   const userRole = userDetails();
-  console.log("🚀 ~ ProjectDataTable ~ userRole:", userRole);
   let token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -103,7 +102,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       return (
         item.status === null ||
         item.status === "" ||
-        item.status === "to_be_started"
+        item.status === "to_be_started" ||
+        item.status === "inprogress"
       );
     });
     if (row.selectedCount > 0) {
@@ -251,25 +251,22 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     },
   ];
 
-  const filteredData = getFormDataApi.filter(
-    (item) =>
-      (selectedStatus ? item.status === selectedStatus : true) &&
-      (selectedClient ? item.clients.name === selectedClient : true) &&
-      Object.values(item).some((val) => {
-        if (typeof val === "object" && val !== null) {
-          return Object.values(val).some((propVal) =>
-            propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        } else if (val) {
-          return val
-            .toString()
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase());
-        }
-        return false;
-      })
+  const filteredData = getFormDataApi.filter((item) =>
+    // (selectedStatus ? item.status === selectedStatus : true) &&
+    // (selectedClient ? item.clients.name === selectedClient : true) &&
+    Object.values(item).some((val) => {
+      if (typeof val === "object" && val !== null) {
+        return Object.values(val).some((propVal) =>
+          propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      } else if (val) {
+        return val.toString().toLowerCase().includes(searchTerm.toLowerCase());
+      }
+      return false;
+    })
   );
-  console.log("filter", filteredData);
+  console.log("🚀 ~ ProjectDataTable ~ filteredData:", filteredData);
+
   const data = filteredData.map((item, index) => ({
     id: index + 1,
     project_code: item?.project_code,

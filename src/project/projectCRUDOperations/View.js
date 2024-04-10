@@ -6,6 +6,7 @@ import ManDaysDetails from "./ManDaysDetails";
 
 const View = ({ viewRecord, closeView, setisView }) => {
   const [isManDaysDetails, SetIsManDaysDetails] = useState(false);
+  const [perDayDetailsData, setPerDayDetailsData] = useState([]);
   const location = useLocation();
   const data = location.state;
 
@@ -16,11 +17,16 @@ const View = ({ viewRecord, closeView, setisView }) => {
     const perDayDetails = await ManWorkPerDays(project_details);
     console.log("perDayDetails", perDayDetails);
     SetIsManDaysDetails(true);
+    setPerDayDetailsData(perDayDetails);
+  };
+  const HandleCloseManDaysDetails = (e) => {
+    e.preventDefault();
+    SetIsManDaysDetails(false);
   };
   return (
-    <div className="w-full bg-white  p-4 pl-8 pr-8 rounded-sm border border-black drop-shadow-lg shadow-2xl shadow-slate-400">
-      <h3 className="text-3xl p-4 underline pl-0">Project View</h3>
-      <ul className="flex flex-wrap text-left border w-full justify-between">
+    <div className="w-full bg-white p-8  mt-16">
+      <h3 className="text-3xl p-4 underline pl-0 mb-4">Project View</h3>
+      <ul className="flex flex-wrap text-left border w-full justify-between rounded-sm ">
         <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2 odd:bg-gray-100">
           <span className="text-xl mr-8 w-5/12">Project Code</span>
           <span className="w-2/12">:</span>
@@ -122,8 +128,11 @@ const View = ({ viewRecord, closeView, setisView }) => {
         name={"X"}
       /> */}
       {isManDaysDetails ? (
-        <div className="absolute top-1/2 left-1/2 bg-white border p-8">
-          <ManDaysDetails />
+        <div className="absolute top-1/2 left-1/2 bg-white border pt-16 pl-2 pr-2 w-4/12 h-1/2 translate-x-[-50%] translate-y-[-50%]">
+          <ManDaysDetails perDayDetailsData={perDayDetailsData} />
+          <div className="absolute top-0 right-0 p-2 m-2 rounded bg-red-300 w-8 h-8 flex items-center justify-center text-xl">
+            <button onClick={HandleCloseManDaysDetails}>X</button>
+          </div>
         </div>
       ) : (
         ""
