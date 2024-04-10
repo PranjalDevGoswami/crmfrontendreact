@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-function MultipleFileUpload({className}) {
+function MultipleFileUpload({ className }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleFileChange = (event) => {

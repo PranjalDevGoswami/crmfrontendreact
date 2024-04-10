@@ -2,7 +2,6 @@ import { MANDAYSPERDAY } from "../../../../utils/urls.js";
 import { postWithAuth } from "../../../provider/helper/axios.js";
 
 export const ManWorkPerDays = async (data) => {
-  console.log("🚀 ~ PostFormData ~ data:", data);
   try {
     const response = await postWithAuth(MANDAYSPERDAY, data, {
       method: "POST",

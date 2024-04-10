@@ -13,6 +13,7 @@ import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectD
 import Input from "../components/InputField.js";
 import { TiPlus } from "react-icons/ti";
 import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
+import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
 
 const Form = () => {
   const [otherCost, setOtherCost] = useState(false);
@@ -22,6 +23,7 @@ const Form = () => {
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
   const [projectTypeData, setProjectTypeData] = useState([]);
+  const [projectManagerData, setProjectManagerData] = useState([]);
 
   const [formData, setFormData] = useState({
     // project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
@@ -45,6 +47,7 @@ const Form = () => {
     operation_select: true,
     finance_select: true,
     user_id: 1,
+    upload_document: "",
   });
 
   const ProjectTypeListData = projectTypeData;
@@ -68,6 +71,18 @@ const Form = () => {
           return val?.name;
         });
         setProjectTypeData(ProjectTypeObject);
+      } catch (error) {
+        console.error("Error fetching project type List:", error);
+      }
+    };
+    FetchProjectType();
+    const FetchProjectManager = async () => {
+      try {
+        const ProjectManager = await GetProjectManager();
+        const ProjectManagerObject = ProjectManager?.data?.map((val) => {
+          return val?.name;
+        });
+        setProjectManagerData(ProjectManagerObject);
       } catch (error) {
         console.error("Error fetching project type List:", error);
       }
@@ -438,7 +453,7 @@ const Form = () => {
               className={
                 "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
               }
-              Option_Name={["-- Select Manager --", ...Amlist]}
+              Option_Name={["-- Select Manager --", ...projectManagerData]}
               RequireAddButton={false}
               required
               onChange={SelectOptionHandler}

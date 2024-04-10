@@ -3,7 +3,7 @@ import Input from "./InputField";
 import Button from "./Button";
 import { PostClientList } from "../fetchApis/clientList/ClientList";
 
-const AddClient = () => {
+const AddClient = ({ closeAddClient }) => {
   const [clientData, setClientData] = useState({
     name: "",
     address: "",
@@ -30,9 +30,11 @@ const AddClient = () => {
 
   const handleAddClient = async (e) => {
     e.preventDefault();
-    console.log(clientData);
     try {
-      await PostClientList(clientData);
+      const response = await PostClientList(clientData);
+      if (response.status === "true") {
+        closeAddClient(false);
+      }
     } catch (error) {
       console.error("Error fetching project data:", error);
     }
