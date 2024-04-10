@@ -87,7 +87,7 @@ const Form = () => {
         console.error("Error fetching project type List:", error);
       }
     };
-    FetchProjectType();
+    FetchProjectManager();
   }, []);
 
   const handleInputChange = (e) => {
