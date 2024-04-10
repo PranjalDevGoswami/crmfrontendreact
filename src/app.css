@@ -42,3 +42,8 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-name: animated_mandays_remove;
   animation-duration: 1s;
 }
+
+.table .sc-dmXWDj{
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}

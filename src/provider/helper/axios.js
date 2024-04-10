@@ -41,8 +41,8 @@ export const postWithOutAuth = (url, data) => {
 export const postWithAuth = (url, data) => {
   let token = localStorage.getItem("token");
   const headers = {
-    Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   };
   // return axios.post(url, data, { headers });
   return new Promise((resolve, reject) => {

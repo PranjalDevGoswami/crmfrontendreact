@@ -16,6 +16,7 @@ import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
 
 const Login = () => {
+  // const token = localStorage.getItem("token");
   const { token, setToken } = useAuth();
   const navigate = useNavigate();
   // const dispatch = useDispatch();
@@ -25,7 +26,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const location = useLocation();
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +48,7 @@ const Login = () => {
       const userList = await fetch(USERLIST);
       const userListJson = await userList.json();
 
-      let loginUser = localStorage.getItem("user");
+      let email = localStorage.getItem("user");
 
       const userData = userListJson.users;
       console.log("userData", userData);
@@ -57,20 +57,19 @@ const Login = () => {
         return userData.filter((user) => user.email === email);
       }
 
-      const email = loginUser;
       const userDetails = getUserByEmail(email);
 
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department;
-        if (department === 1) {
+        if (department == 1) {
           // Redirect to sales dashboard
           navigate("/sales-dashboard");
-        } else if (department === 2) {
+        } else if (department == 2) {
           // Redirect to operation dashboard
           navigate("/operation-dashboard");
         } else {
           // Redirect to default page or handle other cases
-          navigate("/default-page");
+          navigate("/");
         }
       } else {
         console.error("User details not found");
@@ -81,7 +80,9 @@ const Login = () => {
     }
   };
   useEffect(() => {
-    RedirectUser();
+    if (token !== null) {
+      RedirectUser();
+    }
   }, [token]);
   const handleLogin = async () => {
     try {

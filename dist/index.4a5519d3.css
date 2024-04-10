@@ -45,4 +45,8 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-name: animated_mandays_remove;
   animation-duration: 1s;
 }
+
+.table .sc-dmXWDj {
+  overflow: visible !important;
+}
 /*# sourceMappingURL=index.4a5519d3.css.map */

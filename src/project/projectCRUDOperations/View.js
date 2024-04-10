@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { PerDaysManWork } from "../../fetchApis/projects/perDayManWork/perDaysManWork";
 // import Button from "../../Button.js";
+import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysManWork";
+import ManDaysDetails from "./ManDaysDetails";
 
 const View = ({ viewRecord, closeView, setisView }) => {
+  const [isManDaysDetails, SetIsManDaysDetails] = useState(false);
   const location = useLocation();
   const data = location.state;
 
   const handleViewDetails = async (data) => {
-    const perDayDetails = await PerDaysManWork(data);
+    const project_details = {
+      project_code: data,
+    };
+    const perDayDetails = await ManWorkPerDays(project_details);
+    console.log("perDayDetails", perDayDetails);
+    SetIsManDaysDetails(true);
   };
   return (
     <div className="w-full bg-white  p-4 pl-8 pr-8 rounded-sm border border-black drop-shadow-lg shadow-2xl shadow-slate-400">
@@ -93,8 +100,8 @@ const View = ({ viewRecord, closeView, setisView }) => {
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.man_days}</span>
           <span className="absolute top-0 right-0 bg-green-200 p-1 border border-black rounded-sm">
-            <button onClick={handleViewDetails(data?.project_code)}>
-              Show Details
+            <button onClick={() => handleViewDetails(data?.project_code)}>
+              Show More
             </button>
           </span>
         </li>
@@ -114,6 +121,13 @@ const View = ({ viewRecord, closeView, setisView }) => {
         className={"p-2 bg-red-300 rounded absolute top-4 right-4"}
         name={"X"}
       /> */}
+      {isManDaysDetails ? (
+        <div className="absolute top-1/2 left-1/2 bg-white border p-8">
+          <ManDaysDetails />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

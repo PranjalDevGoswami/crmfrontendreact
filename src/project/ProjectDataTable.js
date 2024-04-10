@@ -123,6 +123,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
     setIsViewOptionIndex(index);
     setIsViewOptionOpen(!isViewOptionOpen);
+    setIsMultiEdit(false);
     setSelectedRecord(record);
     setSelectedIndex(index);
     // }
@@ -308,12 +309,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           <h2 className="p-2 text-3xl underline w-3/12">All Project Details</h2>
           <div className="flex justify-end mb-4 w-9/12">
             <div className="flex items-center">
-              {/* <Dropdown
-                Option_Name={["--Select Clients--", "am", "am2"]}
-                onChange={handleFilterOption}
-                name={"Client"}
-                className={"p-4 m-1 border border-black rounded"}
-              /> */}
               {clientsListArray.length > 0 ? (
                 <Dropdown
                   Option_Name={["select Client", ...clientsListArray]}
@@ -354,12 +349,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           </div>
         </div>
         {data.length > 0 ? (
-          <div className="relative">
+          <div className="relative table">
             {isMultiEdit && (
               <div
                 className={`${
                   isMultiEdit
-                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-3.7rem] w-full z-50 p-2"
+                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-3.7rem] w-full p-2"
                     : " opacity-0"
                 }`}
               >

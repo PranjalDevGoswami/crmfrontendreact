@@ -30,7 +30,7 @@ const OperationDashboard = ({ showEdit }) => {
 
   return (
     <div className="">
-      <div className="overflow-hidden">
+      <div className="">
         <div className="m-8 mb-8">
           <ProjectDataTable PersonDepartment={operationDepartment} />
         </div>
