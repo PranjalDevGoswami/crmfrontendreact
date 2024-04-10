@@ -81,9 +81,11 @@ const Edit = ({ viewRecord, setisEdit }) => {
   };
 
   const PostUpdateEditData = async (data) => {
-    console.log("updatedValue", data);
-    await PostMandaysData(data);
-    // setViewEdit(false);
+    try {
+      await PostMandaysData(data);
+    } catch (error) {
+      console.error("Error fetching project data:", error);
+    }
     setUpdatedValue({
       project_code: "",
       name: "",
@@ -92,7 +94,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
       total_achievement: "",
     });
     document.body.classList.remove("DrawerBody");
-    setIsDrawerOpen(false);
+    // setIsDrawerOpen(false);
   };
 
   const handleEditUpdate = () => {

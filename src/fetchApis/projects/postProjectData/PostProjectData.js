@@ -2,9 +2,6 @@ import { POSTPROJECTDATAAPIS } from "../../../../utils/urls.js";
 import { postWithAuth } from "../../../provider/helper/axios.js";
 
 export const PostFormData = async (data) => {
-  console.log("🚀 ~ PostFormData ~ data:", data);
-
-  let token = localStorage.getItem("token");
   try {
     const response = await postWithAuth(POSTPROJECTDATAAPIS, data, {
       method: "POST",

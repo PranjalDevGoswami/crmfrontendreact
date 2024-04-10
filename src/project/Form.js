@@ -47,7 +47,7 @@ const Form = () => {
     operation_select: true,
     finance_select: true,
     user_id: 1,
-    upload_document: "",
+    // upload_document: "",
   });
 
   const ProjectTypeListData = projectTypeData;
@@ -158,6 +158,13 @@ const Form = () => {
       setFormData({
         ...formData,
         [name]: ProjectTypeIndex + 1,
+      });
+    }
+    if (name === "manager") {
+      const ProjectManagerIndex = projectManagerData.indexOf(value);
+      setFormData({
+        ...formData,
+        [name]: ProjectManagerIndex + 1,
       });
     }
   };

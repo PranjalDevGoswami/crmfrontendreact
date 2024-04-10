@@ -306,7 +306,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         }"`}
       >
         <div className="flex items-center h-40 w-full overflow-visible">
-          <h2 className="p-2 text-3xl underline w-3/12">All Project Details</h2>
+          <h2 className="p-2 text-3xl underline w-3/12 text-[#bd1d1d]">
+            All Project Details
+          </h2>
           <div className="flex justify-end mb-4 w-9/12">
             <div className="flex items-center">
               {clientsListArray.length > 0 ? (
