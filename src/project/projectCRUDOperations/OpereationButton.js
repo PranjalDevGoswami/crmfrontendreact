@@ -14,7 +14,6 @@ const OpereationButton = ({
   setIsStatus,
 }) => {
   const userRole = userDetails();
-  console.log("🚀 ~ userRole:", userRole);
   const navigate = useNavigate();
 
   const [viewEditRecord, setEditRecord] = useState();
@@ -62,7 +61,7 @@ const OpereationButton = ({
   return (
     <div className="relative">
       <div className="w-40 h-54 z-50  text-white overflow-visible rounded-md rounded-tr-none">
-        {userRole.role === "OperationTeamLead" ? (
+        {userRole.role.include("operation") ? (
           <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
             <button
               className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"

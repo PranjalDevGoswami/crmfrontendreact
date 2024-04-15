@@ -32,8 +32,10 @@ const AddClient = ({ closeAddClient }) => {
     e.preventDefault();
     try {
       const response = await PostClientList(clientData);
-      if (response.status === "true") {
+      if (response?.status === "true") {
         closeAddClient(false);
+      } else {
+        alert(response?.ex?.response?.data?.name);
       }
     } catch (error) {
       console.error("Error fetching project data:", error);

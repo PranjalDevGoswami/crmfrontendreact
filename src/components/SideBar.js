@@ -87,7 +87,7 @@ const SideBar = () => {
           <PiCaretDoubleLeftLight
             className={`${
               sideBarOpen ? "top-0 left-52" : "left-16 top-0"
-            } text-2xl text-black mr-4 mt-4 cursor-pointer absolute duration-300 font-extralight z-40`}
+            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white h-8`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
             }}
@@ -96,7 +96,7 @@ const SideBar = () => {
           <PiCaretDoubleRightLight
             className={`${
               sideBarOpen ? "top-0 left-52" : "left-16 top-0"
-            } text-2xl text-black mr-4 mt-4 cursor-pointer absolute duration-300 font-extralight z-40`}
+            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white h-8`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
             }}

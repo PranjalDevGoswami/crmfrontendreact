@@ -11,6 +11,7 @@ const Dropdown = ({
   RequireAddButton,
   name,
   multiple,
+  defaultValue,
 }) => {
   const [addOptionValue, setAddOptionValue] = useState("");
   const [openOptionField, setOpenOptionField] = useState(false);
@@ -65,6 +66,7 @@ const Dropdown = ({
             return (
               <option key={index} className="p-4 text-xl" value={option}>
                 {option}
+                {defaultValue}
               </option>
             );
           })}

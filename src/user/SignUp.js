@@ -8,14 +8,13 @@ import { DEPARTMENTSAPIS, REGISTER } from "../../utils/urls";
 
 const SignUp = () => {
   const [departmentId, setDepartmentId] = useState([]);
-  const [departmentName, setDepartmentName] = useState([]);
+  const [departmentName, setDepartmentName] = useState(["it"]);
   const [registerData, setRegisterData] = useState({
     username: "",
     email: "",
     password: "",
-    phone: null,
-    gender: "",
-    user_department: 2,
+    phone: "",
+    user_department: "",
   });
   const navigate = useNavigate();
 
@@ -69,6 +68,7 @@ const SignUp = () => {
         gender: value,
       }));
     } else if (dropdownType === "user_department") {
+      console.log(value);
       const selectedDepartment = departmentId.find((dep) => dep.name === value);
       if (selectedDepartment) {
         setRegisterData((prevData) => ({
@@ -151,7 +151,7 @@ const SignUp = () => {
                 name={"phone"}
                 onchange={handleInputChange}
               />
-              <Dropdown
+              {/* <Dropdown
                 className={
                   "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full pr-4"
                 }
@@ -160,7 +160,7 @@ const SignUp = () => {
                 onChange={(e, value) =>
                   handleDropdownChange(e, "gender", value)
                 }
-              />
+              /> */}
               {departmentName.length > 0 && (
                 <Dropdown
                   className={

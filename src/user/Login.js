@@ -14,12 +14,11 @@ import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
 import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
+import { userDetails } from "./userProfile";
 
 const Login = () => {
-  // const token = localStorage.getItem("token");
   const { token, setToken } = useAuth();
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, setShowPasswordIcon] = useState(false);
   const [loginData, setLoginData] = useState({
@@ -49,10 +48,7 @@ const Login = () => {
       const userListJson = await userList.json();
 
       let email = localStorage.getItem("user");
-
       const userData = userListJson.users;
-      console.log("userData", userData);
-
       function getUserByEmail(email) {
         return userData.filter((user) => user.email === email);
       }
@@ -62,13 +58,10 @@ const Login = () => {
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department;
         if (department == 1) {
-          // Redirect to sales dashboard
           navigate("/sales-dashboard");
         } else if (department == 2) {
-          // Redirect to operation dashboard
           navigate("/operation-dashboard");
         } else {
-          // Redirect to default page or handle other cases
           navigate("/");
         }
       } else {
@@ -76,7 +69,6 @@ const Login = () => {
       }
     } catch (error) {
       console.error("Error redirecting user:", error);
-      // Handle error, display error message, etc.
     }
   };
   useEffect(() => {
@@ -92,14 +84,11 @@ const Login = () => {
         localStorage.setItem("refreshToken", response.refresh);
         localStorage.setItem("user", loginData.email);
         console.log("Login successful", response);
-        // Redirect user or perform other actions
       } else {
-        // Handle login failure, display error message, etc.
         console.error("Login failed:", response.error);
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      // Handle error, display error message, etc.
     }
   };
 
@@ -111,7 +100,6 @@ const Login = () => {
           <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
             <div className="flex flex-col gap-4 p-4 w-9/12">
               <h1 className="text-5xl text-center p-8 text-[#e7251e]">Login</h1>
-              {/* <div className="relative"> */}
               <Input
                 type={"email"}
                 className={

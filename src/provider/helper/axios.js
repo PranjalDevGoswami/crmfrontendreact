@@ -61,7 +61,7 @@ export const postWithAuth = (url, data) => {
           });
           return;
         }
-        resolve({ status: false, message: ex.message });
+        resolve({ status: false, message: ex.message, ex });
       });
   });
 };

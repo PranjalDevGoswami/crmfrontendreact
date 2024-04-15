@@ -5,6 +5,7 @@ import Login from "../user/Login.js";
 import OperationDashboard from "../dashboard/OperationDashboard.js";
 import SignUp from "../user/SignUp.js";
 import SalesDashboard from "../dashboard/SalesDashboard.js";
+import AdminPanel from "../dashboard/AdminPanel.js";
 import Reset from "../user/Reset.js";
 import Error from "../components/Error";
 import Form from "../project/Form.js";
@@ -39,6 +40,10 @@ const Routes = () => {
         {
           path: "/operation-dashboard",
           element: <OperationDashboard />,
+        },
+        {
+          path: "/admin",
+          element: <AdminPanel />,
         },
         {
           path: "/sales-dashboard",

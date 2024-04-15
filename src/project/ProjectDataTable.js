@@ -19,6 +19,7 @@ import Edit from "./projectCRUDOperations/Edit.js";
 import OpereationButton from "./projectCRUDOperations/OpereationButton.js";
 import Status from "./projectCRUDOperations/Status.js";
 import { userDetails } from "../user/userProfile.js";
+import ProjectData from "../../utils/projectData.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -29,7 +30,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     total_achievement: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [getFormDataApi, setGetFormDataApi] = useState([]);
   const [clientsListArray, setClientsListArray] = useState([]);
   const [isMultiEdit, setIsMultiEdit] = useState(false);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
@@ -46,11 +46,13 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [isStatus, setIsStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
+  const [DataForSales, setDataForSales] = useState([]);
 
   const dropdownRef = useRef(null);
 
-  const userRole = userDetails();
   let token = localStorage.getItem("token");
+  let user = localStorage.getItem("user");
+  let role = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -59,16 +61,20 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
-        setGetFormDataApi(projectDataObject);
+        if (role.includes("SalesTeamLead")) {
+          const DataShownByCurrentUser = projectDataObject.filter((item) => {
+            return item.user_email === user;
+          });
+          setDataForSales(DataShownByCurrentUser);
+        } else if (role.includes("SalesManager")) {
+          setDataForSales(projectDataObject);
+        }
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
   }, [token]);
-
-  useEffect(() => {}, [getFormDataApi]);
-
   useEffect(() => {
     const fetchClientList = async () => {
       try {
@@ -146,6 +152,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       name: "Sr.No.",
       selector: (row) => row.id,
       sortable: true,
+      width: "90px",
     },
     {
       name: "Project Code",
@@ -251,7 +258,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     },
   ];
 
-  const filteredData = getFormDataApi.filter((item) =>
+  const filteredData = DataForSales.filter((item) =>
     // (selectedStatus ? item.status === selectedStatus : true) &&
     // (selectedClient ? item.clients.name === selectedClient : true) &&
     Object.values(item).some((val) => {
@@ -265,7 +272,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       return false;
     })
   );
-  console.log("🚀 ~ ProjectDataTable ~ filteredData:", filteredData);
 
   const data = filteredData.map((item, index) => ({
     id: index + 1,
@@ -369,7 +375,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 />
               </div>
             )}
-            {userRole.role === "OperationTeamLead" ? (
+            {role === "OperationTeamLead" ? (
               <DataTable
                 columns={columns}
                 data={desabledRowData}

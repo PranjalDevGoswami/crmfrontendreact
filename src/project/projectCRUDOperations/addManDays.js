@@ -5,7 +5,6 @@ import DataTable from "react-data-table-component";
 import { customStyles, editedColumns } from "../../../utils/DataTablesData";
 import Dropdown from "../../components/DropDown";
 import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
-// import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 
 export function AddManDays({
   selectedRow,
@@ -100,6 +99,7 @@ export function AddManDays({
         className={"p-2 bg-gray-300"}
         name={"status"}
         value={mandaysData[index]?.status}
+        defaultValue="Inprogress"
       />
     ),
   }));
@@ -157,7 +157,7 @@ export function AddManDays({
 
   const HandleAddManDays = () => {
     const updatedMandaysData = [...mandaysData];
-    updatedMandaysData[editIndex] = {
+    updatedMmandaysDataandaysData[editIndex] = {
       man_days: "",
       total_achievement: "",
       status: "",

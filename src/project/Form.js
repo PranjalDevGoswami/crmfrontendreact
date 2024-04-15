@@ -24,7 +24,7 @@ const Form = () => {
   const [clientListData, setClientListData] = useState([]);
   const [projectTypeData, setProjectTypeData] = useState([]);
   const [projectManagerData, setProjectManagerData] = useState([]);
-
+  const user = localStorage.getItem("user");
   const [formData, setFormData] = useState({
     // project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
     name: "",
@@ -42,11 +42,10 @@ const Form = () => {
     // Translator_Cost_Details: "",
     // operation_select: advancePAyment,
     // mandaysEntry: "1",
-    user_email: "test1@novusinsights.com",
+    user_email: user,
     project_manager: 1,
     operation_select: true,
     finance_select: true,
-    user_id: 1,
     // upload_document: "",
   });
 
@@ -110,7 +109,6 @@ const Form = () => {
       setFormData({ ...formData, [name]: isoDate });
     }
     if (name === "set_up_fee") {
-      // setFormData({ ...formData, [name]: parseInt(value) });
       e.preventDefault();
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: parseInt(value) });
@@ -120,7 +118,6 @@ const Form = () => {
       }
     }
     if (name === "cpi") {
-      // setFormData({ ...formData, [name]: parseInt(value) });
       e.preventDefault();
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
@@ -140,7 +137,6 @@ const Form = () => {
   };
 
   const handleCheckboxChange = (name, checked) => {
-    // console.log("check", name, checked);
     setAdvancePAyment(checked);
   };
 
@@ -181,7 +177,6 @@ const Form = () => {
     const formDataArray = [formData];
     // dispatch(addFormData(formDataArray));
     setFormData({
-      // project_code: "",
       name: "",
       project_type: "",
       clients: "",
@@ -193,7 +188,7 @@ const Form = () => {
       tentative_end_date: "",
       other_cost: "",
       Translator_Cost: "",
-      other_cost_Details: "", // Additional field for Other Cost Details
+      other_cost_Details: "",
       Translator_Cost_Details: "",
       Advance_payment_required: advancePAyment,
       mandaysEntry: "1",
@@ -201,7 +196,6 @@ const Form = () => {
       project_manager: 1,
       operation_select: "",
       finance_select: "",
-      user_id: 1,
     });
     PostProjectData(formData);
   };
@@ -299,6 +293,7 @@ const Form = () => {
                 RequireAddButton={false}
                 required
                 onChange={SelectOptionHandler}
+                // defaultValue="CAWI"
               />
             ) : (
               <Dropdown

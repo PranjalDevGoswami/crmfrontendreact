@@ -9,9 +9,10 @@ const Breadcrumbs = () => {
   return (
     <React.Fragment>
       {breadcrumbs.map(({ breadcrumb, match }, index) => (
-        <React.Fragment key={index} >
+        <React.Fragment key={index}>
           {index > 0 && " >> "} {/* Add "/" between breadcrumbs */}
-          <Link key={index}
+          <Link
+            key={index}
             to={match.url}
             className={location.pathname === match.url ? "bg-red-400" : ""}
           >
