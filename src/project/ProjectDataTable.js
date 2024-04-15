@@ -6,7 +6,6 @@ import Input from "../components/InputField.js";
 import { MdOutlineMoreVert } from "react-icons/md";
 import Dropdown from "../components/DropDown.js";
 import {
-  Data,
   DummyData,
   Dummycolumns,
   conditionalRowStyles,
@@ -18,7 +17,6 @@ import View from "./projectCRUDOperations/View.js";
 import Edit from "./projectCRUDOperations/Edit.js";
 import OpereationButton from "./projectCRUDOperations/OpereationButton.js";
 import Status from "./projectCRUDOperations/Status.js";
-import { userDetails } from "../user/userProfile.js";
 import ProjectData from "../../utils/projectData.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
@@ -51,27 +49,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const dropdownRef = useRef(null);
 
   let token = localStorage.getItem("token");
-  let user = localStorage.getItem("user");
   let role = localStorage.getItem("role");
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        if (role.includes("SalesTeamLead")) {
-          const DataShownByCurrentUser = projectDataObject.filter((item) => {
-            return item.user_email === user;
-          });
-          setDataForSales(DataShownByCurrentUser);
-        } else if (role.includes("SalesManager")) {
-          setDataForSales(projectDataObject);
-        }
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
+      await ProjectData({ setDataForSales });
     };
     fetchProjectData();
   }, [token]);
