@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 
-function MultipleFileUpload({ className }) {
-  const [selectedFiles, setSelectedFiles] = useState([]);
-
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    setSelectedFiles(files);
-  };
-
+function MultipleFileUpload({
+  className,
+  selectedFiles,
+  handleFileChange,
+  name,
+}) {
   return (
     <div>
-      {/* <h2>Multiple File Upload</h2> */}
       <input
+        name={name}
         type="file"
         multiple
         onChange={handleFileChange}

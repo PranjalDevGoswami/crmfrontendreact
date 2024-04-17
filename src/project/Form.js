@@ -24,29 +24,26 @@ const Form = () => {
   const [clientListData, setClientListData] = useState([]);
   const [projectTypeData, setProjectTypeData] = useState([]);
   const [projectManagerData, setProjectManagerData] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [managerList, setManagerList] = useState();
   const user = localStorage.getItem("user");
+  const user_id = localStorage.getItem("user_id");
   const [formData, setFormData] = useState({
-    // project_code: "UNI" + Math.floor(Math.random() * 20000 + 20000),
     name: "",
     project_type: "",
     clients: "",
     sample: "",
     cpi: "",
-    set_up_fee: 1,
-    // Operation_team: "",
+    set_up_fee: "",
     tentative_start_date: "",
     tentative_end_date: "",
     other_cost: "",
-    // Translator_Cost: "",
-    // other_cost_Details: "", // Additional field for Other Cost Details
-    // Translator_Cost_Details: "",
-    // operation_select: advancePAyment,
-    // mandaysEntry: "1",
     user_email: user,
-    project_manager: 1,
+    user_id: user_id,
+    project_manager: "",
     operation_select: true,
-    finance_select: true,
-    // upload_document: "",
+    finance_select: advancePAyment,
+    // upload_document: selectedFiles,
   });
 
   const ProjectTypeListData = projectTypeData;
@@ -78,9 +75,13 @@ const Form = () => {
     const FetchProjectManager = async () => {
       try {
         const ProjectManager = await GetProjectManager();
-        const ProjectManagerObject = ProjectManager?.data?.map((val) => {
+        const Opern_Manager = ProjectManager?.data?.filter((item) => {
+          return item.manager_dep.name === "Operations";
+        });
+        const ProjectManagerObject = Opern_Manager?.map((val) => {
           return val?.name;
         });
+        setManagerList(Opern_Manager);
         setProjectManagerData(ProjectManagerObject);
       } catch (error) {
         console.error("Error fetching project type List:", error);
@@ -90,7 +91,7 @@ const Form = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     setFormData({ ...formData, [name]: value });
     if (name === "tentative_start_date") {
       const tst = value;
@@ -134,6 +135,12 @@ const Form = () => {
         alert(`'Sample value can't be in decimal'`);
       }
     }
+    if (name === "upload_document") {
+      e.preventDefault();
+      const fileData = new FormData();
+      fileData.append("file", files[0]);
+      setSelectedFiles(fileData);
+    }
   };
 
   const handleCheckboxChange = (name, checked) => {
@@ -156,11 +163,13 @@ const Form = () => {
         [name]: ProjectTypeIndex + 1,
       });
     }
-    if (name === "manager") {
-      const ProjectManagerIndex = projectManagerData.indexOf(value);
+    if (name === "project_manager") {
+      const selectedManager = managerList.find(
+        (manager) => manager.name === value
+      );
       setFormData({
         ...formData,
-        [name]: ProjectManagerIndex + 1,
+        [name]: selectedManager.id,
       });
     }
   };
@@ -174,29 +183,6 @@ const Form = () => {
   };
 
   const handleSubmit = (e) => {
-    const formDataArray = [formData];
-    // dispatch(addFormData(formDataArray));
-    setFormData({
-      name: "",
-      project_type: "",
-      clients: "",
-      sample: "",
-      cpi: "",
-      set_up_fee: 1,
-      Operation_team: "",
-      tentative_start_date: "",
-      tentative_end_date: "",
-      other_cost: "",
-      Translator_Cost: "",
-      other_cost_Details: "",
-      Translator_Cost_Details: "",
-      Advance_payment_required: advancePAyment,
-      mandaysEntry: "1",
-      user_email: "test1@novusinsights.com",
-      project_manager: 1,
-      operation_select: "",
-      finance_select: "",
-    });
     PostProjectData(formData);
   };
 
@@ -260,7 +246,11 @@ const Form = () => {
   return (
     <div className="relative">
       <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
-      <form onSubmit={handleSubmit} className="p-2 pl-8">
+      <form
+        onSubmit={handleSubmit}
+        className="p-2 pl-8"
+        encType="multipart/form-data"
+      >
         <div className="flex flex-wrap w-full gap-4">
           <div className="flex flex-col w-[32%]">
             <LableAndInput
@@ -451,7 +441,7 @@ const Form = () => {
           <div className="flex flex-col w-[32%]">
             <Label labelName={"Manager  "} className={"pt-4 pb-2"} />
             <Dropdown
-              name={"manager"}
+              name={"project_manager"}
               className={
                 "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
               }
@@ -487,7 +477,12 @@ const Form = () => {
           </div>
           <div className="flex flex-col w-[32%]">
             <Label labelName={"SOW File"} className={"pt-4 pb-2"} />
-            <MultipleFileUpload className={"p-1 border bg-[#f3eded] w-full"} />
+            <MultipleFileUpload
+              selectedFiles={selectedFiles}
+              name={"upload_document"}
+              handleFileChange={handleInputChange}
+              className={"p-1 border bg-[#f3eded] w-full"}
+            />
           </div>
         </div>
         <div className="flex flex-col w-[32%] pt-8 pb-2">

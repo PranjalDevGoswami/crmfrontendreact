@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
-import Input from "./InputField";
 import AddClient from "./AddClient";
 import { TiPlus } from "react-icons/ti";
 

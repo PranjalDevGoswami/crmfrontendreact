@@ -3,7 +3,6 @@ import DataTable from "react-data-table-component";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import Button from "../components/Button";
 import Input from "../components/InputField.js";
-import { MdOutlineMoreVert } from "react-icons/md";
 import Dropdown from "../components/DropDown.js";
 import {
   DummyData,
@@ -15,9 +14,9 @@ import { ClientList } from "../fetchApis/clientList/ClientList";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
 import View from "./projectCRUDOperations/View.js";
 import Edit from "./projectCRUDOperations/Edit.js";
-import OpereationButton from "./projectCRUDOperations/OpereationButton.js";
 import Status from "./projectCRUDOperations/Status.js";
-import ProjectData from "../../utils/projectData.js";
+import { TableColumn } from "../../utils/dataTableColumns.js";
+import AssignedProject from "./AssignedProject.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -44,16 +43,47 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [isStatus, setIsStatus] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
-  const [DataForSales, setDataForSales] = useState([]);
+  const [filteredProjectData, setFilteredProjectData] = useState([]);
 
   const dropdownRef = useRef(null);
 
   let token = localStorage.getItem("token");
   let role = localStorage.getItem("role");
+  let user = localStorage.getItem("user");
+  let username = localStorage.getItem("username");
+  let department = localStorage.getItem("department");
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      await ProjectData({ setDataForSales });
+      try {
+        const fetchDataFromApi2 = await GetProjectData();
+        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
+          return val;
+        });
+        setFilteredProjectData(projectDataObject);
+        if (role.includes("Team Lead") && department == 2) {
+          const DataShownByCurrentUser = projectDataObject.filter((item) => {
+            // console.log(item?.project_teamlead?.name);
+            return (
+              item?.project_teamlead?.name.toLowerCase() ===
+              username.toLowerCase()
+            );
+          });
+          setFilteredProjectData(DataShownByCurrentUser);
+        } else if (role.includes("SalesManager") && department == 1) {
+          const DataShownByCurrentUser = projectDataObject.filter((item) => {
+            return item.user_email === user;
+          });
+          setDataForSales(DataShownByCurrentUser);
+        } else if (role.includes("AM/Manager") && department == 2) {
+          const AssignedManager = projectDataObject.filter((item) => {
+            return item?.project_manager?.name === username;
+          });
+          setFilteredProjectData(AssignedManager);
+        }
+      } catch (error) {
+        console.error("Error fetching project data:", error);
+      }
     };
     fetchProjectData();
   }, [token]);
@@ -106,141 +136,19 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setIsDrawerOpen(true);
     document.body.classList.toggle("DrawerBody");
   };
-  const handleAddEditOperation = (record, index) => {
-    // if (record.status !== "completed") {
-    setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
-    setIsViewOptionIndex(index);
-    setIsViewOptionOpen(!isViewOptionOpen);
-    setIsMultiEdit(false);
-    setSelectedRecord(record);
-    setSelectedIndex(index);
-    // }
-  };
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setOpenDropdownIndex(-1);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const columns = [
-    {
-      name: "Sr.No.",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "90px",
-    },
-    {
-      name: "Project Code",
-      selector: (row) => row.project_code,
-      sortable: true,
-    },
-    {
-      name: "Client Name",
-      selector: (row) => row.clients,
-      sortable: true,
-    },
-    {
-      name: "Project Name",
-      selector: (row) => row.name,
-      sortable: true,
-    },
-    {
-      name: "Type",
-      selector: (row) => row.project_type,
-      sortable: true,
-    },
-    {
-      name: "Start Date",
-      selector: (row) => row.tentative_start_date,
-      sortable: true,
-    },
-    {
-      name: "End Date",
-      selector: (row) => row.tentative_end_date,
-      sortable: true,
-    },
-    {
-      name: "CPI",
-      selector: (row) => row.cpi,
-      sortable: true,
-    },
-    {
-      name: "Project Target",
-      selector: (row) => row.sample,
-      sortable: true,
-    },
-    {
-      name: "Achieved Target",
-      selector: (row) => row.total_achievement,
-      sortable: true,
-    },
-    {
-      name: "Remaining Target",
-      selector: (row) => row.remaining_interview,
-      sortable: true,
-    },
-    {
-      name: "T. Man Days",
-      selector: (row) => row.man_days,
-      sortable: true,
-    },
-    {
-      name: "status",
-      selector: (row) => row.status,
-      sortable: true,
-    },
-    {
-      name: "Actions",
-      key: "action",
-      text: "Action",
-      className: "action",
-      width: 100,
-      align: "left",
-      sortable: false,
-      cell: (record, index) => {
-        return (
-          <div className="relative w-full">
-            <div className="flex items-center">
-              <button
-                onClick={() => handleAddEditOperation(record, index)}
-                className="border p-2 rounded-md mr-2 cursor-pointer"
-              >
-                <MdOutlineMoreVert />
-              </button>
-              {openDropdownIndex === index ? (
-                <div
-                  className={`${
-                    index <= 5
-                      ? "absolute right-[57px] top-0"
-                      : "absolute right-[57px] bottom-0"
-                  }`}
-                >
-                  <OpereationButton
-                    record={selectedRecord}
-                    isView={isView}
-                    setisView={setisView}
-                    setisEdit={setisEdit}
-                    setIsStatus={setIsStatus}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-        );
-      },
-    },
-  ];
 
-  const filteredData = DataForSales.filter((item) =>
+  const filteredData = filteredProjectData.filter((item) =>
     // (selectedStatus ? item.status === selectedStatus : true) &&
     // (selectedClient ? item.clients.name === selectedClient : true) &&
     Object.values(item).some((val) => {
@@ -348,18 +256,43 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 <span className="text-white text-xl">
                   row selected ({selectedRow.length}){" "}
                 </span>
-                <Button
-                  name={"Add Man Days"}
-                  className={
-                    "p-2 bg-yellow-200 border rounded-md border-black ml-4"
-                  }
-                  onClick={handleMutiEdit}
-                />
+                {role.includes("Team Lead") ? (
+                  <Button
+                    name={"Add Man Days"}
+                    className={
+                      "p-2 bg-yellow-200 border rounded-md border-black ml-4"
+                    }
+                    onClick={handleMutiEdit}
+                  />
+                ) : (
+                  <Button
+                    name={"Assign Project"}
+                    className={
+                      "p-2 bg-yellow-200 border rounded-md border-black ml-4"
+                    }
+                    onClick={handleMutiEdit}
+                  />
+                )}
               </div>
             )}
-            {role === "OperationTeamLead" ? (
+            {department == 2 &&
+            (role.includes("Team Lead") || role.includes("AM/Manager")) ? (
               <DataTable
-                columns={columns}
+                columns={TableColumn({
+                  setIsStatus,
+                  setisEdit,
+                  setisView,
+                  isView,
+                  setSelectedRecord,
+                  selectedRecord,
+                  openDropdownIndex,
+                  setOpenDropdownIndex,
+                  setIsViewOptionIndex,
+                  setIsViewOptionOpen,
+                  isViewOptionOpen,
+                  setIsMultiEdit,
+                  setSelectedIndex,
+                })}
                 data={desabledRowData}
                 pagination
                 customStyles={customStyles}
@@ -371,7 +304,21 @@ const ProjectDataTable = ({ PersonDepartment }) => {
               />
             ) : (
               <DataTable
-                columns={columns}
+                columns={TableColumn({
+                  setIsStatus,
+                  setisEdit,
+                  setisView,
+                  isView,
+                  setSelectedRecord,
+                  selectedRecord,
+                  openDropdownIndex,
+                  setOpenDropdownIndex,
+                  setIsViewOptionIndex,
+                  setIsViewOptionOpen,
+                  isViewOptionOpen,
+                  setIsMultiEdit,
+                  setSelectedIndex,
+                })}
                 data={desabledRowData}
                 pagination
                 customStyles={customStyles}
@@ -425,8 +372,14 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         )}
       </div>
       <div className="">
-        {multiEditFieldOpen ? (
+        {multiEditFieldOpen && role.includes("Team Lead") ? (
           <AddManDays
+            selectedRow={selectedRow}
+            setIsDrawerOpen={setIsDrawerOpen}
+            setMultiEditFieldOpen={setMultiEditFieldOpen}
+          />
+        ) : multiEditFieldOpen && role.includes("AM/Manager") ? (
+          <AssignedProject
             selectedRow={selectedRow}
             setIsDrawerOpen={setIsDrawerOpen}
             setMultiEditFieldOpen={setMultiEditFieldOpen}
@@ -438,5 +391,4 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     </>
   );
 };
-
 export default ProjectDataTable;

@@ -1,9 +1,27 @@
-import { useState } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
 import OpereationButton from "../src/project/projectCRUDOperations/OpereationButton";
 
-export const TableColumn = () => {
-  //   const [openDropdownIndex, setOpenDropdownIndex] = useState(-1);
+export const TableColumn = ({
+  setIsStatus,
+  setisEdit,
+  setisView,
+  isView,
+  setSelectedRecord,
+  selectedRecord,
+  openDropdownIndex,
+  setOpenDropdownIndex,
+  setIsViewOptionIndex,
+  setIsViewOptionOpen,
+  isViewOptionOpen,
+  setSelectedIndex,
+}) => {
+  const handleAddEditOperation = (record, index) => {
+    setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
+    setIsViewOptionIndex(index);
+    setIsViewOptionOpen(!isViewOptionOpen);
+    setSelectedRecord(record);
+    setSelectedIndex(index);
+  };
   return (columns = [
     {
       name: "Sr.No.",
@@ -70,47 +88,46 @@ export const TableColumn = () => {
       selector: (row) => row.status,
       sortable: true,
     },
-    // {
-    //   name: "Actions",
-    //   key: "action",
-    //   text: "Action",
-    //   className: "action",
-    //   width: 100,
-    //   align: "left",
-    //   sortable: false,
-    //   cell: (record, index) => {
-    //     return (
-    //       <div className="relative w-full">
-    //         <div className="flex items-center">
-    //           <button
-    //             onClick={() => handleAddEditOperation(record, index)}
-    //             className="border p-2 rounded-md mr-2 cursor-pointer"
-    //           >
-    //             <MdOutlineMoreVert />
-    //           </button>
-    //           {openDropdownIndex === index ? (
-    //             <div
-    //               className={`${
-    //                 index <= 5
-    //                   ? "absolute right-[57px] top-0"
-    //                   : "absolute right-[57px] bottom-0"
-    //               }`}
-    //             >
-    //               <OpereationButton
-    //                 record={selectedRecord}
-    //                 isView={isView}
-    //                 setisView={setisView}
-    //                 setisEdit={setisEdit}
-    //                 setIsStatus={setIsStatus}
-    //               />
-    //             </div>
-    //           ) : (
-    //             ""
-    //           )}
-    //         </div>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      name: "Actions",
+      key: "action",
+      text: "Action",
+      className: "action",
+      align: "left",
+      sortable: false,
+      cell: (record, index) => {
+        return (
+          <div className="relative w-full">
+            <div className="flex items-center">
+              <button
+                onClick={() => handleAddEditOperation(record, index)}
+                className="border p-2 rounded-md mr-2 cursor-pointer"
+              >
+                <MdOutlineMoreVert />
+              </button>
+              {openDropdownIndex === index ? (
+                <div
+                  className={`${
+                    index <= 5
+                      ? "absolute right-[57px] top-0"
+                      : "absolute right-[57px] bottom-0"
+                  }`}
+                >
+                  <OpereationButton
+                    record={selectedRecord}
+                    isView={isView}
+                    setisView={setisView}
+                    setisEdit={setisEdit}
+                    setIsStatus={setIsStatus}
+                  />
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+        );
+      },
+    },
   ]);
 };

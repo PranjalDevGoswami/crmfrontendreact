@@ -57,6 +57,7 @@ const Login = () => {
 
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department;
+        localStorage.setItem("department", department);
         if (department == 1) {
           navigate("/sales-dashboard");
         } else if (department == 2) {
@@ -83,7 +84,6 @@ const Login = () => {
         setToken(response.access);
         localStorage.setItem("refreshToken", response.refresh);
         localStorage.setItem("user", loginData.email);
-        console.log("Login successful", response);
       } else {
         console.error("Login failed:", response.error);
       }

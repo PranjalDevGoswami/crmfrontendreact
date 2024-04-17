@@ -14,6 +14,7 @@ import { userDetails } from "../user/userProfile";
 
 const SideBar = () => {
   const userRole = userDetails();
+  const department = localStorage.getItem("department");
   const [sideBarOpen, SetSideBarOpen] = useState(true);
   return (
     <div className="shadow-slate-400 flex">
@@ -32,7 +33,7 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4 float-right`}
           >
-            {userRole.role === "OperationTeamLead" ? (
+            {department == 2 ? (
               <Link to="/operation-dashboard">Dashboard</Link>
             ) : (
               <Link to="/sales-dashboard">Dashboard</Link>
@@ -46,7 +47,7 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            {userRole.role === "OperationTeamLead" ? (
+            {department == 2 ? (
               <Link to="/operation-dashboard">Project</Link>
             ) : (
               <Link to="/sales-dashboard">Project</Link>
@@ -60,7 +61,7 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            {userRole.role === "OperationTeamLead" ? (
+            {department == 2 ? (
               <Link to="/operation-dashboard">Report</Link>
             ) : (
               <Link to="/sales-dashboard">Report</Link>
@@ -74,7 +75,7 @@ const SideBar = () => {
               sideBarOpen ? "block" : "hidden"
             } overflow-hidden duration-300 ml-4`}
           >
-            {userRole.role === "OperationTeamLead" ? (
+            {department == 2 ? (
               <Link to="/operation-dashboard">Chart</Link>
             ) : (
               <Link to="/sales-dashboard">Chart</Link>
@@ -86,8 +87,8 @@ const SideBar = () => {
         {sideBarOpen ? (
           <PiCaretDoubleLeftLight
             className={`${
-              sideBarOpen ? "top-0 left-52" : "left-16 top-0"
-            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white h-8`}
+              sideBarOpen ? "top-4 left-52" : "left-16 top-0"
+            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
             }}
@@ -95,8 +96,8 @@ const SideBar = () => {
         ) : (
           <PiCaretDoubleRightLight
             className={`${
-              sideBarOpen ? "top-0 left-52" : "left-16 top-0"
-            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white h-8`}
+              sideBarOpen ? "top-4 left-52" : "left-16 top-0"
+            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
             }}

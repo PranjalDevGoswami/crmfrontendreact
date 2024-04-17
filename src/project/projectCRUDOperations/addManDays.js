@@ -99,7 +99,6 @@ export function AddManDays({
         className={"p-2 bg-gray-300"}
         name={"status"}
         value={mandaysData[index]?.status}
-        defaultValue="Inprogress"
       />
     ),
   }));
@@ -157,7 +156,7 @@ export function AddManDays({
 
   const HandleAddManDays = () => {
     const updatedMandaysData = [...mandaysData];
-    updatedMmandaysDataandaysData[editIndex] = {
+    updatedMandaysData[editIndex] = {
       man_days: "",
       total_achievement: "",
       status: "",

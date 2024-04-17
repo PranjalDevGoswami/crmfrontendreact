@@ -3,7 +3,6 @@ import View from "./View";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { userDetails } from "../../user/userProfile";
 
 const OpereationButton = ({
   record,
@@ -13,7 +12,7 @@ const OpereationButton = ({
   isEdit,
   setIsStatus,
 }) => {
-  const userRole = userDetails();
+  const role = localStorage.getItem("role");
   const navigate = useNavigate();
 
   const [viewEditRecord, setEditRecord] = useState();
@@ -58,10 +57,13 @@ const OpereationButton = ({
   const HandleAddManDays = () => {
     setisEdit(true);
   };
+  const handleAssignProject = () => {
+    console.log("Assigned Project");
+  };
   return (
-    <div className="relative">
-      <div className="w-40 h-54 z-50  text-white overflow-visible rounded-md rounded-tr-none">
-        {userRole.role.include("operation") ? (
+    <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
+      <div className="w-40 h-54 ">
+        {role === "TeamLeadOperation" ? (
           <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
             <button
               className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
@@ -115,14 +117,33 @@ const OpereationButton = ({
             )}
           </div>
         ) : (
+          ""
+          // <button
+          //   className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+          //   onClick={handleViewProject}
+          // >
+          //   <Link to={"/view"}>View</Link>
+          // </button>
+        )}
+      </div>
+      {role === "AM/Manager" ? (
+        <div className="absolute top-0 right-40 w-full">
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={handleViewProject}
           >
             <Link to={"/view"}>View</Link>
           </button>
-        )}
-      </div>
+          <button
+            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+            onClick={handleAssignProject}
+          >
+            Assigned Project
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

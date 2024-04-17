@@ -38,8 +38,8 @@ export const postWithOutAuth = (url, data) => {
   return axios.post(url, data);
 };
 
+let token = localStorage.getItem("token");
 export const postWithAuth = (url, data) => {
-  let token = localStorage.getItem("token");
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -48,6 +48,33 @@ export const postWithAuth = (url, data) => {
   return new Promise((resolve, reject) => {
     axios
       .post(url, data, { headers })
+      .then((response) => {
+        if (response && response.data) {
+          resolve({ status: true, data: response.data });
+        }
+      })
+      .catch((ex) => {
+        if (checkForTokenExpiredError(ex)) {
+          const callback = () => getWithAuth(url);
+          refreshTokenAndSetAuth(callback).then((data) => {
+            return resolve(data);
+          });
+          return;
+        }
+        resolve({ status: false, message: ex.message, ex });
+      });
+  });
+};
+
+export const putWithAuth = (url, data) => {
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+  // return axios.post(url, data, { headers });
+  return new Promise((resolve, reject) => {
+    axios
+      .put(url, data, { headers })
       .then((response) => {
         if (response && response.data) {
           resolve({ status: true, data: response.data });

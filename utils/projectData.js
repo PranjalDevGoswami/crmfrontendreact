@@ -1,6 +1,6 @@
 import { GetProjectData } from "../src/fetchApis/projects/getProjectData/GetProjectData";
 
-const ProjectData = async ({ setDataForSales }) => {
+export const ProjectData = async ({ setFilteredProjectData }) => {
   const role = localStorage.getItem("role");
   const user = localStorage.getItem("user");
   try {
@@ -12,13 +12,12 @@ const ProjectData = async ({ setDataForSales }) => {
       const DataShownByCurrentUser = projectDataObject.filter((item) => {
         return item.user_email === user;
       });
-      setDataForSales(DataShownByCurrentUser);
+      setFilteredProjectData(DataShownByCurrentUser);
     } else if (role.includes("manager")) {
-      setDataForSales(projectDataObject);
+      setFilteredProjectData(projectDataObject);
     }
   } catch (error) {
     console.error("Error fetching project data:", error);
   }
   return ProjectData;
 };
-export default ProjectData;
