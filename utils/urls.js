@@ -1,4 +1,4 @@
-const BASEURL = "http://127.0.0.1:8000";
+const BASEURL = "http://13.200.128.137/";
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
 export const GETPROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
