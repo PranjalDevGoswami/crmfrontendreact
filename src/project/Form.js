@@ -22,8 +22,14 @@ const Form = () => {
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([]);
-  const [projectTypeData, setProjectTypeData] = useState([]);
-  const [projectManagerData, setProjectManagerData] = useState([]);
+  const [projectTypeData, setProjectTypeData] = useState([
+    "Demo CATI",
+    " Demo CAWI",
+  ]);
+  const [projectManagerData, setProjectManagerData] = useState([
+    "demo manager1",
+    "demo manager2",
+  ]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [managerList, setManagerList] = useState();
   const user = localStorage.getItem("user");
@@ -38,12 +44,13 @@ const Form = () => {
     tentative_start_date: "",
     tentative_end_date: "",
     other_cost: "",
+    transaction_fee: "",
     user_email: user,
     user_id: user_id,
     project_manager: "",
     operation_select: true,
     finance_select: advancePAyment,
-    // upload_document: selectedFiles,
+    upload_document: "",
   });
 
   const ProjectTypeListData = projectTypeData;
@@ -113,7 +120,14 @@ const Form = () => {
       e.preventDefault();
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: parseInt(value) });
-        console.log("value", value);
+      } else {
+        alert(`'Sample value can't be in decimal'`);
+      }
+    }
+    if (name === "transaction_fee") {
+      e.preventDefault();
+      if (/^\d*$/.test(value)) {
+        setFormData({ ...formData, [name]: parseInt(value) });
       } else {
         alert(`'Sample value can't be in decimal'`);
       }
@@ -136,10 +150,10 @@ const Form = () => {
       }
     }
     if (name === "upload_document") {
-      e.preventDefault();
       const fileData = new FormData();
-      fileData.append("file", files[0]);
-      setSelectedFiles(fileData);
+      fileData.append("upload_document", files[0]);
+      setSelectedFiles(files);
+      setFormData({ ...formData, [name]: fileData });
     }
   };
 
@@ -175,6 +189,7 @@ const Form = () => {
   };
 
   const PostProjectData = async (data) => {
+    console.log(data);
     try {
       await PostFormData(data);
     } catch (error) {
@@ -249,7 +264,7 @@ const Form = () => {
       <form
         onSubmit={handleSubmit}
         className="p-2 pl-8"
-        encType="multipart/form-data"
+        // enctype="multipart/form-data"
       >
         <div className="flex flex-wrap w-full gap-4">
           <div className="flex flex-col w-[32%]">
@@ -270,33 +285,20 @@ const Form = () => {
               className={"pt-4 pb-2"}
               required
             />
-            {projectTypeData.length > 0 ? (
-              <Dropdown
-                name={"project_type"}
-                className={
-                  "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
-                }
-                Option_Name={[
-                  "-- Select Project Type --",
-                  ...ProjectTypeListData,
-                ]}
-                RequireAddButton={false}
-                required
-                onChange={SelectOptionHandler}
-                // defaultValue="CAWI"
-              />
-            ) : (
-              <Dropdown
-                name={"project_type"}
-                className={
-                  "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
-                }
-                Option_Name={["-- Select Project Type --", "CATI", "CAWI"]}
-                RequireAddButton={false}
-                required
-                onChange={SelectOptionHandler}
-              />
-            )}
+            <Dropdown
+              name={"project_type"}
+              className={
+                "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+              }
+              Option_Name={[
+                "-- Select Project Type --",
+                ...ProjectTypeListData,
+              ]}
+              RequireAddButton={false}
+              required
+              onChange={SelectOptionHandler}
+              // defaultValue="CAWI"
+            />
           </div>
           <div className="flex flex-col w-[32%]">
             <Label labelName={"Client"} className={"pt-4 pb-2"} />
@@ -381,8 +383,8 @@ const Form = () => {
 
                   <MultipleValueDropDown
                     options={[
-                      { value: "Other Cost", label: "Other Cost" },
-                      { value: "Translation Cost", label: "Translation Cost" },
+                      { value: "other_cost", label: "Other Cost" },
+                      { value: "transaction_fee", label: "Translation Cost" },
                       // { value: 'Cost', label: 'Cost' },
                     ]}
                     onChange={MultipleValueSection}
@@ -427,7 +429,7 @@ const Form = () => {
               <div className="flex w-full">
                 <div className="w-full inline-block">
                   <Input
-                    InputName={"Translator_Cost"}
+                    InputName={"transaction_fee"}
                     type={"number"}
                     onchange={handleInputChange}
                     className={"p-2 border bg-[#f3eded] w-full"}

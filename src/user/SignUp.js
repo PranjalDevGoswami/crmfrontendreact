@@ -14,30 +14,26 @@ const SignUp = () => {
     email: "",
     password: "",
     phone: "",
-    user_department: "",
+    // user_department: "",
+    confirm_password: "",
   });
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getDepartments();
-  }, []);
+  // useEffect(() => {
+  //   getDepartments();
+  // }, []);
 
-  const getDepartments = async () => {
-    const department = await fetch(DEPARTMENTSAPIS);
-    const departmentJson = await department.json();
-    const depName = await departmentJson.map((dep) => String(dep.name));
-    const departmentDetails = await departmentJson.map((dep) => dep);
-    setDepartmentName(depName);
-    setDepartmentId(departmentDetails);
-  };
+  // const getDepartments = async () => {
+  //   const department = await fetch(DEPARTMENTSAPIS);
+  //   const departmentJson = await department.json();
+  //   const depName = await departmentJson.map((dep) => String(dep.name));
+  //   const departmentDetails = await departmentJson.map((dep) => dep);
+  //   setDepartmentName(depName);
+  //   setDepartmentId(departmentDetails);
+  // };
 
   const handleregisterDataSubmit = async (e) => {
     e.preventDefault();
-    if (registerData.password !== registerData["confirm password"]) {
-      // Password and confirm password do not match
-      alert("Password and confirm password do not match");
-      return;
-    }
     try {
       const response = await fetch(REGISTER, {
         method: "POST",
@@ -48,14 +44,17 @@ const SignUp = () => {
         body: JSON.stringify(registerData),
       });
       if (response.ok) {
+        alert("Registration Successful !!");
         navigate("/login");
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData);
         if (errorData.email) {
           alert(errorData.email);
-        } else {
+        } else if (errorData.password) {
           alert(errorData.password);
+        } else if (errorData.non_field_errors) {
+          alert(errorData.non_field_errors[0]);
         }
       }
     } catch (error) {}
@@ -81,6 +80,15 @@ const SignUp = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (registerData.password && registerData.confirm_password) {
+      if (name === "phone") {
+        if (registerData.password !== registerData.confirm_password) {
+          // Password and confirm password do not match
+          alert("Password and confirm password do not match");
+          return;
+        }
+      }
+    }
     setRegisterData((prevData) => ({ ...prevData, [name]: value }));
   };
 
@@ -137,7 +145,7 @@ const SignUp = () => {
                 }
                 required={"required"}
                 placeholder={"confirm password"}
-                name={"confirm password"}
+                name={"confirm_password"}
                 onchange={handleInputChange}
               />
               <Input
@@ -161,7 +169,7 @@ const SignUp = () => {
                   handleDropdownChange(e, "gender", value)
                 }
               /> */}
-              {departmentName.length > 0 && (
+              {/* {departmentName.length > 0 && (
                 <Dropdown
                   className={
                     "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full pr-4"
@@ -172,7 +180,7 @@ const SignUp = () => {
                     handleDropdownChange(e, "user_department", value)
                   }
                 />
-              )}
+              )} */}
               <div className="flex justify-center">
                 <Button
                   className={"p-4 bg-[#e7251e] rounded-full text-white w-1/2"}

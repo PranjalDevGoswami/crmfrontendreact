@@ -118,9 +118,9 @@ const AssignedProject = ({
     assigned: (
       <Dropdown
         key={`status_${item.id}`}
-        Option_Name={[...selectTL]}
+        Option_Name={["--Select TL--", ...selectTL]}
         onChange={(name, value) => handleSelectTL(index, name, value)}
-        className={"p-2 bg-gray-300"}
+        className={"p-2 bg-white"}
         name={"project_teamlead"}
         value={assignData[index]?.status}
       />

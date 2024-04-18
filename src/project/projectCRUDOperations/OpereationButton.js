@@ -13,6 +13,7 @@ const OpereationButton = ({
   setIsStatus,
 }) => {
   const role = localStorage.getItem("role");
+  const department = localStorage.getItem("department");
   const navigate = useNavigate();
 
   const [viewEditRecord, setEditRecord] = useState();
@@ -63,7 +64,8 @@ const OpereationButton = ({
   return (
     <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
       <div className="w-40 h-54 ">
-        {role === "TeamLeadOperation" ? (
+        {role === "TeamLeadOperation" ||
+        (role === "Team Lead" && department == 2) ? (
           <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
             <button
               className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
@@ -117,17 +119,16 @@ const OpereationButton = ({
             )}
           </div>
         ) : (
-          ""
-          // <button
-          //   className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-          //   onClick={handleViewProject}
-          // >
-          //   <Link to={"/view"}>View</Link>
-          // </button>
+          <button
+            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+            onClick={handleViewProject}
+          >
+            <Link to={"/view"}>View</Link>
+          </button>
         )}
       </div>
       {role === "AM/Manager" ? (
-        <div className="absolute top-0 right-40 w-full">
+        <div className="">
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={handleViewProject}
@@ -138,7 +139,7 @@ const OpereationButton = ({
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={handleAssignProject}
           >
-            Assigned Project
+            Assigned TeamLead
           </button>
         </div>
       ) : (

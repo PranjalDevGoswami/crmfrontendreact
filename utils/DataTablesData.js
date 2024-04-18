@@ -289,6 +289,7 @@ export const editedColumns = [
     name: "Sr.No.",
     selector: (row) => row.id,
     sortable: true,
+    width: "90px",
   },
   {
     name: "Project Code",
@@ -309,6 +310,7 @@ export const editedColumns = [
     name: "Sample",
     selector: (row) => row.sample,
     sortable: true,
+    width: "100px",
   },
   {
     name: "Achieved Target",
@@ -324,6 +326,7 @@ export const editedColumns = [
     name: "status",
     selector: (row) => row.status,
     sortable: true,
+    width: "200px",
   },
 ];
 

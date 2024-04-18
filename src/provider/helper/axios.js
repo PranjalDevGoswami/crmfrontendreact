@@ -55,7 +55,7 @@ export const postWithAuth = (url, data) => {
       })
       .catch((ex) => {
         if (checkForTokenExpiredError(ex)) {
-          const callback = () => getWithAuth(url);
+          const callback = () => postWithAuth(url, data);
           refreshTokenAndSetAuth(callback).then((data) => {
             return resolve(data);
           });
@@ -82,7 +82,7 @@ export const putWithAuth = (url, data) => {
       })
       .catch((ex) => {
         if (checkForTokenExpiredError(ex)) {
-          const callback = () => getWithAuth(url);
+          const callback = () => putWithAuth(url, data);
           refreshTokenAndSetAuth(callback).then((data) => {
             return resolve(data);
           });

@@ -27,7 +27,10 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     total_achievement: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [clientsListArray, setClientsListArray] = useState([]);
+  const [clientsListArray, setClientsListArray] = useState([
+    "Demo Client1",
+    "Demo Client2",
+  ]);
   const [isMultiEdit, setIsMultiEdit] = useState(false);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
@@ -86,7 +89,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       }
     };
     fetchProjectData();
-  }, [token]);
+  }, [token, isDrawerOpen]);
   useEffect(() => {
     const fetchClientList = async () => {
       try {
@@ -204,23 +207,15 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           </h2>
           <div className="flex justify-end mb-4 w-9/12">
             <div className="flex items-center">
-              {clientsListArray.length > 0 ? (
-                <Dropdown
-                  Option_Name={["select Client", ...clientsListArray]}
-                  onChange={handleFilterOption}
-                  name={"Client"}
-                  className={"p-4 m-1 border border-black rounded"}
-                />
-              ) : (
-                <Dropdown
-                  Option_Name={["--Select Clients--", "am", "am2"]}
-                  onChange={handleFilterOption}
-                  name={"Client"}
-                  className={"p-4 m-1 border border-black rounded"}
-                />
-              )}
+              <Dropdown
+                Option_Name={["--Select Client--", ...clientsListArray]}
+                onChange={handleFilterOption}
+                name={"Client"}
+                className={"p-4 m-1 border border-black rounded"}
+              />
               <Dropdown
                 Option_Name={[
+                  "--Select Status--",
                   "Inprogress",
                   "Hold",
                   "Completed",

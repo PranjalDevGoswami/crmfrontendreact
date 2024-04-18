@@ -144,7 +144,12 @@ const Edit = ({ viewRecord, setisEdit }) => {
         <div className="w-11/12 mt-4">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />
           <Dropdown
-            Option_Name={["inprogress", "hold", "complete"]}
+            Option_Name={[
+              "--Select Status--",
+              "inprogress",
+              "hold",
+              "complete",
+            ]}
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}
             name={"status"}

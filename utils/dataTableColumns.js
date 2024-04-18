@@ -108,9 +108,7 @@ export const TableColumn = ({
               {openDropdownIndex === index ? (
                 <div
                   className={`${
-                    index <= 5
-                      ? "absolute right-[57px] top-0"
-                      : "absolute right-[57px] bottom-0"
+                    index <= 5 ? "opration_btn" : "opration_btn_bottom"
                   }`}
                 >
                   <OpereationButton

@@ -10,6 +10,7 @@ import Reset from "../user/Reset.js";
 import Error from "../components/Error";
 import Form from "../project/Form.js";
 import View from "../project/projectCRUDOperations/View";
+import DefaultDashboard from "../dashboard/DefaultDashboard.js";
 // import UserProfile from "../user/userProfile.js";
 
 const Routes = () => {
@@ -60,6 +61,10 @@ const Routes = () => {
         {
           path: "/view",
           element: <View />,
+        },
+        {
+          path: "/default-dashboard",
+          element: <DefaultDashboard />,
         },
         { path: "*", element: <Error /> },
       ],

@@ -128,7 +128,7 @@ const View = ({ viewRecord, closeView, setisView }) => {
         name={"X"}
       /> */}
       {isManDaysDetails ? (
-        <div className="absolute top-1/2 left-1/2 bg-white border pt-16 pl-2 pr-2 w-4/12 h-1/2 translate-x-[-50%] translate-y-[-50%]">
+        <div className="absolute top-1/2 left-1/2 bg-white border pt-16 pl-2 pr-2 w-4/12 h-auto translate-x-[-50%] translate-y-[-50%]">
           <ManDaysDetails perDayDetailsData={perDayDetailsData} />
           <div className="absolute top-0 right-0 p-2 m-2 rounded bg-red-300 w-8 h-8 flex items-center justify-center text-xl">
             <button onClick={HandleCloseManDaysDetails}>X</button>

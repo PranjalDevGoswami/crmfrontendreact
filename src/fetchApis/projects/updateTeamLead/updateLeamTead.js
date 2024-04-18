@@ -12,7 +12,8 @@ export const UpdateTeamLead = async (projectId, data) => {
       }
     );
     if (response.ok) {
-      console.log("data push successfully!");
+      // alert("Project Assign Successfully !!");
+      // console.log("data push successfully!");
       return response.json();
     }
   } catch (error) {

@@ -17,7 +17,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
   const columns = [
     {
       name: "Date",
-      selector: (row) => formatDate(row.date),
+      selector: (row) => row?.date,
       sortable: true,
     },
     {

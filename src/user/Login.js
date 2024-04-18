@@ -63,7 +63,7 @@ const Login = () => {
         } else if (department == 2) {
           navigate("/operation-dashboard");
         } else {
-          navigate("/");
+          navigate("/default-dashboard");
         }
       } else {
         console.error("User details not found");
@@ -77,22 +77,33 @@ const Login = () => {
       RedirectUser();
     }
   }, [token]);
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       const response = await PostLoginData(loginData);
       if (response && response.success) {
         setToken(response.access);
         localStorage.setItem("refreshToken", response.refresh);
         localStorage.setItem("user", loginData.email);
-      } else {
-        console.error("Login failed:", response.error);
+      }
+      if (!response.ok) {
+        if (response.email) {
+          alert(response.email);
+        } else if (response.password) {
+          alert(response.password);
+        } else if (response.non_field_errors) {
+          alert(response.non_field_errors);
+        } else if (response.status == 400) {
+          alert(response.message);
+        }
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      // console.error("Error logging in:", error);
     }
   };
 
   return (
+    // <form onSubmit={handleLogin}>
     <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">
       <div className="flex h-full">
         <div className="w-2/3 h-2/3 flex flex-col items-center justify-center p-8 pl-8"></div>
@@ -172,6 +183,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    // </form>
   );
 };
 

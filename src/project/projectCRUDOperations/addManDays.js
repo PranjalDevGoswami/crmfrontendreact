@@ -5,6 +5,8 @@ import DataTable from "react-data-table-component";
 import { customStyles, editedColumns } from "../../../utils/DataTablesData";
 import Dropdown from "../../components/DropDown";
 import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
+import Label from "../../components/Label.js";
+import Input from "../../components/InputField";
 
 export function AddManDays({
   selectedRow,
@@ -72,7 +74,7 @@ export function AddManDays({
     man_days: (
       <input
         key={`man_days_${item.id}`}
-        className="p-2 bg-gray-300"
+        className="p-2 border w-full"
         type="number"
         maxLength={"2"}
         onChange={(e) => handleMandaysData(index, e)}
@@ -83,7 +85,7 @@ export function AddManDays({
     total_achievement: (
       <input
         key={`total_achievement_${item.id}`}
-        className="p-2 bg-gray-300"
+        className="p-2 border w-full"
         type="number"
         maxLength={"2"}
         onChange={(e) => handleMandaysData(index, e)}
@@ -94,9 +96,9 @@ export function AddManDays({
     status: (
       <Dropdown
         key={`status_${item.id}`}
-        Option_Name={["inprogress", "hold", "complete"]}
+        Option_Name={["--Select Status--", "inprogress", "hold", "complete"]}
         onChange={(name, value) => handleManDayStatus(index, name, value)}
-        className={"p-2 bg-gray-300"}
+        className={"p-2 border bg-white w-full"}
         name={"status"}
         value={mandaysData[index]?.status}
       />
@@ -184,18 +186,20 @@ export function AddManDays({
         className="p-4 top-32 !h-[90%] !overflow-scroll"
         size="1200px"
       >
-        <div className="mb-6 w-1/3">
+        <div className="mb-6">
           <h3 className="text-xl underline pb-4">
             Fill Man Days and Achieve Target
           </h3>
-          <div className="flex flex-row p-2 ml-4 mr-4">
-            <LableAndInput
+          <div className="flex justify-end w-full p-2 ml-4 mr-4">
+            <Label
               labelName={"Man Days Entry For"}
-              InputName={"date"}
-              InputType={"date"}
-              inputClassName={"p-2 border w-full bg-gray-300"}
-              labelClassName={"pt-4 pb-2"}
-              inputChange={handleDate}
+              className={"pt-4 pb-2 w-2/12"}
+            />
+            <Input
+              name={"date"}
+              type={"date"}
+              className={"p-2 mr-4 border w-2/12"}
+              onchange={handleDate}
               min={minDate.toISOString().split("T")[0]}
             />
           </div>
