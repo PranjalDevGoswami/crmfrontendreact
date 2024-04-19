@@ -1,6 +1,6 @@
-import { GETPROJECTDATAAPIS } from "../../../../utils/urls";
+import { PROJECTDATAAPIS } from "../../../../utils/urls.js";
 import { getWithAuth } from "../../../provider/helper/axios";
 
 export const GetProjectData = async () => {
-  return getWithAuth(GETPROJECTDATAAPIS);
+  return getWithAuth(PROJECTDATAAPIS);
 };

@@ -184,7 +184,7 @@ export function AddManDays({
         open={openRight}
         onClose={closeDrawerRight}
         className="p-4 top-32 !h-[90%] !overflow-scroll"
-        size="1200px"
+        size={1200}
       >
         <div className="mb-6">
           <h3 className="text-xl underline pb-4">

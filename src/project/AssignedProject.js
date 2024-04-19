@@ -15,39 +15,32 @@ const AssignedProject = ({
 }) => {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
-  const [project_id, setProject_id] = useState();
-  const [assignData, setAssignData] = useState({
-    name: selectedRow[0].name,
-    project_id: project_id,
-    project_teamlead: "",
-  });
   const [selectTL, setSelectTL] = useState(["TL1", "TL2"]);
+  const [allProjectList, setAllProjectList] = useState();
+  const [project_id, setProject_id] = useState([]);
   const [teamLeadNameID, setTeamLeadNameID] = useState();
+  const [assignData, setAssignData] = useState({
+    ids: [...project_id],
+    projects: [],
+  });
+
   const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const projectCode = selectedRow[0].project_code;
       try {
         const fetchDataFromApi2 = await GetProjectData();
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
-
-        const project = projectDataObject.find(
-          (project) => project.project_code === projectCode
-        );
-        if (project) {
-          setProject_id(project.id);
-          setAssignData({ ...assignData, project_id: project.id });
-        }
+        setAllProjectList(projectDataObject);
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
   }, [selectedRow]);
-  console.log(project_id);
+
   useEffect(() => {
     const getTeamLead = async () => {
       try {
@@ -60,7 +53,6 @@ const AssignedProject = ({
           return tl.map((val) => val);
         });
         setTeamLeadNameID(TeamLeadList);
-        console.log("🚀 ~ TeamLeadList ~ TeamLeadList:", TeamLeadList);
         const TL_Name = TeamLeadList.map((val) => val);
         const names = [];
         TL_Name.forEach((array) => {
@@ -82,34 +74,52 @@ const AssignedProject = ({
     setMultiEditFieldOpen(false);
     setOpenRight(false);
   };
-  const PostProjectData = async (projectId, data) => {
+  const PostProjectData = async (data) => {
     try {
-      await UpdateTeamLead(projectId, data);
+      const response = await UpdateTeamLead(data);
+      alert(response.data.message);
     } catch (error) {
       console.error("Error fetching project data:", error);
     }
   };
 
   const handleAssignedProject = () => {
-    PostProjectData(project_id, assignData);
+    console.log("assignData", assignData);
+    PostProjectData(assignData);
     setOpenRight(false);
     setIsDrawerOpen(false);
     setMultiEditFieldOpen(false);
     document.body.classList.remove("DrawerBody");
   };
-
   const handleSelectTL = (index, name, value) => {
     const teamleadArray = teamLeadNameID[0];
-    const selectedTeamLead = teamleadArray.find((tl) => tl.name === value);
-    if (selectedTeamLead) {
-      setAssignData({
-        ...assignData,
-        [name]: value,
-        project_teamlead: selectedTeamLead.id,
-      });
-    } else {
-      // Handle case where selected team lead is not found
-      console.error("Selected team lead not found");
+    const Selected_TeamLead = teamleadArray.filter(
+      (item) => item.name === value
+    );
+
+    if (value === Selected_TeamLead[0]?.name) {
+      const updatedAssignData = { ...assignData };
+      const projectCode = selectedRow[index].project_code;
+      const filteredItem = allProjectList.find(
+        (item) => item.project_code === projectCode
+      );
+      if (!updatedAssignData.ids.includes(filteredItem.id)) {
+        updatedAssignData.ids.push(filteredItem.id);
+      }
+      const existingProjectIndex = updatedAssignData.projects.findIndex(
+        (project) => project.project_id === filteredItem.id
+      );
+
+      if (existingProjectIndex !== -1) {
+        updatedAssignData.projects[existingProjectIndex].project_teamlead =
+          Selected_TeamLead[0].id;
+      } else {
+        updatedAssignData.projects.push({
+          project_id: filteredItem.id,
+          project_teamlead: Selected_TeamLead[0].id,
+        });
+      }
+      setAssignData(updatedAssignData);
     }
   };
 
@@ -117,7 +127,7 @@ const AssignedProject = ({
     ...item,
     assigned: (
       <Dropdown
-        key={`status_${item.id}`}
+        key={index}
         Option_Name={["--Select TL--", ...selectTL]}
         onChange={(name, value) => handleSelectTL(index, name, value)}
         className={"p-2 bg-white"}
@@ -131,12 +141,7 @@ const AssignedProject = ({
     ...addField,
     {
       name: (
-        <button
-          className="bg-green-300 p-4 "
-          onClick={() => {
-            handleAssignedProject();
-          }}
-        >
+        <button className="bg-green-300 p-4 " onClick={handleAssignedProject}>
           update
         </button>
       ),
@@ -150,7 +155,7 @@ const AssignedProject = ({
         open={openRight}
         onClose={closeDrawerRight}
         className="p-4 top-32 !h-[90%] !overflow-scroll"
-        size="1200px"
+        size={1200}
       >
         <div className="mb-6 w-1/3">
           <h3 className="text-xl underline pb-4">

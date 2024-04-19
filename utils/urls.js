@@ -1,9 +1,9 @@
 const BASEURL = "http://127.0.0.1:8000";
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
-export const GETPROJECTDATAAPIS = BASEURL + "/api/project/projects/";
+export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
-export const POSTPROJECTDATAAPIS = BASEURL + "/api/project/projects/";
-export const UPDATEPROJECTDATAAPIS = BASEURL + "/api/project/projects";
+export const UPDATEPROJECTDATAAPIS =
+  BASEURL + "/api/project/projects/update_projects/";
 export const LOGINPOSTAPIS = BASEURL + "/api/user/login/";
 export const POSTMANDAYSDATA = BASEURL + "/api/operation/projects/estimate/";
 export const RESETPASSWORD = BASEURL + "/api/user/reset-password/";
