@@ -1,18 +1,17 @@
-import { POSTMANDAYSDATA } from "../../../../utils/urls";
+import { POSTMANDAYSDATA } from "../../../../utils/urls.js";
 import { postWithAuth } from "../../../provider/helper/axios";
 
-export const PostMandaysData = async (mandaysData) => {
-  console.log("mandaysData from mandays components", mandaysData);
+export const PostMandaysData = async (data) => {
   try {
-    const response = await postWithAuth(POSTMANDAYSDATA, mandaysData, {
-      body: JSON.stringify(mandaysData),
+    return await postWithAuth(POSTMANDAYSDATA, data, {
+      method: "POST",
+      body: JSON.stringify(data),
     });
-    if (response.ok) {
-      console.log("data push successfully!");
-      return response.json();
-    }
+    // if (response.ok) {
+    //   console.log("data push successfully!");
+    //   // return response.json();
+    // }
   } catch (error) {
-    // Display an alert for login error
-    alert("An error occurred. Please try again.");
+    alert(error, "An error occurred. Please try again.");
   }
 };

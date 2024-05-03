@@ -11,7 +11,13 @@ import Error from "../components/Error";
 import Form from "../project/Form.js";
 import View from "../project/projectCRUDOperations/View";
 import DefaultDashboard from "../dashboard/DefaultDashboard.js";
-// import UserProfile from "../user/userProfile.js";
+import FinanceDashboard from "../dashboard/FinanceDashboard.js";
+import Invoice from "../components/Invoice";
+import InvoicePDF from "../components/InvoicePDF.js";
+import ResetPassword from "../user/ResetPassword.js";
+import ChangePassword from "../user/ChangePassword.js";
+import { Profile } from "../user/userProfile";
+import DirectorDashboard from "../dashboard/DirectorDashboard.js";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -30,6 +36,10 @@ const Routes = () => {
       path: "/reset",
       element: <Reset />,
     },
+    {
+      path: "/confirm-password",
+      element: <ResetPassword />,
+    },
     { path: "*", element: <Error /> },
   ];
 
@@ -43,12 +53,20 @@ const Routes = () => {
           element: <OperationDashboard />,
         },
         {
+          path: "/finance-dashboard",
+          element: <FinanceDashboard />,
+        },
+        {
           path: "/admin",
           element: <AdminPanel />,
         },
         {
           path: "/sales-dashboard",
           element: <SalesDashboard />,
+        },
+        {
+          path: "/director-dashboard",
+          element: <DirectorDashboard />,
         },
         {
           path: "/entry-page",
@@ -62,6 +80,22 @@ const Routes = () => {
           path: "/view",
           element: <View />,
         },
+        {
+          path: "/invoice",
+          element: <Invoice />,
+        },
+        {
+          path: "/change-password",
+          element: <ChangePassword />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
+        },
+        // {
+        //   path: "/download-invoice",
+        //   element: <InvoicePDF />,
+        // },
         {
           path: "/default-dashboard",
           element: <DefaultDashboard />,

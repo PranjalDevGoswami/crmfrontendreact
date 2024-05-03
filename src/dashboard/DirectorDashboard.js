@@ -1,10 +1,14 @@
 import React from "react";
-import SideBar from "../components/SideBar";
+import ProjectDataTable from "../project/ProjectDataTable";
 
 const DirectorDashboard = () => {
   return (
-    <div>
-      <SideBar />
+    <div className="">
+      <div className="">
+        <div className="m-8 mb-8">
+          <ProjectDataTable />
+        </div>
+      </div>
     </div>
   );
 };

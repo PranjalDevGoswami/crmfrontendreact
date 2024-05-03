@@ -47,6 +47,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [filteredProjectData, setFilteredProjectData] = useState([]);
+  const [teamLeadAssiged, setTeamLeadAssiged] = useState();
 
   const dropdownRef = useRef(null);
 
@@ -63,33 +64,33 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
-        setFilteredProjectData(projectDataObject);
-        if (role.includes("Team Lead") && department == 2) {
-          const DataShownByCurrentUser = projectDataObject.filter((item) => {
-            // console.log(item?.project_teamlead?.name);
-            return (
-              item?.project_teamlead?.name.toLowerCase() ===
-              username.toLowerCase()
-            );
-          });
-          setFilteredProjectData(DataShownByCurrentUser);
-        } else if (role.includes("SalesManager") && department == 1) {
-          const DataShownByCurrentUser = projectDataObject.filter((item) => {
-            return item.user_email === user;
-          });
-          setDataForSales(DataShownByCurrentUser);
-        } else if (role.includes("AM/Manager") && department == 2) {
-          const AssignedManager = projectDataObject.filter((item) => {
-            return item?.project_manager?.name === username;
-          });
-          setFilteredProjectData(AssignedManager);
+
+        // Filter based on selected status and client
+        let filteredData = projectDataObject;
+        if (selectedStatus && selectedStatus !== "--Select Status--") {
+          filteredData = filteredData.filter(
+            (item) => item.status == selectedStatus
+          );
         }
+
+        if (selectedClient && selectedClient !== "--Select Client--") {
+          filteredData = filteredData.filter(
+            (item) => item.clients.name === selectedClient
+          );
+        }
+
+        const allProjectListWithTL = filteredData?.filter((item) => {
+          return item?.project_teamlead !== null;
+        });
+        setTeamLeadAssiged(allProjectListWithTL);
+        setFilteredProjectData(filteredData);
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
-  }, [token, isDrawerOpen]);
+  }, [token, isDrawerOpen, selectedStatus, selectedClient]);
+
   useEffect(() => {
     const fetchClientList = async () => {
       try {
@@ -106,16 +107,24 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   }, []);
 
   const handleFilterOption = (name, value) => {
-    console.log("e", name, value);
-
-    if (name === "status") {
-      setSelectedStatus(value);
-      setUpdatedValue({
-        ...updatedValue,
-        status: value,
-      });
+    if (name === "Status") {
+      if (value === "To be Started") {
+        setSelectedStatus("to_be_started");
+      } else if (value === "Completed") {
+        setSelectedStatus("completed");
+      } else if (value === "New") {
+        setSelectedStatus("new");
+      } else if (value === "CBR Raised") {
+        setSelectedStatus("cbr_raised");
+      } else if (value === "Hold") {
+        setSelectedStatus("hold");
+      } else if (value === "--Select Status--") {
+        setSelectedStatus("--Select Status--");
+      }
     }
-    if (name === "clients") setSelectedClient(value);
+    if (name === "Client") {
+      setSelectedClient(value);
+    }
   };
 
   const handleSelectedRowsChange = (row) => {
@@ -151,9 +160,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     };
   }, []);
 
-  const filteredData = filteredProjectData.filter((item) =>
-    // (selectedStatus ? item.status === selectedStatus : true) &&
-    // (selectedClient ? item.clients.name === selectedClient : true) &&
+  const filteredData = filteredProjectData?.filter((item) =>
     Object.values(item).some((val) => {
       if (typeof val === "object" && val !== null) {
         return Object.values(val).some((propVal) =>
@@ -166,7 +173,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     })
   );
 
-  const data = filteredData.map((item, index) => ({
+  const data = filteredData?.map((item, index) => ({
     id: index + 1,
     project_code: item?.project_code,
     name: item?.name,
@@ -187,9 +194,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     status: item.status,
   }));
 
-  const desabledRowData = data.map((item) => {
+  const desabledRowData = data?.map((item) => {
     let desabled = false;
-    if (item.status === "completed") {
+    if (item.status === "completed" || item.status === "cbr_raised") {
       desabled = true;
     }
     return { ...item, desabled };
@@ -219,8 +226,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   "Inprogress",
                   "Hold",
                   "Completed",
-                  "New",
+                  // "New",
                   "To be Started",
+                  "CBR Raised",
                 ]}
                 onChange={handleFilterOption}
                 name={"Status"}
@@ -378,6 +386,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             selectedRow={selectedRow}
             setIsDrawerOpen={setIsDrawerOpen}
             setMultiEditFieldOpen={setMultiEditFieldOpen}
+            teamLeadAssiged={teamLeadAssiged}
           />
         ) : (
           ""

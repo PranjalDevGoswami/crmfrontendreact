@@ -2,7 +2,7 @@ import React from "react";
 import DataTable from "react-data-table-component";
 import {
   conditionalRowStyles,
-  customStyles,
+  customStylesFormanDaysDetails,
 } from "../../../utils/DataTablesData";
 
 const ManDaysDetails = ({ perDayDetailsData }) => {
@@ -36,7 +36,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
       <DataTable
         columns={columns}
         data={data}
-        customStyles={customStyles}
+        customStyles={customStylesFormanDaysDetails}
         conditionalRowStyles={conditionalRowStyles}
       />
     </div>

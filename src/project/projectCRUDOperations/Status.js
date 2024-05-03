@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import LableAndInput from "../../components/LableAndInput";
 import Dropdown from "../../components/DropDown";
-import { POSTMANDAYSDATA } from "../../../utils/urls";
 import Label from "../../components/Label";
+import { ChangeStatus } from "../../fetchApis/projects/changeStatus/changeStatus";
 
 const Status = ({ viewRecord, setIsStatus }) => {
   const [updatedStatus, setUpdatedStatus] = useState({
-    project_code: "",
+    project_code: viewRecord.project_code,
     status: "",
   });
 
@@ -15,19 +15,19 @@ const Status = ({ viewRecord, setIsStatus }) => {
     document.body.classList.remove("DrawerBody");
   };
   const PostUpdateEditData = async (data) => {
-    await POSTMANDAYSDATA(data);
+    await ChangeStatus(data);
     // setViewEdit(false);
-    setUpdatedValue({
+    setUpdatedStatus({
       project_code: "",
       status: "",
     });
     document.body.classList.remove("DrawerBody");
-    setIsDrawerOpen(false);
+    // setIsDrawerOpen(false);
   };
 
   const handleEditUpdate = () => {
-    // console.log("updatedValue", updatedValue);
-    PostUpdateEditData(updatedValue);
+    console.log("updatedValue", updatedStatus);
+    PostUpdateEditData(updatedStatus);
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -73,7 +73,7 @@ const Status = ({ viewRecord, setIsStatus }) => {
               "--Select Status--",
               "inprogress",
               "hold",
-              "complete",
+              "completed",
             ]}
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}

@@ -37,6 +37,8 @@ const SideBar = () => {
               <Link to="/operation-dashboard">Dashboard</Link>
             ) : department == 1 ? (
               <Link to="/sales-dashboard">Dashboard</Link>
+            ) : department == 3 ? (
+              <Link to="/finance-dashboard">Dashboard</Link>
             ) : (
               <Link to="/default-dashboard">Dashboard</Link>
             )}
@@ -53,6 +55,8 @@ const SideBar = () => {
               <Link to="/operation-dashboard">Project</Link>
             ) : department == 1 ? (
               <Link to="/sales-dashboard">Project</Link>
+            ) : department == 3 ? (
+              <Link to="/finance-dashboard">Project</Link>
             ) : (
               <Link to="/default-dashboard">Project</Link>
             )}
@@ -69,6 +73,8 @@ const SideBar = () => {
               <Link to="/operation-dashboard">Report</Link>
             ) : department == 1 ? (
               <Link to="/sales-dashboard">Report</Link>
+            ) : department == 3 ? (
+              <Link to="/finance-dashboard">Report</Link>
             ) : (
               <Link to="/default-dashboard">Report</Link>
             )}
@@ -85,6 +91,8 @@ const SideBar = () => {
               <Link to="/operation-dashboard">Chart</Link>
             ) : department == 1 ? (
               <Link to="/sales-dashboard">Chart</Link>
+            ) : department == 3 ? (
+              <Link to="/finance-dashboard">Chart</Link>
             ) : (
               <Link to="/default-dashboard">Chart</Link>
             )}

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Drawer, Button } from "@material-tailwind/react";
+import { Drawer } from "@material-tailwind/react";
 import DataTable from "react-data-table-component";
-import { AssignColumns, customStyles } from "../../utils/DataTablesData.js";
+import {
+  AssignColumns,
+  conditionalRowStylesForTL,
+  customStyles,
+} from "../../utils/DataTablesData.js";
 import Dropdown from "../components/DropDown.js";
 import { GetProjectManager } from "../fetchApis/projectManager/projectManager";
-import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import { UpdateTeamLead } from "../fetchApis/projects/updateTeamLead/updateLeamTead.js";
 
@@ -12,6 +15,7 @@ const AssignedProject = ({
   selectedRow,
   setIsDrawerOpen,
   setMultiEditFieldOpen,
+  teamLeadAssiged,
 }) => {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
@@ -23,7 +27,6 @@ const AssignedProject = ({
     ids: [...project_id],
     projects: [],
   });
-
   const username = localStorage.getItem("username");
 
   useEffect(() => {
@@ -74,6 +77,7 @@ const AssignedProject = ({
     setMultiEditFieldOpen(false);
     setOpenRight(false);
   };
+
   const PostProjectData = async (data) => {
     try {
       const response = await UpdateTeamLead(data);
@@ -84,13 +88,13 @@ const AssignedProject = ({
   };
 
   const handleAssignedProject = () => {
-    console.log("assignData", assignData);
     PostProjectData(assignData);
     setOpenRight(false);
     setIsDrawerOpen(false);
     setMultiEditFieldOpen(false);
     document.body.classList.remove("DrawerBody");
   };
+
   const handleSelectTL = (index, name, value) => {
     const teamleadArray = teamLeadNameID[0];
     const Selected_TeamLead = teamleadArray.filter(
@@ -123,19 +127,31 @@ const AssignedProject = ({
     }
   };
 
-  const addField = selectedEditData.map((item, index) => ({
-    ...item,
-    assigned: (
-      <Dropdown
-        key={index}
-        Option_Name={["--Select TL--", ...selectTL]}
-        onChange={(name, value) => handleSelectTL(index, name, value)}
-        className={"p-2 bg-white"}
-        name={"project_teamlead"}
-        value={assignData[index]?.status}
-      />
-    ),
-  }));
+  const addField = selectedEditData.map((item, index) => {
+    const projectCode = item.project_code;
+    const projectWithTL = teamLeadAssiged.find(
+      (project) => project.project_code === projectCode
+    );
+    if (projectWithTL && projectWithTL.project_teamlead) {
+      return {
+        ...item,
+        assigned: <p>{projectWithTL?.project_teamlead?.name}</p>,
+      };
+    } else {
+      return {
+        ...item,
+        assigned: (
+          <Dropdown
+            Option_Name={["--Select TL--", ...selectTL]}
+            onChange={(name, value) => handleSelectTL(index, name, value)}
+            className={"p-2 bg-white"}
+            name={"project_teamlead"}
+            value={assignData[index]?.status}
+          />
+        ),
+      };
+    }
+  });
 
   const updatedDataWithButton = [
     ...addField,
@@ -147,7 +163,6 @@ const AssignedProject = ({
       ),
     },
   ];
-
   return (
     <React.Fragment>
       <Drawer
@@ -167,6 +182,8 @@ const AssignedProject = ({
             columns={AssignColumns}
             data={updatedDataWithButton}
             customStyles={customStyles}
+            conditionalRowStyles={conditionalRowStylesForTL}
+            pagination
           />
         </div>
       </Drawer>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Label from "../components/Label.js";
 import Dropdown from "../components/DropDown.js";
 import Button from "../components/Button.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
 import CheckboxList from "../components/Checkbox.js";
 import MultipleFileUpload from "../components/MultipleFileUpload.js";
@@ -21,7 +21,10 @@ const Form = () => {
   const [isOtherFee, setIsOtherFee] = useState(false);
   const [otherFeeValue, setOtherFeeValue] = useState();
   const [advancePAyment, setAdvancePAyment] = useState(false);
-  const [clientListData, setClientListData] = useState([]);
+  const [clientListData, setClientListData] = useState([
+    "demo Client1",
+    "demo Cliet2",
+  ]);
   const [projectTypeData, setProjectTypeData] = useState([
     "Demo CATI",
     " Demo CAWI",
@@ -52,7 +55,7 @@ const Form = () => {
     finance_select: advancePAyment,
     upload_document: "",
   });
-
+  const navigate = useNavigate();
   const ProjectTypeListData = projectTypeData;
 
   useEffect(() => {
@@ -119,7 +122,7 @@ const Form = () => {
     if (name === "set_up_fee") {
       e.preventDefault();
       if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: parseInt(value) });
+        setFormData({ ...formData, [name]: Number(value) });
       } else {
         alert(`'Sample value can't be in decimal'`);
       }
@@ -127,7 +130,7 @@ const Form = () => {
     if (name === "transaction_fee") {
       e.preventDefault();
       if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: parseInt(value) });
+        setFormData({ ...formData, [name]: Number(value) });
       } else {
         alert(`'Sample value can't be in decimal'`);
       }
@@ -144,20 +147,19 @@ const Form = () => {
       e.preventDefault();
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
-        console.log("value", value);
       } else {
         alert(`'Sample value can't be in decimal'`);
       }
     }
     if (name === "upload_document") {
-      const fileData = new FormData();
-      fileData.append("upload_document", files[0]);
-      setSelectedFiles(files);
-      setFormData({ ...formData, [name]: fileData });
+      const formDataFile = new FormData();
+      formDataFile.append("file", files[0]);
+      setFormData({ ...formData, [name]: files[0] });
     }
   };
 
   const handleCheckboxChange = (name, checked) => {
+    console.log(selectedFiles);
     setAdvancePAyment(checked);
   };
 
@@ -189,16 +191,35 @@ const Form = () => {
   };
 
   const PostProjectData = async (data) => {
-    console.log(data);
     try {
-      await PostFormData(data);
+      const response = await PostFormData(data);
+      if (response?.status == true) {
+        alert("Project Add Successfully!!");
+      } else if (
+        response?.ex?.response?.data[0] ===
+        "Tentative end date cannot be in the past."
+      ) {
+        alert(response?.ex?.response?.data[0]);
+      } else if (
+        response?.ex?.response?.data?.upload_document[0] ===
+        "The submitted data was not a file. Check the encoding type on the form."
+      ) {
+        alert("File Formate Not supported");
+      } else {
+        alert("Something went wrong!!");
+      }
     } catch (error) {
       console.error("Error fetching project data:", error);
     }
   };
 
   const handleSubmit = (e) => {
-    PostProjectData(formData);
+    if (!isFormValid()) {
+      return;
+    } else {
+      PostProjectData(formData);
+      navigate("/sales-dashboard");
+    }
   };
 
   useEffect(() => {
@@ -230,13 +251,13 @@ const Form = () => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setOtherFeeValue(selectedValues);
 
-    if (selectedValues.includes("Other Cost")) {
+    if (selectedValues.includes("other_cost")) {
       setOtherCost(true);
     } else {
       setOtherCost(false);
     }
 
-    if (selectedValues.includes("Translation Cost")) {
+    if (selectedValues.includes("transaction_fee")) {
       setTranslationCost(true);
     } else {
       setTranslationCost(false);
@@ -264,7 +285,7 @@ const Form = () => {
       <form
         onSubmit={handleSubmit}
         className="p-2 pl-8"
-        // enctype="multipart/form-data"
+        encType="multipart/form-data"
       >
         <div className="flex flex-wrap w-full gap-4">
           <div className="flex flex-col w-[32%]">
@@ -297,7 +318,6 @@ const Form = () => {
               RequireAddButton={false}
               required
               onChange={SelectOptionHandler}
-              // defaultValue="CAWI"
             />
           </div>
           <div className="flex flex-col w-[32%]">
@@ -314,16 +334,7 @@ const Form = () => {
                 onChange={SelectOptionHandler}
               />
             ) : (
-              <Dropdown
-                name={"clients"}
-                className={
-                  "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
-                }
-                Option_Name={["-- Select Client --", "demo1", "demo2"]}
-                RequireAddButton={true}
-                required
-                onChange={SelectOptionHandler}
-              />
+              ""
             )}
           </div>
           <div className="flex flex-col w-[32%]">
@@ -346,7 +357,6 @@ const Form = () => {
                   type={"number"}
                   onchange={handleInputChange}
                   className={"p-2 border bg-[#f3eded] w-full"}
-                  // value={"12"}
                   min={0}
                 />
               </div>
@@ -362,7 +372,6 @@ const Form = () => {
                   onchange={handleInputChange}
                   className={"p-2 border bg-[#f3eded] w-full"}
                   min={0}
-                  // value={"12"}
                 />
               </div>
               <div className="w-[7%] bg-yellow-200">
@@ -410,7 +419,7 @@ const Form = () => {
               <div className="flex w-full">
                 <div className="w-full inline-block">
                   <Input
-                    InputName={"other_cost"}
+                    name={"other_cost"}
                     type={"number"}
                     onchange={handleInputChange}
                     className={"p-2 border bg-[#f3eded] w-full"}
@@ -429,7 +438,7 @@ const Form = () => {
               <div className="flex w-full">
                 <div className="w-full inline-block">
                   <Input
-                    InputName={"transaction_fee"}
+                    name={"transaction_fee"}
                     type={"number"}
                     onchange={handleInputChange}
                     className={"p-2 border bg-[#f3eded] w-full"}
@@ -494,18 +503,13 @@ const Form = () => {
           />
         </div>
         <div className="flex justify-around pt-4 pb-2 w-4/12">
-          <Link
-            to={isFormValid() ? "/sales-dashboard" : ""}
-            className="inline-block w-1/2 mr-2"
-          >
-            <Button
-              className={`bg-green-500 p-4 mt-8 w-full text-white font-bold ${
-                isFormValid() ? "" : "opacity-50 cursor-not-allowed"
-              }`}
-              name={"Submit"}
-              onClick={() => handleSubmit(formData)}
-            />
-          </Link>
+          <Button
+            className={`bg-green-500 p-4 mt-8 mr-2 w-1/2 text-white font-bold ${
+              isFormValid() ? "" : "opacity-50 cursor-not-allowed"
+            }`}
+            name={"Submit"}
+            onClick={() => handleSubmit(formData)}
+          />
           <Button
             className="bg-red-500 p-4 mt-8 w-1/2 text-white font-bold"
             name={"Cancel"}

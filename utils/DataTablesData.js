@@ -1,4 +1,5 @@
 import { MdOutlineMoreVert } from "react-icons/md";
+import Dropdown from "../src/components/DropDown";
 
 export const Data = [
   {
@@ -71,6 +72,16 @@ export const Data = [
         when: (row) => row.status === "completed",
         style: {
           backgroundColor: "rgba(63, 195, 128, 0.9)",
+          color: "white",
+          "&:hover": {
+            cursor: "pointer",
+          },
+        },
+      },
+      {
+        when: (row) => row.status === "cbr_raised",
+        style: {
+          backgroundColor: "rgb(128,128,128,1)",
           color: "white",
           "&:hover": {
             cursor: "pointer",
@@ -284,6 +295,49 @@ export const customStyles = {
   },
 };
 
+export const customStylesFormanDaysDetails = {
+  table: {
+    style: {
+      minHeight: "400px",
+    },
+  },
+  rows: {
+    style: {
+      backgroundColor: "#fff", // override the row height
+      textAlign: "center",
+      position: "relative",
+    },
+  },
+  rows: {
+    highlightOnHoverStyle: {
+      backgroundColor: "rgb(230, 244, 244)",
+      borderBottomColor: "#FFFFFF",
+      borderRadius: "25px",
+      outline: "1px solid #FFFFFF",
+    },
+  },
+  headCells: {
+    style: {
+      color: "#fff",
+      backgroundColor: "#bd1d1d",
+      fontSize: "14px",
+      textAlign: "center",
+      whiteSpace: "pre-wrap",
+      wordWrap: "break-word",
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: "20px", // override the cell padding for data cells
+      paddingRight: "20px",
+      textAlign: "center",
+    },
+    stripedStyle: {
+      color: "NORMALCOLOR",
+      backgroundColor: "NORMALCOLOR",
+    },
+  },
+};
 export const editedColumns = [
   {
     name: "Sr.No.",
@@ -367,6 +421,29 @@ export const conditionalRowStyles = [
       color: "white",
       "&:hover": {
         cursor: "pointer",
+      },
+    },
+  },
+  {
+    when: (row) => row.status === "cbr_raised",
+    style: {
+      backgroundColor: "rgb(128,128,128,1)",
+      color: "white",
+      "&:hover": {
+        cursor: "not-allowed",
+      },
+    },
+  },
+];
+
+export const conditionalRowStylesForTL = [
+  {
+    when: (row) => row?.assigned?.props?.children == "",
+    style: {
+      backgroundColor: "rgb(128,128,128,1)",
+      color: "white",
+      "&:hover": {
+        cursor: "not-allowed",
       },
     },
   },

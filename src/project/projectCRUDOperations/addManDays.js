@@ -132,24 +132,26 @@ export function AddManDays({
   const finalData = mandaysData.map((item, index) => ({
     ...selectedEditData[index],
     man_days: parseInt(item.man_days),
-    total_achievement: item.total_achievement,
+    total_achievement: Number(item.total_achievement),
     status: item.status,
     is_active: true,
     date: item.date,
   }));
+
   const DataToSend = finalData
     .map((item, index) => {
       if (
         item.project_code !== null &&
         item.man_days !== "" &&
-        item.total_achievement !== ""
+        item.total_achievement !== "" &&
+        item.status !== ""
       ) {
         return {
           project_code: item.project_code,
           name: item.name,
           man_days: parseInt(item.man_days),
           total_achievement: item.total_achievement,
-          status: item.status || "inprogress",
+          status: item.status,
           date: item.date,
         };
       }
@@ -157,6 +159,10 @@ export function AddManDays({
     .filter((item) => item !== undefined);
 
   const HandleAddManDays = () => {
+    if (DataToSend.length === 0) {
+      alert("Please fill in data for at least one project before updating.");
+      return;
+    }
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[editIndex] = {
       man_days: "",
@@ -169,12 +175,15 @@ export function AddManDays({
     BulkUpdateManDays(DataToSend);
     closeDrawerRight();
   };
+
   const BulkUpdateManDays = async (data) => {
-    console.log("data is", data);
     try {
-      await PostMandaysData(data);
+      const response = await PostMandaysData(data);
+      if (response?.status == true) {
+        alert("Operation Perform Sucessfully");
+      }
     } catch (error) {
-      console.error("Error fetching project data:", error);
+      console.log("Error fetching project data:", error);
     }
   };
   return (

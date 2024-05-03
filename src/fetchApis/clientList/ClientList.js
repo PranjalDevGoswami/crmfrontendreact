@@ -13,7 +13,10 @@ export const ClientList = async () => {
 
 export const PostClientList = async (data) => {
   try {
-    return postWithAuth(CLIENTDATAAPIS, data);
+    return await postWithAuth(CLIENTDATAAPIS, data, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   } catch (error) {
     console.error("Error fetching project data:", error);
     throw error;

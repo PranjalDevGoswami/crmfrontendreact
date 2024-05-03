@@ -1,9 +1,9 @@
-import { POSTMANDAYSDATA } from "../../../../utils/urls.js";
+import { CHANGE_STATUS } from "../../../../utils/urls.js";
 import { postWithAuth } from "../../../provider/helper/axios.js";
 
-export const ManWorkPerDays = async (data) => {
+export const ChangeStatus = async (data) => {
   try {
-    const response = await postWithAuth(POSTMANDAYSDATA, data, {
+    const response = await postWithAuth(CHANGE_STATUS, data, {
       method: "POST",
       body: JSON.stringify(data),
     });

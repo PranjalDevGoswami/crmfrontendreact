@@ -1,4 +1,17 @@
 import { jwtDecode } from "jwt-decode";
+import Input from "../components/InputField";
+import Button from "../components/Button";
+import Dropdown from "../components/DropDown";
+import { useEffect, useState } from "react";
+import Label from "../components/Label";
+import {
+  getWithAuth,
+  putWithAuth,
+  putWithAuthForUpload,
+} from "../provider/helper/axios";
+import { UPDATE_PROFILE } from "../../utils/urls.js";
+import { FaRegUserCircle } from "react-icons/fa";
+
 export const userDetails = () => {
   const token = localStorage.getItem("token");
   const decoded = jwtDecode(token);
@@ -6,6 +19,166 @@ export const userDetails = () => {
   localStorage.setItem("role", role);
   localStorage.setItem("user_id", user_id);
   localStorage.setItem("username", username);
-
   return { role, username, user_id };
+};
+
+export const Profile = () => {
+  const [profileUpdateData, setProfileUpdateData] = useState({
+    gender: "",
+    email: "",
+    phone: "",
+    profile_picture: "",
+  });
+  const [profileDetails, setProfileDetails] = useState();
+  const [profileUpdated, setProfileUpdated] = useState(false);
+
+  useEffect(() => {
+    const GetProfileDetails = async () => {
+      const response = await getWithAuth(UPDATE_PROFILE);
+      if (response?.status == true) {
+        setProfileDetails(response?.data);
+        console.log(response);
+      }
+    };
+    GetProfileDetails();
+  }, [profileUpdated]);
+
+  const handleDropdownChange = (e, dropdownType, value) => {
+    if (dropdownType === "gender") {
+      setProfileUpdateData((prevData) => ({
+        ...prevData,
+        gender: value,
+      }));
+    }
+  };
+  const handleUpdateProfileInput = (e) => {
+    const { name, value, files } = e.target;
+    setProfileUpdateData((prev) => ({ ...prev, [name]: value }));
+    if (name === "profile_picture" && files.length > 0) {
+      const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
+      const file = files[0];
+      if (!allowedFormats.includes(file.type)) {
+        alert("Please upload a JPG, PNG, or WebP file.");
+        return;
+      } else {
+        setProfileUpdateData((prev) => ({ ...prev, [name]: files[0] }));
+      }
+    }
+    // if (name === "profile_picture") {
+    // }
+  };
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    const updatedData = Object.entries(profileUpdateData)
+      .filter(([key, value]) => value !== null && value !== "")
+      .reduce((acc, [key, value]) => {
+        acc[key] = value;
+        return acc;
+      }, {});
+    const response = await putWithAuthForUpload(UPDATE_PROFILE, updatedData);
+    if (response.status == true) {
+      setProfileUpdated(!profileUpdated);
+      alert("Profile Update Successfully!");
+    } else {
+      console.log(response);
+      setProfileUpdated(false);
+    }
+  };
+
+  const handleCancelUpdateProfile = (e) => {
+    console.log("cancel");
+  };
+
+  return (
+    <div className="">
+      <div className="m-8 mb-8 overflow-hidden">
+        <h1 className="text-3xl pb-8 ">Update Profile</h1>
+        <div className="w-10/12 m-auto">
+          <div className="flex items-center justify-around">
+            <div className="profile-pic w-4/12">
+              {profileDetails?.profile_picture !== null ? (
+                <div>
+                  <img
+                    src={profileDetails?.profile_picture}
+                    alt="user-profile-pic"
+                    className="w-40 h-40 rounded-full bg-cover"
+                  />
+                </div>
+              ) : (
+                <FaRegUserCircle className="w-40 h-40 rounded-full bg-cover" />
+              )}
+              <div className="flex items-center mt-4">
+                <Label labelName={"Email:"} className={"inline-block"} />
+                <p className="text-xl font-bold p-1">{profileDetails?.email}</p>
+              </div>
+              <div className="flex items-center">
+                <Label labelName={"Gender:"} />
+                <p className="text-xl font-bold p-1">
+                  {profileDetails?.gender}
+                </p>
+              </div>
+              <div className="flex items-center">
+                <Label labelName={"Phone:"} />
+                <p className="text-xl font-bold p-1">{profileDetails?.phone}</p>
+              </div>
+            </div>
+            <div className="w-8/12 flex flex-col gap-4 p-4 ">
+              <Label labelName={"Phone Number"} />
+              <Input
+                type={"number"}
+                name={"phone"}
+                className={
+                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
+                }
+                required={"required"}
+                placeholder={"Phone Number"}
+                onchange={handleUpdateProfileInput}
+              />
+              <Label labelName={"Gender"} />
+
+              <Dropdown
+                className={
+                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full pr-4"
+                }
+                Option_Name={["select gender", "Male", "Female", "Other"]}
+                RequireAddButton={false}
+                onChange={(e, value) =>
+                  handleDropdownChange(e, "gender", value)
+                }
+              />
+              <Label labelName={"Upload Profile pic"} />
+
+              <Input
+                type={"file"}
+                name={"profile_picture"}
+                className={
+                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
+                }
+                required={"required"}
+                placeholder={"upload profile pic"}
+                onchange={handleUpdateProfileInput}
+              />
+
+              <div className="flex justify-center pt-4">
+                <Button
+                  className={
+                    "p-4 bg-green-300 w-1/2 rounded-full text-white hover:bg-green-600"
+                  }
+                  name={"Update"}
+                  onClick={handleUpdateProfile}
+                />
+                <Button
+                  className={
+                    "p-4 bg-[#e7251e] w-1/2 rounded-full text-white ml-2"
+                  }
+                  name={"Cancel"}
+                  onClick={handleCancelUpdateProfile}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };

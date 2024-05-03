@@ -62,6 +62,8 @@ const Login = () => {
           navigate("/sales-dashboard");
         } else if (department == 2) {
           navigate("/operation-dashboard");
+        } else if (department == 3) {
+          navigate("/finance-dashboard");
         } else {
           navigate("/default-dashboard");
         }

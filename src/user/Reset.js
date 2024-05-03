@@ -3,14 +3,17 @@ import { Link } from "react-router-dom";
 import Input from "../components/InputField";
 import Button from "../components/Button";
 import { RESETPASSWORD } from "../../utils/urls";
+import { useNavigate } from "react-router-dom";
 
 const Reset = () => {
   const [email, setEmail] = useState({
     email: "",
   });
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const forgotPassword = async () => {
-    forgotPasswordResponse = await fetch(RESETPASSWORD, {
+    setLoading(true);
+    const response = await fetch(RESETPASSWORD, {
       method: "POST",
       headers: {
         "Content-Type": "Application/Json",
@@ -18,6 +21,14 @@ const Reset = () => {
       },
       body: JSON.stringify(email),
     });
+    setLoading(false);
+    let message = await response.json();
+    if (response.ok) {
+      alert(message.detail + "Please check your email!!");
+      navigate("/login");
+    } else {
+      alert(message.email);
+    }
   };
 
   const handleResetEmail = (e) => {
@@ -25,7 +36,6 @@ const Reset = () => {
     setEmail((prevData) => ({ ...prevData, [name]: value }));
   };
   const handleReset = () => {
-    console.log("email", email);
     forgotPassword();
   };
   return (
@@ -56,7 +66,7 @@ const Reset = () => {
               <div className="flex justify-center pt-4">
                 <Button
                   className={"p-4 bg-[#e7251e] w-1/2 rounded-full text-white "}
-                  name={"Reset"}
+                  name={loading ? "Please wait..." : "Reset"}
                   onClick={handleReset}
                 />
               </div>
