@@ -18,6 +18,7 @@ import ResetPassword from "../user/ResetPassword.js";
 import ChangePassword from "../user/ChangePassword.js";
 import { Profile } from "../user/userProfile";
 import DirectorDashboard from "../dashboard/DirectorDashboard.js";
+import LogoutTimer from "../user/LogoutTimer.js";
 
 const Routes = () => {
   const { token } = useAuth();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Label from "../components/Label.js";
 import Dropdown from "../components/DropDown.js";
 import Button from "../components/Button.js";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
 import CheckboxList from "../components/Checkbox.js";
 import MultipleFileUpload from "../components/MultipleFileUpload.js";
@@ -159,7 +159,6 @@ const Form = () => {
   };
 
   const handleCheckboxChange = (name, checked) => {
-    console.log(selectedFiles);
     setAdvancePAyment(checked);
   };
 
@@ -284,11 +283,11 @@ const Form = () => {
       <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
       <form
         onSubmit={handleSubmit}
-        className="p-2 pl-8"
+        className="lg:p-2 lg:pl-8 lg:pr-4 pr-8"
         encType="multipart/form-data"
       >
-        <div className="flex flex-wrap w-full gap-4">
-          <div className="flex flex-col w-[32%]">
+        <div className="lg:flex inline-block lg:flex-wrap flex-nowrap w-full gap-4">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <LableAndInput
               labelName={"Project Name"}
               InputName={"name"}
@@ -300,7 +299,7 @@ const Form = () => {
               labelClassName={"pt-4 pb-2"}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <Label
               labelName={"Project Type"}
               className={"pt-4 pb-2"}
@@ -320,7 +319,7 @@ const Form = () => {
               onChange={SelectOptionHandler}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <Label labelName={"Client"} className={"pt-4 pb-2"} />
             {clientListData.length > 0 ? (
               <Dropdown
@@ -337,7 +336,7 @@ const Form = () => {
               ""
             )}
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <LableAndInput
               labelName={"Sample"}
               InputName={"sample"}
@@ -348,7 +347,7 @@ const Form = () => {
               min={0}
             />
           </div>
-          <div className="w-[32%] flex flex-col">
+          <div className="lg:w-[32%] w-full flex flex-col">
             <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
             <div className="flex w-full">
               <div className="w-full inline-block">
@@ -362,7 +361,7 @@ const Form = () => {
               </div>
             </div>
           </div>
-          <div className="w-[32%] flex flex-col relative">
+          <div className="lg:w-[32%] w-full flex flex-col relative">
             <Label labelName={"Setup Fee"} className={"pt-4 pb-2"} />
             <div className="flex w-full items-center">
               <div className="w-full inline-block">
@@ -414,7 +413,7 @@ const Form = () => {
           )}
           {/* Additional fields based on checkbox selection */}
           {otherCost ? (
-            <div className="w-[32%] flex flex-col">
+            <div className="lg:w-[32%] w-full flex flex-col">
               <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
               <div className="flex w-full">
                 <div className="w-full inline-block">
@@ -433,7 +432,7 @@ const Form = () => {
             ""
           )}
           {translationCost && (
-            <div className="flex flex-col w-[32%]">
+            <div className="flex flex-col lg:w-[32%] w-full">
               <Label labelName={"Translator Cost"} className={"pt-4 pb-2"} />
               <div className="flex w-full">
                 <div className="w-full inline-block">
@@ -449,7 +448,7 @@ const Form = () => {
               </div>
             </div>
           )}
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <Label labelName={"Manager  "} className={"pt-4 pb-2"} />
             <Dropdown
               name={"project_manager"}
@@ -462,7 +461,7 @@ const Form = () => {
               onChange={SelectOptionHandler}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <LableAndInput
               labelName={"Start Date"}
               InputName={"tentative_start_date"}
@@ -474,7 +473,7 @@ const Form = () => {
               labelClassName={"pt-4 pb-2"}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <LableAndInput
               labelName={"End Date"}
               InputName={"tentative_end_date"}
@@ -486,7 +485,7 @@ const Form = () => {
               labelClassName={"pt-4 pb-2"}
             />
           </div>
-          <div className="flex flex-col w-[32%]">
+          <div className="flex flex-col lg:w-[32%] w-full">
             <Label labelName={"SOW File"} className={"pt-4 pb-2"} />
             <MultipleFileUpload
               selectedFiles={selectedFiles}
@@ -496,22 +495,22 @@ const Form = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col w-[32%] pt-8 pb-2">
+        <div className="flex flex-col lg:w-[32%] w-full pt-8 pb-2">
           <CheckboxList
             InputItems={["Advanced Payment Required"]}
             onCheckboxChange={handleCheckboxChange}
           />
         </div>
-        <div className="flex justify-around pt-4 pb-2 w-4/12">
+        <div className="flex justify-around pt-4 pb-2 md:w-4/12 w-6/12">
           <Button
-            className={`bg-green-500 p-4 mt-8 mr-2 w-1/2 text-white font-bold ${
+            className={`bg-green-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold ${
               isFormValid() ? "" : "opacity-50 cursor-not-allowed"
             }`}
             name={"Submit"}
             onClick={() => handleSubmit(formData)}
           />
           <Button
-            className="bg-red-500 p-4 mt-8 w-1/2 text-white font-bold"
+            className="bg-red-500 p-4 mt-8 md:w-1/2 w-full text-white font-bold"
             name={"Cancel"}
           />
         </div>

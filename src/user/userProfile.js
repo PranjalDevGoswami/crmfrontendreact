@@ -94,18 +94,18 @@ export const Profile = () => {
       <div className="m-8 mb-8 overflow-hidden">
         <h1 className="text-3xl pb-8 ">Update Profile</h1>
         <div className="w-10/12 m-auto">
-          <div className="flex items-center justify-around">
-            <div className="profile-pic w-4/12">
+          <div className="lg:flex lg:flex-row flex-col items-center justify-around">
+            <div className="profile-pic lg:w-4/12 w-full border-b-2 border-b-black">
               {profileDetails?.profile_picture !== null ? (
                 <div>
                   <img
                     src={profileDetails?.profile_picture}
                     alt="user-profile-pic"
-                    className="w-40 h-40 rounded-full bg-cover"
+                    className="lg:w-40 lg:h-40 w-20 h-20 rounded-full bg-cover"
                   />
                 </div>
               ) : (
-                <FaRegUserCircle className="w-40 h-40 rounded-full bg-cover" />
+                <FaRegUserCircle className="lg:w-40 lg:h-40 w-20 h-20 rounded-full bg-cover" />
               )}
               <div className="flex items-center mt-4">
                 <Label labelName={"Email:"} className={"inline-block"} />
@@ -122,7 +122,7 @@ export const Profile = () => {
                 <p className="text-xl font-bold p-1">{profileDetails?.phone}</p>
               </div>
             </div>
-            <div className="w-8/12 flex flex-col gap-4 p-4 ">
+            <div className="lg:w-8/12 w-full flex flex-col lg:gap-4 gap-3 p-3 lg:p-4 mt-8">
               <Label labelName={"Phone Number"} />
               <Input
                 type={"number"}

@@ -124,7 +124,7 @@ const SignUp = () => {
                   "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
                 }
                 required={"required"}
-                placeholder={"userId or email address"}
+                placeholder={"email address"}
                 name={"email"}
                 onchange={handleInputChange}
               />
@@ -192,7 +192,7 @@ const SignUp = () => {
                 <Link to="/login">
                   <Button
                     className={"p-4 underline"}
-                    name={"Have a account? Login"}
+                    name={"Already Have account? Login"}
                   />
                 </Link>
               </div>

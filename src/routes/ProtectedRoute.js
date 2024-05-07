@@ -11,22 +11,22 @@ export const ProtectedRoute = () => {
   }
   return (
     <>
-      <div className="">
-        <div className="sticky top-0 left-0 h-28 w-full z-50">
-          <Header />
-        </div>
-        <div className="w-full">
-          <div className="flex">
-            <div className="sticky top-28 left-0 h-28 w-52">
-              <div className="">
-                <MainDashboard />
+      <div className="sticky top-0 left-0 h-28 w-full z-50">
+        <Header />
+      </div>
+      <div className="w-full">
+        <div className="flex">
+          <div className="sticky top-28 left-0 h-28 max-w-52">
+            <MainDashboard />
+          </div>
+          <div className="w-full overflow-scroll ml-8">
+            <div className="container mx-auto">
+              {/* <div className="bg-white h-8 sticky top-32">
+              <Breadcrumbs />
+            </div> */}
+              <div className="max-w-full overflow-x-scroll">
+                <Outlet />
               </div>
-            </div>
-            <div className="w-full pl-8">
-              <div className="bg-white h-8 sticky top-32">
-                <Breadcrumbs />
-              </div>
-              <Outlet />
             </div>
           </div>
         </div>

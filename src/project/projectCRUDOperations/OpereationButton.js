@@ -79,7 +79,7 @@ const OpereationButton = ({
                 View
                 {/* </Link> */}
               </button>
-              {record.status !== "completed" ||
+              {record.status !== "completed" &&
               record.status !== "cbr_raised" ? (
                 <button
                   className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"

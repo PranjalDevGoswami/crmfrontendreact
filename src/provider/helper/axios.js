@@ -132,6 +132,7 @@ import { REFRESH_TOKEN } from "../../../utils/urls.js";
 import { Route } from "react-router-dom";
 
 export const checkForTokenExpiredError = (error) => {
+  console.log("🚀 ~ checkForTokenExpiredError ~ error:", error);
   if (error.message === "Network Error") {
     document.write("Server Down");
   } else {
@@ -148,7 +149,9 @@ export const createWithAuth = () => {
     },
   });
 };
+
 const refreshTokenAndSetAuth = async (callback) => {
+  console.log("🚀 ~ refreshTokenAndSetAuth ~ callback:", callback);
   const refreshToken = localStorage.getItem("refreshToken");
   const response = await refreshUserToken(REFRESH_TOKEN, {
     refresh: refreshToken,

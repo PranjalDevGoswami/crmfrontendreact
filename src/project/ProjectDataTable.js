@@ -2,21 +2,19 @@ import React, { useEffect, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import Button from "../components/Button";
-import Input from "../components/InputField.js";
-import Dropdown from "../components/DropDown.js";
 import {
   DummyData,
   Dummycolumns,
   conditionalRowStyles,
   customStyles,
 } from "../../utils/DataTablesData";
-import { ClientList } from "../fetchApis/clientList/ClientList";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
 import View from "./projectCRUDOperations/View.js";
 import Edit from "./projectCRUDOperations/Edit.js";
 import Status from "./projectCRUDOperations/Status.js";
 import { TableColumn } from "../../utils/dataTableColumns.js";
 import AssignedProject from "./AssignedProject.js";
+import FilterProject from "./FilterProject";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -44,10 +42,10 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [selectedIndex, setSelectedIndex] = useState();
   const [closeView, setCloseView] = useState(false);
   const [isStatus, setIsStatus] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedClient, setSelectedClient] = useState("");
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [teamLeadAssiged, setTeamLeadAssiged] = useState();
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
 
   const dropdownRef = useRef(null);
 
@@ -64,7 +62,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
-
         // Filter based on selected status and client
         let filteredData = projectDataObject;
         if (selectedStatus && selectedStatus !== "--Select Status--") {
@@ -90,42 +87,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     };
     fetchProjectData();
   }, [token, isDrawerOpen, selectedStatus, selectedClient]);
-
-  useEffect(() => {
-    const fetchClientList = async () => {
-      try {
-        const response = await ClientList();
-        const responseArray = response?.data?.map((val) => {
-          return val.name;
-        });
-        setClientsListArray(responseArray);
-      } catch (error) {
-        console.log("error is", error);
-      }
-    };
-    fetchClientList();
-  }, []);
-
-  const handleFilterOption = (name, value) => {
-    if (name === "Status") {
-      if (value === "To be Started") {
-        setSelectedStatus("to_be_started");
-      } else if (value === "Completed") {
-        setSelectedStatus("completed");
-      } else if (value === "New") {
-        setSelectedStatus("new");
-      } else if (value === "CBR Raised") {
-        setSelectedStatus("cbr_raised");
-      } else if (value === "Hold") {
-        setSelectedStatus("hold");
-      } else if (value === "--Select Status--") {
-        setSelectedStatus("--Select Status--");
-      }
-    }
-    if (name === "Client") {
-      setSelectedClient(value);
-    }
-  };
 
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
@@ -208,42 +169,21 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           isDrawerOpen ? "opacity-30 relative overflow-hidden" : "opacity-100"
         }"`}
       >
-        <div className="flex items-center h-40 w-full overflow-visible">
-          <h2 className="p-2 text-3xl underline w-3/12 text-[#bd1d1d]">
+        <div className="flex lg:flex-row flex-col items-center h-40 w-full overflow-visible lg:container lg:mx-auto">
+          <h2 className="p-2 text-3xl underline lg:w-3/12 w-full text-[#bd1d1d]">
             All Project Details
           </h2>
-          <div className="flex justify-end mb-4 w-9/12">
+          <div className="flex lg:justify-end justify-start mb-4 lg:w-9/12 w-full">
             <div className="flex items-center">
-              <Dropdown
-                Option_Name={["--Select Client--", ...clientsListArray]}
-                onChange={handleFilterOption}
-                name={"Client"}
-                className={"p-4 m-1 border border-black rounded"}
-              />
-              <Dropdown
-                Option_Name={[
-                  "--Select Status--",
-                  "Inprogress",
-                  "Hold",
-                  "Completed",
-                  // "New",
-                  "To be Started",
-                  "CBR Raised",
-                ]}
-                onChange={handleFilterOption}
-                name={"Status"}
-                className={"p-4 m-1 border border-black rounded"}
+              <FilterProject
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+                selectedClient={selectedClient}
+                setSelectedClient={setSelectedClient}
+                setSearchTerm={setSearchTerm}
+                searchTerm={searchTerm}
               />
             </div>
-            <Input
-              type="text"
-              placeholder="Search..."
-              value={searchTerm}
-              onchange={(e) => setSearchTerm(e.target.value)}
-              className={
-                "p-2 m-1 border border-black rounded focus:outline-none"
-              }
-            />
           </div>
         </div>
         {data.length > 0 ? (
@@ -263,7 +203,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   <Button
                     name={"Add Man Days"}
                     className={
-                      "p-2 bg-yellow-200 border rounded-md border-black ml-4"
+                      "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
                     }
                     onClick={handleMutiEdit}
                   />
@@ -271,7 +211,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   <Button
                     name={"Assign Project"}
                     className={
-                      "p-2 bg-yellow-200 border rounded-md border-black ml-4"
+                      "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
                     }
                     onClick={handleMutiEdit}
                   />

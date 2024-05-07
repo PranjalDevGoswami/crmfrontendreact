@@ -164,7 +164,7 @@ const AssignedProject = ({
     },
   ];
   return (
-    <React.Fragment>
+    <div className="">
       <Drawer
         placement="right"
         open={openRight}
@@ -187,7 +187,7 @@ const AssignedProject = ({
           />
         </div>
       </Drawer>
-    </React.Fragment>
+    </div>
   );
 };
 

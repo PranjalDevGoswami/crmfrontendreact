@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Button from "../components/Button.js";
-
 import { useNavigate } from "react-router-dom";
-
 import { Link } from "react-router-dom";
 import { BiShow } from "react-icons/bi";
 import object7 from "../assets/object7.png";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { PostLoginData } from "../fetchApis/login/PostLoginData";
-import { login } from "../features/login/loginSlice.js";
 import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
 import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
-import { userDetails } from "./userProfile";
 
 const Login = () => {
   const { token, setToken } = useAuth();
@@ -106,12 +101,12 @@ const Login = () => {
 
   return (
     // <form onSubmit={handleLogin}>
-    <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 w-full h-screen bg-contain">
-      <div className="flex h-full">
-        <div className="w-2/3 h-2/3 flex flex-col items-center justify-center p-8 pl-8"></div>
-        <div className="w-1/3">
+    <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 md:w-full md:h-screen xl:bg-contain bg-cover">
+      <div className="md:flex md:h-full block h-auto">
+        <div className="md:w-2/3 md:h-2/3 hidden md:flex flex-col items-center justify-center p-8 pl-8"></div>
+        <div className="md:w-1/3 w-full">
           <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
-            <div className="flex flex-col gap-4 p-4 w-9/12">
+            <div className="flex flex-col gap-4 md:p-4 p-1 w-9/12">
               <h1 className="text-5xl text-center p-8 text-[#e7251e]">Login</h1>
               <Input
                 type={"email"}
@@ -146,14 +141,14 @@ const Login = () => {
                 )}
               </div>
               <img src={object7} alt="fgg" className="absolute top-8" />
-              <div className="flex justify-between">
-                <div className="flex items-center">
+              <div className="flex lg:flex-row flex-col justify-between">
+                <div className="lg:flex items-center inline-block">
                   <Input type={"checkbox"} className="inline-block" />
                   <Label labelName={"Keep me Login"} className={"pl-2"} />
                 </div>
                 <Link to="/reset">
                   <Button
-                    className={"p-4 text-right float-right"}
+                    className={"p-4 lg:text-right lg:float-right"}
                     name={"Forgot password?"}
                   />
                 </Link>

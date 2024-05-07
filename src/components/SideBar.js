@@ -23,14 +23,14 @@ const SideBar = () => {
       </div>
       <div
         className={`${
-          sideBarOpen ? "w-52" : "w-16"
+          sideBarOpen ? "lg:w-52 w-16" : "lg:w-16 w-16"
         }  bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-4`}
       >
         <div className="flex justify-start overflow-hidden mt-4 pl-4">
           <MdDashboard className="text-2xl group" />
           <div
             className={`${
-              sideBarOpen ? "block" : "hidden"
+              sideBarOpen ? "lg:block hidden" : "hidden"
             } overflow-hidden duration-300 ml-4 float-right`}
           >
             {department == 2 ? (
@@ -44,7 +44,7 @@ const SideBar = () => {
             )}
           </div>
         </div>
-        <div className="flex justify-start overflow-hidden pl-4">
+        {/* <div className="flex justify-start overflow-hidden pl-4">
           <GoProjectRoadmap className="text-2xl group" />
           <div
             className={`${
@@ -97,13 +97,13 @@ const SideBar = () => {
               <Link to="/default-dashboard">Chart</Link>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="">
         {sideBarOpen ? (
           <PiCaretDoubleLeftLight
             className={`${
-              sideBarOpen ? "top-4 left-52" : "left-16 top-0"
+              sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-0"
             } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);
@@ -112,7 +112,7 @@ const SideBar = () => {
         ) : (
           <PiCaretDoubleRightLight
             className={`${
-              sideBarOpen ? "top-4 left-52" : "left-16 top-0"
+              sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-0"
             } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
             onClick={() => {
               SetSideBarOpen(!sideBarOpen);

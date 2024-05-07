@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Breadcrumbs from "../Breadcrumbs.js";
 import Header from "../partials/Header.js";
-// import View from "../project/projectCRUDOperations/View";
 import View from "../project/projectCRUDOperations/View.js";
 import SideBar from "../components/SideBar.js";
 
 const ViewDashboard = ({ viewRecord }) => {
-  console.log("viewRecord", viewRecord);
-
   return (
     <div className="">
       <div className="w-full sticky top-0 z-20">

@@ -25,8 +25,29 @@ export function AddManDays({
   );
   const [editIndex, setEditIndex] = useState(null);
 
+  // const handleMandaysData = (index, e) => {
+  //   const sampleSize = selectedEditData.map((item) => item.sample);
+  //   const { name, value } = e.target;
+  //   const updatedMandaysData = [...mandaysData];
+  //   updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
+  //   setMandaysData(updatedMandaysData);
+  // };
+
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
+    const projectId = selectedEditData[index].id;
+    const projectIndex = selectedEditData.findIndex(
+      (project) => project.id === projectId
+    );
+    // const sampleSize = selectedEditData[projectIndex].sample;
+    const RemainingSize = selectedEditData[projectIndex].remaining_interview;
+    if (name === "total_achievement" && parseInt(value) >= RemainingSize) {
+      alert(
+        "Achieved Target must be smaller than the Remaining Interview Size for project " +
+          selectedEditData[projectIndex].name
+      );
+      return;
+    }
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
     setMandaysData(updatedMandaysData);
@@ -38,6 +59,7 @@ export function AddManDays({
   minDate.setDate(minDate.getDate() - 1);
 
   const handleManDayStatus = (index, name, value) => {
+    console.log();
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], status: value };
 

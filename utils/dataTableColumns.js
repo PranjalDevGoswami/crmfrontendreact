@@ -24,69 +24,82 @@ export const TableColumn = ({
   };
   return (columns = [
     {
-      name: "Sr.No.",
+      name: "SN.",
       selector: (row) => row.id,
       sortable: true,
+      width: "75px",
     },
     {
       name: "Project Code",
       selector: (row) => row.project_code,
       sortable: true,
+      width: "120px",
     },
     {
       name: "Client Name",
       selector: (row) => row.clients,
       sortable: true,
+      width: "100px",
     },
     {
       name: "Project Name",
       selector: (row) => row.name,
       sortable: true,
+      width: "180px",
     },
     {
       name: "Type",
       selector: (row) => row.project_type,
       sortable: true,
+      width: "85px",
     },
     {
       name: "Start Date",
       selector: (row) => row.tentative_start_date,
       sortable: true,
+      width: "110px",
     },
     {
       name: "End Date",
       selector: (row) => row.tentative_end_date,
       sortable: true,
+      width: "110px",
     },
     {
       name: "CPI",
       selector: (row) => row.cpi,
       sortable: true,
+      width: "75px",
     },
     {
       name: "Project Target",
       selector: (row) => row.sample,
       sortable: true,
+      width: "100px",
     },
     {
-      name: "Achieved Target",
+      name: "Ach. Target",
       selector: (row) => row.total_achievement,
       sortable: true,
+      width: "100px",
     },
     {
-      name: "Remaining Target",
+      name: "Rem. Target",
       selector: (row) => row.remaining_interview,
       sortable: true,
+      width: "100px",
     },
     {
       name: "T. Man Days",
       selector: (row) => row.man_days,
       sortable: true,
+      width: "100px",
     },
     {
       name: "status",
       selector: (row) => row.status,
       sortable: true,
+      width: "90px",
     },
     {
       name: "Actions",
@@ -95,6 +108,7 @@ export const TableColumn = ({
       className: "action",
       align: "left",
       sortable: false,
+      width: "90px",
       cell: (record, index) => {
         return (
           <div className="relative w-full">
