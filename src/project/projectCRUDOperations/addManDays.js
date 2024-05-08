@@ -202,6 +202,7 @@ export function AddManDays({
   const BulkUpdateManDays = async (data) => {
     try {
       const response = await PostMandaysData(data);
+      console.log("🚀 ~ BulkUpdateManDays ~ response:", response);
       if (response?.status == true) {
         alert("Operation Perform Sucessfully");
       }
