@@ -9,7 +9,7 @@ function App() {
 
   return (
     <AuthProvider>
-      {/* {token ? <RoutesForProtected /> : <RoutesForPublic />} */}
+      <LogoutTimer />
       <Routes />
     </AuthProvider>
   );

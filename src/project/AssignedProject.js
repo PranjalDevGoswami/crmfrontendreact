@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Drawer } from "@material-tailwind/react";
+// import { Drawer } from "@material-tailwind/react";
+import Drawer from "@mui/material/Drawer";
+
 import DataTable from "react-data-table-component";
 import {
   AssignColumns,
@@ -164,13 +166,19 @@ const AssignedProject = ({
     },
   ];
   return (
-    <div className="">
+    <React.Fragment>
       <Drawer
-        placement="right"
+        anchor={"right"}
         open={openRight}
         onClose={closeDrawerRight}
-        className="p-4 top-32 !h-[90%] !overflow-scroll"
-        size={1200}
+        PaperProps={{
+          sx: {
+            width: 1200,
+            padding: 2,
+          },
+        }}
+        // className={"p-4 top-32 !h-[90%]"}
+        // size={1200}
       >
         <div className="mb-6 w-1/3">
           <h3 className="text-xl underline pb-4">
@@ -187,7 +195,7 @@ const AssignedProject = ({
           />
         </div>
       </Drawer>
-    </div>
+    </React.Fragment>
   );
 };
 

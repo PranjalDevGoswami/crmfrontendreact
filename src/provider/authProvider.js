@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { BASEURL, REFRESH_TOKEN } from "../../utils/urls";
 
 const AuthContext = createContext();
 
@@ -21,23 +22,25 @@ const AuthProvider = ({ children }) => {
 
   const refreshAccessToken = async () => {
     try {
-      const response = await axios.post(
-        "http://13.200.128.137/:8000/token/refresh/",
-        { refreshToken }
-      );
+      const response = await axios.post(REFRESH_TOKEN, { refreshToken });
       const { accessToken } = response.data;
       setToken(accessToken);
       return accessToken; // Return the new access token
     } catch (error) {
       console.error("Error refreshing access token:", error);
-      // Show an alert when token refresh fails due to expiration
-      alert("Token has expired. Please log in again.");
+      if (error.response && error.response.status === 401) {
+        // Unauthorized, possibly due to refresh token expiration
+        alert("Refresh token has expired. Please log in again.");
+        // Clear local storage and navigate to login page
+        localStorage.clear();
+        window.location.href = "/login";
+      }
       throw error; // Propagate the error
     }
   };
 
   const api = axios.create({
-    baseURL: "http://13.200.128.137/:8000/",
+    baseURL: BASEURL,
   });
 
   api.interceptors.request.use(

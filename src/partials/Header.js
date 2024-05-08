@@ -65,7 +65,7 @@ const Header = () => {
             {token ? (
               <div className="flex flex-wrap">
                 <span className="m-2">
-                  {username.username ? username.username : "User"}
+                  {username?.username ? username?.username : "User"}
                 </span>
 
                 <div className="relative cursor-pointer" ref={headerBtn}>

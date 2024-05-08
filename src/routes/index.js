@@ -22,7 +22,7 @@ import LogoutTimer from "../user/LogoutTimer.js";
 
 const Routes = () => {
   const { token } = useAuth();
-
+  // const token = localStorage.getItem("token");
   // Define public routes accessible to all users
   const routesForPublic = [
     {
@@ -42,6 +42,10 @@ const Routes = () => {
       element: <ResetPassword />,
     },
     { path: "*", element: <Error /> },
+    {
+      path: "/logout",
+      element: <LogoutTimer />, // Include LogoutTimer component
+    },
   ];
 
   const routesForAuthenticatedOnly = [
