@@ -36,6 +36,7 @@ const OpereationButton = ({
   };
 
   const handleViewProject = () => {
+    console.log(record);
     setisView(true);
     navigate("/view", { state: record });
   };
@@ -50,7 +51,12 @@ const OpereationButton = ({
   };
   const PostRaiseCBR = async (data) => {
     try {
-      await RaiseCBRPostApi(data);
+      const response = await RaiseCBRPostApi(data);
+      if (response?.status == true) {
+        alert("CBR has been Raised !!!");
+      } else if (response?.ex?.response?.data?.project_code) {
+        alert("project code : " + response?.ex?.response?.data?.project_code);
+      }
     } catch (error) {
       console.error("Error fetching project data:", error);
     }

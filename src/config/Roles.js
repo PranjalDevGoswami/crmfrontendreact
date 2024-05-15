@@ -1,12 +1,17 @@
-export default {
-  SUPER_ADMIN: "SUPER_ADMIN",
-  DIRECTOR: "DIRECTOR",
-  HOD_FINANCE: "HOD_FINANCE",
-  HOD_OPERATION: "HOD_OPERATION",
-  OPERATION_MANAGER: "OPERATION_MANAGER",
-  OPERATION_TEAMLEAD: "OPERATION_TEAMLEAD",
-  HOD_SALES: "HOD_SALES",
-  SALES_MANAGER: "SALES_MANAGER",
-  SALES_TEAMLEAD: "SALES_TEAMLEAD",
-  GUEST: "GUEST",
+export const Deparment = {
+  Sales: "Sales",
+  Operation: "Operation",
+  Finance: "Finance",
 };
+export const Role = {
+  Director: "Director",
+  Hod: "Hod",
+  Manager: "Manager",
+  TeamLead: "Team Lead",
+};
+// export const Role = {
+//   Director: "Director",
+//   Hod: "Hod",
+//   Manager: "Manager",
+//   TeamLead: "Team Lead",
+// };

@@ -21,7 +21,7 @@ const AssignedProject = ({
 }) => {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
-  const [selectTL, setSelectTL] = useState(["TL1", "TL2"]);
+  const [selectTL, setSelectTL] = useState(["No TL Assigned"]);
   const [allProjectList, setAllProjectList] = useState();
   const [project_id, setProject_id] = useState([]);
   const [teamLeadNameID, setTeamLeadNameID] = useState();
@@ -83,6 +83,7 @@ const AssignedProject = ({
   const PostProjectData = async (data) => {
     try {
       const response = await UpdateTeamLead(data);
+      console.log("🚀 ~ PostProjectData ~ response:", response);
       alert(response.data.message);
     } catch (error) {
       console.error("Error fetching project data:", error);
@@ -98,34 +99,39 @@ const AssignedProject = ({
   };
 
   const handleSelectTL = (index, name, value) => {
-    const teamleadArray = teamLeadNameID[0];
-    const Selected_TeamLead = teamleadArray.filter(
-      (item) => item.name === value
-    );
-
-    if (value === Selected_TeamLead[0]?.name) {
-      const updatedAssignData = { ...assignData };
-      const projectCode = selectedRow[index].project_code;
-      const filteredItem = allProjectList.find(
-        (item) => item.project_code === projectCode
-      );
-      if (!updatedAssignData.ids.includes(filteredItem.id)) {
-        updatedAssignData.ids.push(filteredItem.id);
-      }
-      const existingProjectIndex = updatedAssignData.projects.findIndex(
-        (project) => project.project_id === filteredItem.id
+    if (value === "No TL Assigned") {
+      alert("No TL Assiged.");
+    }
+    if (teamLeadNameID) {
+      const teamleadArray = teamLeadNameID[0];
+      const Selected_TeamLead = teamleadArray.filter(
+        (item) => item.name === value
       );
 
-      if (existingProjectIndex !== -1) {
-        updatedAssignData.projects[existingProjectIndex].project_teamlead =
-          Selected_TeamLead[0].id;
-      } else {
-        updatedAssignData.projects.push({
-          project_id: filteredItem.id,
-          project_teamlead: Selected_TeamLead[0].id,
-        });
+      if (value === Selected_TeamLead[0]?.name) {
+        const updatedAssignData = { ...assignData };
+        const projectCode = selectedRow[index].project_code;
+        const filteredItem = allProjectList.find(
+          (item) => item.project_code === projectCode
+        );
+        if (!updatedAssignData.ids.includes(filteredItem.id)) {
+          updatedAssignData.ids.push(filteredItem.id);
+        }
+        const existingProjectIndex = updatedAssignData.projects.findIndex(
+          (project) => project.project_id === filteredItem.id
+        );
+
+        if (existingProjectIndex !== -1) {
+          updatedAssignData.projects[existingProjectIndex].project_teamlead =
+            Selected_TeamLead[0].id;
+        } else {
+          updatedAssignData.projects.push({
+            project_id: filteredItem.id,
+            project_teamlead: Selected_TeamLead[0].id,
+          });
+        }
+        setAssignData(updatedAssignData);
       }
-      setAssignData(updatedAssignData);
     }
   };
 

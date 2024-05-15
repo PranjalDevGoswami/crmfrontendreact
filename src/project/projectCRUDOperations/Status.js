@@ -15,18 +15,23 @@ const Status = ({ viewRecord, setIsStatus }) => {
     document.body.classList.remove("DrawerBody");
   };
   const PostUpdateEditData = async (data) => {
-    await ChangeStatus(data);
+    const response = await ChangeStatus(data);
+    if (response?.status == true) {
+      setUpdatedStatus({
+        project_code: "",
+        status: "",
+      });
+      document.body.classList.remove("DrawerBody");
+      setIsStatus(false);
+      alert("Status Change Sucessfully!!");
+    } else {
+      alert("please select Status");
+    }
     // setViewEdit(false);
-    setUpdatedStatus({
-      project_code: "",
-      status: "",
-    });
-    document.body.classList.remove("DrawerBody");
     // setIsDrawerOpen(false);
   };
 
   const handleEditUpdate = () => {
-    console.log("updatedValue", updatedStatus);
     PostUpdateEditData(updatedStatus);
   };
   const handleInputChange = (e) => {

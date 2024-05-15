@@ -47,7 +47,6 @@ const Header = () => {
 
   const handleProfileSetting = () => {
     navigate("/profile");
-    console.log("Profile btn");
   };
 
   return (

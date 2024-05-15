@@ -112,7 +112,7 @@ export const TableColumn = ({
       cell: (record, index) => {
         return (
           <div className="relative w-full">
-            <div className="flex items-center">
+            <div className="flex items-center overflow-visible">
               <button
                 onClick={() => handleAddEditOperation(record, index)}
                 className="border p-2 rounded-md mr-2 cursor-pointer"

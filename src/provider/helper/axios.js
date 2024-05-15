@@ -185,7 +185,6 @@ export const postWithAuth = (url, data) => {
   };
   // return axios.post(url, data, { headers });
   return new Promise((resolve, reject) => {
-    console.log("🚀 ~ refreshTokenAndSetAuth ~ response:", response);
     axios
       .post(url, data, { headers })
       .then((response) => {

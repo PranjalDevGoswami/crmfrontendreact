@@ -412,8 +412,67 @@ export const AssignColumns = [
     sortable: true,
   },
 ];
+const currentDate = new Date().toISOString().split("T")[0];
 
 export const conditionalRowStyles = [
+  // {
+  //   when: (row) => new Date(row.tentative_end_date) < new Date(currentDate),
+  //   style: {
+  //     backgroundColor: "rgb(255, 63, 58)",
+  //     color: "black",
+  //     "&:hover": {
+  //       cursor: "not-allowed",
+  //     },
+  //   },
+  // },
+
+  // {
+  //   when: (row) => {
+  //     const endDate = new Date(row.tentative_end_date).getTime();
+  //     const diffInMs = endDate - new Date(currentDate);
+  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
+  //     return diffInWeeks <= 2;
+  //   },
+  //   style: {
+  //     backgroundColor: "red",
+  //     color: "white",
+  //     "&:hover": {
+  //       cursor: "not-allowed",
+  //     },
+  //   },
+  // },
+  // {
+  //   when: (row) => {
+  //     const endDate = new Date(row.tentative_end_date).getTime();
+  //     const diffInMs = endDate - new Date(currentDate);
+  //     console.log("🚀 ~ diffInMs:", diffInMs);
+  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
+  //     return diffInWeeks <= 1;
+  //   },
+  //   style: {
+  //     backgroundColor: "orange",
+  //     color: "white",
+  //     "&:hover": {
+  //       cursor: "not-allowed",
+  //     },
+  //   },
+  // },
+  // {
+  //   when: (row) => {
+  //     const endDate = new Date(row.tentative_end_date).getTime();
+  //     const diffInMs = endDate - new Date(currentDate);
+  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
+  //     return diffInWeeks < 0;
+  //   },
+  //   style: {
+  //     backgroundColor: "yellow",
+  //     color: "black",
+  //     "&:hover": {
+  //       cursor: "not-allowed",
+  //     },
+  //   },
+  // },
+
   {
     when: (row) => row.status == "completed",
     style: {

@@ -15,6 +15,7 @@ import Status from "./projectCRUDOperations/Status.js";
 import { TableColumn } from "../../utils/dataTableColumns.js";
 import AssignedProject from "./AssignedProject.js";
 import FilterProject from "./FilterProject";
+import { Checkbox } from "@mui/material";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -25,6 +26,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     total_achievement: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedHod, setSelectedHod] = useState("");
+  const [selectedManager, setSelectedManager] = useState("");
+  const [selectedTl, setSelectedTl] = useState("");
   const [clientsListArray, setClientsListArray] = useState([
     "Demo Client1",
     "Demo Client2",
@@ -47,6 +51,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
 
+  const [tlAssociates, setTlAssociates] = useState();
+
   const dropdownRef = useRef(null);
 
   let token = localStorage.getItem("token");
@@ -54,6 +60,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   let user = localStorage.getItem("user");
   let username = localStorage.getItem("username");
   let department = localStorage.getItem("department");
+  let user_id = localStorage.getItem("user_id");
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -62,6 +69,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
+
         // Filter based on selected status and client
         let filteredData = projectDataObject;
         if (selectedStatus && selectedStatus !== "--Select Status--") {
@@ -69,24 +77,58 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             (item) => item.status == selectedStatus
           );
         }
-
+        if (selectedHod && selectedHod !== "--Select HOD--") {
+          filteredData = filteredData.filter(
+            (item) => item?.project_hod?.name == selectedHod
+          );
+        }
+        if (selectedManager && selectedManager !== "--Select Manager--") {
+          filteredData = filteredData.filter(
+            (item) => item?.project_manager?.name == selectedManager
+          );
+        }
+        if (selectedTl && selectedTl !== "--Select TeamLead--") {
+          filteredData = filteredData.filter(
+            (item) => item?.project_teamlead?.name == selectedTl
+          );
+        }
         if (selectedClient && selectedClient !== "--Select Client--") {
           filteredData = filteredData.filter(
             (item) => item.clients.name === selectedClient
           );
         }
+        if (role === "Team Lead") {
+          filteredData = filteredData?.filter((item) => {
+            return item?.project_teamlead?.id == user_id;
+          });
+        }
+        if (role === "AM/Manager") {
+          filteredData = filteredData?.filter((item) => {
+            return item?.project_manager?.id == user_id;
+          });
+        }
+        if (role === "HOD") {
+          filteredData = filteredData?.filter((item) => {
+            return item?.project_hod?.id == user_id;
+          });
+        }
 
-        const allProjectListWithTL = filteredData?.filter((item) => {
-          return item?.project_teamlead !== null;
-        });
-        setTeamLeadAssiged(allProjectListWithTL);
+        setTeamLeadAssiged(filteredData);
         setFilteredProjectData(filteredData);
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
-  }, [token, isDrawerOpen, selectedStatus, selectedClient]);
+  }, [
+    token,
+    isDrawerOpen,
+    selectedStatus,
+    selectedClient,
+    selectedManager,
+    selectedHod,
+    selectedTl,
+  ]);
 
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
@@ -154,14 +196,36 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     man_days: item.man_days,
     status: item.status,
   }));
+  const currentDate = new Date().toISOString().split("T")[0];
 
   const desabledRowData = data?.map((item) => {
     let desabled = false;
-    if (item.status === "completed" || item.status === "cbr_raised") {
+    if (
+      item.status === "completed" ||
+      item.status === "cbr_raised" ||
+      new Date(item.tentative_end_date) < new Date(currentDate)
+    ) {
       desabled = true;
     }
     return { ...item, desabled };
   });
+  const customSort = (rows, selector, direction) => {
+    return rows.sort((a, b) => {
+      // use the selector to resolve your field names by passing the sort comparators
+      const aField = selector(a).toLowerCase();
+      const bField = selector(b).toLowerCase();
+
+      let comparison = 0;
+
+      if (aField > bField) {
+        comparison = 1;
+      } else if (aField < bField) {
+        comparison = -1;
+      }
+
+      return direction === "desc" ? comparison * -1 : comparison;
+    });
+  };
   return (
     <>
       <div
@@ -169,11 +233,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           isDrawerOpen ? "opacity-30 relative overflow-hidden" : "opacity-100"
         }"`}
       >
-        <div className="flex lg:flex-row flex-col items-center h-40 w-full overflow-visible lg:container lg:mx-auto">
-          <h2 className="p-2 text-3xl underline lg:w-3/12 w-full text-[#bd1d1d]">
-            All Project Details
-          </h2>
-          <div className="flex lg:justify-end justify-start mb-4 lg:w-9/12 w-full">
+        <div className="flex lg:flex-row flex-col items-center h-40 w-full overflow-visible md:w-11/12 lg:container lg:mx-auto">
+          {/* <h2 className="p-2 text-3xl underline lg:w-3/12 w-full text-[#bd1d1d]">
+           All Project Details
+          </h2> */}
+          <div className="flex lg:justify-end justify-start mb-4 lg:w-full w-full">
             <div className="flex items-center">
               <FilterProject
                 selectedStatus={selectedStatus}
@@ -182,17 +246,35 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 setSelectedClient={setSelectedClient}
                 setSearchTerm={setSearchTerm}
                 searchTerm={searchTerm}
+                setTlAssociates={setTlAssociates}
+                setSelectedHod={setSelectedHod}
+                setSelectedManager={setSelectedManager}
+                setSelectedTl={setSelectedTl}
               />
             </div>
           </div>
         </div>
-        {data.length > 0 ? (
+        {data?.length > 0 ? (
           <div className="relative table">
+            {/* <div className="flex">
+              <span className="">
+                Project Completed
+                <p className="w-4 h-4 bg-red-400"></p>
+              </span>
+              <p className="">
+                CBR Raised
+                <p className="w-4 h-4 bg-red-400"></p>
+              </p>
+              <p className="">
+                Date has Expired
+                <p className="w-4 h-4 bg-red-400"></p>
+              </p>
+            </div> */}
             {isMultiEdit && (
               <div
                 className={`${
                   isMultiEdit
-                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-3.7rem] w-full p-2"
+                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-0.3rem] w-full p-2"
                     : " opacity-0"
                 }`}
               >
@@ -244,6 +326,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
+                sortFunction={customSort}
+                title={" All Project Details"}
               />
             ) : (
               <DataTable
@@ -269,6 +353,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
+                title={" All Project Details"}
               />
             )}
 
@@ -283,24 +368,22 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             )}
             {isView ? (
               <div className="z-50">
-                {" "}
                 <View
                   viewRecord={selectedRecord}
                   closeView={closeView}
                   setisView={setisView}
-                />{" "}
+                />
               </div>
             ) : (
               ""
             )}
             {isStatus ? (
               <div className="z-50">
-                {" "}
                 <Status
                   viewRecord={selectedRecord}
                   closeView={closeView}
                   setIsStatus={setIsStatus}
-                />{" "}
+                />
               </div>
             ) : (
               ""

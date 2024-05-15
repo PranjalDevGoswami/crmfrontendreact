@@ -7,9 +7,7 @@ export const ChangeStatus = async (data) => {
       method: "POST",
       body: JSON.stringify(data),
     });
-    if (response.status == true) {
-      return response.data;
-    }
+    return response;
   } catch (error) {
     // Display an alert for login error
     alert("An error occurred. Please try again.");

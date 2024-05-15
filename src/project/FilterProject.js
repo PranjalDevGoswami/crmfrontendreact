@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Dropdown from "../components/DropDown";
 import { ClientList } from "../fetchApis/clientList/ClientList.js";
 import Input from "../components/InputField.js";
+import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
+import { GetProjectHod } from "../fetchApis/projectHod/projectHod.js";
+import { GetProjectTeamLead } from "../fetchApis/projectTeamLead/projectTl.js";
 
 const FilterProject = ({
   selectedStatus,
@@ -10,19 +13,36 @@ const FilterProject = ({
   setSelectedClient,
   setSearchTerm,
   searchTerm,
+  setSelectedHod,
+  setSelectedManager,
+  setSelectedTl,
 }) => {
   const [clientsListArray, setClientsListArray] = useState([
     "Demo Client1",
     "Demo Client2",
   ]);
+  const [managerListArray, setManagerListArray] = useState([
+    "Demo Manager1",
+    "Demo Manager2",
+  ]);
+  const [hodListArray, setHodListArray] = useState(["Demo Hod1", "Demo Hod2"]);
+  const [tlListArray, setTlListArray] = useState(["Demo TL1", "Demo TL2"]);
+  const [managerAssociates, setManagerAssociates] = useState([
+    "Demo TL1",
+    "Demo TL2",
+  ]);
+  const [tlAssociates, setTlAssociates] = useState();
   const [status, setStatus] = useState([
-    "Inprogress",
-    "Hold",
-    "Completed",
-    "New",
     "To be Started",
+    "Inprogress",
+    "Completed",
+    "CBR Raised",
+    "Hold",
   ]);
   // const [selectedClient, setSelectedClient] = useState("");
+  const role = localStorage.getItem("role");
+  const user_id = localStorage.getItem("user_id");
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchClientList = async () => {
@@ -37,6 +57,77 @@ const FilterProject = ({
       }
     };
     fetchClientList();
+  }, []);
+
+  useEffect(() => {
+    const fetchManagerList = async () => {
+      try {
+        const response = await GetProjectManager();
+        let TlUnderThisManager = response.data;
+
+        if (role == "AM/Manager") {
+          TeamLeadIs = TlUnderThisManager.filter(
+            (item) => item.name == username
+          );
+          let TeamLeadIsArray = TeamLeadIs.map((item) =>
+            item.manager_teamlead.map((item) => item.name)
+          );
+          setTlListArray(TeamLeadIsArray[0]);
+        }
+        setTlAssociates(TlUnderThisManager);
+        let responseArray = response?.data?.map((val) => {
+          return val.name;
+        });
+        if (role !== "HOD") {
+          setManagerListArray(responseArray);
+        }
+      } catch (error) {
+        console.log("error is", error);
+      }
+    };
+    fetchManagerList();
+  }, []);
+
+  useEffect(() => {
+    const fetchHodList = async () => {
+      try {
+        const response = await GetProjectHod();
+        let ManagerUnderThisHod = response.data;
+        if (role == "HOD") {
+          managerIs = ManagerUnderThisHod.filter(
+            (item) => item.name == username
+          );
+          let managerIsArray = managerIs.map((item) =>
+            item.hod_manager.map((item) => item.name)
+          );
+          setManagerListArray(managerIsArray[0]);
+        }
+        ManagerUnderThisHod = ManagerUnderThisHod.filter((item) => item.name);
+        setManagerAssociates(ManagerUnderThisHod);
+        const responseArray = response?.data?.map((val) => {
+          return val.name;
+        });
+        setHodListArray(responseArray);
+      } catch (error) {
+        console.log("error is", error);
+      }
+    };
+    fetchHodList();
+  }, []);
+
+  useEffect(() => {
+    const fetchTlList = async () => {
+      try {
+        const response = await GetProjectTeamLead();
+        const responseArray = response?.data?.map((val) => {
+          return val.name;
+        });
+        setTlListArray(responseArray);
+      } catch (error) {
+        console.log("error is", error);
+      }
+    };
+    fetchTlList();
   }, []);
 
   const handleFilterOption = (name, value) => {
@@ -60,10 +151,83 @@ const FilterProject = ({
     if (name === "Client") {
       setSelectedClient(value);
     }
+    if (name === "HOD") {
+      const Hod = managerAssociates.filter((item) => item.name === value);
+      if (Hod.length > 0) {
+        const managerName = Hod.map((item) =>
+          item.hod_manager.filter((item) => item.id == user_id)
+        );
+        if (managerName[0] == "undefined" || managerName[0] == null) {
+          setTlListArray(["Demo Manager1", "Demo Manager2"]);
+        } else {
+          setManagerListArray(managerName[0]);
+        }
+        setSelectedHod(value);
+      }
+    }
+
+    if (name === "Manager") {
+      let manager = tlAssociates.filter((item) => item.name === value);
+      if (manager.length > 0) {
+        const TlName = manager.map((item) =>
+          item.manager_teamlead?.map((item) => item.name)
+        );
+        if (TlName[0] == "undefined" || TlName[0] == null) {
+          setTlListArray(["Demo TL1", "Demo TL2"]);
+        } else {
+          setTlListArray(TlName[0]);
+        }
+      }
+      setSelectedManager(value);
+    }
+    if (name === "TeamLead") {
+      let manager = tlAssociates.filter((item) => item.name === value);
+      if (manager.length > 0) {
+        const TlName = manager.map((item) =>
+          item.manager_teamlead?.map((item) => item.name)
+        );
+        if (TlName[0] == "undefined" || TlName[0] == null) {
+          setTlListArray(["Demo TL1", "Demo TL2"]);
+        } else {
+          setTlListArray(TlName[0]);
+        }
+      }
+      setSelectedTl(value);
+    }
   };
 
   return (
-    <div className="flex items-center w-full">
+    <div className="flex items-center w-11/12 container mx-auto">
+      {role === "Director" ? (
+        <Dropdown
+          Option_Name={["--Select HOD--", ...hodListArray]}
+          onChange={handleFilterOption}
+          name={"HOD"}
+          className={"p-4 m-1 border border-black rounded lg:w-full w-11/12"}
+        />
+      ) : (
+        ""
+      )}
+      {role === "Director" || role === "HOD" ? (
+        <Dropdown
+          Option_Name={["--Select Manager--", ...managerListArray]}
+          onChange={handleFilterOption}
+          name={"Manager"}
+          className={"p-4 m-1 border border-black rounded lg:w-full w-11/12"}
+        />
+      ) : (
+        ""
+      )}
+      {role === "Director" || role === "HOD" || role === "AM/Manager" ? (
+        <Dropdown
+          Option_Name={["--Select TeamLead--", ...tlListArray]}
+          onChange={handleFilterOption}
+          name={"TeamLead"}
+          className={"p-4 m-1 border border-black rounded lg:w-full w-11/12"}
+        />
+      ) : (
+        ""
+      )}
       <Dropdown
         Option_Name={["--Select Client--", ...clientsListArray]}
         onChange={handleFilterOption}

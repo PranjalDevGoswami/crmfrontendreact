@@ -16,7 +16,7 @@
     "util": "^0.12.5"
   },
   "scripts": {
-    "start": "parcel ./public/index.html --port 4000",
+    "start": "parcel ./public/index.html --port 4001",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

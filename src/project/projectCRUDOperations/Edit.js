@@ -82,17 +82,24 @@ const Edit = ({ viewRecord, setisEdit }) => {
 
   const PostUpdateEditData = async (data) => {
     try {
-      await PostMandaysData(data);
+      const response = await PostMandaysData(data);
+      if (response?.status == true) {
+        setisEdit(false);
+        setUpdatedValue({
+          project_code: "",
+          name: "",
+          date: "",
+          man_days: "",
+          total_achievement: "",
+        });
+        alert("operation perform sucessfully");
+      } else {
+        alert("field can not be blank.");
+      }
     } catch (error) {
       console.error("Error fetching project data:", error);
     }
-    setUpdatedValue({
-      project_code: "",
-      name: "",
-      date: "",
-      man_days: "",
-      total_achievement: "",
-    });
+
     document.body.classList.remove("DrawerBody");
     // setIsDrawerOpen(false);
   };
@@ -165,6 +172,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
             Inputvalue={updatedValue.man_days}
             inputChange={handleInputChange}
             InputMax_lenght={2}
+            min={1}
           />
         </div>
         <div className="w-11/12">
@@ -177,6 +185,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
             Inputvalue={updatedValue.total_achievement}
             inputChange={handleInputChange}
             InputMax_lenght={3}
+            min={1}
           />
         </div>
         <div className="flex pt-10">

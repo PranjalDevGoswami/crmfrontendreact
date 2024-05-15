@@ -32,11 +32,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .AddManDaysAnimation{
   animation-name: animated_mandays;
   animation-duration: 1s;
+  z-index: 10;
 }
 @keyframes animated_mandays {
-  0%   {left:0px; top:-5rem;}
+  0%   {left:0px; top:-3.7rem;}
 
-  100% {left:0px; top:-3.7rem;}
+  100% {left:0px; top:-0.3rem;}
 }
 .removeManDaysAnimation{
   animation-name: animated_mandays_remove;

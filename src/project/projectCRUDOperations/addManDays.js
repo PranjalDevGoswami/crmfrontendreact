@@ -42,13 +42,16 @@ export function AddManDays({
     );
     // const sampleSize = selectedEditData[projectIndex].sample;
     const RemainingSize = selectedEditData[projectIndex].remaining_interview;
-    if (name === "total_achievement" && parseInt(value) >= RemainingSize) {
-      alert(
-        "Achieved Target must be smaller than the Remaining Interview Size for project " +
-          selectedEditData[projectIndex].name
-      );
-      return;
-    }
+    console.log("🚀 ~ handleMandaysData ~ RemainingSize:", RemainingSize);
+    // if (name === "total_achievement") {
+    //   if (RemainingSize <= parseInt(value)) {
+    //     alert(
+    //       "Achieved Target must be smaller than the Remaining Interview Size for project " +
+    //         selectedEditData[projectIndex].name
+    //     );
+    //     return;
+    //   }
+    // }
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
     setMandaysData(updatedMandaysData);
@@ -155,7 +158,7 @@ export function AddManDays({
   const finalData = mandaysData.map((item, index) => ({
     ...selectedEditData[index],
     man_days: parseInt(item.man_days),
-    total_achievement: Number(item.total_achievement),
+    total_achievement: item.total_achievement,
     status: item.status,
     is_active: true,
     date: item.date,
@@ -182,7 +185,7 @@ export function AddManDays({
     .filter((item) => item !== undefined);
 
   const HandleAddManDays = () => {
-    if (DataToSend.length === 0) {
+    if (DataToSend?.length === 0) {
       alert("Please fill in data for at least one project before updating.");
       return;
     }
@@ -196,15 +199,16 @@ export function AddManDays({
     setMandaysData(updatedMandaysData);
     setEditIndex(null);
     BulkUpdateManDays(DataToSend);
-    closeDrawerRight();
   };
 
   const BulkUpdateManDays = async (data) => {
     try {
       const response = await PostMandaysData(data);
-      console.log("🚀 ~ BulkUpdateManDays ~ response:", response);
       if (response?.status == true) {
         alert("Operation Perform Sucessfully");
+        closeDrawerRight();
+      } else if (response?.status == false) {
+        alert(response?.ex?.response?.data?.error);
       }
     } catch (error) {
       console.log("Error fetching project data:", error);

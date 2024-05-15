@@ -24,7 +24,7 @@ export const ProtectedRoute = () => {
               {/* <div className="bg-white h-8 sticky top-32">
               <Breadcrumbs />
             </div> */}
-              <div className="max-w-full overflow-x-scroll">
+              <div className="max-w-full">
                 <Outlet />
               </div>
             </div>

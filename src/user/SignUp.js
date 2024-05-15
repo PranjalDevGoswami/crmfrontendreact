@@ -34,6 +34,11 @@ const SignUp = () => {
 
   const handleregisterDataSubmit = async (e) => {
     e.preventDefault();
+    if (!registerData.username.trim()) {
+      alert("Username cannot be empty");
+      return;
+    }
+
     try {
       const response = await fetch(REGISTER, {
         method: "POST",
@@ -52,7 +57,9 @@ const SignUp = () => {
         if (errorData.email) {
           alert(errorData.email);
         } else if (errorData.password) {
-          alert(errorData.password);
+          alert("password :" + errorData.password);
+        } else if (errorData.confirm_password) {
+          alert("confirm password :" + errorData.confirm_password);
         } else if (errorData.non_field_errors) {
           alert(errorData.non_field_errors[0]);
         }

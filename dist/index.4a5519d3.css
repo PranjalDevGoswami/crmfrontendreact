@@ -25,18 +25,19 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .AddManDaysAnimation {
+  z-index: 10;
   animation-name: animated_mandays;
   animation-duration: 1s;
 }
 
 @keyframes animated_mandays {
   0% {
-    top: -5rem;
+    top: -3.7rem;
     left: 0;
   }
 
   100% {
-    top: -3.7rem;
+    top: -.3rem;
     left: 0;
   }
 }

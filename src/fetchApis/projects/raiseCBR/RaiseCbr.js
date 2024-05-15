@@ -7,10 +7,7 @@ export const RaiseCBRPostApi = async (data) => {
       method: "POST",
       body: JSON.stringify(data),
     });
-    if (response.ok) {
-      alert("CBR hasbeen Raised !!!");
-      return response.json();
-    }
+    return response;
   } catch (error) {
     alert("An error occurred. Please try again.");
   }

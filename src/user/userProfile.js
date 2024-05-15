@@ -4,13 +4,10 @@ import Button from "../components/Button";
 import Dropdown from "../components/DropDown";
 import { useEffect, useState } from "react";
 import Label from "../components/Label";
-import {
-  getWithAuth,
-  putWithAuth,
-  putWithAuthForUpload,
-} from "../provider/helper/axios";
+import { getWithAuth, putWithAuthForUpload } from "../provider/helper/axios";
 import { UPDATE_PROFILE } from "../../utils/urls.js";
 import { FaRegUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export const userDetails = () => {
   const token = localStorage.getItem("token");
@@ -24,7 +21,9 @@ export const userDetails = () => {
   }
 };
 
-export const Profile = () => {
+export const Profile = ({ profileDataUpdate }) => {
+  const navigate = useNavigate();
+
   const [profileUpdateData, setProfileUpdateData] = useState({
     gender: "",
     email: "",
@@ -88,7 +87,7 @@ export const Profile = () => {
   };
 
   const handleCancelUpdateProfile = (e) => {
-    console.log("cancel");
+    navigate(-1);
   };
 
   return (

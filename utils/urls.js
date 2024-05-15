@@ -19,3 +19,5 @@ export const RESETPASSWORD = BASEURL + "/api/user/send_reset_password_email/";
 export const CONFIRM_PASSWORD = BASEURL + "/api/user/confirm-password/";
 export const CHANGE_PASSWORD = BASEURL + "/api/user/change-password/";
 export const UPDATE_PROFILE = BASEURL + "/api/user/update-profile/";
+export const PROJECT_HOD = BASEURL + "/api/project/hods/";
+export const PROJECT_TL = BASEURL + "/api/project/project-teamleads/";

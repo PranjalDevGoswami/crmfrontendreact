@@ -249,14 +249,19 @@ const Form = () => {
   const MultipleValueSection = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setOtherFeeValue(selectedValues);
-
-    if (selectedValues.includes("other_cost")) {
+    if (
+      selectedValues.includes("other_cost") ||
+      selectedValues.includes("transaction_fee")
+    ) {
       setOtherCost(true);
     } else {
       setOtherCost(false);
     }
 
-    if (selectedValues.includes("transaction_fee")) {
+    if (
+      selectedValues.includes("transaction_fee") ||
+      selectedValues.includes("other_cost")
+    ) {
       setTranslationCost(true);
     } else {
       setTranslationCost(false);

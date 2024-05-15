@@ -84,10 +84,12 @@ const Login = () => {
         localStorage.setItem("user", loginData.email);
       }
       if (!response.ok) {
-        if (response.email) {
-          alert(response.email);
+        if (loginData.password.length < 8) {
+          alert("password must be greater than/equal to 8 character");
+        } else if (response.email) {
+          alert("userId/email can not be blank!!");
         } else if (response.password) {
-          alert(response.password);
+          alert("password can not be blank!!");
         } else if (response.non_field_errors) {
           alert(response.non_field_errors);
         } else if (response.status == 400) {
@@ -100,87 +102,94 @@ const Login = () => {
   };
 
   return (
-    // <form onSubmit={handleLogin}>
-    <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 md:w-full md:h-screen xl:bg-contain bg-cover">
-      <div className="md:flex md:h-full block h-auto">
-        <div className="md:w-2/3 md:h-2/3 hidden md:flex flex-col items-center justify-center p-8 pl-8"></div>
-        <div className="md:w-1/3 w-full">
-          <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
-            <div className="flex flex-col gap-4 md:p-4 p-1 w-9/12">
-              <h1 className="text-5xl text-center p-8 text-[#e7251e]">Login</h1>
-              <Input
-                type={"email"}
-                className={
-                  "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
-                }
-                required={"required"}
-                placeholder={"email"}
-                name={"email"}
-                onchange={(e) => handleOnchange(e)}
-              />
-              {/* <FaUserAlt c="absolute top-1/2"/> */}
-              {/* </div> */}
-              <div className="relative w-full">
+    <form onSubmit={handleLogin}>
+      <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 md:w-full md:h-screen xl:bg-contain bg-cover">
+        <div className="md:flex md:h-full block h-auto">
+          <div className="md:w-2/3 md:h-2/3 hidden md:flex flex-col items-center justify-center p-8 pl-8"></div>
+          <div className="md:w-1/3 w-full">
+            <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
+              <div className="flex flex-col gap-4 md:p-4 p-1 w-9/12">
+                <h1 className="text-5xl text-center p-8 text-[#e7251e]">
+                  Login
+                </h1>
                 <Input
-                  type={showPassword ? "text" : "password"}
+                  type={"email"}
                   className={
-                    "p-2 pl-4 border bg-[#f3eded] outline-none rounded-full focus:border-cyan-600 w-full"
+                    "outline-none p-2 pl-4 border bg-[#f3eded] rounded-full focus:border-cyan-600 relative w-full"
                   }
                   required={"required"}
-                  placeholder={"password"}
-                  name={"password"}
+                  placeholder={"email/userId"}
+                  name={"email"}
                   onchange={(e) => handleOnchange(e)}
                 />
-                {showPasswordIcon ? (
-                  <BiShow
-                    className="absolute top-1/2 right-4 translate-y-[-50%] cursor-pointer"
-                    onClick={handleShowPassword}
+                {/* <FaUserAlt c="absolute top-1/2"/> */}
+                {/* </div> */}
+                <div className="relative w-full">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    className={
+                      "p-2 pl-4 border bg-[#f3eded] outline-none rounded-full focus:border-cyan-600 w-full"
+                    }
+                    required={"required"}
+                    placeholder={"password"}
+                    name={"password"}
+                    onchange={(e) => handleOnchange(e)}
                   />
-                ) : (
-                  ""
-                )}
-              </div>
-              <img src={object7} alt="fgg" className="absolute top-8" />
-              <div className="flex lg:flex-row flex-col justify-between">
-                <div className="lg:flex items-center inline-block">
-                  <Input type={"checkbox"} className="inline-block" />
-                  <Label labelName={"Keep me Login"} className={"pl-2"} />
+                  {showPasswordIcon ? (
+                    <BiShow
+                      className="absolute top-1/2 right-4 translate-y-[-50%] cursor-pointer"
+                      onClick={handleShowPassword}
+                    />
+                  ) : (
+                    ""
+                  )}
                 </div>
-                <Link to="/reset">
+                <img src={object7} alt="fgg" className="absolute top-8" />
+                <div className="flex lg:flex-row flex-col justify-between">
+                  <div className="lg:flex items-center inline-block">
+                    <Input type={"checkbox"} className="inline-block" />
+                    <Label labelName={"Keep me Login"} className={"pl-2"} />
+                  </div>
+                  <Link to="/reset">
+                    <Button
+                      type={"button"}
+                      className={"p-4 lg:text-right lg:float-right"}
+                      name={"Forgot password?"}
+                    />
+                  </Link>
+                </div>
+                {/* <RiLockPasswordFill /> */}
+                <div className="flex justify-center">
                   <Button
-                    className={"p-4 lg:text-right lg:float-right"}
-                    name={"Forgot password?"}
+                    type={"submit"}
+                    className={
+                      "p-4 bg-[#e7251e] w-1/2 rounded-full text-white "
+                    }
+                    name={"Login"}
+                    onClick={handleLogin}
                   />
-                </Link>
-              </div>
-              {/* <RiLockPasswordFill /> */}
-              <div className="flex justify-center">
-                <Button
-                  className={"p-4 bg-[#e7251e] w-1/2 rounded-full text-white "}
-                  name={"Login"}
-                  onClick={handleLogin}
+                </div>
+                <img
+                  src={object7}
+                  alt="fgg"
+                  className="absolute top-56 right-8"
                 />
-              </div>
-              <img
-                src={object7}
-                alt="fgg"
-                className="absolute top-56 right-8"
-              />
 
-              <div className="flex justify-center">
-                <Link to="/register">
-                  <Button
-                    className={" p-4"}
-                    name={"don't have account? Signup Now"}
-                  />
-                </Link>
+                <div className="flex justify-center">
+                  <Link to="/register">
+                    <Button
+                      type={"button"}
+                      className={" p-4"}
+                      name={"Don't have account? Signup Now"}
+                    />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    // </form>
+    </form>
   );
 };
 
