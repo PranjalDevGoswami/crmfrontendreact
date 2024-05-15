@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Select from "react-select";
 
-const MultipleValueDropDown = ({ onChange, className, options }) => {
+const MultipleValueDropDown = ({
+  onChange,
+  className,
+  options,
+  defaultValue,
+}) => {
+  console.log(defaultValue);
   const setSelectedOption = (e) => {
     onChange(e);
   };
@@ -13,6 +19,7 @@ const MultipleValueDropDown = ({ onChange, className, options }) => {
         onChange={setSelectedOption}
         options={options}
         isMulti
+        defaultValue={defaultValue}
       />
     </div>
   );

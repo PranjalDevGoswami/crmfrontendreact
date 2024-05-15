@@ -208,7 +208,11 @@ export function AddManDays({
         alert("Operation Perform Sucessfully");
         closeDrawerRight();
       } else if (response?.status == false) {
-        alert(response?.ex?.response?.data?.error);
+        if (response?.ex?.response?.data[0]) {
+          alert("please select date from calender");
+        } else {
+          alert(response?.ex?.response?.data?.error);
+        }
       }
     } catch (error) {
       console.log("Error fetching project data:", error);

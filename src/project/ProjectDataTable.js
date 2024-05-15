@@ -69,7 +69,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
           return val;
         });
-
         // Filter based on selected status and client
         let filteredData = projectDataObject;
         if (selectedStatus && selectedStatus !== "--Select Status--") {
@@ -110,6 +109,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         if (role === "HOD") {
           filteredData = filteredData?.filter((item) => {
             return item?.project_hod?.id == user_id;
+          });
+        }
+        if (department == 1) {
+          filteredData = projectDataObject?.filter((item) => {
+            return item.user_id == user_id;
           });
         }
 

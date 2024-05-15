@@ -19,7 +19,7 @@ const Form = () => {
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
-  const [otherFeeValue, setOtherFeeValue] = useState();
+  const [otherFeeValue, setOtherFeeValue] = useState([]);
   const [advancePAyment, setAdvancePAyment] = useState(false);
   const [clientListData, setClientListData] = useState([
     "demo Client1",
@@ -246,26 +246,34 @@ const Form = () => {
   const minDate = new Date(today);
   minDate.setDate(minDate.getDate() - 1);
 
-  const MultipleValueSection = (selectedOptions) => {
-    const selectedValues = selectedOptions.map((option) => option.value);
-    setOtherFeeValue(selectedValues);
-    if (
-      selectedValues.includes("other_cost") ||
-      selectedValues.includes("transaction_fee")
-    ) {
-      setOtherCost(true);
-    } else {
-      setOtherCost(false);
-    }
+  // const MultipleValueSection = (selectedOptions) => {
+  //   const selectedValues = selectedOptions.map((option) => option.value);
+  //   setOtherFeeValue(selectedValues);
+  //   if (selectedValues.includes("other_cost")) {
+  //     setOtherCost(true);
+  //   } else {
+  //     setOtherCost(false);
+  //   }
 
-    if (
-      selectedValues.includes("transaction_fee") ||
-      selectedValues.includes("other_cost")
-    ) {
-      setTranslationCost(true);
-    } else {
-      setTranslationCost(false);
-    }
+  //   if (selectedValues.includes("transaction_fee")) {
+  //     setTranslationCost(true);
+  //   } else {
+  //     setTranslationCost(false);
+  //   }
+  // };
+  const MultipleValueSection = (selectedOptions) => {
+    // Extracting the values from the selected options
+    const selectedValues = selectedOptions.map((option) => option.value);
+
+    // Merging the newly selected values with the old ones
+    const updatedValues = [...otherFeeValue, ...selectedValues];
+
+    // Setting the state with the updated values
+    setOtherFeeValue(updatedValues);
+
+    // Updating the other state variables based on the selections
+    setOtherCost(updatedValues.includes("other_cost"));
+    setTranslationCost(updatedValues.includes("transaction_fee"));
   };
 
   const isFormValid = () => {
@@ -378,7 +386,7 @@ const Form = () => {
                   min={0}
                 />
               </div>
-              <div className="w-[7%] bg-yellow-200">
+              <div className="w-[7%] bg-yellow-200 flex items-center justify-center">
                 <button
                   onClick={OpenOtherFee}
                   className="inline-block p-[13px]"
@@ -402,6 +410,11 @@ const Form = () => {
                     ]}
                     onChange={MultipleValueSection}
                     className={"w-full bg-[#f3eded] "}
+                    // defaultValue={
+                    //   otherFeeValue && otherFeeValue.length > 0
+                    //     ? otherFeeValue
+                    //     : null
+                    // }
                   />
                 </div>
                 <Button
