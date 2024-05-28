@@ -7,7 +7,6 @@ const MultipleValueDropDown = ({
   options,
   defaultValue,
 }) => {
-  console.log(defaultValue);
   const setSelectedOption = (e) => {
     onChange(e);
   };

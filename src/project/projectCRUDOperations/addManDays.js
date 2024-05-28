@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-// import { Drawer, Button } from "@material-tailwind/react";
 import Drawer from "@mui/material/Drawer";
-import LableAndInput from "../../components/LableAndInput";
 import DataTable from "react-data-table-component";
 import { customStyles, editedColumns } from "../../../utils/DataTablesData";
 import Dropdown from "../../components/DropDown";
 import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 import Label from "../../components/Label.js";
-import Input from "../../components/InputField";
+import DateComponent from "../../components/DateComponent.js";
 
 export function AddManDays({
   selectedRow,
@@ -40,27 +38,11 @@ export function AddManDays({
     const projectIndex = selectedEditData.findIndex(
       (project) => project.id === projectId
     );
-    // const sampleSize = selectedEditData[projectIndex].sample;
     const RemainingSize = selectedEditData[projectIndex].remaining_interview;
-    console.log("🚀 ~ handleMandaysData ~ RemainingSize:", RemainingSize);
-    // if (name === "total_achievement") {
-    //   if (RemainingSize <= parseInt(value)) {
-    //     alert(
-    //       "Achieved Target must be smaller than the Remaining Interview Size for project " +
-    //         selectedEditData[projectIndex].name
-    //     );
-    //     return;
-    //   }
-    // }
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
     setMandaysData(updatedMandaysData);
   };
-
-  const today = new Date();
-  // Subtract one day from today's date
-  const minDate = new Date(today);
-  minDate.setDate(minDate.getDate() - 1);
 
   const handleManDayStatus = (index, name, value) => {
     console.log();
@@ -71,8 +53,7 @@ export function AddManDays({
   };
 
   const handleDate = (e) => {
-    const { value } = e.target;
-    const tst = value;
+    const tst = e.target.value;
     const parts = tst.split("/");
     const isoDate = new Date(
       `${parts[2]}-${parts[1]}-${parts[0]}`
@@ -122,7 +103,7 @@ export function AddManDays({
     status: (
       <Dropdown
         key={`status_${item.id}`}
-        Option_Name={["--Select Status--", "inprogress", "hold", "complete"]}
+        Option_Name={["--Select Status--", "inprogress", "hold", "completed"]}
         onChange={(name, value) => handleManDayStatus(index, name, value)}
         className={"p-2 border bg-white w-full"}
         name={"status"}
@@ -240,13 +221,7 @@ export function AddManDays({
               labelName={"Man Days Entry For"}
               className={"pt-4 pb-2 w-2/12"}
             />
-            <Input
-              name={"date"}
-              type={"date"}
-              className={"p-2 mr-4 border w-2/12"}
-              onchange={handleDate}
-              min={minDate.toISOString().split("T")[0]}
-            />
+            <DateComponent handleDateChange={handleDate} />
           </div>
         </div>
         <div className="overflow-scroll">

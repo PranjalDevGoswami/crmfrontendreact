@@ -20,6 +20,21 @@ const Login = () => {
     email: "",
     password: "",
   });
+  // const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  // const checkInternetConnection = async () => {
+  //   try {
+  //     const response = await fetch("https://www.unimrkt.com/", {
+  //       method: "HEAD",
+  //       mode: "no-cors",
+  //     });
+  //     setIsOnline(true);
+  //   } catch (error) {
+  //     setIsOnline(false);
+  //     alert("Internet Connection Interrupt");
+  //   }
+  // };
+  // checkInternetConnection();
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -49,9 +64,10 @@ const Login = () => {
       }
 
       const userDetails = getUserByEmail(email);
+      console.log("🚀 ~ RedirectUser ~ userDetails:", userDetails);
 
       if (userDetails.length > 0) {
-        const department = userDetails[0].user_department;
+        const department = userDetails[0].user_department?.id;
         localStorage.setItem("department", department);
         if (department == 1) {
           navigate("/sales-dashboard");
@@ -59,6 +75,8 @@ const Login = () => {
           navigate("/operation-dashboard");
         } else if (department == 3) {
           navigate("/finance-dashboard");
+        } else if (userDetails[0]?.email === "admin@unimrkt.com") {
+          navigate("/Admin-dashboard");
         } else {
           navigate("/default-dashboard");
         }

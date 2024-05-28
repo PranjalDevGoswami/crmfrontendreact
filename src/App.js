@@ -5,8 +5,6 @@ import Routes from "./routes";
 import LogoutTimer from "./user/LogoutTimer.js";
 
 function App() {
-  let token = localStorage.getItem("token");
-
   return (
     <AuthProvider>
       <LogoutTimer />

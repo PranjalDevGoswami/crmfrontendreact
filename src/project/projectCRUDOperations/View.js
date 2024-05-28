@@ -10,6 +10,7 @@ const View = ({ viewRecord, closeView, setisView }) => {
   const [perDayDetailsData, setPerDayDetailsData] = useState([]);
   const location = useLocation();
   const data = location.state;
+  console.log("🚀 ~ View ~ data:", data);
 
   const navigate = useNavigate();
 
@@ -95,17 +96,23 @@ const View = ({ viewRecord, closeView, setisView }) => {
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.project_manager}</span>
         </li>
+
         <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
           <span className="text-xl mr-8 w-5/12">Sample </span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.sample}</span>
         </li>
         <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
+          <span className="text-xl mr-8 w-5/12">Project Teamlead </span>
+          <span className="w-2/12">:</span>
+          <span className="w-5/12">{data?.teamlead}</span>
+        </li>
+        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
           <span className="text-xl mr-8 w-5/12">Other Cost </span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.other_cost}</span>
         </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
+        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
           <span className="text-xl mr-8 w-5/12">Operation Team</span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.operation_team}</span>
@@ -115,7 +122,7 @@ const View = ({ viewRecord, closeView, setisView }) => {
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.finance_team}</span>
         </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2 relative">
+        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2 relative">
           <span className="text-xl mr-8 w-5/12">Total Man Days</span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.man_days}</span>
@@ -130,10 +137,15 @@ const View = ({ viewRecord, closeView, setisView }) => {
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.total_achievement}</span>
         </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
+        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
           <span className="text-xl mr-8 w-5/12">Status</span>
           <span className="w-2/12">:</span>
           <span className="w-5/12">{data?.status}</span>
+        </li>
+        <li className="border p-1 flex items-center text-xl justify-between w-1/2">
+          <span className="text-xl mr-8 w-5/12">Sow</span>
+          <span className="w-2/12">:</span>
+          <span className="w-5/12">{data?.sow}</span>
         </li>
       </ul>
       {/* <Button

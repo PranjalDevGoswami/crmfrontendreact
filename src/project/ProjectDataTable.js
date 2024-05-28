@@ -10,12 +10,11 @@ import {
 } from "../../utils/DataTablesData";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
 import View from "./projectCRUDOperations/View.js";
-import Edit from "./projectCRUDOperations/Edit.js";
+import Edit from "./projectCRUDOperations/AddMandaysEdit.js";
 import Status from "./projectCRUDOperations/Status.js";
 import { TableColumn } from "../../utils/dataTableColumns.js";
 import AssignedProject from "./AssignedProject.js";
 import FilterProject from "./FilterProject";
-import { Checkbox } from "@mui/material";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -115,6 +114,16 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           filteredData = projectDataObject?.filter((item) => {
             return item.user_id == user_id;
           });
+          if (selectedStatus && selectedStatus !== "--Select Status--") {
+            filteredData = filteredData.filter(
+              (item) => item.status == selectedStatus
+            );
+          }
+          if (selectedClient && selectedClient !== "--Select Client--") {
+            filteredData = filteredData.filter(
+              (item) => item.clients.name === selectedClient
+            );
+          }
         }
 
         setTeamLeadAssiged(filteredData);
@@ -171,10 +180,16 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     Object.values(item).some((val) => {
       if (typeof val === "object" && val !== null) {
         return Object.values(val).some((propVal) =>
-          propVal.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          propVal
+            ?.toString()
+            ?.toLowerCase()
+            ?.includes(searchTerm?.toLowerCase())
         );
       } else if (val) {
-        return val.toString().toLowerCase().includes(searchTerm.toLowerCase());
+        return val
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(searchTerm?.toLowerCase());
       }
       return false;
     })
@@ -199,6 +214,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     remaining_interview: item.remaining_interview,
     man_days: item.man_days,
     status: item.status,
+    // project_manager: item?.project_manager,
+    // project_teamlead: item?.project_teamlead,
   }));
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -213,23 +230,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     }
     return { ...item, desabled };
   });
-  const customSort = (rows, selector, direction) => {
-    return rows.sort((a, b) => {
-      // use the selector to resolve your field names by passing the sort comparators
-      const aField = selector(a).toLowerCase();
-      const bField = selector(b).toLowerCase();
 
-      let comparison = 0;
-
-      if (aField > bField) {
-        comparison = 1;
-      } else if (aField < bField) {
-        comparison = -1;
-      }
-
-      return direction === "desc" ? comparison * -1 : comparison;
-    });
-  };
   return (
     <>
       <div
@@ -330,7 +331,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
-                sortFunction={customSort}
                 title={" All Project Details"}
               />
             ) : (

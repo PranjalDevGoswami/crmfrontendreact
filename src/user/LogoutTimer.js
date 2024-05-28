@@ -3,6 +3,8 @@ import Login from "../user/Login.js";
 
 const LogoutTimer = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   useEffect(() => {
     let inactivityTimeout;
 
@@ -13,7 +15,6 @@ const LogoutTimer = () => {
 
     const logoutUser = () => {
       setIsLoggedIn(false);
-      // Clear local storage
       localStorage.clear();
     };
 
@@ -21,18 +22,27 @@ const LogoutTimer = () => {
       resetTimeout();
     };
 
-    // Initial setup
     resetTimeout();
 
-    // Event listeners for user activity
+    const handleOnline = () => {
+      setIsOnline(true);
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
     window.addEventListener("mousemove", handleUserActivity);
     window.addEventListener("keydown", handleUserActivity);
-
-    // Cleanup
     return () => {
       clearTimeout(inactivityTimeout);
       window.removeEventListener("mousemove", handleUserActivity);
       window.removeEventListener("keydown", handleUserActivity);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, [isLoggedIn]);
 };

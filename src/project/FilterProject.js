@@ -155,7 +155,7 @@ const FilterProject = ({
       const Hod = managerAssociates.filter((item) => item.name === value);
       if (Hod.length > 0) {
         const managerName = Hod.map((item) =>
-          item.hod_manager.filter((item) => item.id == user_id)
+          item?.hod_manager?.filter((item) => item?.id == user_id)
         );
         if (managerName[0] == "undefined" || managerName[0] == null) {
           setTlListArray(["Demo Manager1", "Demo Manager2"]);

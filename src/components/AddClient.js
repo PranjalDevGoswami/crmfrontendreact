@@ -11,6 +11,8 @@ const AddClient = ({ closeAddClient }) => {
     country: "",
     phone_number: "",
     contact_person: "",
+    email: "",
+    email_id_for_cc: "",
   });
 
   const handleChange = (e) => {
@@ -48,6 +50,8 @@ const AddClient = ({ closeAddClient }) => {
       country: "",
       phone_number: "",
       contact_person: "",
+      email: "",
+      email_id_for_cc: "",
     });
   };
 
@@ -61,6 +65,24 @@ const AddClient = ({ closeAddClient }) => {
           className="p-2 w-[45%] border rounded"
           placeholder="Client Name"
           value={clientData.name}
+          onchange={handleChange}
+          required
+        />
+        <Input
+          type="email"
+          name="email"
+          className="p-2 w-[45%] border rounded"
+          placeholder="Email"
+          value={clientData.email}
+          onchange={handleChange}
+          required
+        />
+        <Input
+          type="email"
+          name="email_id_for_cc"
+          className="p-2 w-[45%] border rounded"
+          placeholder="Contact Person Email"
+          value={clientData.email_id_for_cc}
           onchange={handleChange}
           required
         />

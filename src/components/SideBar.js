@@ -8,14 +8,18 @@ import {
 import { GoProjectRoadmap } from "react-icons/go";
 import { TbReport } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
+import { GrUserManager } from "react-icons/gr";
+import { MdManageAccounts } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { MdDashboard } from "react-icons/md";
 import { userDetails } from "../user/userProfile";
 
 const SideBar = () => {
   const userRole = userDetails();
+  const userEmail = localStorage.getItem("user");
   const department = localStorage.getItem("department");
   const [sideBarOpen, SetSideBarOpen] = useState(true);
+  // if()
   return (
     <div className="shadow-slate-400 flex">
       <div className="bg-white">
@@ -24,7 +28,7 @@ const SideBar = () => {
       <div
         className={`${
           sideBarOpen ? "lg:w-52 w-16" : "lg:w-16 w-16"
-        }  bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-4`}
+        }  bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-2`}
       >
         <div className="flex justify-start overflow-hidden mt-4 pl-4">
           <MdDashboard className="text-2xl group" />
@@ -39,10 +43,40 @@ const SideBar = () => {
               <Link to="/sales-dashboard">Dashboard</Link>
             ) : department == 3 ? (
               <Link to="/finance-dashboard">Dashboard</Link>
+            ) : userEmail === "admin@unimrkt.com" ? (
+              <Link to="/Admin-dashboard">Dashboard</Link>
             ) : (
               <Link to="/default-dashboard">Dashboard</Link>
             )}
           </div>
+        </div>
+        <div>
+          {userEmail === "admin@unimrkt.com" && (
+            <div className="flex justify-start overflow-hidden pl-4">
+              <GrUserManager className="text-2xl group" />
+              <div
+                className={`${
+                  sideBarOpen ? "lg:block hidden" : "hidden"
+                } overflow-hidden duration-300 ml-4 float-right`}
+              >
+                <Link to="/Admin-dashboard">User Management</Link>
+              </div>
+            </div>
+          )}
+        </div>
+        <div>
+          {userEmail === "admin@unimrkt.com" && (
+            <div className="flex justify-start overflow-hidden pl-4">
+              <MdManageAccounts className="text-2xl group" />
+              <div
+                className={`${
+                  sideBarOpen ? "lg:block hidden" : "hidden"
+                } overflow-hidden duration-300 ml-4 float-right`}
+              >
+                <Link to="/Management-Role">Role Management</Link>
+              </div>
+            </div>
+          )}
         </div>
         {/* <div className="flex justify-start overflow-hidden pl-4">
           <GoProjectRoadmap className="text-2xl group" />
@@ -98,27 +132,27 @@ const SideBar = () => {
             )}
           </div>
         </div> */}
-      </div>
-      <div className="">
-        {sideBarOpen ? (
-          <PiCaretDoubleLeftLight
-            className={`${
-              sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-0"
-            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
-            onClick={() => {
-              SetSideBarOpen(!sideBarOpen);
-            }}
-          />
-        ) : (
-          <PiCaretDoubleRightLight
-            className={`${
-              sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-0"
-            } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
-            onClick={() => {
-              SetSideBarOpen(!sideBarOpen);
-            }}
-          />
-        )}
+        <div className="">
+          {sideBarOpen ? (
+            <PiCaretDoubleLeftLight
+              className={`${
+                sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-4"
+              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
+              onClick={() => {
+                SetSideBarOpen(!sideBarOpen);
+              }}
+            />
+          ) : (
+            <PiCaretDoubleRightLight
+              className={`${
+                sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-4"
+              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
+              onClick={() => {
+                SetSideBarOpen(!sideBarOpen);
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import ChangePassword from "../user/ChangePassword.js";
 import { Profile } from "../user/userProfile";
 import DirectorDashboard from "../dashboard/DirectorDashboard.js";
 import LogoutTimer from "../user/LogoutTimer.js";
+import ManagementPanel from "../dashboard/ManagementRole";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -96,6 +97,14 @@ const Routes = () => {
         {
           path: "/profile",
           element: <Profile />,
+        },
+        {
+          path: "/Admin-dashboard",
+          element: <AdminPanel />,
+        },
+        {
+          path: "/Management-Role",
+          element: <ManagementPanel />,
         },
         // {
         //   path: "/download-invoice",

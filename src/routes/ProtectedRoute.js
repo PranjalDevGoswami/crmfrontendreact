@@ -19,7 +19,7 @@ export const ProtectedRoute = () => {
           <div className="sticky top-28 left-0 h-28 max-w-52">
             <MainDashboard />
           </div>
-          <div className="w-full overflow-scroll ml-8">
+          <div className="w-full  ml-8">
             <div className="container mx-auto">
               {/* <div className="bg-white h-8 sticky top-32">
               <Breadcrumbs />

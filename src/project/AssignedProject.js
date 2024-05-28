@@ -83,7 +83,6 @@ const AssignedProject = ({
   const PostProjectData = async (data) => {
     try {
       const response = await UpdateTeamLead(data);
-      console.log("🚀 ~ PostProjectData ~ response:", response);
       alert(response.data.message);
     } catch (error) {
       console.error("Error fetching project data:", error);

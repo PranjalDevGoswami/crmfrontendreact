@@ -23,6 +23,7 @@ const OpereationButton = ({
     man_days: "",
     total_achievement: "",
   });
+
   const [isInvoice, setIsInvoice] = useState(false);
 
   const HandleOnEdit = (record) => {
@@ -70,6 +71,13 @@ const OpereationButton = ({
   const handleAssignProject = () => {
     console.log("Assigned Project");
   };
+  const endDateStr = record.tentative_end_date;
+  const endDate = new Date(endDateStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+  const DateValidate = today < endDate;
+
   return (
     <div>
       <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
@@ -86,7 +94,9 @@ const OpereationButton = ({
                 {/* </Link> */}
               </button>
               {record.status !== "completed" &&
-              record.status !== "cbr_raised" ? (
+              record.status !== "cbr_raised" &&
+              record.status !== "hold" &&
+              DateValidate == true ? (
                 <button
                   className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                   onClick={HandleAddManDays}
@@ -104,13 +114,15 @@ const OpereationButton = ({
                     HandleOnEdit(record);
                   }}
                 >
-                  Edit Target Request
+                  Edit Request
                 </button>
               ) : (
                 ""
               )}
               {record.status !== "completed" &&
-              record.status !== "cbr_raised" ? (
+              record.status !== "cbr_raised" &&
+              record.status !== "hold" &&
+              DateValidate == true ? (
                 <button
                   className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                   onClick={() => handleStatus(record)}
@@ -121,6 +133,7 @@ const OpereationButton = ({
                 ""
               )}
               {record.status === "completed" &&
+              record.status !== "hold" &&
               record.status !== "cbr_raised" ? (
                 <button
                   className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
@@ -132,7 +145,7 @@ const OpereationButton = ({
                 ""
               )}
             </div>
-          ) : department == 1 || department == 3 ? (
+          ) : department == 1 || department == 3 || role === "Director" ? (
             <button
               className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
               onClick={handleViewProject}

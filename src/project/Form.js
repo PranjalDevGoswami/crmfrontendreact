@@ -338,7 +338,7 @@ const Form = () => {
               <Dropdown
                 name={"clients"}
                 className={
-                  "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+                  "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border rounded-r-none"
                 }
                 Option_Name={["-- Select Client --", ...clientListData]}
                 RequireAddButton={true}
@@ -382,14 +382,14 @@ const Form = () => {
                   name={"set_up_fee"}
                   type={"number"}
                   onchange={handleInputChange}
-                  className={"p-2 border bg-[#f3eded] w-full"}
+                  className={"p-2 border bg-[#f3eded] w-full rounded-r-none"}
                   min={0}
                 />
               </div>
-              <div className="w-[7%] bg-yellow-200 flex items-center justify-center">
+              <div className="w-[7%] bg-yellow-200 flex items-center justify-center rounded-r-full">
                 <button
                   onClick={OpenOtherFee}
-                  className="inline-block p-[13px]"
+                  className="inline-block p-[13px] "
                 >
                   <TiPlus />
                 </button>

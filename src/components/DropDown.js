@@ -56,7 +56,7 @@ const Dropdown = ({
     <div className="w-full">
       <div className="relative flex">
         <select
-          className={className}
+          className={"rounded-full p-2 " + className}
           onChange={HandleDropdownOnchange}
           name={name}
           multiple={multiple}
@@ -73,7 +73,7 @@ const Dropdown = ({
         {requireAddButton ? (
           <button
             onClick={OpenOptionFieldHandler}
-            className="bg-yellow-200 p-2"
+            className="bg-yellow-200 p-2 rounded-r-full"
           >
             <TiPlus />
           </button>
