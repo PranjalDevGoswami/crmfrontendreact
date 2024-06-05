@@ -1,159 +1,172 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-// import Button from "../../Button.js";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysManWork";
 import ManDaysDetails from "./ManDaysDetails";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import { getWithAuth } from "../../provider/helper/axios";
+import { PROJECTDATAAPIS } from "../../../utils/urls.js";
 
 const View = ({ viewRecord, closeView, setisView }) => {
-  const [isManDaysDetails, SetIsManDaysDetails] = useState(false);
+  const [isManDaysDetails, setIsManDaysDetails] = useState(false);
   const [perDayDetailsData, setPerDayDetailsData] = useState([]);
+  const [currentProjectDetails, setCurrentProjectDetails] = useState(null);
   const location = useLocation();
-  const data = location.state;
-  console.log("🚀 ~ View ~ data:", data);
-
+  const { state: data } = location;
   const navigate = useNavigate();
 
-  const handleViewDetails = async (data) => {
-    const project_details = {
-      project_code: data,
-    };
-    const response = await ManWorkPerDays(project_details);
-    if (response?.status == true) {
-      SetIsManDaysDetails(true);
-      setPerDayDetailsData(response?.data);
+  const handleViewDetails = async (projectCode) => {
+    const response = await ManWorkPerDays({ project_code: projectCode });
+    if (response?.status) {
+      setIsManDaysDetails(true);
+      setPerDayDetailsData(response.data);
     } else {
-      alert("data not found!!");
+      alert("Data not found!!");
     }
   };
-  const HandleCloseManDaysDetails = (e) => {
+
+  const handleCloseManDaysDetails = (e) => {
     e.preventDefault();
-    SetIsManDaysDetails(false);
+    setIsManDaysDetails(false);
   };
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      const response = await getWithAuth(PROJECTDATAAPIS);
+      const projectData = response?.data;
+      if (projectData) {
+        const currentProject = projectData.find(
+          (item) => item.project_code === data?.project_code
+        );
+        setCurrentProjectDetails(currentProject || null);
+      }
+    };
+    fetchProjectData();
+  }, [data]);
+
+  const renderListItem = (label, value, index, hasDetails = false) => (
+    <li
+      key={label}
+      className={`border p-1 flex items-center text-xl justify-between w-1/2 ${
+        index % 2 === 0
+          ? index % 4 === 0
+            ? "bg-white"
+            : "bg-gray-100"
+          : index % 4 === 1
+          ? "bg-gray-100"
+          : "bg-white"
+      }`}
+    >
+      <span className="text-xl mr-8 w-5/12">{label}</span>
+      <span className="w-2/12">:</span>
+      <span className="w-5/12 relative">
+        {value}
+        {hasDetails && value && (
+          <span
+            className="absolute top-1 right-1 cursor-pointer underline text-blue-700"
+            onClick={() =>
+              handleViewDetails(currentProjectDetails.project_code)
+            }
+          >
+            Show Details
+          </span>
+        )}
+      </span>
+    </li>
+  );
+
   return (
-    <div className="w-full bg-white p-8  mt-16">
+    <div className="w-full bg-white p-8 mt-16">
       <div className="flex items-center justify-between">
         <h3 className="text-3xl p-4 underline pl-0 mb-4">Project View</h3>
         <button
-          className="bg-gray-300 p-4 pt-2 pb-2 "
+          className="bg-gray-300 p-4 pt-2 pb-2"
           onClick={() => navigate(-1)}
         >
           <FaLongArrowAltLeft className="text-3xl" />
         </button>
       </div>
-      <ul className="flex flex-wrap text-left border w-full justify-between rounded-sm ">
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2 odd:bg-gray-100">
-          <span className="text-xl mr-8 w-5/12">Project Code</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.project_code}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2 ">
-          <span className="text-xl mr-8 w-5/12">Project name</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.name}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Cost Per Interview </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.cpi}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl justify-between w-1/2 bg-gray-100">
-          <span className="text-xl mr-8 w-5/12">Clients </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.clients}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl  justify-between w-1/2 bg-gray-100">
-          <span className="text-xl mr-8 w-5/12">Project type </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.project_type}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Other Cost </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.other_cost}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl justify-between w-1/2 bg-white">
-          <span className="text-xl mr-8 w-5/12">Set Up Fee </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.set_up_fee}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Tentative Start Date</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">
-            {data?.tentative_start_date?.split("T")[0]}
-          </span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Tentative End Date </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">
-            {data?.tentative_end_date?.split("T")[0]}
-          </span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Project Manager </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.project_manager}</span>
-        </li>
-
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Sample </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.sample}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Project Teamlead </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.teamlead}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Other Cost </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.other_cost}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Operation Team</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.operation_team}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Finance Team </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.finance_team}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2 relative">
-          <span className="text-xl mr-8 w-5/12">Total Man Days</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.man_days}</span>
-          <span className="absolute top-1 right-1 cursor-pointer underline text-blue-700">
-            <span onClick={() => handleViewDetails(data?.project_code)}>
-              Show Details
-            </span>
-          </span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-gray-100 justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Achiev Target </span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.total_achievement}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl bg-white justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Status</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.status}</span>
-        </li>
-        <li className="border p-1 flex items-center text-xl justify-between w-1/2">
-          <span className="text-xl mr-8 w-5/12">Sow</span>
-          <span className="w-2/12">:</span>
-          <span className="w-5/12">{data?.sow}</span>
-        </li>
-      </ul>
-      {/* <Button
-        onClick={HandleCloseProjectDetails}
-        className={"p-2 bg-red-300 rounded absolute top-4 right-4"}
-        name={"X"}
-      /> */}
-      {isManDaysDetails ? (
+      {currentProjectDetails && (
+        <ul className="flex flex-wrap text-left border w-full justify-between rounded-sm">
+          {[
+            {
+              label: "Project Code",
+              value: currentProjectDetails.project_code,
+            },
+            { label: "Project Name", value: currentProjectDetails.name },
+            {
+              label: "Project Type",
+              value: currentProjectDetails.project_type?.name,
+            },
+            { label: "Clients", value: currentProjectDetails.clients?.name },
+            {
+              label: "Project Manager",
+              value: currentProjectDetails.project_manager?.name,
+            },
+            {
+              label: "Project Teamlead",
+              value: currentProjectDetails.project_teamlead?.name,
+            },
+            {
+              label: "Operation Team",
+              value: currentProjectDetails.operation_team || "N/A",
+            },
+            {
+              label: "Finance Team",
+              value: currentProjectDetails.finance_team || "N/A",
+            },
+            {
+              label: "Tentative Start Date",
+              value: currentProjectDetails.tentative_start_date?.split("T")[0],
+            },
+            {
+              label: "Tentative End Date",
+              value: currentProjectDetails.tentative_end_date?.split("T")[0],
+            },
+            { label: "Sample", value: currentProjectDetails.sample },
+            {
+              label: "Achiev Target",
+              value: currentProjectDetails.total_achievement,
+            },
+            {
+              label: "Total Man Days",
+              value: currentProjectDetails.man_days,
+              hasDetails: true,
+            },
+            { label: "Cost Per Interview", value: currentProjectDetails.cpi },
+            {
+              label: "Other Cost",
+              value: currentProjectDetails.other_cost || "N/A",
+            },
+            { label: "Set Up Fee", value: currentProjectDetails.set_up_fee },
+            {
+              label: "Translation Cost",
+              value: currentProjectDetails.transaction_fee || "N/A",
+            },
+            { label: "Status", value: currentProjectDetails.status },
+            {
+              label: "Sow",
+              value: currentProjectDetails.upload_document && (
+                <Link
+                  to={currentProjectDetails.upload_document}
+                  target="_blank"
+                >
+                  <img
+                    src={currentProjectDetails.upload_document}
+                    className="w-8 h-8"
+                    alt="sow file"
+                  />
+                  <span className="absolute top-1 right-1 cursor-pointer underline text-blue-700">
+                    View
+                  </span>
+                </Link>
+              ),
+            },
+          ].map(({ label, value, hasDetails }, index) =>
+            renderListItem(label, value, index, hasDetails)
+          )}
+        </ul>
+      )}
+      {isManDaysDetails && (
         <div className="absolute top-1/2 left-1/2 bg-gray-300 border mt-16 pl-2 pr-2 w-6/12 h-auto min-h-48 translate-x-[-50%] translate-y-[-50%]">
           <h3 className="text-xl mt-4 pl-2">
             Day wise Detail View of achieving Target and Men-days utilization
@@ -161,12 +174,10 @@ const View = ({ viewRecord, closeView, setisView }) => {
             <span className="font-bold">{' "' + data.sample + '" '}</span>
           </h3>
           <ManDaysDetails perDayDetailsData={perDayDetailsData} />
-          <div className="absolute top-0 right-0 p-0 m-0 rounded  w-8 h-8 flex items-center justify-center text-xl">
-            <button onClick={HandleCloseManDaysDetails}>X</button>
+          <div className="absolute top-0 right-0 p-0 m-0 rounded w-8 h-8 flex items-center justify-center text-xl">
+            <button onClick={handleCloseManDaysDetails}>X</button>
           </div>
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

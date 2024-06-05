@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import DataTable from "react-data-table-component";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import Button from "../components/Button";
@@ -15,6 +15,7 @@ import Status from "./projectCRUDOperations/Status.js";
 import { TableColumn } from "../../utils/dataTableColumns.js";
 import AssignedProject from "./AssignedProject.js";
 import FilterProject from "./FilterProject";
+import ExportCSV from "./ExportExcel.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -142,6 +143,21 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     selectedHod,
     selectedTl,
   ]);
+  const buttonRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+      setIsViewOptionOpen(false);
+      setOpenDropdownIndex(-1);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
@@ -261,20 +277,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
         </div>
         {data?.length > 0 ? (
           <div className="relative table">
-            {/* <div className="flex">
-              <span className="">
-                Project Completed
-                <p className="w-4 h-4 bg-red-400"></p>
-              </span>
-              <p className="">
-                CBR Raised
-                <p className="w-4 h-4 bg-red-400"></p>
-              </p>
-              <p className="">
-                Date has Expired
-                <p className="w-4 h-4 bg-red-400"></p>
-              </p>
-            </div> */}
             {isMultiEdit && (
               <div
                 className={`${
@@ -322,6 +324,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   isViewOptionOpen,
                   setIsMultiEdit,
                   setSelectedIndex,
+                  buttonRef,
                 })}
                 data={desabledRowData}
                 pagination
@@ -332,6 +335,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
                 title={" All Project Details"}
+                actions={<ExportCSV data={data} />}
               />
             ) : (
               <DataTable
@@ -349,6 +353,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   isViewOptionOpen,
                   setIsMultiEdit,
                   setSelectedIndex,
+                  buttonRef,
                 })}
                 data={desabledRowData}
                 pagination

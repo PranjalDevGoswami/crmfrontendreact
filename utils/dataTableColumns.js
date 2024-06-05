@@ -1,6 +1,5 @@
 import { MdOutlineMoreVert } from "react-icons/md";
 import OpereationButton from "../src/project/projectCRUDOperations/OpereationButton";
-import { useRef } from "react";
 
 export const TableColumn = ({
   setIsStatus,
@@ -15,6 +14,7 @@ export const TableColumn = ({
   setIsViewOptionOpen,
   isViewOptionOpen,
   setSelectedIndex,
+  buttonRef,
 }) => {
   const handleAddEditOperation = (record, index) => {
     setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
@@ -116,7 +116,6 @@ export const TableColumn = ({
           <div className="relative w-full">
             <div className="flex items-center overflow-visible">
               <button
-                ref={buttonRef}
                 onClick={() => handleAddEditOperation(record, index)}
                 className="border p-2 rounded-md mr-2 cursor-pointer"
               >
@@ -124,6 +123,8 @@ export const TableColumn = ({
               </button>
               {openDropdownIndex === index ? (
                 <div
+                  ref={buttonRef}
+                  onClick={(e) => e.stopPropagation()}
                   className={`${
                     index <= 5 ? "opration_btn" : "opration_btn_bottom"
                   }`}

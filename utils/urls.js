@@ -1,4 +1,4 @@
-export const BASEURL = "http://127.0.0.1:8000";
+export const BASEURL = "https://crmapi.unimrkt.com";
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
 export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
