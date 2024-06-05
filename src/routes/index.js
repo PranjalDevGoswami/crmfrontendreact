@@ -20,6 +20,7 @@ import { Profile } from "../user/userProfile";
 import DirectorDashboard from "../dashboard/DirectorDashboard.js";
 import LogoutTimer from "../user/LogoutTimer.js";
 import ManagementPanel from "../dashboard/ManagementRole";
+import ReportDashboard from "../dashboard/ReportDashboard.js";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -113,6 +114,10 @@ const Routes = () => {
         {
           path: "/default-dashboard",
           element: <DefaultDashboard />,
+        },
+        {
+          path: "/report",
+          element: <ReportDashboard />,
         },
         { path: "*", element: <Error /> },
       ],

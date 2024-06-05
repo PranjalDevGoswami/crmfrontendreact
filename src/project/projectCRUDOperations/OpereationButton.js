@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import View from "./View";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +36,6 @@ const OpereationButton = ({
   };
 
   const handleViewProject = () => {
-    console.log(record);
     setisView(true);
     navigate("/view", { state: record });
   };
@@ -77,7 +75,6 @@ const OpereationButton = ({
   today.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
   const DateValidate = today < endDate;
-
   return (
     <div>
       <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">

@@ -538,3 +538,400 @@ const Form = () => {
 };
 
 export default Form;
+
+// import React, { useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { TiPlus } from "react-icons/ti";
+// import Label from "../components/Label.js";
+// import Dropdown from "../components/DropDown.js";
+// import Button from "../components/Button.js";
+// import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
+// import CheckboxList from "../components/Checkbox.js";
+// import MultipleFileUpload from "../components/MultipleFileUpload.js";
+// import LableAndInput from "../components/LableAndInput.js";
+// import Input from "../components/InputField.js";
+// import { ClientList } from "../fetchApis/clientList/ClientList";
+// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+// import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
+// import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
+// import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
+
+// const Form = () => {
+//   const [otherCost, setOtherCost] = useState(false);
+//   const [translationCost, setTranslationCost] = useState(false);
+//   const [isOtherFee, setIsOtherFee] = useState(false);
+//   const [otherFeeValue, setOtherFeeValue] = useState([]);
+//   const [advancePayment, setAdvancePayment] = useState(false);
+//   const [clientListData, setClientListData] = useState([]);
+//   const [projectTypeData, setProjectTypeData] = useState([]);
+//   const [projectManagerData, setProjectManagerData] = useState([]);
+//   const [selectedFiles, setSelectedFiles] = useState([]);
+//   const [managerList, setManagerList] = useState([]);
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     project_type: "",
+//     clients: "",
+//     sample: "",
+//     cpi: "",
+//     set_up_fee: "",
+//     tentative_start_date: "",
+//     tentative_end_date: "",
+//     other_cost: "",
+//     transaction_fee: "",
+//     user_email: localStorage.getItem("user"),
+//     user_id: localStorage.getItem("user_id"),
+//     project_manager: "",
+//     operation_select: true,
+//     finance_select: advancePayment,
+//     upload_document: "",
+//   });
+
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const fetchInitialData = async () => {
+//       try {
+//         const [clientData, projectTypeData, projectManagerData] =
+//           await Promise.all([
+//             ClientList(),
+//             ProjectTypeList(),
+//             GetProjectManager(),
+//           ]);
+
+//         setClientListData(clientData?.data?.map((val) => val.name));
+//         setProjectTypeData(projectTypeData?.data?.map((val) => val.name));
+
+//         const projectManagers = projectManagerData?.data?.filter(
+//           (item) => item.manager_dep.name === "Operations"
+//         );
+//         setManagerList(projectManagers);
+//         setProjectManagerData(projectManagers?.map((val) => val.name));
+//       } catch (error) {
+//         console.error("Error fetching initial data:", error);
+//       }
+//     };
+
+//     fetchInitialData();
+//   }, []);
+
+//   const handleInputChange = (e) => {
+//     const { name, value, files } = e.target;
+
+//     setFormData((prevState) => ({
+//       ...prevState,
+//       [name]: name === "upload_document" ? files[0] : value,
+//       tentative_start_date:
+//         name === "tentative_start_date"
+//           ? convertToISO(value)
+//           : prevState.tentative_start_date,
+//       tentative_end_date:
+//         name === "tentative_end_date"
+//           ? convertToISO(value)
+//           : prevState.tentative_end_date,
+//       set_up_fee:
+//         name === "set_up_fee"
+//           ? handleNumericValue(value, "Setup Fee")
+//           : prevState.set_up_fee,
+//       transaction_fee:
+//         name === "transaction_fee"
+//           ? handleNumericValue(value, "Translation Fee")
+//           : prevState.transaction_fee,
+//       cpi: name === "cpi" ? handleNumericValue(value, "CPI") : prevState.cpi,
+//       sample:
+//         name === "sample"
+//           ? handleNumericValue(value, "Sample")
+//           : prevState.sample,
+//     }));
+//   };
+
+//   const handleNumericValue = (value, fieldName) => {
+//     if (/^\d*$/.test(value)) {
+//       return Number(value);
+//     } else {
+//       alert(`${fieldName} value can't be in decimal`);
+//       return "";
+//     }
+//   };
+
+//   const convertToISO = (dateStr) => {
+//     const parts = dateStr.split("/");
+//     return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).toISOString();
+//   };
+
+//   const handleCheckboxChange = (name, checked) => {
+//     setAdvancePayment(checked);
+//     setFormData((prevState) => ({
+//       ...prevState,
+//       finance_select: checked,
+//     }));
+//   };
+
+//   const SelectOptionHandler = (name, value) => {
+//     setFormData((prevState) => ({
+//       ...prevState,
+//       [name]:
+//         name === "clients"
+//           ? clientListData.indexOf(value) + 1
+//           : name === "project_type"
+//           ? projectTypeData.indexOf(value) + 1
+//           : name === "project_manager"
+//           ? managerList.find((manager) => manager.name === value).id
+//           : value,
+//     }));
+//   };
+
+//   const PostProjectData = async (data) => {
+//     try {
+//       const response = await PostFormData(data);
+//       if (response?.status) {
+//         alert("Project Added Successfully!!");
+//       } else {
+//         alert(response?.ex?.response?.data[0] || "Something went wrong!!");
+//       }
+//     } catch (error) {
+//       console.error("Error posting project data:", error);
+//     }
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     if (!isFormValid()) return;
+
+//     PostProjectData(formData);
+//     navigate("/sales-dashboard");
+//   };
+
+//   const isFormValid = () => {
+//     const {
+//       name,
+//       project_type,
+//       clients,
+//       sample,
+//       cpi,
+//       set_up_fee,
+//       tentative_start_date,
+//       tentative_end_date,
+//     } = formData;
+//     return (
+//       name &&
+//       project_type &&
+//       clients &&
+//       sample &&
+//       cpi &&
+//       set_up_fee &&
+//       tentative_start_date &&
+//       tentative_end_date
+//     );
+//   };
+
+//   const toggleOtherFee = (e) => {
+//     e.preventDefault();
+//     setIsOtherFee(!isOtherFee);
+//   };
+
+//   const MultipleValueSection = (selectedOptions) => {
+//     const selectedValues = selectedOptions.map((option) => option.value);
+//     const updatedValues = [...new Set([...otherFeeValue, ...selectedValues])];
+
+//     setOtherFeeValue(updatedValues);
+//     setOtherCost(updatedValues.includes("other_cost"));
+//     setTranslationCost(updatedValues.includes("transaction_fee"));
+//   };
+
+//   const minDate = new Date().toISOString().split("T")[0];
+
+//   return (
+//     <div className="relative">
+//       <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
+//       <form
+//         onSubmit={handleSubmit}
+//         className="lg:p-2 lg:pl-8 lg:pr-4 pr-8"
+//         encType="multipart/form-data"
+//       >
+//         <div className="lg:flex inline-block lg:flex-wrap flex-nowrap w-full gap-4">
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="Project Name"
+//               InputName="name"
+//               InputType="text"
+//               inputChange={handleInputChange}
+//               InputMin_length="1"
+//               InputMax_length="50"
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <Label labelName="Project Type" className="pt-4 pb-2" required />
+//             <Dropdown
+//               name="project_type"
+//               className="p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
+//               Option_Name={["-- Select Project Type --", ...projectTypeData]}
+//               RequireAddButton={false}
+//               required
+//               onChange={SelectOptionHandler}
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <Label labelName="Client" className="pt-4 pb-2" />
+//             {clientListData.length > 0 && (
+//               <Dropdown
+//                 name="clients"
+//                 className="p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border rounded-r-none"
+//                 Option_Name={["-- Select Client --", ...clientListData]}
+//                 RequireAddButton={true}
+//                 required
+//                 onChange={SelectOptionHandler}
+//               />
+//             )}
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="Sample"
+//               InputName="sample"
+//               InputType="number"
+//               inputChange={handleInputChange}
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//               min={0}
+//               required
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="CPI"
+//               InputName="cpi"
+//               InputType="number"
+//               inputChange={handleInputChange}
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//               min={0}
+//               required
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="Setup Fee"
+//               InputName="set_up_fee"
+//               InputType="number"
+//               inputChange={handleInputChange}
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//               min={0}
+//               required
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="Tentative Start Date"
+//               InputName="tentative_start_date"
+//               InputType="date"
+//               inputChange={handleInputChange}
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//               required
+//               min={minDate}
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <LableAndInput
+//               labelName="Tentative End Date"
+//               InputName="tentative_end_date"
+//               InputType="date"
+//               inputChange={handleInputChange}
+//               inputClassName="p-2 border bg-[#f3eded]"
+//               labelClassName="pt-4 pb-2"
+//               required
+//               min={minDate}
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full">
+//             <Label labelName="Project Manager" className="pt-4 pb-2" />
+//             {projectManagerData.length > 0 && (
+//               <Dropdown
+//                 name="project_manager"
+//                 className="p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
+//                 Option_Name={[
+//                   "-- Select Project Manager --",
+//                   ...projectManagerData,
+//                 ]}
+//                 RequireAddButton={true}
+//                 required
+//                 onChange={SelectOptionHandler}
+//               />
+//             )}
+//           </div>
+//         </div>
+
+//         <div className="lg:flex grid-cols-2 flex-wrap w-full gap-4">
+//           <div className="flex flex-col lg:w-[32%] w-full pt-6">
+//             <Label labelName="Advance Payment?" className="pb-2" />
+//             <CheckboxList
+//               name="finance_select"
+//               options={["Advance Payment"]}
+//               onChange={handleCheckboxChange}
+//               selected={advancePayment}
+//               required
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full pt-6">
+//             <Label labelName="Upload Documents" className="pb-2" />
+//             <MultipleFileUpload
+//               name="upload_document"
+//               files={selectedFiles}
+//               onChange={handleInputChange}
+//               onFileSelect={setSelectedFiles}
+//             />
+//           </div>
+//           <div className="flex flex-col lg:w-[32%] w-full pt-6">
+//             <Label labelName="Other Fee" className="pb-2" />
+//             <MultipleValueDropDown
+//               options={["Other Cost", "Translation Cost"]}
+//               onChange={MultipleValueSection}
+//             />
+//           </div>
+//         </div>
+
+//         <div className="flex flex-wrap w-full gap-4">
+//           {otherCost && (
+//             <div className="flex flex-col lg:w-[32%] w-full pt-6">
+//               <LableAndInput
+//                 labelName="Other Cost"
+//                 InputName="other_cost"
+//                 InputType="number"
+//                 inputChange={handleInputChange}
+//                 inputClassName="p-2 border bg-[#f3eded]"
+//                 labelClassName="pt-4 pb-2"
+//                 min={0}
+//               />
+//             </div>
+//           )}
+//           {translationCost && (
+//             <div className="flex flex-col lg:w-[32%] w-full pt-6">
+//               <LableAndInput
+//                 labelName="Translation Fee"
+//                 InputName="transaction_fee"
+//                 InputType="number"
+//                 inputChange={handleInputChange}
+//                 inputClassName="p-2 border bg-[#f3eded]"
+//                 labelClassName="pt-4 pb-2"
+//                 min={0}
+//               />
+//             </div>
+//           )}
+//         </div>
+
+//         <div className="flex justify-end pt-8">
+//           <Button
+//             type="submit"
+//             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+//           >
+//             Submit
+//           </Button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default Form;

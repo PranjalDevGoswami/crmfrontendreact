@@ -5,14 +5,14 @@ const CheckboxList = ({ InputItems, onCheckboxChange }) => {
 
   // Function to handle checkbox change
   const handleCheckboxChange = (event) => {
-      const { name, checked } = event.target;
-      setCheckedItems({ ...checkedItems, [name]: checked });
-      onCheckboxChange(name, checked); // Trigger the onCheckboxChange function
+    const { name, checked } = event.target;
+    setCheckedItems({ ...checkedItems, [name]: checked });
+    onCheckboxChange(name, checked); // Trigger the onCheckboxChange function
   };
 
   return (
     <div>
-      {InputItems.map((item, index) => (
+      {InputItems?.map((item, index) => (
         <div key={index}>
           <input
             type="checkbox"

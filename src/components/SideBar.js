@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-
-// import { PiCaretDoubleLeftLight, PiCaretDoubleRightLight } from "react-icons/fa";
 import {
   PiCaretDoubleLeftLight,
   PiCaretDoubleRightLight,
@@ -9,147 +7,94 @@ import { GoProjectRoadmap } from "react-icons/go";
 import { TbReport } from "react-icons/tb";
 import { FaChartLine } from "react-icons/fa6";
 import { GrUserManager } from "react-icons/gr";
-import { MdManageAccounts } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { MdDashboard } from "react-icons/md";
+import { MdManageAccounts, MdDashboard } from "react-icons/md";
 import { userDetails } from "../user/userProfile";
+import SidebarItem from "./SideBarItems";
 
 const SideBar = () => {
   const userRole = userDetails();
   const userEmail = localStorage.getItem("user");
   const department = localStorage.getItem("department");
-  const [sideBarOpen, SetSideBarOpen] = useState(true);
-  // if()
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+
+  const getDashboardLink = () => {
+    if (userEmail === "admin@unimrkt.com") return "/Admin-dashboard";
+    switch (department) {
+      case "1":
+        return "/sales-dashboard";
+      case "2":
+        return "/operation-dashboard";
+      case "3":
+        return "/finance-dashboard";
+      default:
+        return "/default-dashboard";
+    }
+  };
+
+  const dashboardLink = getDashboardLink();
+
+  const adminItems = [
+    { icon: GrUserManager, label: "User Management", link: "/Admin-dashboard" },
+    {
+      icon: MdManageAccounts,
+      label: "Role Management",
+      link: "/Management-Role",
+    },
+  ];
+
+  const commonItems = [
+    { icon: GoProjectRoadmap, label: "Project", link: dashboardLink },
+    // { icon: TbReport, label: "Report", link: "/report" },
+    // { icon: FaChartLine, label: "Chart", link: dashboardLink },
+  ];
+
   return (
     <div className="shadow-slate-400 flex">
-      <div className="bg-white">
-        {/* <img src={logo} alt="logo" className="w-[210px] h-[110px]" /> */}
-      </div>
+      <div className="bg-white"></div>
       <div
         className={`${
           sideBarOpen ? "lg:w-52 w-16" : "lg:w-16 w-16"
-        }  bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-2`}
+        } bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-2`}
       >
-        <div className="flex justify-start overflow-hidden mt-4 pl-4">
-          <MdDashboard className="text-2xl group" />
-          <div
-            className={`${
-              sideBarOpen ? "lg:block hidden" : "hidden"
-            } overflow-hidden duration-300 ml-4 float-right`}
-          >
-            {department == 2 ? (
-              <Link to="/operation-dashboard">Dashboard</Link>
-            ) : department == 1 ? (
-              <Link to="/sales-dashboard">Dashboard</Link>
-            ) : department == 3 ? (
-              <Link to="/finance-dashboard">Dashboard</Link>
-            ) : userEmail === "admin@unimrkt.com" ? (
-              <Link to="/Admin-dashboard">Dashboard</Link>
-            ) : (
-              <Link to="/default-dashboard">Dashboard</Link>
-            )}
-          </div>
-        </div>
+        <SidebarItem
+          icon={MdDashboard}
+          label="Dashboard"
+          link={dashboardLink}
+          sideBarOpen={sideBarOpen}
+        />
+        {userEmail === "admin@unimrkt.com" &&
+          adminItems.map((item, index) => (
+            <SidebarItem
+              key={index}
+              icon={item.icon}
+              label={item.label}
+              link={item.link}
+              sideBarOpen={sideBarOpen}
+            />
+          ))}
+        {commonItems.map((item, index) => (
+          <SidebarItem
+            key={index}
+            icon={item.icon}
+            label={item.label}
+            link={item.link}
+            sideBarOpen={sideBarOpen}
+          />
+        ))}
         <div>
-          {userEmail === "admin@unimrkt.com" && (
-            <div className="flex justify-start overflow-hidden pl-4">
-              <GrUserManager className="text-2xl group" />
-              <div
-                className={`${
-                  sideBarOpen ? "lg:block hidden" : "hidden"
-                } overflow-hidden duration-300 ml-4 float-right`}
-              >
-                <Link to="/Admin-dashboard">User Management</Link>
-              </div>
-            </div>
-          )}
-        </div>
-        <div>
-          {userEmail === "admin@unimrkt.com" && (
-            <div className="flex justify-start overflow-hidden pl-4">
-              <MdManageAccounts className="text-2xl group" />
-              <div
-                className={`${
-                  sideBarOpen ? "lg:block hidden" : "hidden"
-                } overflow-hidden duration-300 ml-4 float-right`}
-              >
-                <Link to="/Management-Role">Role Management</Link>
-              </div>
-            </div>
-          )}
-        </div>
-        {/* <div className="flex justify-start overflow-hidden pl-4">
-          <GoProjectRoadmap className="text-2xl group" />
-          <div
-            className={`${
-              sideBarOpen ? "block" : "hidden"
-            } overflow-hidden duration-300 ml-4`}
-          >
-            {department == 2 ? (
-              <Link to="/operation-dashboard">Project</Link>
-            ) : department == 1 ? (
-              <Link to="/sales-dashboard">Project</Link>
-            ) : department == 3 ? (
-              <Link to="/finance-dashboard">Project</Link>
-            ) : (
-              <Link to="/default-dashboard">Project</Link>
-            )}
-          </div>
-        </div>
-        <div className="flex justify-start overflow-hidden pl-4">
-          <TbReport className="text-2xl group" />
-          <div
-            className={`${
-              sideBarOpen ? "block" : "hidden"
-            } overflow-hidden duration-300 ml-4`}
-          >
-            {department == 2 ? (
-              <Link to="/operation-dashboard">Report</Link>
-            ) : department == 1 ? (
-              <Link to="/sales-dashboard">Report</Link>
-            ) : department == 3 ? (
-              <Link to="/finance-dashboard">Report</Link>
-            ) : (
-              <Link to="/default-dashboard">Report</Link>
-            )}
-          </div>
-        </div>
-        <div className="flex justify-start overflow-hidden pl-4">
-          <FaChartLine className="text-2xl group" />
-          <div
-            className={`${
-              sideBarOpen ? "block" : "hidden"
-            } overflow-hidden duration-300 ml-4`}
-          >
-            {department == 2 ? (
-              <Link to="/operation-dashboard">Chart</Link>
-            ) : department == 1 ? (
-              <Link to="/sales-dashboard">Chart</Link>
-            ) : department == 3 ? (
-              <Link to="/finance-dashboard">Chart</Link>
-            ) : (
-              <Link to="/default-dashboard">Chart</Link>
-            )}
-          </div>
-        </div> */}
-        <div className="">
           {sideBarOpen ? (
             <PiCaretDoubleLeftLight
-              className={`${
-                sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-4"
+              className={`top-4 ${
+                sideBarOpen ? "left-52 lg:block hidden" : "left-16"
               } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
-              onClick={() => {
-                SetSideBarOpen(!sideBarOpen);
-              }}
+              onClick={() => setSideBarOpen(!sideBarOpen)}
             />
           ) : (
             <PiCaretDoubleRightLight
-              className={`${
-                sideBarOpen ? "top-4 left-52 lg:block hidden" : "left-16 top-4"
+              className={`top-4 ${
+                sideBarOpen ? "left-52 lg:block hidden" : "left-16"
               } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
-              onClick={() => {
-                SetSideBarOpen(!sideBarOpen);
-              }}
+              onClick={() => setSideBarOpen(!sideBarOpen)}
             />
           )}
         </div>
@@ -157,4 +102,5 @@ const SideBar = () => {
     </div>
   );
 };
+
 export default SideBar;

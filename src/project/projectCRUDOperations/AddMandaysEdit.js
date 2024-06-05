@@ -109,7 +109,7 @@ const Edit = ({ viewRecord, setisEdit }) => {
   };
 
   return (
-    <div className="absolute h-auto w-1/2 top-2/3 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-50%]">
+    <div className="absolute h-auto w-1/2 top-2/3 left-1/2 -translate-x-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-y-1/2 z-50">
       <h3 className="text-xl underline pb-4">
         Fill Man Days and Achieve Target
       </h3>

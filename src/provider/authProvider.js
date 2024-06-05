@@ -25,17 +25,15 @@ const AuthProvider = ({ children }) => {
       const response = await axios.post(REFRESH_TOKEN, { refreshToken });
       const { accessToken } = response.data;
       setToken(accessToken);
-      return accessToken; // Return the new access token
+      return accessToken;
     } catch (error) {
       console.error("Error refreshing access token:", error);
       if (error.response && error.response.status === 401) {
-        // Unauthorized, possibly due to refresh token expiration
         alert("Refresh token has expired. Please log in again.");
-        // Clear local storage and navigate to login page
         localStorage.clear();
         window.location.href = "/login";
       }
-      throw error; // Propagate the error
+      throw error;
     }
   };
 
