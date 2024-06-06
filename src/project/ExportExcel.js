@@ -1,6 +1,9 @@
 import React from "react";
 import Button from "../components/Button";
+<<<<<<< HEAD
 import { IoMdDownload } from "react-icons/io";
+=======
+>>>>>>> origin/dev
 
 const convertArrayOfObjectsToCSV = (array) => {
   if (!array || !array.length) {
@@ -43,6 +46,7 @@ const downloadCSV = (array) => {
 };
 
 const Export = ({ onExport }) => (
+<<<<<<< HEAD
   <div className="rounded-full bg-white p-2 pl-4 pr-4 flex items-center border hover:bg-gray-50">
     <Button
       className={"text-lg mr-2 text-blue-500 hover:underline"}
@@ -51,6 +55,13 @@ const Export = ({ onExport }) => (
     />
     <IoMdDownload className="text-lg text-blue-500" />
   </div>
+=======
+  <Button
+    className={"rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"}
+    onClick={onExport}
+    name="Export"
+  />
+>>>>>>> origin/dev
 );
 
 const ExportCSV = ({ data }) => {

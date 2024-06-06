@@ -273,7 +273,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           </div>
         </div>
         {data?.length > 0 ? (
+<<<<<<< HEAD
           <div className="relative table w-full">
+=======
+          <div className="relative table">
+>>>>>>> origin/dev
             {isMultiEdit && (
               <div
                 className={`${
