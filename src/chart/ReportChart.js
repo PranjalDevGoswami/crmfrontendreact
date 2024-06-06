@@ -73,7 +73,7 @@ export default function ReportChart() {
   };
 
   return (
-    <div className="bg-gray-100 border w-1/2 p-2">
+    <div className="bg-gray-100 border w-1/2 p-4">
       <PieChart
         series={[
           {
