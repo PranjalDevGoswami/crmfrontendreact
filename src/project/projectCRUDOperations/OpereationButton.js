@@ -86,49 +86,41 @@ const OpereationButton = ({
                 className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                 onClick={handleViewProject}
               >
-                {/* <Link to={'/view'}> */}
                 View
-                {/* </Link> */}
               </button>
               {record.status !== "completed" &&
-              record.status !== "cbr_raised" &&
-              record.status !== "hold" &&
-              DateValidate == true ? (
-                <button
-                  className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                  onClick={HandleAddManDays}
-                >
-                  Add Mandays
-                </button>
-              ) : (
-                ""
-              )}
+                record.status !== "cbr_raised" &&
+                record.status !== "hold" &&
+                DateValidate == true && (
+                  <button
+                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                    onClick={HandleAddManDays}
+                  >
+                    Add Mandays
+                  </button>
+                )}
               {record.status !== "completed" &&
-              record.status !== "cbr_raised" ? (
-                <button
-                  className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                  onClick={() => {
-                    HandleOnEdit(record);
-                  }}
-                >
-                  Edit Request
-                </button>
-              ) : (
-                ""
-              )}
+                record.status !== "cbr_raised" && (
+                  <button
+                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                    onClick={() => {
+                      HandleOnEdit(record);
+                    }}
+                  >
+                    Edit Request
+                  </button>
+                )}
               {record.status !== "completed" &&
-              record.status !== "cbr_raised" &&
-              record.status !== "hold" &&
-              DateValidate == true ? (
-                <button
-                  className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                  onClick={() => handleStatus(record)}
-                >
-                  Status Update
-                </button>
-              ) : (
-                ""
-              )}
+                record.status !== "cbr_raised" &&
+                record.status !== "hold" &&
+                DateValidate == true && (
+                  <button
+                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                    onClick={() => handleStatus(record)}
+                  >
+                    Status Update
+                  </button>
+                )}
               {record.status === "completed" &&
               record.status !== "hold" &&
               record.status !== "cbr_raised" ? (
@@ -142,18 +134,20 @@ const OpereationButton = ({
                 ""
               )}
             </div>
-          ) : department == 1 || department == 3 || role === "Director" ? (
-            <button
-              className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-              onClick={handleViewProject}
-            >
-              <Link to={"/view"}>View</Link>
-            </button>
           ) : (
-            ""
+            department == 1 ||
+            department == 3 ||
+            (role === "Director" && (
+              <button
+                className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+                onClick={handleViewProject}
+              >
+                <Link to={"/view"}>View</Link>
+              </button>
+            ))
           )}
         </div>
-        {role === "AM/Manager" ? (
+        {(role === "AM/Manager" || role === "superuser") && (
           <div className="">
             <button
               className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
@@ -161,26 +155,17 @@ const OpereationButton = ({
             >
               <Link to={"/view"}>View</Link>
             </button>
-            {/* <button
-            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-            onClick={handleAssignProject}
-          >
-            
-          </button> */}
           </div>
-        ) : (
-          ""
         )}
-        {department == 3 ? (
-          <button
-            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-            onClick={() => handleGetInvoice(record)}
-          >
-            Get Invoice
-          </button>
-        ) : (
-          ""
-        )}
+        {department == 3 ||
+          (role === "superuser" && (
+            <button
+              className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+              onClick={() => handleGetInvoice(record)}
+            >
+              Get Invoice
+            </button>
+          ))}
       </div>
     </div>
   );

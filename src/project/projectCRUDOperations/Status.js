@@ -27,8 +27,6 @@ const Status = ({ viewRecord, setIsStatus }) => {
     } else {
       alert("please select Status");
     }
-    // setViewEdit(false);
-    // setIsDrawerOpen(false);
   };
 
   const handleEditUpdate = () => {
@@ -100,7 +98,6 @@ const Status = ({ viewRecord, setIsStatus }) => {
               "bg-red-300 p-4 m-2 flex items-center w-full rounded text-white hover:bg-red-500"
             }
           >
-            {" "}
             Cancel
           </button>
         </div>

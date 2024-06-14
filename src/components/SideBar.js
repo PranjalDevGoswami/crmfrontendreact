@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   PiCaretDoubleLeftLight,
   PiCaretDoubleRightLight,
@@ -10,12 +10,14 @@ import { GrUserManager } from "react-icons/gr";
 import { MdManageAccounts, MdDashboard } from "react-icons/md";
 import { userDetails } from "../user/userProfile";
 import SidebarItem from "./SideBarItems";
+import { ThemeContext } from "../ContextApi/ThemeContext";
 
 const SideBar = () => {
   const userRole = userDetails();
   const userEmail = localStorage.getItem("user");
   const department = localStorage.getItem("department");
   const [sideBarOpen, setSideBarOpen] = useState(true);
+  const { darkMode } = useContext(ThemeContext);
 
   const getDashboardLink = () => {
     if (userEmail === "admin@unimrkt.com") return "/Admin-dashboard";
@@ -44,8 +46,8 @@ const SideBar = () => {
 
   const commonItems = [
     { icon: GoProjectRoadmap, label: "Project", link: dashboardLink },
-    // { icon: TbReport, label: "Report", link: "/report" },
-    // { icon: FaChartLine, label: "Chart", link: dashboardLink },
+    { icon: TbReport, label: "Report", link: "/report" },
+    { icon: FaChartLine, label: "Chart", link: dashboardLink },
   ];
 
   return (
@@ -86,14 +88,18 @@ const SideBar = () => {
             <PiCaretDoubleLeftLight
               className={`top-4 ${
                 sideBarOpen ? "left-52 lg:block hidden" : "left-16"
-              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
+              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight ${
+                darkMode ? "text-white" : "text-black"
+              }`}
               onClick={() => setSideBarOpen(!sideBarOpen)}
             />
           ) : (
             <PiCaretDoubleRightLight
               className={`top-4 ${
                 sideBarOpen ? "left-52 lg:block hidden" : "left-16"
-              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight bg-white`}
+              } text-2xl text-black cursor-pointer absolute duration-300 font-extralight ${
+                darkMode ? "text-white" : "text-black"
+              }`}
               onClick={() => setSideBarOpen(!sideBarOpen)}
             />
           )}

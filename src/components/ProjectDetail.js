@@ -9,7 +9,6 @@ import { addFormData } from "./features/projectData/projectDataSlice.js";
 import { GetProjectData } from "./fetchApis/projects/getProjectData/GetProjectData.js";
 import LableAndInput from "./LableAndInput.js";
 
-
 const ProjectDetail = ({ data }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editedIndex, setEditedIndex] = useState();
@@ -21,10 +20,9 @@ const ProjectDetail = ({ data }) => {
   const [isOperationPerson, setIsOperationPerson] = useState(true);
   const [viewProjectDetails, setViewProjectDetails] = useState(false);
   const [editedFieldIndex, setEditedFieldIndex] = useState(null);
-  const [achieveTarget,setAchieveTarget] = useState()
+  const [achieveTarget, setAchieveTarget] = useState();
 
   const dispatchProjectData = useDispatch();
-
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -35,8 +33,8 @@ const ProjectDetail = ({ data }) => {
           return val;
         });
         dispatchProjectData(addFormData(projectDataObject));
-          } catch (error) {
-         console.error("Error fetching project data:", error);
+      } catch (error) {
+        console.error("Error fetching project data:", error);
       }
     };
     fetchProjectData();
@@ -82,18 +80,16 @@ const ProjectDetail = ({ data }) => {
   const handleCancelUpdate = () => {
     setIsEdit(false);
   };
-  const handleEditChange = (e) =>{
-    const {name,value} = e.target;
-    if(name==='manDaysEntryDate'){
-      setMandaysEntryDate(value)
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "manDaysEntryDate") {
+      setMandaysEntryDate(value);
+    } else if (name === "achieve_target") {
+      setAchieveTarget(value);
+    } else {
+      setMandaysEntry(value);
     }
-    else if(name==='achieve_target'){
-      setAchieveTarget(value)
-    }
-    else{
-      setMandaysEntry(value)
-    }
-  }
+  };
 
   const handleMandays = (e) => {
     setMandaysEntry(e.target.value);
@@ -181,17 +177,50 @@ const ProjectDetail = ({ data }) => {
           {isOperationPerson ? (
             <div className="flex flex-wrap justify-between">
               <div className="w-5/12">
-                <LableAndInput labelName={'Project Code'} Inputvalue={Formdata1.map((project_code)=>project_code.project_code)} desabled={true} inputClassName={'cursor-not-allowed p-2 border bg-[#f3eded]'} labelClassName={'pt-4 pb-2'}/>
+                <LableAndInput
+                  labelName={"Project Code"}
+                  Inputvalue={Formdata1.map(
+                    (project_code) => project_code.project_code
+                  )}
+                  desabled={true}
+                  inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
+                  labelClassName={"pt-4 pb-2"}
+                  readOnly
+                />
               </div>
               <div className="w-5/12">
-                <LableAndInput labelName={'Date'} InputName={'manDaysEntryDate'} Inputvalue={mandaysEntryDate} inputChange={handleEditChange} InputType={'date'} inputClassName={'p-2 border'} labelClassName={'pt-4 pb-2'} min={minDate.toISOString().split("T")[0]}/>
+                <LableAndInput
+                  labelName={"Date"}
+                  InputName={"manDaysEntryDate"}
+                  Inputvalue={mandaysEntryDate}
+                  inputChange={handleEditChange}
+                  InputType={"date"}
+                  inputClassName={"p-2 border"}
+                  labelClassName={"pt-4 pb-2"}
+                  min={minDate.toISOString().split("T")[0]}
+                />
               </div>
               <div className="w-5/12">
-                <LableAndInput labelName={'Man Days'} InputName={'mandays_number'} Inputvalue={mandaysEntry} inputChange={handleEditChange} InputType={'number'} inputClassName={'p-2 border'} labelClassName={'pt-4 pb-2'}/>
+                <LableAndInput
+                  labelName={"Man Days"}
+                  InputName={"mandays_number"}
+                  Inputvalue={mandaysEntry}
+                  inputChange={handleEditChange}
+                  InputType={"number"}
+                  inputClassName={"p-2 border"}
+                  labelClassName={"pt-4 pb-2"}
+                />
               </div>
               <div className="w-5/12">
-                <LableAndInput labelName={'Achieve Target'}  Inputvalue={achieveTarget} InputType={'number'} InputName={'achieve_target'}
-                  inputChange={handleEditChange} inputClassName={'p-2 border'} labelClassName={'pt-4 pb-2'}/>
+                <LableAndInput
+                  labelName={"Achieve Target"}
+                  Inputvalue={achieveTarget}
+                  InputType={"number"}
+                  InputName={"achieve_target"}
+                  inputChange={handleEditChange}
+                  inputClassName={"p-2 border"}
+                  labelClassName={"pt-4 pb-2"}
+                />
               </div>
             </div>
           ) : (

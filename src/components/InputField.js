@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "../ContextApi/ThemeContext";
 
 const Input = ({
   type,
@@ -16,10 +17,13 @@ const Input = ({
   multiple,
   onfocus,
 }) => {
+  const { darkMode } = useContext(ThemeContext);
   return (
     <input
       type={type}
-      className={"rounded-full " + className}
+      className={
+        `${darkMode && "bg-black text-white"} rounded-full ` + className
+      }
       placeholder={placeholder}
       onChange={onchange}
       value={value}

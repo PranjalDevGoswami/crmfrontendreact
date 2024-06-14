@@ -8,6 +8,7 @@ import { getWithAuth, putWithAuthForUpload } from "../provider/helper/axios";
 import { UPDATE_PROFILE } from "../../utils/urls.js";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 export const userDetails = () => {
   const token = localStorage.getItem("token");
@@ -22,6 +23,8 @@ export const userDetails = () => {
 };
 
 export const Profile = ({ profileDataUpdate }) => {
+  const [profilePic, setProfilePic] = useState("pawan");
+
   const navigate = useNavigate();
 
   const [profileUpdateData, setProfileUpdateData] = useState({
@@ -38,7 +41,10 @@ export const Profile = ({ profileDataUpdate }) => {
       const response = await getWithAuth(UPDATE_PROFILE);
       if (response?.status == true) {
         setProfileDetails(response?.data);
-        console.log(response);
+        {
+          profileDetails?.profile_picture && console.log("ht");
+          setProfilePic(profileDetails?.profile_picture);
+        }
       }
     };
     GetProfileDetails();
@@ -65,8 +71,6 @@ export const Profile = ({ profileDataUpdate }) => {
         setProfileUpdateData((prev) => ({ ...prev, [name]: files[0] }));
       }
     }
-    // if (name === "profile_picture") {
-    // }
   };
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -98,12 +102,20 @@ export const Profile = ({ profileDataUpdate }) => {
           <div className="lg:flex lg:flex-row flex-col items-center justify-around">
             <div className="profile-pic lg:w-4/12 w-full border-b-2 border-b-black">
               {profileDetails?.profile_picture !== null ? (
-                <div>
+                <div className="relative">
                   <img
                     src={profileDetails?.profile_picture}
                     alt="user-profile-pic"
                     className="lg:w-40 lg:h-40 w-20 h-20 rounded-full bg-cover"
                   />
+                  {profileDetails?.profile_picture && (
+                    <MdOutlineModeEdit
+                      className={
+                        "absolute bottom-0 left-24 bg-gray-100 rounded-full p-2 w-8 h-8 cursor-pointer"
+                      }
+                      onClick={() => console.log("PP clear")}
+                    />
+                  )}
                 </div>
               ) : (
                 <FaRegUserCircle className="lg:w-40 lg:h-40 w-20 h-20 rounded-full bg-cover" />

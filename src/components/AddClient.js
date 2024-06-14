@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "./InputField";
 import Button from "./Button";
 import { PostClientList } from "../fetchApis/clientList/ClientList";
+import { ThemeContext } from "../ContextApi/ThemeContext";
 
 const AddClient = ({ closeAddClient }) => {
   const [clientData, setClientData] = useState({
@@ -54,9 +55,13 @@ const AddClient = ({ closeAddClient }) => {
       email_id_for_cc: "",
     });
   };
-
+  const { darkMode } = useContext(ThemeContext);
   return (
-    <div className="p-8">
+    <div
+      className={`${
+        darkMode && "bg-black text-white border-white border "
+      } p-8`}
+    >
       <h3 className="pt-4 pb-4 underline text-2xl">Add Client Details</h3>
       <div className="flex flex-wrap gap-4">
         <Input
@@ -133,7 +138,9 @@ const AddClient = ({ closeAddClient }) => {
       </div>
       <Button
         name="Add Client"
-        className="bg-yellow-200 p-4 rounded mt-4 w-4/12"
+        className={`${
+          darkMode ? "bg-black text-white" : "bg-yellow-200"
+        } p-4 rounded mt-4 w-4/12 border`}
         onClick={handleAddClient}
       />
     </div>

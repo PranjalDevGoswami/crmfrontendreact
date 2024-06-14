@@ -10,6 +10,7 @@ export const Role = {
   Manager: "Manager",
   TeamLead: "Team Lead",
   Admin: "Admin",
+  superuser: "superuser",
 };
 export const Director = ["Sandeep Kumar", "Anurag Mangoo", "Kanishk Sheel"];
 

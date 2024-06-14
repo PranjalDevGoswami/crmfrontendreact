@@ -1,21 +1,23 @@
 import { MdOutlineMoreVert } from "react-icons/md";
 import OpereationButton from "../src/project/projectCRUDOperations/OpereationButton";
+import { DataTableContext } from "../src/ContextApi/DataTableContext";
+import { useContext } from "react";
 
-export const TableColumn = ({
-  setIsStatus,
-  setisEdit,
-  setisView,
-  isView,
-  setSelectedRecord,
-  selectedRecord,
-  openDropdownIndex,
-  setOpenDropdownIndex,
-  setIsViewOptionIndex,
-  setIsViewOptionOpen,
-  isViewOptionOpen,
-  setSelectedIndex,
-  buttonRef,
-}) => {
+export const TableColumn = ({ buttonRef }) => {
+  const {
+    setIsStatus,
+    setisEdit,
+    isView,
+    setisView,
+    selectedRecord,
+    setSelectedRecord,
+    openDropdownIndex,
+    setOpenDropdownIndex,
+    setIsViewOptionIndex,
+    isViewOptionOpen,
+    setIsViewOptionOpen,
+    setSelectedIndex,
+  } = useContext(DataTableContext);
   const handleAddEditOperation = (record, index) => {
     setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
     setIsViewOptionIndex(index);
@@ -25,15 +27,15 @@ export const TableColumn = ({
   };
 
   return (columns = [
-    {
-      name: "SN.",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "75px",
-    },
+    // {
+    //   name: "SN.",
+    //   selector: (row) => row.id,
+    //   sortable: true,
+    //   width: "75px",
+    // },
     {
       name: "Project Code",
-      selector: (row) => row.project_code,
+      selector: (row) => row.project_code.toUpperCase(),
       sortable: true,
       width: "120px",
     },
@@ -47,7 +49,7 @@ export const TableColumn = ({
       name: "Project Name",
       selector: (row) => row.name,
       sortable: true,
-      width: "auto",
+      width: "270px",
     },
     {
       name: "Type",

@@ -23,7 +23,7 @@ import ManagementPanel from "../dashboard/ManagementRole";
 import ReportDashboard from "../dashboard/ReportDashboard.js";
 
 const Routes = () => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   // const token = localStorage.getItem("token");
   // Define public routes accessible to all users
   const routesForPublic = [

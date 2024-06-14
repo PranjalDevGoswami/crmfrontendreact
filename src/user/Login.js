@@ -64,7 +64,6 @@ const Login = () => {
       }
 
       const userDetails = getUserByEmail(email);
-      console.log("🚀 ~ RedirectUser ~ userDetails:", userDetails);
 
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department?.id;

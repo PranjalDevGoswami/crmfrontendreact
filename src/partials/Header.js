@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../assets/mainlogo.png";
@@ -6,12 +6,16 @@ import { useAuth } from "../provider/authProvider";
 import { userDetails } from "../user/userProfile";
 import { UPDATE_PROFILE } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios.js";
+import NotificationsComponent from "../notification/Notification.js";
+import { ThemeContext } from "../ContextApi/ThemeContext.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();
   const [isProfileSetting, setIsProfileSetting] = useState(false);
   const navigate = useNavigate();
   const headerBtn = useRef();
+
+  const { darkMode } = useContext(ThemeContext);
 
   const handleLogout = () => {
     setToken();
@@ -60,16 +64,19 @@ const Header = () => {
               className="w-full max-h-[90px] max-w-[210px]"
             />
           </div>
-          <div className="max-w-2/12 text-right justify-end mr-8 flex flex-wrap items-center">
+          <div className="max-w-2/12 text-right justify-end flex flex-wrap items-center">
             {token ? (
-              <div className="flex flex-wrap">
-                <span className="m-2">
+              <div className="flex flex-wrap items-center">
+                <div className="relative">
+                  <NotificationsComponent className="relative" />
+                </div>
+                <span className="m-2 text-black">
                   {username?.username ? username?.username : "User"}
                 </span>
 
                 <div className="relative cursor-pointer" ref={headerBtn}>
                   {profileDetails?.profile_picture !== null ? (
-                    <div>
+                    <div className="border rounded-full">
                       <img
                         src={profileDetails?.profile_picture}
                         alt="user-profile-pic"
@@ -81,7 +88,9 @@ const Header = () => {
                     </div>
                   ) : (
                     <FaRegUserCircle
-                      className="w-9 h-9 rounded-full bg-cover cursor-pointer"
+                      className={`${
+                        darkMode && "text-black"
+                      } w-9 h-9 rounded-full bg-cover cursor-pointer border "`}
                       onClick={() => {
                         setIsProfileSetting(!isProfileSetting);
                       }}
@@ -103,7 +112,7 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <span className="m-2">Guest</span>
+              <span className="m-2 text-black">Guest</span>
             )}
           </div>
         </div>

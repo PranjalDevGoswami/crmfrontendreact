@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { GetProjectData } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
+import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
 import { GoProjectRoadmap } from "react-icons/go";
 
 const ProjectCount = () => {
   const [project, setProject] = useState([]);
 
   useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        setProject(projectDataObject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
+    const ProjectDetail = async () => {
+      const response = await ProjectDetails();
+      setProject(response);
     };
-    fetchProjectData();
+    ProjectDetail();
   }, []);
   const ProjectTotal = project.length;
 

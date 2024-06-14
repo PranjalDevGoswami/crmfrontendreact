@@ -1,4 +1,4 @@
-export const BASEURL = "https://crmapi.unimrkt.com";
+export const BASEURL = "http://127.0.0.1:8000";
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
 export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
@@ -22,3 +22,6 @@ export const UPDATE_PROFILE = BASEURL + "/api/user/update-profile/";
 export const PROJECT_HOD = BASEURL + "/api/project/hods/";
 export const PROJECT_TL = BASEURL + "/api/project/project-teamleads/";
 export const USERSTATUS = BASEURL + "/api/user/user/status/";
+export const EDITPROJECTREQUEST = BASEURL + "/api/project/send-project-email/";
+export const UPDATEDPROJECTLIST =
+  BASEURL + "/api/project/project-updated-data/";

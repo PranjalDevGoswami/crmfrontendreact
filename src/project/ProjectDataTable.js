@@ -7,60 +7,64 @@ import {
   Dummycolumns,
   conditionalRowStyles,
   customStyles,
+  customStylesDarkMode,
 } from "../../utils/DataTablesData";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
 import View from "./projectCRUDOperations/View.js";
-import Edit from "./projectCRUDOperations/AddMandaysEdit.js";
+import Edit from "./projectCRUDOperations/ProjectEditRequest.js";
 import Status from "./projectCRUDOperations/Status.js";
 import { TableColumn } from "../../utils/dataTableColumns.js";
 import AssignedProject from "./AssignedProject.js";
 import FilterProject from "./FilterProject";
 import ExportCSV from "./ExportExcel.js";
+import { ThemeContext } from "../ContextApi/ThemeContext";
+import { FilterContext } from "../ContextApi/FilterContext.js";
+import { DataTableContext } from "../ContextApi/DataTableContext.js";
+import ProjectStatusTabs from "./projectCRUDOperations/ProjectStatusTabs.js";
+import { Link } from "react-router-dom";
+import OpenNotification from "../notification/OpenNotificationDetails.js";
+import { NotifiactionContext } from "../ContextApi/NotificationContext.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
-  const [updatedValue, setUpdatedValue] = useState({
-    project_code: "",
-    date: "",
-    man_days: "",
-    total_achievement: "",
-  });
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedHod, setSelectedHod] = useState("");
-  const [selectedManager, setSelectedManager] = useState("");
-  const [selectedTl, setSelectedTl] = useState("");
-  const [clientsListArray, setClientsListArray] = useState([
-    "Demo Client1",
-    "Demo Client2",
-  ]);
   const [isMultiEdit, setIsMultiEdit] = useState(false);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isViewOptionOpen, setIsViewOptionOpen] = useState(false);
-  const [isViewOptionIndex, setIsViewOptionIndex] = useState();
-  const [openDropdownIndex, setOpenDropdownIndex] = useState(-1);
-  const [isView, setisView] = useState(false);
-  const [isEdit, setisEdit] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState();
-  const [selectedIndex, setSelectedIndex] = useState();
   const [closeView, setCloseView] = useState(false);
-  const [isStatus, setIsStatus] = useState(false);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [teamLeadAssiged, setTeamLeadAssiged] = useState();
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedClient, setSelectedClient] = useState("");
-
-  const [tlAssociates, setTlAssociates] = useState();
-
+  const [drawerContent, setDrawerContent] = useState(null);
   const dropdownRef = useRef(null);
 
   let token = localStorage.getItem("token");
   let role = localStorage.getItem("role");
-  let user = localStorage.getItem("user");
-  let username = localStorage.getItem("username");
   let department = localStorage.getItem("department");
   let user_id = localStorage.getItem("user_id");
+
+  const { darkMode } = useContext(ThemeContext);
+  const {
+    setIsStatus,
+    isEdit,
+    setisEdit,
+    setisView,
+    isView,
+    selectedRecord,
+    setOpenDropdownIndex,
+    setIsViewOptionOpen,
+    isStatus,
+  } = useContext(DataTableContext);
+
+  const {
+    selectedStatus,
+    selectedClient,
+    searchTerm,
+    selectedHod,
+    selectedManager,
+    selectedTl,
+  } = useContext(FilterContext);
+  const { isViewNotification } = useContext(NotifiactionContext);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -111,6 +115,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             return item?.project_hod?.id == user_id;
           });
         }
+        if (role === "superuser") {
+          filteredData = filteredData?.filter((item) => {
+            return item;
+          });
+        }
         if (department == 1) {
           filteredData = projectDataObject?.filter((item) => {
             return item.user_id == user_id;
@@ -143,7 +152,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     selectedHod,
     selectedTl,
   ]);
-  const buttonRef = useRef(null);
 
   const handleClickOutside = (event) => {
     if (buttonRef.current && !buttonRef.current.contains(event.target)) {
@@ -175,11 +183,21 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       setIsMultiEdit(false);
     }
   };
-  const handleMutiEdit = () => {
+
+  const handleAddManDays = () => {
+    setDrawerContent("AddManDays");
     setMultiEditFieldOpen(true);
     setIsDrawerOpen(true);
     document.body.classList.toggle("DrawerBody");
   };
+
+  const handleAssignProject = () => {
+    setDrawerContent("AssignProject");
+    setMultiEditFieldOpen(true);
+    setIsDrawerOpen(true);
+    document.body.classList.toggle("DrawerBody");
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -230,8 +248,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     remaining_interview: item.remaining_interview,
     man_days: item.man_days,
     status: item.status,
-    // project_manager: item?.project_manager,
-    // project_teamlead: item?.project_teamlead,
   }));
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -248,184 +264,203 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   });
 
   return (
-    <>
+    <div className="p-4">
       <div
         className={`${
           isDrawerOpen ? "opacity-30 relative overflow-hidden" : "opacity-100"
         }"`}
       >
-        <div className="flex lg:flex-row flex-col items-center h-40 w-full overflow-visible md:w-11/12 lg:container lg:mx-auto">
-          <div className="flex lg:justify-end justify-start mb-4 lg:w-full w-full">
-            <div className="flex items-center">
-              <FilterProject
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                selectedClient={selectedClient}
-                setSelectedClient={setSelectedClient}
-                setSearchTerm={setSearchTerm}
-                searchTerm={searchTerm}
-                setTlAssociates={setTlAssociates}
-                setSelectedHod={setSelectedHod}
-                setSelectedManager={setSelectedManager}
-                setSelectedTl={setSelectedTl}
-              />
-            </div>
+        <div className="flex lg:justify-end justify-start mb-4 lg:w-full w-full">
+          <div className="flex items-center">
+            <FilterProject />
           </div>
         </div>
-        {data?.length > 0 ? (
-<<<<<<< HEAD
-          <div className="relative table w-full">
-=======
-          <div className="relative table">
->>>>>>> origin/dev
-            {isMultiEdit && (
-              <div
-                className={`${
-                  isMultiEdit
-                    ? "AddManDaysAnimation opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-0.3rem] w-full p-2"
-                    : " opacity-0"
-                }`}
-              >
-                <span className="text-white text-xl">
-                  row selected ({selectedRow.length}){" "}
-                </span>
-                {role.includes("Team Lead") ? (
+        <div className="relative table">
+          <div className="relative w-2/3">
+            <ProjectStatusTabs className={"absolute top-1 left-60 z-10"} />
+          </div>
+          {isMultiEdit && (
+            <div
+              className={`${
+                isMultiEdit
+                  ? "AddManDaysAnimation  opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-0.3rem] w-full p-2"
+                  : " opacity-0"
+              } z-auto`}
+            >
+              <span className="text-white text-xl">
+                row selected ({selectedRow.length})
+              </span>
+              {role.includes("Team Lead") ? (
+                <Button
+                  name={"Add Man Days"}
+                  className={
+                    "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                  }
+                  onClick={handleAddManDays}
+                />
+              ) : role.includes("AM/Manager") ? (
+                <Button
+                  name={"Assign Project"}
+                  className={
+                    "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                  }
+                  onClick={handleAssignProject}
+                />
+              ) : role.includes("superuser") ? (
+                <div>
                   <Button
                     name={"Add Man Days"}
                     className={
                       "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
                     }
-                    onClick={handleMutiEdit}
+                    onClick={handleAddManDays}
                   />
-                ) : (
                   <Button
                     name={"Assign Project"}
                     className={
                       "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
                     }
-                    onClick={handleMutiEdit}
+                    onClick={handleAssignProject}
                   />
-                )}
-              </div>
-            )}
-            {department == 2 &&
-            (role.includes("Team Lead") || role.includes("AM/Manager")) ? (
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
+          {department == 2 &&
+          (role.includes("Team Lead") || role.includes("AM/Manager")) ? (
+            <DataTable
+              columns={
+                data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
+              }
+              data={data?.length > 0 ? desabledRowData : DummyData}
+              pagination
+              customStyles={darkMode ? customStylesDarkMode : customStyles}
+              selectableRows
+              onSelectedRowsChange={handleSelectedRowsChange}
+              enableMultiRowSelection
+              selectableRowDisabled={(row) => row.desabled}
+              conditionalRowStyles={conditionalRowStyles}
+              title={
+                data?.length > 0 ? "All Project Details" : "No Project Found"
+              }
+              actions={<ExportCSV data={data} />}
+            />
+          ) : (department == 1 ||
+              department == 2 ||
+              department == 3 ||
+              department == 4) &&
+            role.includes("superuser") ? (
+            <div className="">
+              <Link to={"/entry-page"}>
+                <Button
+                  name={"Add Project"}
+                  // onClick={AddProjectHandler}
+                  className={`${
+                    darkMode
+                      ? "bg-black text-white border-white"
+                      : "bg-yellow-200 border-black"
+                  } border rounded-lg p-2 absolute right-28 top-2 z-10`}
+                />
+              </Link>
               <DataTable
-                columns={TableColumn({
-                  setIsStatus,
-                  setisEdit,
-                  setisView,
-                  isView,
-                  setSelectedRecord,
-                  selectedRecord,
-                  openDropdownIndex,
-                  setOpenDropdownIndex,
-                  setIsViewOptionIndex,
-                  setIsViewOptionOpen,
-                  isViewOptionOpen,
-                  setIsMultiEdit,
-                  setSelectedIndex,
-                  buttonRef,
-                })}
-                data={desabledRowData}
+                columns={
+                  data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
+                }
+                data={data?.length > 0 ? desabledRowData : DummyData}
                 pagination
-                customStyles={customStyles}
                 selectableRows
+                customStyles={darkMode ? customStylesDarkMode : customStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
-                title={" All Project Details"}
+                title={
+                  data?.length > 0 ? "All Project Details" : "No Project Found"
+                }
                 actions={<ExportCSV data={data} />}
               />
-            ) : (
+            </div>
+          ) : (
+            <div className="">
+              {/* <Link to={"/entry-page"}>
+                <Button
+                  name={"Add Project"}
+                  // onClick={AddProjectHandler}
+                  className={`${
+                    darkMode
+                      ? "bg-black text-white border-white"
+                      : "bg-yellow-200 border-black"
+                  } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                />
+              </Link> */}
               <DataTable
-                columns={TableColumn({
-                  setIsStatus,
-                  setisEdit,
-                  setisView,
-                  isView,
-                  setSelectedRecord,
-                  selectedRecord,
-                  openDropdownIndex,
-                  setOpenDropdownIndex,
-                  setIsViewOptionIndex,
-                  setIsViewOptionOpen,
-                  isViewOptionOpen,
-                  setIsMultiEdit,
-                  setSelectedIndex,
-                  buttonRef,
-                })}
-                data={desabledRowData}
+                columns={
+                  data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
+                }
+                data={data?.length > 0 ? desabledRowData : DummyData}
                 pagination
-                customStyles={customStyles}
+                customStyles={darkMode ? customStylesDarkMode : customStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 conditionalRowStyles={conditionalRowStyles}
-                title={" All Project Details"}
+                title={
+                  data?.length > 0 ? "All Project Details" : "No Project Found"
+                }
+                actions={<ExportCSV data={data} />}
               />
-            )}
+            </div>
+          )}
 
-            {isOperationPerson && (
-              <>
-                {isEdit ? (
-                  <Edit viewRecord={selectedRecord} setisEdit={setisEdit} />
-                ) : (
-                  ""
-                )}
-              </>
-            )}
-            {isView ? (
-              <div className="z-50">
-                <View
-                  viewRecord={selectedRecord}
-                  closeView={closeView}
-                  setisView={setisView}
-                />
-              </div>
-            ) : (
-              ""
-            )}
-            {isStatus ? (
-              <div className="z-50">
-                <Status
-                  viewRecord={selectedRecord}
-                  closeView={closeView}
-                  setIsStatus={setIsStatus}
-                />
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
-        ) : (
-          <DataTable
-            columns={Dummycolumns}
-            data={DummyData}
-            customStyles={customStyles}
-          />
-        )}
+          {isOperationPerson && isEdit && (
+            <Edit viewRecord={selectedRecord} setisEdit={setisEdit} />
+          )}
+          {isView && (
+            <div className="z-50">
+              <View
+                viewRecord={selectedRecord}
+                closeView={closeView}
+                setisView={setisView}
+              />
+            </div>
+          )}
+          {isStatus && (
+            <div className="z-50">
+              <Status
+                viewRecord={selectedRecord}
+                closeView={closeView}
+                setIsStatus={setIsStatus}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <div className="">
-        {multiEditFieldOpen && role.includes("Team Lead") ? (
+        {multiEditFieldOpen && drawerContent === "AddManDays" && (
           <AddManDays
             selectedRow={selectedRow}
             setIsDrawerOpen={setIsDrawerOpen}
             setMultiEditFieldOpen={setMultiEditFieldOpen}
           />
-        ) : multiEditFieldOpen && role.includes("AM/Manager") ? (
+        )}
+        {multiEditFieldOpen && drawerContent === "AssignProject" && (
           <AssignedProject
             selectedRow={selectedRow}
             setIsDrawerOpen={setIsDrawerOpen}
             setMultiEditFieldOpen={setMultiEditFieldOpen}
             teamLeadAssiged={teamLeadAssiged}
           />
-        ) : (
-          ""
+        )}
+        {isViewNotification && (
+          <div className="absolute top-1/2 left-1/2 w-80 p-2 h-auto">
+            <OpenNotification />
+          </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
+
 export default ProjectDataTable;

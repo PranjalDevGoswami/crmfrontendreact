@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "./Button";
 import AddClient from "./AddClient";
 import { TiPlus } from "react-icons/ti";
+import { ThemeContext } from "../ContextApi/ThemeContext";
 
 const Dropdown = ({
   className,
@@ -11,16 +12,17 @@ const Dropdown = ({
   name,
   multiple,
   defaultValue,
+  selectedOption,
 }) => {
   const [addOptionValue, setAddOptionValue] = useState("");
   const [openOptionField, setOpenOptionField] = useState(false);
   const [requireAddButton] = useState(RequireAddButton);
-  // const [addOptionItem, setAddOptionItem] = useState(Option_Name.slice());
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [addOptionItem, setAddOptionItem] = useState([]);
 
+  const { darkMode } = useContext(ThemeContext);
+
   useEffect(() => {
-    // Populate addOptionItem with initial options
     setAddOptionItem(Option_Name.slice());
   }, [Option_Name]);
 
@@ -56,15 +58,19 @@ const Dropdown = ({
     <div className="w-full">
       <div className="relative flex">
         <select
-          className={"rounded-full p-2 " + className}
+          className={
+            `${darkMode && "bg-black border-white"} rounded-full p-2 ` +
+            className
+          }
           onChange={HandleDropdownOnchange}
           name={name}
           multiple={multiple}
+          value={selectedOption}
         >
           {addOptionItem.map((option, index) => {
             return (
               <option key={index} className="p-4 text-xl" value={option}>
-                {option}
+                {option.charAt(0).toUpperCase() + option.slice(1)}
                 {defaultValue}
               </option>
             );
