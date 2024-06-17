@@ -6,7 +6,7 @@ import { useAuth } from "../provider/authProvider";
 import { userDetails } from "../user/userProfile";
 import { UPDATE_PROFILE } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios.js";
-import NotificationsComponent from "../notification/Notification.js";
+import Notifications from "../notification/Notification.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
 
 const Header = () => {
@@ -68,7 +68,7 @@ const Header = () => {
             {token ? (
               <div className="flex flex-wrap items-center">
                 <div className="relative">
-                  <NotificationsComponent className="relative" />
+                  <Notifications className="relative" />
                 </div>
                 <span className="m-2 text-black">
                   {username?.username ? username?.username : "User"}

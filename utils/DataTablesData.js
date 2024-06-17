@@ -149,11 +149,6 @@ export const Data = [
 
 export const Dummycolumns = [
   {
-    name: "Sr.No.",
-    selector: (row) => row.id,
-    sortable: true,
-  },
-  {
     name: "Project Code",
     selector: (row) => row.project_code,
     sortable: true,

@@ -163,6 +163,33 @@ export const putWithAuth = (url, data) => {
       });
   });
 };
+export const patchWithAuth = (url, data) => {
+  let token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+  // return axios.post(url, data, { headers });
+  return new Promise((resolve, reject) => {
+    axios
+      .patch(url, data, { headers })
+      .then((response) => {
+        if (response && response.data) {
+          resolve({ status: true, data: response.data });
+        }
+      })
+      .catch((ex) => {
+        if (checkForTokenExpiredError(ex)) {
+          const callback = () => putWithAuth(url, data);
+          refreshTokenAndSetAuth(callback).then((data) => {
+            return resolve(data);
+          });
+          return;
+        }
+        resolve({ status: false, message: ex.message, ex });
+      });
+  });
+};
 
 export const getWithAuth = (url) => {
   const token = localStorage.getItem("token");

@@ -63,7 +63,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     selectedManager,
     selectedTl,
   } = useContext(FilterContext);
-  const { isViewNotification } = useContext(NotifiactionContext);
+  const { isViewNotification, notificationProjectList, setIsViewNotification } =
+    useContext(NotifiactionContext);
   const buttonRef = useRef(null);
 
   useEffect(() => {
@@ -151,6 +152,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     selectedManager,
     selectedHod,
     selectedTl,
+    notificationProjectList,
+    setIsViewNotification,
   ]);
 
   const handleClickOutside = (event) => {
@@ -276,7 +279,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           </div>
         </div>
         <div className="relative table">
-          <div className="relative w-2/3">
+          <div className="relative w-full">
             <ProjectStatusTabs className={"absolute top-1 left-60 z-10"} />
           </div>
           {isMultiEdit && (
@@ -384,17 +387,38 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             </div>
           ) : (
             <div className="">
-              {/* <Link to={"/entry-page"}>
-                <Button
-                  name={"Add Project"}
-                  // onClick={AddProjectHandler}
-                  className={`${
-                    darkMode
-                      ? "bg-black text-white border-white"
-                      : "bg-yellow-200 border-black"
-                  } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+              {role.includes("Director") ? (
+                <DataTable
+                  columns={
+                    data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
+                  }
+                  data={data?.length > 0 ? desabledRowData : DummyData}
+                  pagination
+                  customStyles={darkMode ? customStylesDarkMode : customStyles}
+                  onSelectedRowsChange={handleSelectedRowsChange}
+                  enableMultiRowSelection
+                  selectableRowDisabled={(row) => row.desabled}
+                  conditionalRowStyles={conditionalRowStyles}
+                  title={
+                    data?.length > 0
+                      ? "All Project Details"
+                      : "No Project Found"
+                  }
+                  actions={<ExportCSV data={data} />}
                 />
-              </Link> */}
+              ) : (
+                <Link to={"/entry-page"}>
+                  <Button
+                    name={"Add Project"}
+                    // onClick={AddProjectHandler}
+                    className={`${
+                      darkMode
+                        ? "bg-black text-white border-white"
+                        : "bg-yellow-200 border-black"
+                    } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                  />
+                </Link>
+              )}
               <DataTable
                 columns={
                   data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
@@ -409,7 +433,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 title={
                   data?.length > 0 ? "All Project Details" : "No Project Found"
                 }
-                actions={<ExportCSV data={data} />}
+                // actions={<ExportCSV data={data} />}
               />
             </div>
           )}
@@ -454,7 +478,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
           />
         )}
         {isViewNotification && (
-          <div className="absolute top-1/2 left-1/2 w-80 p-2 h-auto">
+          <div className="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 p-2 h-auto">
             <OpenNotification />
           </div>
         )}

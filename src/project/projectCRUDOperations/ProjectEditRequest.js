@@ -44,15 +44,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
     }
   };
 
-  const handleDateFocus = (e) => {
-    const selectedDate = new Date(e.target.value);
-
-    if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
-      e.target.value = "";
-      e.preventDefault();
-      alert("weekend is not selectable");
-    }
-  };
+  const handleDateFocus = (e) => {};
 
   const getMinDate = () => {
     let currentDate = new Date();
@@ -83,13 +75,22 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
   const PostUpdateEditData = async (data) => {
     const response = await postWithAuth(EDITPROJECTREQUEST, data);
     if (response.status == true) {
+      alert("Edit Request Sent Successfully");
       setisEdit(false);
     }
     setNotificationList([...notificationList, response?.data]);
   };
 
   const handleEditUpdate = () => {
-    PostUpdateEditData(updatedValue);
+    console.log(updatedValue.tentative_end_date);
+    const selectedDate = new Date(updatedValue.tentative_end_date);
+    console.log("🚀 ~ handleEditUpdate ~ selectedDate:", selectedDate);
+    if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
+      updatedValue.tentative_end_date = "";
+      alert("weekend is not selectable");
+    } else {
+      PostUpdateEditData(updatedValue);
+    }
   };
 
   return (
@@ -126,7 +127,6 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             Inputvalue={showDate}
             inputChange={handleInputChange}
             min={getMinDate()}
-            InputOnFocus={handleDateFocus}
           />
         </div>
         <div className="w-11/12">

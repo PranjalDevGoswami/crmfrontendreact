@@ -80,6 +80,7 @@ const OpereationButton = ({
       <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
         <div className="w-40 h-54 ">
           {role === "TeamLeadOperation" ||
+          role === "superuser" ||
           (role === "Team Lead" && department == 2) ? (
             <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
               <button
@@ -133,6 +134,14 @@ const OpereationButton = ({
               ) : (
                 ""
               )}
+              {role === "superuser" && (
+                <button
+                  className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+                  onClick={() => handleGetInvoice(record)}
+                >
+                  Get Invoice
+                </button>
+              )}
             </div>
           ) : (
             department == 1 ||
@@ -147,25 +156,25 @@ const OpereationButton = ({
             ))
           )}
         </div>
-        {(role === "AM/Manager" || role === "superuser") && (
-          <div className="">
-            <button
-              className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-              onClick={handleViewProject}
-            >
-              <Link to={"/view"}>View</Link>
-            </button>
-          </div>
-        )}
-        {department == 3 ||
-          (role === "superuser" && (
-            <button
-              className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-              onClick={() => handleGetInvoice(record)}
-            >
-              Get Invoice
-            </button>
+        {role === "AM/Manager" ||
+          (department == 1 && (
+            <div className="">
+              <button
+                className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+                onClick={handleViewProject}
+              >
+                <Link to={"/view"}>View</Link>
+              </button>
+            </div>
           ))}
+        {department == 3 && (
+          <button
+            className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+            onClick={() => handleGetInvoice(record)}
+          >
+            Get Invoice
+          </button>
+        )}
       </div>
     </div>
   );

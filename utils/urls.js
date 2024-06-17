@@ -25,3 +25,5 @@ export const USERSTATUS = BASEURL + "/api/user/user/status/";
 export const EDITPROJECTREQUEST = BASEURL + "/api/project/send-project-email/";
 export const UPDATEDPROJECTLIST =
   BASEURL + "/api/project/project-updated-data/";
+export const PROJECTUPDATEWITHPROJECTCODE =
+  BASEURL + "/api/project/update/with-projectcode/";
