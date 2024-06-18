@@ -12,7 +12,7 @@ const ProjectCount = () => {
     };
     ProjectDetail();
   }, []);
-  const ProjectTotal = project.length;
+  const ProjectTotal = project?.length;
 
   return (
     <div className="w-80 h-48 bg-[#4CBC9A] text-white rounded-md m-2">

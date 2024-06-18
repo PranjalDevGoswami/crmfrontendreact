@@ -47,7 +47,12 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-duration: 1s;
 }
 
-.table .sc-dmXWDj, .table.sc-ePzkNi, .table div {
+.table .sc-dmXWDj {
+  overflow: visible !important;
+}
+
+.table.sc-ePzkNi, .table div {
+  white-space: pre-wrap !important;
   overflow: visible !important;
 }
 

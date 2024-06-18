@@ -74,7 +74,7 @@ const OpereationButton = ({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
-  const DateValidate = today < endDate;
+  const DateValidate = today <= endDate;
   return (
     <div>
       <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
@@ -144,20 +144,23 @@ const OpereationButton = ({
               )}
             </div>
           ) : (
-            department == 1 ||
-            department == 3 ||
-            (role === "Director" && (
+            (department == 1 ||
+              department == 3 ||
+              role === "Director" ||
+              role === "superuser" ||
+              role === "AM/Manager") && (
               <button
                 className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
                 onClick={handleViewProject}
               >
                 <Link to={"/view"}>View</Link>
               </button>
-            ))
+            )
           )}
         </div>
-        {role === "AM/Manager" ||
-          (department == 1 && (
+        {/* {(role === "AM/Manager" || department == 2 || department == 1) &&
+          role !== "superuser" &&
+          role !== "Director" && (
             <div className="">
               <button
                 className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
@@ -166,7 +169,7 @@ const OpereationButton = ({
                 <Link to={"/view"}>View</Link>
               </button>
             </div>
-          ))}
+          )} */}
         {department == 3 && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"

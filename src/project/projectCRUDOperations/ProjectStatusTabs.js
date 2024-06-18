@@ -1,9 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import Button from "../../components/Button";
 import { FilterContext } from "../../ContextApi/FilterContext";
+import { ThemeContext } from "../../ContextApi/ThemeContext";
 const ProjectStatusTabs = ({ className }) => {
   const { activeTabValue, setActiveTabValue, setSelectedStatus } =
     useContext(FilterContext);
+  const { darkMode } = useContext(ThemeContext);
 
   const handleActiveTab = (e) => {
     setActiveTabValue(e.target.value);
@@ -35,7 +37,11 @@ const ProjectStatusTabs = ({ className }) => {
               value={buttonValue[index]}
               className={`${
                 activeTabValue === buttonValue[index] && "bg-green-400"
-              } bg-gray-200 mr-4 p-2 rounded-md `}
+              } ${
+                darkMode
+                  ? "bg-black text-white border-white border"
+                  : "bg-gray-200"
+              }  mr-4 p-2 rounded-md `}
               onClick={handleActiveTab}
             />
           );

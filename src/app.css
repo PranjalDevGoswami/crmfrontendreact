@@ -43,6 +43,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .table div {
   overflow-y: visible !important;
   overflow-x: visible !important;
+      white-space: pre-wrap !important;
   /* z-index: 50; */
 }
 .sc-eywPal{

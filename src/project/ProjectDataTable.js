@@ -293,7 +293,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
               <span className="text-white text-xl">
                 row selected ({selectedRow.length})
               </span>
-              {role.includes("Team Lead") ? (
+              {role?.includes("Team Lead") ? (
                 <Button
                   name={"Add Man Days"}
                   className={
@@ -301,7 +301,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   }
                   onClick={handleAddManDays}
                 />
-              ) : role.includes("AM/Manager") ? (
+              ) : role?.includes("AM/Manager") ? (
                 <Button
                   name={"Assign Project"}
                   className={
@@ -309,7 +309,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   }
                   onClick={handleAssignProject}
                 />
-              ) : role.includes("superuser") ? (
+              ) : role?.includes("superuser") ? (
                 <div>
                   <Button
                     name={"Add Man Days"}
@@ -332,7 +332,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             </div>
           )}
           {department == 2 &&
-          (role.includes("Team Lead") || role.includes("AM/Manager")) ? (
+          (role?.includes("Team Lead") || role?.includes("AM/Manager")) ? (
             <DataTable
               columns={
                 data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
@@ -354,7 +354,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
               department == 2 ||
               department == 3 ||
               department == 4) &&
-            role.includes("superuser") ? (
+            role?.includes("superuser") ? (
             <div className="">
               <Link to={"/entry-page"}>
                 <Button
@@ -387,7 +387,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
             </div>
           ) : (
             <div className="">
-              {role.includes("Director") ? (
+              {role?.includes("Director") ? (
                 <DataTable
                   columns={
                     data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
@@ -407,34 +407,42 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   actions={<ExportCSV data={data} />}
                 />
               ) : (
-                <Link to={"/entry-page"}>
-                  <Button
-                    name={"Add Project"}
-                    // onClick={AddProjectHandler}
-                    className={`${
-                      darkMode
-                        ? "bg-black text-white border-white"
-                        : "bg-yellow-200 border-black"
-                    } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                <div>
+                  <Link to={"/entry-page"}>
+                    <Button
+                      name={"Add Project"}
+                      // onClick={AddProjectHandler}
+                      className={`${
+                        darkMode
+                          ? "bg-black text-white border-white"
+                          : "bg-yellow-200 border-black"
+                      } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                    />
+                  </Link>
+
+                  <DataTable
+                    columns={
+                      data?.length > 0
+                        ? TableColumn({ buttonRef })
+                        : Dummycolumns
+                    }
+                    data={data?.length > 0 ? desabledRowData : DummyData}
+                    pagination
+                    customStyles={
+                      darkMode ? customStylesDarkMode : customStyles
+                    }
+                    onSelectedRowsChange={handleSelectedRowsChange}
+                    enableMultiRowSelection
+                    selectableRowDisabled={(row) => row.desabled}
+                    conditionalRowStyles={conditionalRowStyles}
+                    title={
+                      data?.length > 0
+                        ? "All Project Details"
+                        : "No Project Found"
+                    }
                   />
-                </Link>
+                </div>
               )}
-              <DataTable
-                columns={
-                  data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
-                }
-                data={data?.length > 0 ? desabledRowData : DummyData}
-                pagination
-                customStyles={darkMode ? customStylesDarkMode : customStyles}
-                onSelectedRowsChange={handleSelectedRowsChange}
-                enableMultiRowSelection
-                selectableRowDisabled={(row) => row.desabled}
-                conditionalRowStyles={conditionalRowStyles}
-                title={
-                  data?.length > 0 ? "All Project Details" : "No Project Found"
-                }
-                // actions={<ExportCSV data={data} />}
-              />
             </div>
           )}
 

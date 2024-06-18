@@ -50,6 +50,8 @@ export const TableColumn = ({ buttonRef }) => {
       selector: (row) => row.name,
       sortable: true,
       width: "270px",
+      overflow: "wrap",
+      whiteSpace: "pre-wrap !important",
     },
     {
       name: "Type",
@@ -97,13 +99,13 @@ export const TableColumn = ({ buttonRef }) => {
       name: "T. Man Days",
       selector: (row) => row.man_days,
       sortable: true,
-      width: "100px",
+      width: "70px",
     },
     {
       name: "status",
       selector: (row) => row.status,
       sortable: true,
-      width: "90px",
+      width: "120px",
     },
     {
       name: "Actions",

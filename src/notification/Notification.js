@@ -106,26 +106,34 @@ const Notification = () => {
           className="border bg-gray-200 cursor-pointer text-left absolute top-10 -left-1/2 w-72 p-4 rounded-md"
           ref={notification_btn_ref}
         >
-          <ul>
-            {notificationList.map((item, ind) => {
-              return (
-                <li
-                  key={ind}
-                  className="border-b-black border p-4"
-                  onClick={() => handleViewNotification(item.project_code)}
-                >
-                  <span>Project Code: {item.project_code}</span>
-                  {/* <Button className={""} onClick={""} name={"Accept"} /> */}
-                  {/* <br />
+          {notificationList.length > 0 ? (
+            <ul>
+              {notificationList.map((item, ind) => {
+                return (
+                  <li
+                    key={ind}
+                    className="border-b-black border p-4"
+                    onClick={() => handleViewNotification(item.project_code)}
+                  >
+                    <span>Project Code: {item.project_code}</span>
+                    {/* <Button className={""} onClick={""} name={"Accept"} /> */}
+                    {/* <br />
               <span>Sample Revised: {item.sample}</span>
               <br />
               <span>Date Required: {item.tentative_end_date}</span>
               <br />
               <span>Reason: {item.reason_for_adjustment}</span> */}
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <ul>
+              <li className="border-b-black border p-2">
+                No Notification found
+              </li>
+            </ul>
+          )}
         </div>
       )}
     </div>

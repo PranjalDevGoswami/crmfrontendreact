@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { BiShow } from "react-icons/bi";
 import object7 from "../assets/object7.png";
-import { useNavigate } from "react-router-dom";
 import { PostLoginData } from "../fetchApis/login/PostLoginData";
 import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
@@ -20,21 +19,6 @@ const Login = () => {
     email: "",
     password: "",
   });
-  // const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  // const checkInternetConnection = async () => {
-  //   try {
-  //     const response = await fetch("https://www.unimrkt.com/", {
-  //       method: "HEAD",
-  //       mode: "no-cors",
-  //     });
-  //     setIsOnline(true);
-  //   } catch (error) {
-  //     setIsOnline(false);
-  //     alert("Internet Connection Interrupt");
-  //   }
-  // };
-  // checkInternetConnection();
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -86,11 +70,13 @@ const Login = () => {
       console.error("Error redirecting user:", error);
     }
   };
+
   useEffect(() => {
     if (token !== null) {
       RedirectUser();
     }
   }, [token]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -114,7 +100,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      // console.error("Error logging in:", error);
+      console.error("Error logging in:", error);
     }
   };
 
@@ -139,8 +125,6 @@ const Login = () => {
                   name={"email"}
                   onchange={(e) => handleOnchange(e)}
                 />
-                {/* <FaUserAlt c="absolute top-1/2"/> */}
-                {/* </div> */}
                 <div className="relative w-full">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -175,7 +159,6 @@ const Login = () => {
                     />
                   </Link>
                 </div>
-                {/* <RiLockPasswordFill /> */}
                 <div className="flex justify-center">
                   <Button
                     type={"submit"}
@@ -191,7 +174,6 @@ const Login = () => {
                   alt="fgg"
                   className="absolute top-56 right-8"
                 />
-
                 <div className="flex justify-center">
                   <Link to="/register">
                     <Button

@@ -16,6 +16,7 @@ const SideBar = () => {
   const userRole = userDetails();
   const userEmail = localStorage.getItem("user");
   const department = localStorage.getItem("department");
+  const role = localStorage.getItem("role");
   const [sideBarOpen, setSideBarOpen] = useState(true);
   const { darkMode } = useContext(ThemeContext);
 
@@ -43,12 +44,23 @@ const SideBar = () => {
       link: "/Management-Role",
     },
   ];
-
   const commonItems = [
     { icon: GoProjectRoadmap, label: "Project", link: dashboardLink },
-    { icon: TbReport, label: "Report", link: "/report" },
-    { icon: FaChartLine, label: "Chart", link: dashboardLink },
   ];
+
+  if (role === "Director" || role === "superuser") {
+    commonItems.push(
+      { icon: TbReport, label: "Report", link: "/report" }
+      // { icon: FaChartLine, label: "Chart", link: dashboardLink }
+    );
+  }
+
+  //   const commonItems = [
+  //     { icon: GoProjectRoadmap, label: "Project", link: dashboardLink },
+  // {(role==="Director" ||  role === "superuser")?{ icon: TbReport, label: "Report", link: "/report" }:null}
+
+  //     // { icon: FaChartLine, label: "Chart", link: dashboardLink },
+  //   ];
 
   return (
     <div className="shadow-slate-400 flex">

@@ -291,6 +291,21 @@ export const customStyles = {
   },
 };
 export const customStylesDarkMode = {
+  header: {
+    style: {
+      color: "#fff",
+      backgroundColor: "#000",
+      borderBottom: "1px solid",
+    },
+  },
+  pagination: {
+    style: {
+      color: "#fff",
+      borderColor: "white",
+      backgroundColor: "#000",
+      borderBottom: "1px solid",
+    },
+  },
   rows: {
     style: {
       backgroundColor: "#000", // override the row height
