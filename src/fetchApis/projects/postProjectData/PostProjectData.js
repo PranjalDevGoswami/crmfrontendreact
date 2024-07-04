@@ -1,4 +1,5 @@
 import { PROJECTDATAAPIS } from "../../../../utils/urls.js";
+import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuthForUpload } from "../../../provider/helper/axios.js";
 
 export const PostFormData = async (data) => {
@@ -8,6 +9,10 @@ export const PostFormData = async (data) => {
       body: JSON.stringify(data),
     });
   } catch (error) {
-    alert("An error occurred. Please try again.");
+    SweetAlert({
+      title: "Error",
+      text: "An error occurred. Please try again.",
+      icon: "error",
+    });
   }
 };

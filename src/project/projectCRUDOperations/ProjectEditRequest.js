@@ -7,6 +7,9 @@ import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysDat
 import { postWithAuth } from "../../provider/helper/axios";
 import { EDITPROJECTREQUEST } from "../../../utils/urls";
 import { NotifiactionContext } from "../../ContextApi/NotificationContext";
+import Loader from "../../components/Loader";
+import SweetAlert from "../../components/SweetAlert";
+import { DataTableContext } from "../../ContextApi/DataTableContext";
 
 const SampleEdit = ({ viewRecord, setisEdit }) => {
   const [showDate, setShowDate] = useState();
@@ -17,8 +20,11 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
     sample: "",
     reason_for_adjustment: "",
   });
+  const { isAddManDays, setIsAddManDays } = useContext(DataTableContext);
+
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);
+  const [loader, setLoader] = useState(false);
 
   const handleFilterOption = (name, value) => {
     setUpdatedValue({
@@ -73,26 +79,33 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
   };
 
   const PostUpdateEditData = async (data) => {
+    setLoader(true);
     const response = await postWithAuth(EDITPROJECTREQUEST, data);
     if (response.status == true) {
-      alert("Edit Request Sent Successfully");
+      setLoader(false);
+      SweetAlert({
+        title: "Edit Request Sent Successfully",
+        text: "",
+        icon: "success",
+      });
       setisEdit(false);
     }
     setNotificationList([...notificationList, response?.data]);
   };
 
   const handleEditUpdate = () => {
-    console.log(updatedValue.tentative_end_date);
     const selectedDate = new Date(updatedValue.tentative_end_date);
-    console.log("🚀 ~ handleEditUpdate ~ selectedDate:", selectedDate);
     if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
       updatedValue.tentative_end_date = "";
-      alert("weekend is not selectable");
+      SweetAlert({
+        title: "weekend is not selectable",
+        text: "",
+        icon: "info",
+      });
     } else {
       PostUpdateEditData(updatedValue);
     }
   };
-
   return (
     <div className="absolute h-auto w-1/2 top-2/3 left-1/2 -translate-x-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-y-1/2 z-50">
       <h3 className="text-xl underline pb-4">Project Edit Request</h3>
@@ -100,7 +113,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
         <div className="w-11/12">
           <LableAndInput
             labelName={"Project Code"}
-            Inputvalue={viewRecord.project_code}
+            Inputvalue={viewRecord.project_code.toUpperCase()}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
             labelClassName={"pt-4 pb-2"}
@@ -158,6 +171,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             }
           >
             Update
+            {/* {loader ? <Loader /> : "Update"} */}
           </button>
           <button
             onClick={handleCancelUpdate}
@@ -167,6 +181,9 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
           >
             Cancel
           </button>
+        </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          {loader ? <Loader /> : ""}
         </div>
       </div>
     </div>

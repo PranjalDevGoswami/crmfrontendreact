@@ -3,8 +3,10 @@ import Input from "./InputField";
 import Button from "./Button";
 import { PostClientList } from "../fetchApis/clientList/ClientList";
 import { ThemeContext } from "../ContextApi/ThemeContext";
+import SweetAlert from "./SweetAlert";
+import { CloseAddClient } from "../ContextApi/CloseAddClientContext";
 
-const AddClient = ({ closeAddClient }) => {
+const AddClient = () => {
   const [clientData, setClientData] = useState({
     name: "",
     address: "",
@@ -15,6 +17,7 @@ const AddClient = ({ closeAddClient }) => {
     email: "",
     email_id_for_cc: "",
   });
+  const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,13 +39,25 @@ const AddClient = ({ closeAddClient }) => {
     try {
       const response = await PostClientList(clientData);
       if (response?.status == true) {
-        closeAddClient(false);
-        alert("Client Add Successfully!!");
+        setCloseAddClient(false);
+        SweetAlert({
+          title: "Client Added Successfully!!",
+          text: "",
+          icon: "success",
+        });
       } else {
-        alert(response?.ex?.response?.data?.name);
+        SweetAlert({
+          title: "Error",
+          text: response?.ex?.response?.data?.name || "An error occurred",
+          icon: "error",
+        });
       }
     } catch (error) {
-      console.error("Error fetching project data:", error);
+      SweetAlert({
+        title: "Error",
+        text: "An error occurred while adding the client.",
+        icon: "error",
+      });
     }
     setClientData({
       name: "",
@@ -60,7 +75,7 @@ const AddClient = ({ closeAddClient }) => {
     <div
       className={`${
         darkMode && "bg-black text-white border-white border "
-      } p-8`}
+      } p-8 shadow-lg shadow-slate-600`}
     >
       <h3 className="pt-4 pb-4 underline text-2xl">Add Client Details</h3>
       <div className="flex flex-wrap gap-4">

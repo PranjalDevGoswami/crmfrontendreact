@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Label from "../components/Label.js";
 import Dropdown from "../components/DropDown.js";
 import Button from "../components/Button.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
 import CheckboxList from "../components/Checkbox.js";
 import MultipleFileUpload from "../components/MultipleFileUpload.js";
@@ -15,6 +15,8 @@ import { TiPlus } from "react-icons/ti";
 import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
 import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
+import SweetAlert from "../components/SweetAlert.js";
+import { CloseAddClient } from "../ContextApi/CloseAddClientContext.js";
 
 const Form = () => {
   const [otherCost, setOtherCost] = useState(false);
@@ -58,6 +60,8 @@ const Form = () => {
   });
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
+  const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
+  const token = localStorage.getItem("tokrn");
   const ProjectTypeListData = projectTypeData;
 
   useEffect(() => {
@@ -115,7 +119,11 @@ const Form = () => {
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: Number(value) });
       } else {
-        alert(`'Sample value can't be in decimal'`);
+        SweetAlert({
+          title: "Error",
+          text: `'Sample value can't be in decimal'`,
+          icon: "error",
+        });
       }
     }
     if (name === "transaction_fee") {
@@ -123,7 +131,11 @@ const Form = () => {
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: Number(value) });
       } else {
-        alert(`'Sample value can't be in decimal'`);
+        SweetAlert({
+          title: "Error",
+          text: `'Sample value can't be in decimal'`,
+          icon: "error",
+        });
       }
     }
     if (name === "cpi") {
@@ -131,7 +143,11 @@ const Form = () => {
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
       } else {
-        alert(`'Sample value can't be in decimal'`);
+        SweetAlert({
+          title: "Error",
+          text: `'Sample value can't be in decimal'`,
+          icon: "error",
+        });
       }
     }
     if (name === "sample") {
@@ -139,7 +155,11 @@ const Form = () => {
       if (/^\d*$/.test(value)) {
         setFormData({ ...formData, [name]: value });
       } else {
-        alert(`'Sample value can't be in decimal'`);
+        SweetAlert({
+          title: "Error",
+          text: `'Sample value can't be in decimal'`,
+          icon: "error",
+        });
       }
     }
     if (name === "upload_document") {
@@ -184,22 +204,43 @@ const Form = () => {
     try {
       const response = await PostFormData(data);
       if (response?.status == true) {
-        alert("Project Add Successfully!!");
+        SweetAlert({
+          title: "Project Add Successfully!!",
+          text: "",
+          icon: "success",
+        });
       } else if (
         response?.ex?.response?.data[0] ===
         "Tentative end date cannot be in the past."
       ) {
-        alert(response?.ex?.response?.data[0]);
+        SweetAlert({
+          title: "Error",
+          text: response?.ex?.response?.data[0] || "An error occurred",
+          icon: "error",
+        });
       } else if (
         response?.ex?.response?.data?.upload_document[0] ===
         "The submitted data was not a file. Check the encoding type on the form."
       ) {
-        alert("File Formate Not supported");
+        SweetAlert({
+          title: "Error",
+          text: "File Formate Not supported",
+          icon: "error",
+        });
       } else {
-        alert("Something went wrong!!");
+        SweetAlert({
+          title: "Error",
+          text: "something went wrong",
+          icon: "error",
+        });
       }
     } catch (error) {
-      console.error("Error fetching project data:", error);
+      SweetAlert({
+        title: "Error",
+        text: "Error fetching project data:",
+        error,
+        icon: "error",
+      });
     }
   };
 
@@ -223,7 +264,7 @@ const Form = () => {
       } catch (error) {}
     };
     fetchDataFromApi();
-  }, []);
+  }, [closeAddClient, token]);
 
   const OpenOtherFee = (e) => {
     e.preventDefault();
@@ -259,10 +300,14 @@ const Form = () => {
 
   const Amlist = ["Manager 1", "Manager2", "1"];
   return (
-    <div className={`${darkMode ? "bg-black text-white" : ""} "relative"`}>
+    <div
+      className={`${
+        darkMode ? "bg-black text-white" : "bg-white text-black"
+      } relative rounded-md shadow-lg shadow-slate-600`}
+    >
       <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={() => handleSubmit(formData)}
         className="lg:p-2 lg:pl-8 lg:pr-4 pr-8"
         encType="multipart/form-data"
       >
@@ -472,7 +517,7 @@ const Form = () => {
             onCheckboxChange={handleCheckboxChange}
           />
         </div>
-        <div className="flex justify-around pt-4 pb-2 md:w-4/12 w-6/12">
+        <div className="flex justify-around pt-4 pb-2 md:w-4/12 w-6/12 text-center">
           <Button
             className={`bg-green-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold ${
               isFormValid() ? "" : "opacity-50 cursor-not-allowed"
@@ -480,10 +525,12 @@ const Form = () => {
             name={"Submit"}
             onClick={() => handleSubmit(formData)}
           />
-          <Button
+          <Link
+            to={"/sales-dashboard"}
             className="bg-red-500 p-4 mt-8 md:w-1/2 w-full text-white font-bold"
-            name={"Cancel"}
-          />
+          >
+            <Button className="" name={"Cancel"} />
+          </Link>
         </div>
       </form>
     </div>

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import DataTable from "react-data-table-component";
 import {
   conditionalRowStyles,
   customStylesFormanDaysDetails,
+  customStylesFormanDaysDetailsDarkMode,
 } from "../../../utils/DataTablesData";
+import { ThemeContext } from "../../ContextApi/ThemeContext";
 
 const ManDaysDetails = ({ perDayDetailsData }) => {
   if (!Array.isArray(perDayDetailsData)) {
@@ -13,6 +15,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(); // Adjust locale and formatting options as needed
   };
+  const { darkMode } = useContext(ThemeContext);
 
   const columns = [
     {
@@ -44,11 +47,19 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
   }));
 
   return (
-    <div className="p-2 mt-2">
+    <div
+      className={`${
+        darkMode ? "w-full bg-black text-white" : "bg-white"
+      } w-full p-2 mt-2 `}
+    >
       <DataTable
         columns={columns}
         data={data}
-        customStyles={customStylesFormanDaysDetails}
+        customStyles={
+          darkMode
+            ? customStylesFormanDaysDetailsDarkMode
+            : customStylesFormanDaysDetails
+        }
         conditionalRowStyles={conditionalRowStyles}
         pagination
       />

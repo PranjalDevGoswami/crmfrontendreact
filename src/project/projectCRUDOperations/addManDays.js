@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import DataTable from "react-data-table-component";
 import { customStyles, editedColumns } from "../../../utils/DataTablesData";
@@ -6,12 +6,13 @@ import Dropdown from "../../components/DropDown";
 import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 import Label from "../../components/Label.js";
 import DateComponent from "../../components/DateComponent.js";
+import SweetAlert from "../../components/SweetAlert.js";
+import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 
-export function AddManDays({
-  selectedRow,
-  setIsDrawerOpen,
-  setMultiEditFieldOpen,
-}) {
+export function AddManDays({ setMultiEditFieldOpen }) {
+  const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit } =
+    useContext(DataTableContext);
+
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [mandaysData, setMandaysData] = useState(
@@ -23,14 +24,6 @@ export function AddManDays({
     }))
   );
   const [editIndex, setEditIndex] = useState(null);
-
-  // const handleMandaysData = (index, e) => {
-  //   const sampleSize = selectedEditData.map((item) => item.sample);
-  //   const { name, value } = e.target;
-  //   const updatedMandaysData = [...mandaysData];
-  //   updatedMandaysData[index] = { ...updatedMandaysData[index], [name]: value };
-  //   setMandaysData(updatedMandaysData);
-  // };
 
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
@@ -62,17 +55,6 @@ export function AddManDays({
       ...item,
       date: isoDate,
     }));
-    setMandaysData(updatedMandaysData);
-  };
-
-  const resetRowData = (index) => {
-    const updatedMandaysData = [...mandaysData];
-    updatedMandaysData[index] = {
-      man_days: "",
-      total_achievement: "",
-      status: "",
-      date: "",
-    };
     setMandaysData(updatedMandaysData);
   };
 
@@ -128,10 +110,12 @@ export function AddManDays({
     },
   ];
 
-  const openDrawerRight = () => setOpenRight(true);
+  // const openDrawerRight = () => setOpenRight(true);
   const closeDrawerRight = () => {
     document.body.classList.remove("DrawerBody");
     setIsDrawerOpen(false);
+    setSelectedRow([]);
+    setIsMultiEdit(false);
     setMultiEditFieldOpen(false);
     setOpenRight(false);
   };
@@ -167,7 +151,11 @@ export function AddManDays({
 
   const HandleAddManDays = () => {
     if (DataToSend?.length === 0) {
-      alert("Please fill in data for at least one project before updating.");
+      SweetAlert({
+        title: "Error",
+        text: "Please fill in data for at least one project before updating.",
+        icon: "info",
+      });
       return;
     }
     const updatedMandaysData = [...mandaysData];
@@ -186,13 +174,25 @@ export function AddManDays({
     try {
       const response = await PostMandaysData(data);
       if (response?.status == true) {
-        alert("Operation Perform Sucessfully");
+        SweetAlert({
+          title: "Operation Perform Sucessfully",
+          text: "",
+          icon: "success",
+        });
         closeDrawerRight();
       } else if (response?.status == false) {
         if (response?.ex?.response?.data[0]) {
-          alert("please select date from calender");
+          SweetAlert({
+            title: "Error",
+            text: "please select date from calender",
+            icon: "info",
+          });
         } else {
-          alert(response?.ex?.response?.data?.error);
+          SweetAlert({
+            title: "Error",
+            text: response?.ex?.response?.data?.error,
+            icon: "info",
+          });
         }
       }
     } catch (error) {

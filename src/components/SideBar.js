@@ -54,14 +54,6 @@ const SideBar = () => {
       // { icon: FaChartLine, label: "Chart", link: dashboardLink }
     );
   }
-
-  //   const commonItems = [
-  //     { icon: GoProjectRoadmap, label: "Project", link: dashboardLink },
-  // {(role==="Director" ||  role === "superuser")?{ icon: TbReport, label: "Report", link: "/report" }:null}
-
-  //     // { icon: FaChartLine, label: "Chart", link: dashboardLink },
-  //   ];
-
   return (
     <div className="shadow-slate-400 flex">
       <div className="bg-white"></div>

@@ -1,3 +1,5 @@
+// export const BASEURL = "https://crmapi.unimrkt.com"; //live server
+// export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
 export const BASEURL = "http://127.0.0.1:8000";
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
 export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";

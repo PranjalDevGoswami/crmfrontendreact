@@ -3,6 +3,7 @@ import Input from "../components/InputField";
 import Button from "../components/Button";
 import { CONFIRM_PASSWORD } from "../../utils/urls";
 import { useNavigate, useLocation } from "react-router-dom";
+import SweetAlert from "../components/SweetAlert";
 
 const ResetPassword = () => {
   const location = useLocation();
@@ -34,19 +35,30 @@ const ResetPassword = () => {
     });
     let message = await response.json();
     if (message?.msg) {
-      alert(message?.msg);
+      SweetAlert({
+        title: message?.msg,
+        text: "",
+        icon: "success",
+      });
       navigate("/login");
     } else if (
       message?.non_field_errors[0] === "Token is not valid or expired"
     ) {
-      alert(
-        "The password reset link you used has expired.\n" +
-          "Please request a new password reset link."
-      );
+      SweetAlert({
+        title: "Info",
+        text:
+          "The password reset link you used has expired.\n" +
+          "Please request a new password reset link.",
+        icon: "info",
+      });
     } else if (
       message?.non_field_errors[0] === "Password length must be 8 characters."
     ) {
-      alert("Password length must be 8 characters.");
+      SweetAlert({
+        title: "info",
+        text: "Password length must be 8 characters.",
+        icon: "info",
+      });
     }
   };
 
@@ -57,7 +69,11 @@ const ResetPassword = () => {
 
   const validatePasswords = () => {
     if (password.password !== password.password2) {
-      alert("Passwords do not match");
+      SweetAlert({
+        title: "error",
+        text: "Passwords do not match",
+        icon: "error",
+      });
       return false;
     }
     return true;

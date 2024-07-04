@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { DEPARTMENTSAPIS, REGISTER } from "../../utils/urls";
+import SweetAlert from "../components/SweetAlert";
 
 const SignUp = () => {
   const [departmentId, setDepartmentId] = useState([]);
@@ -35,7 +36,11 @@ const SignUp = () => {
   const handleregisterDataSubmit = async (e) => {
     e.preventDefault();
     if (!registerData.username.trim()) {
-      alert("Username cannot be empty");
+      SweetAlert({
+        title: "Username cannot be empty",
+        text: "",
+        icon: "info",
+      });
       return;
     }
 
@@ -49,19 +54,39 @@ const SignUp = () => {
         body: JSON.stringify(registerData),
       });
       if (response.ok) {
-        alert("Registration Successful !!");
+        SweetAlert({
+          title: "Success",
+          text: "Registration Successful !!",
+          icon: "info",
+        });
         navigate("/login");
       } else {
         const errorData = await response.json();
         console.error("Registration failed:", errorData);
         if (errorData.email) {
-          alert(errorData.email);
+          SweetAlert({
+            title: "Error",
+            text: errorData.email,
+            icon: "error",
+          });
         } else if (errorData.password) {
-          alert("password :" + errorData.password);
+          SweetAlert({
+            title: "Error",
+            text: "password :" + errorData.password,
+            icon: "error",
+          });
         } else if (errorData.confirm_password) {
-          alert("confirm password :" + errorData.confirm_password);
+          SweetAlert({
+            title: "Error",
+            text: "confirm password :" + errorData.confirm_password,
+            icon: "error",
+          });
         } else if (errorData.non_field_errors) {
-          alert(errorData.non_field_errors[0]);
+          SweetAlert({
+            title: "Error",
+            text: errorData.non_field_errors[0],
+            icon: "error",
+          });
         }
       }
     } catch (error) {}
@@ -91,7 +116,11 @@ const SignUp = () => {
       if (name === "phone") {
         if (registerData.password !== registerData.confirm_password) {
           // Password and confirm password do not match
-          alert("Password and confirm password do not match");
+          SweetAlert({
+            title: "Error",
+            text: "Password and confirm password do not match",
+            icon: "error",
+          });
           return;
         }
       }

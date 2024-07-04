@@ -193,6 +193,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import axios from "axios";
 import { USERLIST } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios";
+import SweetAlert from "../components/SweetAlert";
 const ManagementPanel = () => {
   const [userList, setUserList] = useState([]);
   const [columns, setColumns] = useState({
@@ -262,9 +263,18 @@ const ManagementPanel = () => {
         { roles },
         { headers: { Authorization: "Bearer YOUR_TOKEN" } }
       );
-      alert("Roles updated successfully!");
+      SweetAlert({
+        title: "Roles updated successfully!",
+        text: "",
+        icon: "success",
+      });
     } catch (error) {
-      console.error("Error updating roles:", error);
+      SweetAlert({
+        title: "Error",
+        text: "Error updating roles:",
+        error,
+        icon: "error",
+      });
     }
   };
 

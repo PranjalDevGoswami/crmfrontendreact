@@ -1,18 +1,24 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysManWork";
 import ManDaysDetails from "./ManDaysDetails";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { getWithAuth } from "../../provider/helper/axios";
 import { PROJECTDATAAPIS } from "../../../utils/urls.js";
+import { DataTableContext } from "../../ContextApi/DataTableContext.js";
+import { ThemeContext } from "../../ContextApi/ThemeContext.js";
+import SweetAlert from "../../components/SweetAlert.js";
 
-const View = ({ viewRecord, closeView, setisView }) => {
+const View = () => {
   const [isManDaysDetails, setIsManDaysDetails] = useState(false);
   const [perDayDetailsData, setPerDayDetailsData] = useState([]);
   const [currentProjectDetails, setCurrentProjectDetails] = useState(null);
   const location = useLocation();
   const { state: data } = location;
   const navigate = useNavigate();
+  const { darkMode } = useContext(ThemeContext);
+
+  const { closeView, setCloseView, setisView } = useContext(DataTableContext);
 
   const handleViewDetails = async (projectCode) => {
     const response = await ManWorkPerDays({ project_code: projectCode });
@@ -20,7 +26,11 @@ const View = ({ viewRecord, closeView, setisView }) => {
       setIsManDaysDetails(true);
       setPerDayDetailsData(response.data);
     } else {
-      alert("Data not found!!");
+      SweetAlert({
+        title: "Data not found!!",
+        text: "",
+        icon: "info",
+      });
     }
   };
 
@@ -44,10 +54,24 @@ const View = ({ viewRecord, closeView, setisView }) => {
   }, [data]);
 
   const renderListItem = (label, value, index, hasDetails = false) => (
+    // <li
+    //   key={label}
+    //   className={`border p-1 flex items-center text-xl justify-between w-1/2 ${
+    //     index % 2 === 0
+    //       ? index % 4 === 0
+    //         ? "bg-white"
+    //         : "bg-gray-100"
+    //       : index % 4 === 1
+    //       ? "bg-gray-100"
+    //       : "bg-white"
+    //   } ${darkMode ? "bg-black text-white border-b border-black" : ""}`}
+    // >
     <li
       key={label}
       className={`border p-1 flex items-center text-xl justify-between w-1/2 ${
-        index % 2 === 0
+        darkMode
+          ? "bg-black text-white border-b border-white"
+          : index % 2 === 0
           ? index % 4 === 0
             ? "bg-white"
             : "bg-gray-100"
@@ -75,12 +99,20 @@ const View = ({ viewRecord, closeView, setisView }) => {
   );
 
   return (
-    <div className="w-full bg-white p-8 mt-16">
+    <div
+      className={`${
+        darkMode ? "w-full bg-black text-white" : "bg-white"
+      } w-full p-8 mt-16 `}
+    >
       <div className="flex items-center justify-between">
         <h3 className="text-3xl p-4 underline pl-0 mb-4">Project View</h3>
         <button
           className="bg-gray-300 p-4 pt-2 pb-2"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            navigate(-1);
+            setCloseView(false);
+            setisView(false);
+          }}
         >
           <FaLongArrowAltLeft className="text-3xl" />
         </button>
@@ -90,7 +122,7 @@ const View = ({ viewRecord, closeView, setisView }) => {
           {[
             {
               label: "Project Code",
-              value: currentProjectDetails.project_code,
+              value: currentProjectDetails.project_code.toUpperCase(),
             },
             { label: "Project Name", value: currentProjectDetails.name },
             {
@@ -167,14 +199,22 @@ const View = ({ viewRecord, closeView, setisView }) => {
         </ul>
       )}
       {isManDaysDetails && (
-        <div className="absolute top-1/2 left-1/2 bg-gray-300 border mt-16 pl-2 pr-2 w-6/12 h-auto min-h-48 translate-x-[-50%] translate-y-[-50%]">
-          <h3 className="text-xl mt-4 pl-2">
+        <div
+          className={`${
+            darkMode ? "bg-black text-white" : "bg-gray-300"
+          } absolute top-1/2 left-1/2 border mt-16 pl-2 pr-2 w-6/12 h-auto min-h-48 translate-x-[-50%] translate-y-[-50%] `}
+        >
+          <h3
+            className={`${
+              darkMode ? "bg-black text-white" : "bg-white"
+            } text-xl mt-4 p-2 `}
+          >
             Day wise Detail View of achieving Target and Men-days utilization
             for Targeted Sample Size:
             <span className="font-bold">{' "' + data.sample + '" '}</span>
           </h3>
           <ManDaysDetails perDayDetailsData={perDayDetailsData} />
-          <div className="absolute top-0 right-0 p-0 m-0 rounded w-8 h-8 flex items-center justify-center text-xl">
+          <div className="absolute top-3 right-1 p-0 m-0 rounded w-8 h-8 flex items-center justify-center text-xl">
             <button onClick={handleCloseManDaysDetails}>X</button>
           </div>
         </div>

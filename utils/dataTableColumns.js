@@ -49,7 +49,7 @@ export const TableColumn = ({ buttonRef }) => {
       name: "Project Name",
       selector: (row) => row.name,
       sortable: true,
-      width: "270px",
+      width: "235px",
       overflow: "wrap",
       whiteSpace: "pre-wrap !important",
     },
@@ -99,13 +99,55 @@ export const TableColumn = ({ buttonRef }) => {
       name: "T. Man Days",
       selector: (row) => row.man_days,
       sortable: true,
-      width: "70px",
+      width: "110px",
     },
     {
       name: "status",
       selector: (row) => row.status,
       sortable: true,
-      width: "120px",
+      width: "125px",
+      conditionalCellStyles: [
+        {
+          when: (row) => row.status === "completed",
+          style: {
+            backgroundColor: "rgba(63, 195, 128, 0.9)",
+            color: "white",
+            "&:hover": {
+              cursor: "pointer",
+            },
+          },
+        },
+        {
+          when: (row) => row.status === "cbr_raised",
+          style: {
+            backgroundColor: "rgb(128,128,128,1)",
+            color: "white",
+            "&:hover": {
+              cursor: "pointer",
+            },
+          },
+        },
+        {
+          when: (row) => row.status === "undefined",
+          style: {
+            backgroundColor: "rgba(248, 148, 6, 0.9)",
+            color: "white",
+            "&:hover": {
+              cursor: "pointer",
+            },
+          },
+        },
+        {
+          when: (row) => row.status === null,
+          style: {
+            backgroundColor: "rgba(242, 38, 19, 0.9)",
+            color: "white",
+            "&:hover": {
+              cursor: "not-allowed",
+            },
+          },
+        },
+      ],
     },
     {
       name: "Actions",

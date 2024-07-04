@@ -5,7 +5,6 @@ import Button from "../components/Button";
 import {
   DummyData,
   Dummycolumns,
-  conditionalRowStyles,
   customStyles,
   customStylesDarkMode,
 } from "../../utils/DataTablesData";
@@ -24,25 +23,27 @@ import ProjectStatusTabs from "./projectCRUDOperations/ProjectStatusTabs.js";
 import { Link } from "react-router-dom";
 import OpenNotification from "../notification/OpenNotificationDetails.js";
 import { NotifiactionContext } from "../ContextApi/NotificationContext.js";
+import Shimmer from "../components/Shimmer.js";
+import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual.js";
+import { FetchProject } from "../ContextApi/FetchProjectContext.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
-  const [isMultiEdit, setIsMultiEdit] = useState(false);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState([]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [closeView, setCloseView] = useState(false);
+  // const [selectedRow, setSelectedRow] = useState([]);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [teamLeadAssiged, setTeamLeadAssiged] = useState();
   const [drawerContent, setDrawerContent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const dropdownRef = useRef(null);
+  const [projectData, setProjectData] = useState([]);
+  const [teamLeadAssigned, setTeamLeadAssigned] = useState([]);
 
   let token = localStorage.getItem("token");
   let role = localStorage.getItem("role");
   let department = localStorage.getItem("department");
   let user_id = localStorage.getItem("user_id");
 
-  const { darkMode } = useContext(ThemeContext);
   const {
     setIsStatus,
     isEdit,
@@ -53,8 +54,17 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setOpenDropdownIndex,
     setIsViewOptionOpen,
     isStatus,
+    closeView,
+    isAddManDays,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isMultiEdit,
+    setIsMultiEdit,
+    selectedRow,
+    setSelectedRow,
   } = useContext(DataTableContext);
 
+  const { darkMode } = useContext(ThemeContext);
   const {
     selectedStatus,
     selectedClient,
@@ -65,95 +75,219 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   } = useContext(FilterContext);
   const { isViewNotification, notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
+  const { projectList } = useContext(FetchProject);
   const buttonRef = useRef(null);
 
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        // Filter based on selected status and client
-        let filteredData = projectDataObject;
-        if (selectedStatus && selectedStatus !== "--Select Status--") {
-          filteredData = filteredData.filter(
-            (item) => item.status == selectedStatus
-          );
-        }
-        if (selectedHod && selectedHod !== "--Select HOD--") {
-          filteredData = filteredData.filter(
-            (item) => item?.project_hod?.name == selectedHod
-          );
-        }
-        if (selectedManager && selectedManager !== "--Select Manager--") {
-          filteredData = filteredData.filter(
-            (item) => item?.project_manager?.name == selectedManager
-          );
-        }
-        if (selectedTl && selectedTl !== "--Select TeamLead--") {
-          filteredData = filteredData.filter(
-            (item) => item?.project_teamlead?.name == selectedTl
-          );
-        }
-        if (selectedClient && selectedClient !== "--Select Client--") {
-          filteredData = filteredData.filter(
-            (item) => item.clients.name === selectedClient
-          );
-        }
-        if (role === "Team Lead") {
-          filteredData = filteredData?.filter((item) => {
-            return item?.project_teamlead?.id == user_id;
-          });
-        }
-        if (role === "AM/Manager") {
-          filteredData = filteredData?.filter((item) => {
-            return item?.project_manager?.id == user_id;
-          });
-        }
-        if (role === "HOD") {
-          filteredData = filteredData?.filter((item) => {
-            return item?.project_hod?.id == user_id;
-          });
-        }
-        if (role === "superuser") {
-          filteredData = filteredData?.filter((item) => {
-            return item;
-          });
-        }
-        if (department == 1) {
-          filteredData = projectDataObject?.filter((item) => {
-            return item.user_id == user_id;
-          });
-          if (selectedStatus && selectedStatus !== "--Select Status--") {
-            filteredData = filteredData.filter(
-              (item) => item.status == selectedStatus
-            );
-          }
-          if (selectedClient && selectedClient !== "--Select Client--") {
-            filteredData = filteredData.filter(
-              (item) => item.clients.name === selectedClient
-            );
-          }
-        }
+  // useEffect(() => {
+  //   const fetchProjectData = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const fetchDataFromApi2 = await GetProjectData();
+  //       const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
+  //         return val;
+  //       });
+  //       // Filter based on selected status and client
+  //       let filteredData = projectDataObject;
+  //       if (
+  //         selectedStatus &&
+  //         selectedStatus !== "--Select Status--" &&
+  //         selectedStatus !== "all"
+  //       ) {
+  //         filteredData = filteredData.filter(
+  //           (item) => item.status == selectedStatus
+  //         );
+  //       } else {
+  //         filteredData = projectDataObject;
+  //       }
+  //       if (selectedHod && selectedHod !== "--Select HOD--") {
+  //         filteredData = filteredData.filter(
+  //           (item) => item?.project_hod?.name == selectedHod
+  //         );
+  //       }
+  //       if (selectedManager && selectedManager !== "--Select Manager--") {
+  //         filteredData = filteredData.filter(
+  //           (item) => item?.project_manager?.name == selectedManager
+  //         );
+  //       }
+  //       if (selectedTl && selectedTl !== "--Select TeamLead--") {
+  //         filteredData = filteredData.filter(
+  //           (item) => item?.project_teamlead?.name == selectedTl
+  //         );
+  //       }
+  //       if (selectedClient && selectedClient !== "--Select Client--") {
+  //         filteredData = filteredData.filter(
+  //           (item) => item.clients.name === selectedClient
+  //         );
+  //       }
+  //       if (role === "Team Lead") {
+  //         filteredData = filteredData?.filter((item) => {
+  //           return item?.project_teamlead?.id == user_id;
+  //         });
+  //       }
+  //       if (role === "AM/Manager") {
+  //         filteredData = filteredData?.filter((item) => {
+  //           return item?.project_manager?.id == user_id;
+  //         });
+  //       }
+  //       if (role === "HOD") {
+  //         filteredData = filteredData?.filter((item) => {
+  //           return item?.project_hod?.id == user_id;
+  //         });
+  //       }
+  //       if (role === "superuser") {
+  //         filteredData = filteredData?.filter((item) => {
+  //           return item;
+  //         });
+  //       }
+  //       if (department == 1) {
+  //         filteredData = projectDataObject?.filter((item) => {
+  //           return item.user_id == user_id;
+  //         });
+  //         if (
+  //           selectedStatus &&
+  //           selectedStatus !== "--Select Status--" &&
+  //           selectedStatus !== "all"
+  //         ) {
+  //           filteredData = filteredData.filter(
+  //             (item) => item.status == selectedStatus
+  //           );
+  //         } else {
+  //           filteredData = projectDataObject;
+  //         }
+  //         if (selectedClient && selectedClient !== "--Select Client--") {
+  //           filteredData = filteredData.filter(
+  //             (item) => item.clients.name === selectedClient
+  //           );
+  //         }
+  //       }
+  //       setTeamLeadAssiged(filteredData);
+  //       setFilteredProjectData(filteredData);
+  //       setIsLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching project data:", error);
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchProjectData();
+  // }, [
+  //   token,
+  //   isDrawerOpen,
+  //   selectedStatus,
+  //   selectedClient,
+  //   selectedManager,
+  //   selectedHod,
+  //   selectedTl,
+  //   notificationProjectList,
+  //   setIsViewNotification,
+  // ]);
 
-        setTeamLeadAssiged(filteredData);
-        setFilteredProjectData(filteredData);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
+  useEffect(() => {
+    if (!isDrawerOpen && !isAddManDays && !isStatus) {
+      const fetchProjectData = async () => {
+        setIsLoading(true);
+        try {
+          const fetchDataFromApi2 = await GetProjectData();
+          const projectDataObject = fetchDataFromApi2?.data?.map((val) => val);
+          setProjectData(projectDataObject);
+          setIsLoading(false);
+        } catch (error) {
+          console.error("Error fetching project data:", error);
+          setIsLoading(false);
+        }
+      };
+      fetchProjectData();
+    }
   }, [
     token,
+    isAddManDays,
+    isStatus,
+    notificationProjectList,
     isDrawerOpen,
+    setIsViewNotification,
+  ]);
+
+  useEffect(() => {
+    let filteredData = projectData;
+
+    if (
+      selectedStatus &&
+      selectedStatus !== "--Select Status--" &&
+      selectedStatus !== "all"
+    ) {
+      filteredData = filteredData.filter(
+        (item) => item.status === selectedStatus
+      );
+    }
+
+    if (selectedHod && selectedHod !== "--Select HOD--") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_hod?.name === selectedHod
+      );
+    }
+
+    if (selectedManager && selectedManager !== "--Select Manager--") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_manager?.name === selectedManager
+      );
+    }
+
+    if (selectedTl && selectedTl !== "--Select TeamLead--") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_teamlead?.name === selectedTl
+      );
+    }
+
+    if (selectedClient && selectedClient !== "--Select Client--") {
+      filteredData = filteredData.filter(
+        (item) => item.clients.name === selectedClient
+      );
+    }
+
+    // Additional checks based on the role
+    if (role === "Team Lead") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_teamlead?.id == user_id
+      );
+    } else if (role === "AM/Manager") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_manager?.id == user_id
+      );
+    } else if (role === "HOD") {
+      filteredData = filteredData.filter(
+        (item) => item?.project_hod?.id == user_id
+      );
+    } else if (role === "superuser") {
+      filteredData = projectData;
+    }
+
+    if (department == 1) {
+      filteredData = projectData.filter((item) => item.user_id == user_id);
+      if (
+        selectedStatus &&
+        selectedStatus !== "--Select Status--" &&
+        selectedStatus !== "all"
+      ) {
+        filteredData = filteredData.filter(
+          (item) => item.status === selectedStatus
+        );
+      }
+
+      if (selectedClient && selectedClient !== "--Select Client--") {
+        filteredData = filteredData.filter(
+          (item) => item.clients.name === selectedClient
+        );
+      }
+    }
+    setTeamLeadAssigned(filteredData);
+    setFilteredProjectData(filteredData);
+  }, [
     selectedStatus,
     selectedClient,
     selectedManager,
     selectedHod,
     selectedTl,
-    notificationProjectList,
-    setIsViewNotification,
+    token,
+    projectData,
   ]);
 
   const handleClickOutside = (event) => {
@@ -267,159 +401,97 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   });
 
   return (
-    <div className="p-4">
-      <div
-        className={`${
-          isDrawerOpen ? "opacity-30 relative overflow-hidden" : "opacity-100"
-        }"`}
-      >
-        <div className="flex lg:justify-end justify-start mb-4 lg:w-full w-full">
-          <div className="flex items-center">
-            <FilterProject />
-          </div>
-        </div>
-        <div className="relative table">
-          <div className="relative w-full">
-            <ProjectStatusTabs className={"absolute top-1 left-60 z-10"} />
-          </div>
-          {isMultiEdit && (
-            <div
-              className={`${
-                isMultiEdit
-                  ? "AddManDaysAnimation  opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-0.3rem] w-full p-2"
-                  : " opacity-0"
-              } z-auto`}
-            >
-              <span className="text-white text-xl">
-                row selected ({selectedRow.length})
-              </span>
-              {role?.includes("Team Lead") ? (
-                <Button
-                  name={"Add Man Days"}
-                  className={
-                    "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
-                  }
-                  onClick={handleAddManDays}
-                />
-              ) : role?.includes("AM/Manager") ? (
-                <Button
-                  name={"Assign Project"}
-                  className={
-                    "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
-                  }
-                  onClick={handleAssignProject}
-                />
-              ) : role?.includes("superuser") ? (
-                <div>
-                  <Button
-                    name={"Add Man Days"}
-                    className={
-                      "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
-                    }
-                    onClick={handleAddManDays}
-                  />
-                  <Button
-                    name={"Assign Project"}
-                    className={
-                      "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
-                    }
-                    onClick={handleAssignProject}
-                  />
+    <div
+      className={`${
+        darkMode ? "bg-black border-white border" : "bg-white"
+      } p-4  rounded-md mt-8 shadow-lg`}
+    >
+      {isLoading ? (
+        <Shimmer />
+      ) : (
+        <div>
+          <div
+            className={`${
+              isDrawerOpen
+                ? "opacity-30 relative overflow-hidden"
+                : "opacity-100"
+            }`}
+          >
+            <div className="flex lg:justify-end justify-start mb-4 lg:w-full w-full">
+              <div className="w-full">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl">
+                      {data?.length > 0
+                        ? "All Project Details"
+                        : "No Project Found"}
+                    </h2>
+                  </div>
+                  <div>
+                    <FilterProject />
+                  </div>
                 </div>
-              ) : (
-                ""
-              )}
+              </div>
             </div>
-          )}
-          {department == 2 &&
-          (role?.includes("Team Lead") || role?.includes("AM/Manager")) ? (
-            <DataTable
-              columns={
-                data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
-              }
-              data={data?.length > 0 ? desabledRowData : DummyData}
-              pagination
-              customStyles={darkMode ? customStylesDarkMode : customStyles}
-              selectableRows
-              onSelectedRowsChange={handleSelectedRowsChange}
-              enableMultiRowSelection
-              selectableRowDisabled={(row) => row.desabled}
-              conditionalRowStyles={conditionalRowStyles}
-              title={
-                data?.length > 0 ? "All Project Details" : "No Project Found"
-              }
-              actions={<ExportCSV data={data} />}
-            />
-          ) : (department == 1 ||
-              department == 2 ||
-              department == 3 ||
-              department == 4) &&
-            role?.includes("superuser") ? (
-            <div className="">
-              <Link to={"/entry-page"}>
-                <Button
-                  name={"Add Project"}
-                  // onClick={AddProjectHandler}
+            <div className="relative table !overflow-x-scroll">
+              <div className="relative w-full">
+                <ProjectStatusTabs
+                  className={"absolute top-[10px] left-0 z-10"}
+                />
+              </div>
+              {isMultiEdit && (
+                <div
                   className={`${
-                    darkMode
-                      ? "bg-black text-white border-white"
-                      : "bg-yellow-200 border-black"
-                  } border rounded-lg p-2 absolute right-28 top-2 z-10`}
-                />
-              </Link>
-              <DataTable
-                columns={
-                  data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
-                }
-                data={data?.length > 0 ? desabledRowData : DummyData}
-                pagination
-                selectableRows
-                customStyles={darkMode ? customStylesDarkMode : customStyles}
-                onSelectedRowsChange={handleSelectedRowsChange}
-                enableMultiRowSelection
-                selectableRowDisabled={(row) => row.desabled}
-                conditionalRowStyles={conditionalRowStyles}
-                title={
-                  data?.length > 0 ? "All Project Details" : "No Project Found"
-                }
-                actions={<ExportCSV data={data} />}
-              />
-            </div>
-          ) : (
-            <div className="">
-              {role?.includes("Director") ? (
-                <DataTable
-                  columns={
-                    data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns
-                  }
-                  data={data?.length > 0 ? desabledRowData : DummyData}
-                  pagination
-                  customStyles={darkMode ? customStylesDarkMode : customStyles}
-                  onSelectedRowsChange={handleSelectedRowsChange}
-                  enableMultiRowSelection
-                  selectableRowDisabled={(row) => row.desabled}
-                  conditionalRowStyles={conditionalRowStyles}
-                  title={
-                    data?.length > 0
-                      ? "All Project Details"
-                      : "No Project Found"
-                  }
-                  actions={<ExportCSV data={data} />}
-                />
-              ) : (
-                <div>
-                  <Link to={"/entry-page"}>
+                    isMultiEdit
+                      ? "AddManDaysAnimation  opacity-100 flex items-center justify-left bg-[#bd1d1d] border absolute right-0 top-[-0.3rem] w-full p-2"
+                      : " opacity-0"
+                  } z-auto`}
+                >
+                  <span className="text-white text-xl">
+                    row selected ({selectedRow.length})
+                  </span>
+                  {role?.includes("Team Lead") ? (
                     <Button
-                      name={"Add Project"}
-                      // onClick={AddProjectHandler}
-                      className={`${
-                        darkMode
-                          ? "bg-black text-white border-white"
-                          : "bg-yellow-200 border-black"
-                      } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                      name={"Add Man Days"}
+                      className={
+                        "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                      }
+                      onClick={handleAddManDays}
                     />
-                  </Link>
-
+                  ) : role?.includes("AM/Manager") ? (
+                    <Button
+                      name={"Assign Project"}
+                      className={
+                        "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                      }
+                      onClick={handleAssignProject}
+                    />
+                  ) : role?.includes("superuser") ? (
+                    <div>
+                      <Button
+                        name={"Add Man Days"}
+                        className={
+                          "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                        }
+                        onClick={handleAddManDays}
+                      />
+                      <Button
+                        name={"Assign Project"}
+                        className={
+                          "p-2 bg-yellow-200 border rounded-lg border-black ml-4"
+                        }
+                        onClick={handleAssignProject}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )}
+              <div className="">
+                {department == 2 &&
+                (role?.includes("Team Lead") ||
+                  role?.includes("AM/Manager")) ? (
                   <DataTable
                     columns={
                       data?.length > 0
@@ -431,66 +503,138 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                     customStyles={
                       darkMode ? customStylesDarkMode : customStyles
                     }
+                    selectableRows
                     onSelectedRowsChange={handleSelectedRowsChange}
                     enableMultiRowSelection
                     selectableRowDisabled={(row) => row.desabled}
-                    conditionalRowStyles={conditionalRowStyles}
-                    title={
-                      data?.length > 0
-                        ? "All Project Details"
-                        : "No Project Found"
-                    }
+                    actions={<ExportCSV data={data} />}
                   />
-                </div>
-              )}
-            </div>
-          )}
+                ) : (department == 1 ||
+                    department == 2 ||
+                    department == 3 ||
+                    department == 4) &&
+                  role?.includes("superuser") ? (
+                  <div className="">
+                    <Link to={"/entry-page"}>
+                      <Button
+                        name={"Add Project"}
+                        className={`${
+                          darkMode
+                            ? "bg-black text-white border-white"
+                            : "bg-yellow-200 border-black"
+                        } border rounded-lg p-2 absolute right-28 top-2 z-10`}
+                      />
+                    </Link>
+                    <DataTable
+                      columns={
+                        data?.length > 0
+                          ? TableColumn({ buttonRef })
+                          : Dummycolumns
+                      }
+                      data={data?.length > 0 ? desabledRowData : DummyData}
+                      pagination
+                      selectableRows
+                      customStyles={
+                        darkMode ? customStylesDarkMode : customStyles
+                      }
+                      onSelectedRowsChange={handleSelectedRowsChange}
+                      enableMultiRowSelection
+                      selectableRowDisabled={(row) => row.desabled}
+                      actions={<ExportCSV data={data} />}
+                    />
+                  </div>
+                ) : (
+                  <div className="">
+                    {role?.includes("Director") ? (
+                      <DataTable
+                        columns={
+                          data?.length > 0
+                            ? TableColumn({ buttonRef })
+                            : Dummycolumns
+                        }
+                        data={data?.length > 0 ? desabledRowData : DummyData}
+                        pagination
+                        customStyles={
+                          darkMode ? customStylesDarkMode : customStyles
+                        }
+                        onSelectedRowsChange={handleSelectedRowsChange}
+                        enableMultiRowSelection
+                        selectableRowDisabled={(row) => row.desabled}
+                        actions={<ExportCSV data={data} />}
+                      />
+                    ) : (
+                      <div>
+                        <Link to={"/entry-page"}>
+                          <Button
+                            name={"Add Project"}
+                            className={`${
+                              darkMode
+                                ? "bg-black text-white border-white"
+                                : "bg-yellow-200 border-black"
+                            } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                          />
+                        </Link>
+                        <DataTable
+                          columns={
+                            data?.length > 0
+                              ? TableColumn({ buttonRef })
+                              : Dummycolumns
+                          }
+                          data={data?.length > 0 ? desabledRowData : DummyData}
+                          pagination
+                          customStyles={
+                            darkMode ? customStylesDarkMode : customStyles
+                          }
+                          onSelectedRowsChange={handleSelectedRowsChange}
+                          enableMultiRowSelection
+                          selectableRowDisabled={(row) => row.desabled}
+                          actions={<div />}
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
 
-          {isOperationPerson && isEdit && (
-            <Edit viewRecord={selectedRecord} setisEdit={setisEdit} />
-          )}
-          {isView && (
-            <div className="z-50">
-              <View
-                viewRecord={selectedRecord}
-                closeView={closeView}
-                setisView={setisView}
-              />
+                {isOperationPerson && isEdit && (
+                  <Edit viewRecord={selectedRecord} setisEdit={setisEdit} />
+                )}
+                {isOperationPerson && isAddManDays && (
+                  <AddManDaysInduvisual
+                    viewRecord={selectedRecord}
+                    setisEdit={setisEdit}
+                  />
+                )}
+                {isView && (
+                  <div className="z-50">
+                    <View />
+                  </div>
+                )}
+                {isStatus && (
+                  <div className="z-50">
+                    <Status viewRecord={selectedRecord} closeView={closeView} />
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-          {isStatus && (
-            <div className="z-50">
-              <Status
-                viewRecord={selectedRecord}
-                closeView={closeView}
-                setIsStatus={setIsStatus}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="">
-        {multiEditFieldOpen && drawerContent === "AddManDays" && (
-          <AddManDays
-            selectedRow={selectedRow}
-            setIsDrawerOpen={setIsDrawerOpen}
-            setMultiEditFieldOpen={setMultiEditFieldOpen}
-          />
-        )}
-        {multiEditFieldOpen && drawerContent === "AssignProject" && (
-          <AssignedProject
-            selectedRow={selectedRow}
-            setIsDrawerOpen={setIsDrawerOpen}
-            setMultiEditFieldOpen={setMultiEditFieldOpen}
-            teamLeadAssiged={teamLeadAssiged}
-          />
-        )}
-        {isViewNotification && (
-          <div className="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 p-2 h-auto">
-            <OpenNotification />
           </div>
-        )}
-      </div>
+          <div className="">
+            {multiEditFieldOpen && drawerContent === "AddManDays" && (
+              <AddManDays setMultiEditFieldOpen={setMultiEditFieldOpen} />
+            )}
+            {multiEditFieldOpen && drawerContent === "AssignProject" && (
+              <AssignedProject
+                setMultiEditFieldOpen={setMultiEditFieldOpen}
+                teamLeadAssiged={teamLeadAssiged}
+              />
+            )}
+            {isViewNotification && (
+              <div className="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 p-2 h-auto">
+                <OpenNotification />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

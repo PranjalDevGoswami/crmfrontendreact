@@ -12,6 +12,7 @@ export const SearchFilterContext = ({ children }) => {
   const [activeTabValue, setActiveTabValue] = useState("inprogress");
   const [status, setStatus] = useState([
     activeTabValue,
+    "All",
     "To be Started",
     "Completed",
     "CBR Raised",

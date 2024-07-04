@@ -8,6 +8,8 @@ import { UPDATE_PROFILE } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios.js";
 import Notifications from "../notification/Notification.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
+import { FaUser, FaLock } from "react-icons/fa";
+import { IoLogOut } from "react-icons/io5";
 
 const Header = () => {
   const { token, setToken } = useAuth();
@@ -97,13 +99,28 @@ const Header = () => {
                     />
                   )}
                   {isProfileSetting ? (
-                    <ul className="absolute top-10 right-0 w-40 text-left bg-[#bd1d1d] text-white z-10 p-4 cursor-pointer">
-                      <li onClick={handleProfileSetting}>Profile</li>
+                    <ul className="absolute top-10 right-0 w-48 h-auto rounded-md text-left bg-[#bd1d1d] text-white z-10 p-4 cursor-pointer">
+                      <li
+                        onClick={handleProfileSetting}
+                        className="flex justify-start items-center mb-4"
+                      >
+                        <FaUser className="mr-2 text-white text-2xl" />
+                        Profile
+                      </li>
                       <Link to="/change-password">
-                        <li>Change Password</li>
+                        <li className="flex justify-start items-center mb-4">
+                          <FaLock className="mr-2 text-white text-2xl" />
+                          Change Password
+                        </li>
                       </Link>
                       <Link to="/login">
-                        <li onClick={handleLogout}>Logout</li>
+                        <li
+                          onClick={handleLogout}
+                          className="flex justify-start items-center mb-4"
+                        >
+                          <IoLogOut className="mr-2 text-white text-3xl" />
+                          Logout
+                        </li>
                       </Link>
                     </ul>
                   ) : (

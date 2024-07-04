@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { BASEURL, REFRESH_TOKEN } from "../../utils/urls";
+import SweetAlert from "../components/SweetAlert";
 
 const AuthContext = createContext();
 
@@ -29,7 +30,11 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error refreshing access token:", error);
       if (error.response && error.response.status === 401) {
-        alert("Refresh token has expired. Please log in again.");
+        SweetAlert({
+          title: "Error",
+          text: "Refresh token has expired. Please log in again.",
+          icon: "error",
+        });
         localStorage.clear();
         window.location.href = "/login";
       }

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AssignedProject from "../../project/AssignedProject.js";
+import SweetAlert from "../../components/SweetAlert.js";
+import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 
 const OpereationButton = ({
   record,
@@ -22,6 +24,8 @@ const OpereationButton = ({
     man_days: "",
     total_achievement: "",
   });
+
+  const { isAddManDays, setIsAddManDays } = useContext(DataTableContext);
 
   const [isInvoice, setIsInvoice] = useState(false);
 
@@ -52,19 +56,31 @@ const OpereationButton = ({
     try {
       const response = await RaiseCBRPostApi(data);
       if (response?.status == true) {
-        alert("CBR has been Raised !!!");
+        SweetAlert({
+          title: "CBR has been Raised !!!",
+          text: "",
+          icon: "success",
+        });
       } else if (response?.ex?.response?.data?.project_code) {
-        alert("project code : " + response?.ex?.response?.data?.project_code);
+        SweetAlert({
+          title: "project code : " + response?.ex?.response?.data?.project_code,
+        });
       }
     } catch (error) {
       console.error("Error fetching project data:", error);
+      SweetAlert({
+        title: "Error",
+        text: "Error fetching project data:",
+        error,
+        icon: "error",
+      });
     }
   };
   const handleStatus = (record) => {
     setIsStatus(true);
   };
   const HandleAddManDays = () => {
-    setisEdit(true);
+    setIsAddManDays(true);
   };
   const handleAssignProject = () => {
     console.log("Assigned Project");
@@ -101,7 +117,8 @@ const OpereationButton = ({
                   </button>
                 )}
               {record.status !== "completed" &&
-                record.status !== "cbr_raised" && (
+                record.status !== "cbr_raised" &&
+                record.status !== "hold" && (
                   <button
                     className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                     onClick={() => {

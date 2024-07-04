@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../components/Button.js";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -9,6 +9,8 @@ import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
 import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
+import { ThemeContext } from "../ContextApi/ThemeContext.js";
+import SweetAlert from "../components/SweetAlert.js";
 
 const Login = () => {
   const { token, setToken } = useAuth();
@@ -19,6 +21,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const { darkMode } = useContext(ThemeContext);
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -86,21 +89,37 @@ const Login = () => {
         localStorage.setItem("refreshToken", response.refresh);
         localStorage.setItem("user", loginData.email);
       }
+      const showAlert = (title, text) => {
+        SweetAlert({
+          title: title,
+          text: text,
+          icon: "error",
+        });
+      };
+
       if (!response.ok) {
         if (loginData.password.length < 8) {
-          alert("password must be greater than/equal to 8 character");
-        } else if (response.email) {
-          alert("userId/email can not be blank!!");
-        } else if (response.password) {
-          alert("password can not be blank!!");
+          showAlert(
+            "Error",
+            "Password must be greater than or equal to 8 characters"
+          );
+        } else if (!loginData.email) {
+          showAlert("Error", "UserId/email cannot be blank!!");
+        } else if (!loginData.password) {
+          showAlert("Error", "Password cannot be blank!!");
         } else if (response.non_field_errors) {
-          alert(response.non_field_errors);
-        } else if (response.status == 400) {
-          alert(response.message);
+          showAlert("Error", response.non_field_errors);
+        } else if (response.status === 400) {
+          showAlert("Error", response.message);
         }
       }
     } catch (error) {
-      console.error("Error logging in:", error);
+      SweetAlert({
+        title: "Error",
+        text: "Error logging in:",
+        error,
+        icon: "error",
+      });
     }
   };
 
@@ -109,7 +128,7 @@ const Login = () => {
       <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 md:w-full md:h-screen xl:bg-contain bg-cover">
         <div className="md:flex md:h-full block h-auto">
           <div className="md:w-2/3 md:h-2/3 hidden md:flex flex-col items-center justify-center p-8 pl-8"></div>
-          <div className="md:w-1/3 w-full">
+          <div className="md:w-1/2 w-full">
             <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
               <div className="flex flex-col gap-4 md:p-4 p-1 w-9/12">
                 <h1 className="text-5xl text-center p-8 text-[#e7251e]">
@@ -136,13 +155,13 @@ const Login = () => {
                     name={"password"}
                     onchange={(e) => handleOnchange(e)}
                   />
-                  {showPasswordIcon ? (
+                  {showPasswordIcon && (
                     <BiShow
-                      className="absolute top-1/2 right-4 translate-y-[-50%] cursor-pointer"
+                      className={` ${
+                        darkMode ? "text-white" : "text-black"
+                      } absolute top-1/2 right-4 translate-y-[-50%] cursor-pointer`}
                       onClick={handleShowPassword}
                     />
-                  ) : (
-                    ""
                   )}
                 </div>
                 <img src={object7} alt="fgg" className="absolute top-8" />

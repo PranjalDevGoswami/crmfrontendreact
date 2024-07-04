@@ -1,4 +1,5 @@
 import { RAISECBR } from "../../../../utils/urls";
+import SweetAlert from "../../../components/SweetAlert";
 import { postWithAuth } from "../../../provider/helper/axios";
 
 export const RaiseCBRPostApi = async (data) => {
@@ -9,6 +10,10 @@ export const RaiseCBRPostApi = async (data) => {
     });
     return response;
   } catch (error) {
-    alert("An error occurred. Please try again.");
+    SweetAlert({
+      title: "Error",
+      text: "An error occurred. Please try again.",
+      icon: "error",
+    });
   }
 };

@@ -6,8 +6,12 @@ import OpenNotification from "./OpenNotificationDetails";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import {
+  GetProjectData,
+  ProjectDetails,
+} from "../fetchApis/projects/getProjectData/GetProjectData";
 import { getWithAuth } from "../provider/helper/axios";
+import { FetchProject } from "../ContextApi/FetchProjectContext";
 
 // const socket = io(BASEURL); // Connect to the server
 
@@ -22,7 +26,9 @@ const Notification = () => {
     setIsViewNotification,
     isViewNotification,
   } = useContext(NotifiactionContext);
+  const { projectList, setProjectList } = useContext(FetchProject);
   const username = localStorage.getItem("username");
+  const role = localStorage.getItem("role");
   useEffect(() => {
     if (darkMode) {
       document.body.style.backgroundColor = "black";
@@ -34,21 +40,15 @@ const Notification = () => {
   }, [darkMode]);
   useEffect(() => {
     const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        let activeEditProject = projectDataObject.filter((item) => {
-          return (
-            item?.send_email_manager == true &&
-            item?.project_manager?.name == username
-          );
-        });
-        setNotificationList(activeEditProject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
+      const response = await ProjectDetails();
+      setProjectList(response);
+      let activeEditProject = response.filter((item) => {
+        return (
+          item?.send_email_manager == true &&
+          item?.project_manager?.name == username
+        );
+      });
+      setNotificationList(activeEditProject);
     };
     fetchProjectData();
   }, []);
@@ -98,24 +98,26 @@ const Notification = () => {
       >
         <IoNotifications className="mr-4 cursor-pointer text-3xl text-black" />
         <span className="bg-red-600 text-white p-3 rounded-full w-3 h-3 absolute -top-3 left-4 text-sm flex justify-center items-center">
-          {notificationList?.length > 0 ? notificationList.length : 0}
+          {role === "AM/Manager" && notificationList?.length > 0
+            ? notificationList.length
+            : 0}
         </span>
       </div>
       {isNotificationActive && (
         <div
-          className="border bg-gray-200 cursor-pointer text-left absolute top-10 -left-1/2 w-72 p-4 rounded-md"
+          className="border bg-[#bd1d1d] text-white cursor-pointer text-left absolute top-10 -left-1/2 w-72 p-4 rounded-md"
           ref={notification_btn_ref}
         >
-          {notificationList.length > 0 ? (
+          {role === "AM/Manager" && notificationList.length > 0 ? (
             <ul>
               {notificationList.map((item, ind) => {
                 return (
                   <li
                     key={ind}
-                    className="border-b-black border p-4"
+                    className="border-b-black border-b p-4"
                     onClick={() => handleViewNotification(item.project_code)}
                   >
-                    <span>Project Code: {item.project_code}</span>
+                    <span>Project Code: {item.project_code.toUpperCase()}</span>
                     {/* <Button className={""} onClick={""} name={"Accept"} /> */}
                     {/* <br />
               <span>Sample Revised: {item.sample}</span>
@@ -129,7 +131,7 @@ const Notification = () => {
             </ul>
           ) : (
             <ul>
-              <li className="border-b-black border p-2">
+              <li className="border-b-black border-b p-2">
                 No Notification found
               </li>
             </ul>

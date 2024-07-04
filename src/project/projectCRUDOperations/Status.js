@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import LableAndInput from "../../components/LableAndInput";
 import Dropdown from "../../components/DropDown";
 import Label from "../../components/Label";
 import { ChangeStatus } from "../../fetchApis/projects/changeStatus/changeStatus";
+import SweetAlert from "../../components/SweetAlert";
+import { DataTableContext } from "../../ContextApi/DataTableContext";
 
-const Status = ({ viewRecord, setIsStatus }) => {
+const Status = ({ viewRecord }) => {
   const [updatedStatus, setUpdatedStatus] = useState({
     project_code: viewRecord.project_code,
     status: "",
   });
+  const { setIsStatus } = useContext(DataTableContext);
 
   const handleCancelUpdate = () => {
     setIsStatus(false);
@@ -23,9 +26,17 @@ const Status = ({ viewRecord, setIsStatus }) => {
       });
       document.body.classList.remove("DrawerBody");
       setIsStatus(false);
-      alert("Status Change Sucessfully!!");
+      SweetAlert({
+        title: "Status Change Sucessfully!!",
+        text: "",
+        icon: "success",
+      });
     } else {
-      alert("please select Status");
+      SweetAlert({
+        title: "please select Status",
+        text: "",
+        icon: "info",
+      });
     }
   };
 
@@ -46,13 +57,13 @@ const Status = ({ viewRecord, setIsStatus }) => {
     });
   };
   return (
-    <div className="absolute top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-50%]">
+    <div className="absolute top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-50%] z-40">
       <h3 className="text-xl underline pb-4">Change Project Status</h3>
       <div className="flex items-center flex-col justify-between">
         <div className="w-11/12">
           <LableAndInput
             labelName={"Project Code"}
-            Inputvalue={viewRecord.project_code}
+            Inputvalue={viewRecord.project_code.toUpperCase()}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
             labelClassName={"pt-4 pb-2"}

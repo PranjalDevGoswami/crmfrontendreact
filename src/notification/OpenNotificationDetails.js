@@ -3,10 +3,13 @@ import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import Button from "../components/Button";
 import { putWithAuth } from "../provider/helper/axios";
 import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/urls";
+import { FetchProject } from "../ContextApi/FetchProjectContext";
+import SweetAlert from "../components/SweetAlert";
 
 const OpenNotification = ({ notification_btn_ref }) => {
   const { notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
+  const { projectList, setProjectList } = useContext(FetchProject);
   const [dataToUpdate, setDataToUpdate] = useState({
     project_code: "",
     tentative_end_date: "",
@@ -19,7 +22,6 @@ const OpenNotification = ({ notification_btn_ref }) => {
     const selectedProject = notificationProjectList.find(
       (item) => item.project_code === projectCode
     );
-
     if (selectedProject) {
       const updatedData = {
         project_code: selectedProject.project_code,
@@ -35,16 +37,33 @@ const OpenNotification = ({ notification_btn_ref }) => {
           updatedData
         );
         if (response?.status == true) {
-          alert(response?.data?.message);
+          SweetAlert({
+            title: "Success",
+            text: response?.data?.message,
+            icon: "success",
+          });
           setIsViewNotification(false);
         } else {
-          alert("please fill data");
+          SweetAlert({
+            title: "Error",
+            text: "please fill data",
+            icon: "info",
+          });
         }
       }
     }
   };
-  const handleReject = (projectCode) => {
-    // console.log(dataToUpdate);
+
+  const getOldProjectData = projectList?.filter((item) => {
+    return (
+      item?.project_code ==
+      notificationProjectList.map((item) => {
+        return item?.project_code;
+      })
+    );
+  });
+
+  const handleReject = async (projectCode) => {
     setIsViewNotification(false);
   };
   return (
@@ -52,55 +71,56 @@ const OpenNotification = ({ notification_btn_ref }) => {
       {notificationProjectList?.map((item, ind) => (
         <div
           key={ind}
-          className="border-b border-black mb-2 border bg-gray-200 cursor-pointer p-4 rounded-md"
+          className="border-b border-black mb-2 border bg-[#bd1d1d] cursor-pointer p-4 rounded-md"
         >
-          {/* <div className="flex justify-between">
+          <div className="flex justify-between">
             <div className="w-1/2 p-4">
               <div>
                 <h3 className="border-b-black border font-bold text-xl">
                   Old Project Data
                 </h3>
                 <div className="border-b-black border">
-                  Project Code: {item.project_code}
+                  Project Code:
+                  {getOldProjectData[0]?.project_code?.toUpperCase()}
                 </div>
                 <div className="border-b-black border">
-                  Sample Revised: {item.sample}
+                  Previous Sample Size: {getOldProjectData[0]?.sample}
                 </div>
                 <div className="border-b-black border">
-                  Date Required: {item.tentative_end_date?.split("T")[0]}
+                  Previous Date Given:
+                  {getOldProjectData[0]?.tentative_end_date?.split("T")[0]}
                 </div>
-                <div className="">Reason: {item.reason_for_adjustment}</div>
               </div>
-            </div> */}
-          <div className=" p-4">
-            <h3 className="border-b-black border font-bold text-xl">
-              New Required Project Data
-            </h3>
-            <div className="border-b-black border">
-              Project Code: {item.project_code}
             </div>
-            <div className="border-b-black border">
-              Sample Revised: {item.sample}
-            </div>
-            <div className="border-b-black border">
-              Date Required: {item.tentative_end_date?.split("T")[0]}
-            </div>
-            <div className="">Reason: {item.reason_for_adjustment}</div>
-            <div className="flex">
-              <Button
-                className=" bg-green-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold"
-                onClick={() => handleAccept(item.project_code)}
-                name="Accept"
-              />
-              <Button
-                className=" bg-red-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold"
-                onClick={() => handleReject(item.project_code)}
-                name="Reject"
-              />
+            <div className="w-1/2 p-4">
+              <h3 className="border-b-black border font-bold text-xl">
+                New Required Project Data
+              </h3>
+              <div className="border-b-black border">
+                Project Code: {item?.project_code?.toUpperCase()}
+              </div>
+              <div className="border-b-black border">
+                Sample Revised: {item?.sample}
+              </div>
+              <div className="border-b-black border">
+                Date Required: {item?.tentative_end_date?.split("T")[0]}
+              </div>
+              <div className="">Reason: {item?.reason_for_adjustment}</div>
+              <div className="flex">
+                <Button
+                  className=" bg-green-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold"
+                  onClick={() => handleAccept(item?.project_code)}
+                  name="Accept"
+                />
+                <Button
+                  className=" bg-red-500 p-4 mt-8 mr-2 md:w-1/2 w-full text-white font-bold"
+                  onClick={() => handleReject(item?.project_code)}
+                  name="Reject"
+                />
+              </div>
             </div>
           </div>
         </div>
-        // </div>
       ))}
     </div>
   );

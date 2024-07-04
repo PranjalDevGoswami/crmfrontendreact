@@ -9,6 +9,7 @@ import { UPDATE_PROFILE } from "../../utils/urls.js";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineModeEdit } from "react-icons/md";
+import SweetAlert from "../components/SweetAlert.js";
 
 export const userDetails = () => {
   const token = localStorage.getItem("token");
@@ -65,7 +66,11 @@ export const Profile = ({ profileDataUpdate }) => {
       const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
       const file = files[0];
       if (!allowedFormats.includes(file.type)) {
-        alert("Please upload a JPG, PNG, or WebP file.");
+        SweetAlert({
+          title: "info",
+          text: "Please upload a JPG, PNG, or WebP file.",
+          icon: "info",
+        });
         return;
       } else {
         setProfileUpdateData((prev) => ({ ...prev, [name]: files[0] }));
@@ -83,7 +88,11 @@ export const Profile = ({ profileDataUpdate }) => {
     const response = await putWithAuthForUpload(UPDATE_PROFILE, updatedData);
     if (response.status == true) {
       setProfileUpdated(!profileUpdated);
-      alert("Profile Update Successfully!");
+      SweetAlert({
+        title: "Success",
+        text: "Profile Update Successfully!",
+        icon: "success",
+      });
     } else {
       console.log(response);
       setProfileUpdated(false);
@@ -95,12 +104,12 @@ export const Profile = ({ profileDataUpdate }) => {
   };
 
   return (
-    <div className="">
+    <div className="bg-white rounded-md p-4 mt-16">
       <div className="m-8 mb-8 overflow-hidden">
         <h1 className="text-3xl pb-8 ">Update Profile</h1>
         <div className="w-10/12 m-auto">
           <div className="lg:flex lg:flex-row flex-col items-center justify-around">
-            <div className="profile-pic lg:w-4/12 w-full border-b-2 border-b-black">
+            <div className="profile-pic lg:w-4/12 w-full border-b-2 border-b-black md:border-none">
               {profileDetails?.profile_picture !== null ? (
                 <div className="relative">
                   <img

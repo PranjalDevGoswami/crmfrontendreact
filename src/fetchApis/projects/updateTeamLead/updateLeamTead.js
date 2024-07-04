@@ -1,4 +1,5 @@
 import { UPDATEPROJECTDATAAPIS } from "../../../../utils/urls.js";
+import SweetAlert from "../../../components/SweetAlert.js";
 import { putWithAuth } from "../../../provider/helper/axios.js";
 
 export const UpdateTeamLead = async (data) => {
@@ -10,6 +11,10 @@ export const UpdateTeamLead = async (data) => {
     return response;
   } catch (error) {
     // Display an alert for login error
-    alert("An error occurred. Please try again.");
+    SweetAlert({
+      title: "Error",
+      text: "An error occurred. Please try again.",
+      icon: "error",
+    });
   }
 };

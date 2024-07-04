@@ -4,6 +4,7 @@ import Input from "../components/InputField";
 import Button from "../components/Button";
 import { RESETPASSWORD } from "../../utils/urls";
 import { useNavigate } from "react-router-dom";
+import SweetAlert from "../components/SweetAlert";
 
 const Reset = () => {
   const [email, setEmail] = useState({
@@ -24,10 +25,18 @@ const Reset = () => {
     setLoading(false);
     let message = await response.json();
     if (response.ok) {
-      alert(message.detail + "Please check your email!!");
+      SweetAlert({
+        title: "Success",
+        text: message.detail + "Please check your email!!",
+        icon: "success",
+      });
       navigate("/login");
     } else {
-      alert(message.email);
+      SweetAlert({
+        title: "",
+        text: message.email,
+        icon: "info",
+      });
     }
   };
 

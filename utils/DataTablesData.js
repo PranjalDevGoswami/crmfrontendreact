@@ -1,5 +1,4 @@
 import { MdOutlineMoreVert } from "react-icons/md";
-import Dropdown from "../src/components/DropDown";
 
 export const Data = [
   {
@@ -67,48 +66,6 @@ export const Data = [
     selector: (row) => row.status,
     sortable: true,
     right: true,
-    conditionalCellStyles: [
-      {
-        when: (row) => row.status === "completed",
-        style: {
-          backgroundColor: "rgba(63, 195, 128, 0.9)",
-          color: "white",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        },
-      },
-      {
-        when: (row) => row.status === "cbr_raised",
-        style: {
-          backgroundColor: "rgb(128,128,128,1)",
-          color: "white",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        },
-      },
-      {
-        when: (row) => row.status === "undefined",
-        style: {
-          backgroundColor: "rgba(248, 148, 6, 0.9)",
-          color: "white",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        },
-      },
-      {
-        when: (row) => row.status === null,
-        style: {
-          backgroundColor: "rgba(242, 38, 19, 0.9)",
-          color: "white",
-          "&:hover": {
-            cursor: "not-allowed",
-          },
-        },
-      },
-    ],
   },
   {
     name: "Actions",
@@ -254,14 +211,14 @@ export const DummyData = [
 export const customStyles = {
   rows: {
     style: {
-      backgroundColor: "#fff", // override the row height
+      backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity))", // override the row height
       textAlign: "center",
       position: "relative",
     },
   },
   rows: {
     highlightOnHoverStyle: {
-      backgroundColor: "rgb(230, 244, 244)",
+      backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity))",
       borderBottomColor: "#FFFFFF",
       borderRadius: "25px",
       outline: "1px solid #FFFFFF",
@@ -289,6 +246,20 @@ export const customStyles = {
       backgroundColor: "NORMALCOLOR",
     },
   },
+  // pagination: {
+  //   style: {
+  //     color: "#000",
+  //     backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity))",
+  //     borderBottom: "none",
+  //   },
+  // },
+  // header: {
+  //   style: {
+  //     color: "#000",
+  //     backgroundColor: "#e5e7eb",
+  //     borderBottom: "none",
+  //   },
+  // },
 };
 export const customStylesDarkMode = {
   header: {
@@ -303,7 +274,7 @@ export const customStylesDarkMode = {
       color: "#fff",
       borderColor: "white",
       backgroundColor: "#000",
-      borderBottom: "1px solid",
+      borderBottom: "none",
     },
   },
   rows: {
@@ -395,6 +366,69 @@ export const customStylesFormanDaysDetails = {
     },
   },
 };
+
+export const customStylesFormanDaysDetailsDarkMode = {
+  header: {
+    style: {
+      color: "#fff",
+      backgroundColor: "#000",
+      border: "1px solid",
+    },
+  },
+  pagination: {
+    style: {
+      color: "#fff",
+      borderColor: "white",
+      backgroundColor: "#000",
+      border: "1px solid",
+    },
+  },
+  rows: {
+    style: {
+      backgroundColor: "#000", // override the row height
+      textAlign: "center",
+      position: "relative",
+      text: "#fff",
+      color: "#fff",
+    },
+  },
+  rows: {
+    highlightOnHoverStyle: {
+      // backgroundColor: "rgb(230, 244, 244)",
+      borderBottomColor: "#FFFFFF",
+      borderRadius: "25px",
+      outline: "1px solid #FFFFFF",
+      backgroundColor: "#000",
+    },
+  },
+  headCells: {
+    style: {
+      color: "#fff",
+      // backgroundColor: "#bd1d1d",
+      backgroundColor: "#000",
+      fontSize: "14px",
+      textAlign: "center",
+      whiteSpace: "pre-wrap",
+      wordWrap: "break-word",
+      borderColor: "red",
+      backgroundColor: "#000",
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: "20px", // override the cell padding for data cells
+      paddingRight: "20px",
+      textAlign: "center",
+      backgroundColor: "#000",
+      color: "#fff",
+    },
+    stripedStyle: {
+      color: "NORMALCOLOR",
+      backgroundColor: "#fff",
+    },
+  },
+};
+
 export const editedColumns = [
   {
     name: "Sr.No.",
@@ -404,7 +438,7 @@ export const editedColumns = [
   },
   {
     name: "Project Code",
-    selector: (row) => row.project_code,
+    selector: (row) => row.project_code?.toUpperCase(),
     sortable: true,
   },
   {
@@ -446,27 +480,32 @@ export const AssignColumns = [
     name: "Sr.No.",
     selector: (row) => row.id,
     sortable: true,
+    // width: "90px",
   },
   {
     name: "Project Code",
-    selector: (row) => row.project_code,
+    selector: (row) => row.project_code?.toUpperCase(),
     sortable: true,
+    // width: "200px",
   },
   {
     name: "Client Name",
     selector: (row) => row.clients,
     sortable: true,
+    // width: "200px",
   },
   {
     name: "Project Name",
     selector: (row) => row.name,
     sortable: true,
+    // width: "400px",
   },
 
   {
     name: "Assign To",
     selector: (row) => row.assigned,
     sortable: true,
+    // width: "260px",
   },
 ];
 const currentDate = new Date().toISOString().split("T")[0];
@@ -530,16 +569,16 @@ export const conditionalRowStyles = [
   //   },
   // },
 
-  {
-    when: (row) => row.status == "completed",
-    style: {
-      backgroundColor: "rgba(63, 195, 128, 0.9)",
-      color: "white",
-      "&:hover": {
-        cursor: "pointer",
-      },
-    },
-  },
+  // {
+  //   when: (row) => row.status == "completed",
+  //   style: {
+  //     backgroundColor: "rgba(63, 195, 128, 0.9)",
+  //     color: "white",
+  //     "&:hover": {
+  //       cursor: "pointer",
+  //     },
+  //   },
+  // },
   {
     when: (row) => row.status === "cbr_raised",
     style: {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // import { Drawer } from "@material-tailwind/react";
 import Drawer from "@mui/material/Drawer";
 
@@ -12,13 +12,12 @@ import Dropdown from "../components/DropDown.js";
 import { GetProjectManager } from "../fetchApis/projectManager/projectManager";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import { UpdateTeamLead } from "../fetchApis/projects/updateTeamLead/updateLeamTead.js";
+import SweetAlert from "../components/SweetAlert.js";
+import { DataTableContext } from "../ContextApi/DataTableContext.js";
 
-const AssignedProject = ({
-  selectedRow,
-  setIsDrawerOpen,
-  setMultiEditFieldOpen,
-  teamLeadAssiged,
-}) => {
+const AssignedProject = ({ setMultiEditFieldOpen, teamLeadAssiged }) => {
+  const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit } =
+    useContext(DataTableContext);
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [selectTL, setSelectTL] = useState(["No TL Assigned"]);
@@ -78,14 +77,25 @@ const AssignedProject = ({
     setIsDrawerOpen(false);
     setMultiEditFieldOpen(false);
     setOpenRight(false);
+    setIsMultiEdit(false);
+    setSelectedRow([]);
   };
 
   const PostProjectData = async (data) => {
     try {
       const response = await UpdateTeamLead(data);
-      alert(response.data.message);
+      SweetAlert({
+        title: "Success",
+        text: response.data.message,
+        icon: "success",
+      });
     } catch (error) {
-      console.error("Error fetching project data:", error);
+      SweetAlert({
+        title: "Error",
+        text: "Error fetching project data:",
+        error,
+        icon: "error",
+      });
     }
   };
 
@@ -99,7 +109,11 @@ const AssignedProject = ({
 
   const handleSelectTL = (index, name, value) => {
     if (value === "No TL Assigned") {
-      alert("No TL Assiged.");
+      SweetAlert({
+        title: "Alert",
+        text: "No TL Assiged.",
+        icon: "info",
+      });
     }
     if (teamLeadNameID) {
       const teamleadArray = teamLeadNameID[0];
@@ -136,7 +150,7 @@ const AssignedProject = ({
 
   const addField = selectedEditData.map((item, index) => {
     const projectCode = item.project_code;
-    const projectWithTL = teamLeadAssiged.find(
+    const projectWithTL = teamLeadAssiged?.find(
       (project) => project.project_code === projectCode
     );
     if (projectWithTL && projectWithTL.project_teamlead) {
