@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from "./Button";
-import AddClient from "./AddClient";
+import AddClient from "./Form/AddClient";
 import { TiPlus } from "react-icons/ti";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 import SweetAlert from "./SweetAlert";
@@ -63,7 +63,7 @@ const Dropdown = ({
 
   return (
     <div className="w-full">
-      <div className="relative flex">
+      <div className="relative flex p-1">
         <select
           className={
             `${darkMode && "bg-black border-white"} rounded-full p-2 ` +
@@ -77,7 +77,7 @@ const Dropdown = ({
           {addOptionItem.map((option, index) => {
             return (
               <option key={index} className="p-4 text-xl" value={option}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option?.charAt(0)?.toUpperCase() + option?.slice(1)}
                 {defaultValue}
               </option>
             );
@@ -86,7 +86,7 @@ const Dropdown = ({
         {requireAddButton ? (
           <button
             onClick={OpenOptionFieldHandler}
-            className="bg-yellow-200 p-2 rounded-r-full"
+            className="bg-yellow-200 p-2 rounded-r-full mt-2"
           >
             <TiPlus />
           </button>

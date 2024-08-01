@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BsGraphUp } from "react-icons/bs";
-import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData";
+import { FilterContext } from "../../ContextApi/FilterContext";
+// import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData";
 
 const NewProject = () => {
-  const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  useEffect(() => {
-    const ProjectDetail = async () => {
-      const response = await ProjectDetails();
-      setProjects(response);
-    };
-    ProjectDetail();
-  }, []);
+  // useEffect(() => {
+  //   const ProjectDetail = async () => {
+  //     const response = await ProjectDetails();
+  //     setProjects(response);
+  //   };
+  //   ProjectDetail();
+  // }, []);
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
-  const currentMonthProjects = projects.filter((project) => {
+  const currentMonthProjects = projectData.filter((project) => {
     const startDate = new Date(project.tentative_start_date);
     return (
       startDate.getFullYear() === currentYear &&

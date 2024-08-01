@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import React, { useContext, useEffect, useState } from "react";
+// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { FilterContext } from "../ContextApi/FilterContext";
 
 const RPEWeek = () => {
   const [projectInProgress, setProjectInProgress] = useState([]);
@@ -10,12 +11,13 @@ const RPEWeek = () => {
   const [error, setError] = useState(null);
   const [barChartData, setBarChartData] = useState([]);
   const [totalMenRequired, setTotalMenRequired] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const fetchDataFromApi = await GetProjectData();
-        const projectDataObject = fetchDataFromApi?.data || [];
+        // const fetchDataFromApi = await GetProjectData();
+        const projectDataObject = projectData?.data || [];
         const filteredProjects = projectDataObject.filter(
           (item) => item.status === "inprogress"
         );

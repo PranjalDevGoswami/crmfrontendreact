@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const DataTableContext = createContext();
 
 export const DataTableContextProvider = ({ children }) => {
-  const [isStatus, setIsStatus] = useState(false);
+  const [changeStatus, setChangeStatus] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   const [isAddManDays, setIsAddManDays] = useState(false);
   const [isView, setisView] = useState(false);
@@ -20,8 +20,8 @@ export const DataTableContextProvider = ({ children }) => {
   return (
     <DataTableContext.Provider
       value={{
-        isStatus,
-        setIsStatus,
+        changeStatus,
+        setChangeStatus,
         isEdit,
         setisEdit,
         isView,

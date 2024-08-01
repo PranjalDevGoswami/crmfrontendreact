@@ -5,6 +5,7 @@ const SweetAlert = ({ title, text, icon }) => {
     title: title,
     text: text,
     icon: icon,
+    customClass: "swal-back",
   });
 };
 

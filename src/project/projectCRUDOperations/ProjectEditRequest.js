@@ -11,7 +11,7 @@ import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
 
-const SampleEdit = ({ viewRecord, setisEdit }) => {
+const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
   const [updatedValue, setUpdatedValue] = useState({
     name: viewRecord.name,
@@ -20,7 +20,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
     sample: "",
     reason_for_adjustment: "",
   });
-  const { isAddManDays, setIsAddManDays } = useContext(DataTableContext);
+  const { setisEdit } = useContext(DataTableContext);
 
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);
@@ -107,10 +107,10 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
     }
   };
   return (
-    <div className="absolute h-auto w-1/2 top-2/3 left-1/2 -translate-x-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-y-1/2 z-50">
+    <div>
       <h3 className="text-xl underline pb-4">Project Edit Request</h3>
-      <div className="flex items-center flex-col justify-between">
-        <div className="w-11/12">
+      <div className="flex items-center flex-wrap justify-center w-full rounded-sm">
+        <div className="ProjectOperationEdit hidden">
           <LableAndInput
             labelName={"Project Code"}
             Inputvalue={viewRecord.project_code.toUpperCase()}
@@ -120,7 +120,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Project Name"}
             Inputvalue={viewRecord.name}
@@ -130,7 +130,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Date Required(Tentative)"}
             InputName={"tentative_end_date"}
@@ -142,7 +142,7 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             min={getMinDate()}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Revised Target Required (Sample)"}
             InputType={"number"}
@@ -155,13 +155,22 @@ const SampleEdit = ({ viewRecord, setisEdit }) => {
             min={1}
           />
         </div>
-        <div className="w-11/12">
-          <Label labelName={"Reason"} className={"pt-4 pb-2 mt-4 mb-2"} />
+        <div className="ProjectOperationEdit">
+          <LableAndInput
+            labelName={"Reason"}
+            InputType={"text"}
+            InputName={"reason_for_adjustment"}
+            inputClassName={"p-2 border"}
+            labelClassName={"pt-4 pb-2"}
+            Inputvalue={updatedValue.reason_for_adjustment}
+            inputChange={handleInputChange}
+          />
+          {/* <Label labelName={"Reason"} className={"pt-4 pb-2"} />
           <textarea
-            className="w-full border mt-4 mb-2 p-2"
+            className="w-full p-1 border rounded-full"
             name="reason_for_adjustment"
             onChange={handleInputChange}
-          />
+          /> */}
         </div>
         <div className="flex pt-10">
           <button

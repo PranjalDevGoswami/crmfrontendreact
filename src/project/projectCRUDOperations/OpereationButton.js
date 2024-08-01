@@ -6,14 +6,7 @@ import AssignedProject from "../../project/AssignedProject.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 
-const OpereationButton = ({
-  record,
-  isView,
-  setisView,
-  setisEdit,
-  isEdit,
-  setIsStatus,
-}) => {
+const OpereationButton = ({ record }) => {
   const role = localStorage.getItem("role");
   const department = localStorage.getItem("department");
   const navigate = useNavigate();
@@ -25,12 +18,23 @@ const OpereationButton = ({
     total_achievement: "",
   });
 
-  const { isAddManDays, setIsAddManDays } = useContext(DataTableContext);
+  const {
+    isAddManDays,
+    setIsAddManDays,
+    isView,
+    setisView,
+    setisEdit,
+    isEdit,
+    setChangeStatus,
+  } = useContext(DataTableContext);
 
   const [isInvoice, setIsInvoice] = useState(false);
 
   const HandleOnEdit = (record) => {
     setisEdit(true);
+    setIsAddManDays(false);
+    setChangeStatus(false);
+    setisView(false);
     setEditRecord(record);
     setUpdatedValue({
       ...updatedValue,
@@ -38,9 +42,31 @@ const OpereationButton = ({
       name: record?.name,
     });
   };
+  const handleStatus = (record) => {
+    setChangeStatus(true);
+    setisEdit(false);
+    setIsAddManDays(false);
+    setisView(false);
+  };
+  const HandleAddManDays = () => {
+    setIsAddManDays(true);
+    setisEdit(false);
+    setChangeStatus(false);
+    setisView(false);
+  };
+  // const handleAssignProject = () => {
+  //   console.log("Assigned Project");
+  //   setChangeStatus(false);
+  //   setisEdit(false);
+  //   setIsAddManDays(false);
+  //   setisView(false);
+  // };
 
   const handleViewProject = () => {
     setisView(true);
+    setChangeStatus(false);
+    setisEdit(false);
+    setIsAddManDays(false);
     navigate("/view", { state: record });
   };
 
@@ -76,15 +102,7 @@ const OpereationButton = ({
       });
     }
   };
-  const handleStatus = (record) => {
-    setIsStatus(true);
-  };
-  const HandleAddManDays = () => {
-    setIsAddManDays(true);
-  };
-  const handleAssignProject = () => {
-    console.log("Assigned Project");
-  };
+
   const endDateStr = record.tentative_end_date;
   const endDate = new Date(endDateStr);
   const today = new Date();
@@ -130,7 +148,7 @@ const OpereationButton = ({
                 )}
               {record.status !== "completed" &&
                 record.status !== "cbr_raised" &&
-                record.status !== "hold" &&
+                // record.status !== "hold" &&
                 DateValidate == true && (
                   <button
                     className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"

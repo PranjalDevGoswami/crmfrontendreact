@@ -1,36 +1,38 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { FilterContext } from "../ContextApi/FilterContext";
+// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 
 export default function PiReportChart() {
-  const [project, setProject] = useState([]);
+  // const [project, setProject] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        setProject(projectDataObject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchProjectData = async () => {
+  //     try {
+  //       const fetchDataFromApi2 = await GetProjectData();
+  //       const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
+  //         return val;
+  //       });
+  //       setProject(projectDataObject);
+  //     } catch (error) {
+  //       console.error("Error fetching project data:", error);
+  //     }
+  //   };
+  //   fetchProjectData();
+  // }, []);
 
-  const ToBeStartedProject = project.filter(
+  const ToBeStartedProject = projectData.filter(
     (item) => item.status === "to_be_started"
   );
-  const InProgressProject = project.filter(
+  const InProgressProject = projectData.filter(
     (item) => item.status === "inprogress"
   );
-  const CompletedProject = project.filter(
+  const CompletedProject = projectData.filter(
     (item) => item.status === "completed"
   );
-  const HoldProject = project.filter((item) => item.status === "hold");
-  const CbrRaisedProject = project.filter(
+  const HoldProject = projectData.filter((item) => item.status === "hold");
+  const CbrRaisedProject = projectData.filter(
     (item) => item.status === "cbr_raised"
   );
 

@@ -1,16 +1,15 @@
-import { UPDATEPROJECTDATAAPIS } from "../../../../utils/urls.js";
+import { UPDATETLASSIGNMENT } from "../../../../utils/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
-import { putWithAuth } from "../../../provider/helper/axios.js";
+import { postWithAuth, putWithAuth } from "../../../provider/helper/axios.js";
 
 export const UpdateTeamLead = async (data) => {
   try {
-    const response = await putWithAuth(UPDATEPROJECTDATAAPIS, data, {
+    const response = await postWithAuth(UPDATETLASSIGNMENT, data, {
       method: "PUT",
       body: JSON.stringify(data),
     });
     return response;
   } catch (error) {
-    // Display an alert for login error
     SweetAlert({
       title: "Error",
       text: "An error occurred. Please try again.",

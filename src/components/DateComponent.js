@@ -13,7 +13,7 @@ const DateComponent = ({ handleDateChange }) => {
   return (
     <div className="p-2 mr-4 w-2/12">
       <Input
-        name={"date"}
+        name={"update_date"}
         type={"date"}
         className={"p-2 mr-4 border w-full"}
         onchange={handleDateChange}

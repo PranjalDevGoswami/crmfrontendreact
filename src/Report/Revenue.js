@@ -1,34 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import React, { useContext, useEffect, useState } from "react";
+// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { FilterContext } from "../ContextApi/FilterContext";
 
 const Revenue = () => {
   const [project, setProject] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        setProject(projectDataObject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
-  }, []);
-  const CPI = project.map((item) => item?.cpi);
-  const unexecuted_Sample = project.map(
+  // useEffect(() => {
+  //   const fetchProjectData = async () => {
+  //     try {
+  //       const fetchDataFromApi2 = await GetProjectData();
+  //       const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
+  //         return val;
+  //       });
+  //       setProject(projectDataObject);
+  //     } catch (error) {
+  //       console.error("Error fetching project data:", error);
+  //     }
+  //   };
+  //   fetchProjectData();
+  // }, []);
+  const CPI = projectData.map((item) => item?.cpi);
+  const unexecuted_Sample = projectData.map(
     (item) => item?.remaining_interview || 0
   );
-  const executed_Sample = project.map((item) => item?.total_achievement || 0);
+  const executed_Sample = projectData.map(
+    (item) => item?.total_achievement || 0
+  );
 
-  const inPipeLine = project.filter((item) => item?.status === "to_be_started");
+  const inPipeLine = projectData.filter(
+    (item) => item?.status === "to_be_started"
+  );
   const PipeLineProject = inPipeLine.map((item) => item.sample);
   const PipeLineProjectCost = inPipeLine.map((item) => item.cpi);
 
-  const RevenueBilled = project.filter((item) => item?.status === "cbr_raised");
+  const RevenueBilled = projectData.filter(
+    (item) => item?.status === "cbr_raised"
+  );
   const RevenueBilledProject = RevenueBilled.map((item) => item.sample);
   const RevenueBilledProjectCost = RevenueBilled.map((item) => item.cpi);
 

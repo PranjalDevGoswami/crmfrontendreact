@@ -1,203 +1,39 @@
-import React, { useContext, useEffect, useState } from "react";
-import Label from "../components/Label.js";
-import Dropdown from "../components/DropDown.js";
+import React, { useContext } from "react";
 import Button from "../components/Button.js";
 import { Link, useNavigate } from "react-router-dom";
-import MultipleValueDropDown from "../components/MultipleValueDropDown.js";
 import CheckboxList from "../components/Checkbox.js";
-import MultipleFileUpload from "../components/MultipleFileUpload.js";
-import LableAndInput from "../components/LableAndInput.js";
-import { ClientList } from "../fetchApis/clientList/ClientList";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
-import Input from "../components/InputField.js";
-import { TiPlus } from "react-icons/ti";
-import { ProjectTypeList } from "../fetchApis/projects/projectType/ProjectTypeList";
-import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import SweetAlert from "../components/SweetAlert.js";
-import { CloseAddClient } from "../ContextApi/CloseAddClientContext.js";
+import ProjectTypeComponent from "../components/Form/ProjectType.js";
+import { FormDataContext } from "../ContextApi/FormDataContext.js";
+import Client from "../components/Form/Client.js";
+import SowFileUpload from "../components/Form/SowUpload.js";
+import AddOtherCost from "../components/Form/AddOtherCost.js";
+import OtherCost from "../components/Form/OtherCost.js";
+import TranslationCost from "../components/Form/TranslationCost.js";
+import EndDate from "../components/Form/EndDate.js";
+import StartDate from "../components/Form/StartDate.js";
+import ProjectManager from "../components/Form/ProjectManager.js";
+import SetupFee from "../components/Form/SetupFee.js";
+import CostPerInterview from "../components/Form/CostPerInterview.js";
+import SampleSize from "../components/Form/SampleSize.js";
+import ProjectName from "../components/Form/ProjectName.js";
 
 const Form = () => {
-  const [otherCost, setOtherCost] = useState(false);
-  const [translationCost, setTranslationCost] = useState(false);
-  const [isOtherFee, setIsOtherFee] = useState(false);
-  const [otherFeeValue, setOtherFeeValue] = useState([]);
-  const [advancePAyment, setAdvancePAyment] = useState(false);
-  const [clientListData, setClientListData] = useState([
-    "demo Client1",
-    "demo Cliet2",
-  ]);
-  const [projectTypeData, setProjectTypeData] = useState([
-    "Demo CATI",
-    " Demo CAWI",
-  ]);
-  const [projectManagerData, setProjectManagerData] = useState([
-    "demo manager1",
-    "demo manager2",
-  ]);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [managerList, setManagerList] = useState();
-  const user = localStorage.getItem("user");
-  const user_id = localStorage.getItem("user_id");
-  const [formData, setFormData] = useState({
-    name: "",
-    project_type: "",
-    clients: "",
-    sample: "",
-    cpi: "",
-    set_up_fee: "",
-    tentative_start_date: "",
-    tentative_end_date: "",
-    other_cost: "",
-    transaction_fee: "",
-    user_email: user,
-    user_id: user_id,
-    project_manager: "",
-    operation_select: true,
-    finance_select: advancePAyment,
-    upload_document: "",
-  });
+  const {
+    formData,
+    setAdvancePAyment,
+    isOtherFee,
+    otherCost,
+    translationCost,
+  } = useContext(FormDataContext);
+
   const navigate = useNavigate();
   const { darkMode } = useContext(ThemeContext);
-  const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
-  const token = localStorage.getItem("tokrn");
-  const ProjectTypeListData = projectTypeData;
-
-  useEffect(() => {
-    const FetchProjectType = async () => {
-      try {
-        const ProjectType = await ProjectTypeList();
-        const ProjectTypeObject = ProjectType?.data?.map((val) => {
-          return val?.name;
-        });
-        setProjectTypeData(ProjectTypeObject);
-      } catch (error) {
-        console.error("Error fetching project type List:", error);
-      }
-    };
-    FetchProjectType();
-    const FetchProjectManager = async () => {
-      try {
-        const ProjectManager = await GetProjectManager();
-        const Opern_Manager = ProjectManager?.data?.filter((item) => {
-          return item.manager_dep.name === "Operations";
-        });
-        const ProjectManagerObject = Opern_Manager?.map((val) => {
-          return val?.name;
-        });
-        setManagerList(Opern_Manager);
-        setProjectManagerData(ProjectManagerObject);
-      } catch (error) {
-        console.error("Error fetching project type List:", error);
-      }
-    };
-    FetchProjectManager();
-  }, []);
-
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({ ...formData, [name]: value });
-    if (name === "tentative_start_date") {
-      const tst = value;
-      const parts = tst.split("/");
-      const isoDate = new Date(
-        `${parts[2]}-${parts[1]}-${parts[0]}`
-      ).toISOString();
-      setFormData({ ...formData, [name]: isoDate });
-    }
-    if (name === "tentative_end_date") {
-      const tst = value;
-      const parts = tst.split("/");
-      const isoDate = new Date(
-        `${parts[2]}-${parts[1]}-${parts[0]}`
-      ).toISOString();
-      setFormData({ ...formData, [name]: isoDate });
-    }
-    if (name === "set_up_fee") {
-      e.preventDefault();
-      if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: Number(value) });
-      } else {
-        SweetAlert({
-          title: "Error",
-          text: `'Sample value can't be in decimal'`,
-          icon: "error",
-        });
-      }
-    }
-    if (name === "transaction_fee") {
-      e.preventDefault();
-      if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: Number(value) });
-      } else {
-        SweetAlert({
-          title: "Error",
-          text: `'Sample value can't be in decimal'`,
-          icon: "error",
-        });
-      }
-    }
-    if (name === "cpi") {
-      e.preventDefault();
-      if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: value });
-      } else {
-        SweetAlert({
-          title: "Error",
-          text: `'Sample value can't be in decimal'`,
-          icon: "error",
-        });
-      }
-    }
-    if (name === "sample") {
-      e.preventDefault();
-      if (/^\d*$/.test(value)) {
-        setFormData({ ...formData, [name]: value });
-      } else {
-        SweetAlert({
-          title: "Error",
-          text: `'Sample value can't be in decimal'`,
-          icon: "error",
-        });
-      }
-    }
-    if (name === "upload_document") {
-      const formDataFile = new FormData();
-      formDataFile.append("file", files[0]);
-      setFormData({ ...formData, [name]: files[0] });
-    }
-  };
 
   const handleCheckboxChange = (name, checked) => {
     setAdvancePAyment(checked);
-  };
-
-  const SelectOptionHandler = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-    if (name === "clients") {
-      const clientIndex = clientListData.indexOf(value);
-      setFormData({
-        ...formData,
-        [name]: clientIndex + 1,
-      });
-    }
-    if (name === "project_type") {
-      const ProjectTypeIndex = projectTypeData.indexOf(value);
-      setFormData({
-        ...formData,
-        [name]: ProjectTypeIndex + 1,
-      });
-    }
-    if (name === "project_manager") {
-      const selectedManager = managerList.find(
-        (manager) => manager.name === value
-      );
-      setFormData({
-        ...formData,
-        [name]: selectedManager.id,
-      });
-    }
   };
 
   const PostProjectData = async (data) => {
@@ -205,7 +41,7 @@ const Form = () => {
       const response = await PostFormData(data);
       if (response?.status == true) {
         SweetAlert({
-          title: "Project Add Successfully!!",
+          title: "Project Added Successfully!!",
           text: "",
           icon: "success",
         });
@@ -248,41 +84,10 @@ const Form = () => {
     if (!isFormValid()) {
       return;
     } else {
+      console.log(formData);
       PostProjectData(formData);
       navigate("/sales-dashboard");
     }
-  };
-
-  useEffect(() => {
-    const fetchDataFromApi = async () => {
-      try {
-        const ClientData = await ClientList();
-        const clientDataItems = ClientData?.data?.map((val) => {
-          return val.name;
-        });
-        setClientListData(clientDataItems);
-      } catch (error) {}
-    };
-    fetchDataFromApi();
-  }, [closeAddClient, token]);
-
-  const OpenOtherFee = (e) => {
-    e.preventDefault();
-    setIsOtherFee(true);
-  };
-  const CloseOtherFeehandler = () => {
-    setIsOtherFee(false);
-  };
-
-  const today = new Date();
-  const minDate = new Date(today);
-  minDate.setDate(minDate.getDate() - 1);
-  const MultipleValueSection = (selectedOptions) => {
-    const selectedValues = selectedOptions.map((option) => option.value);
-    const updatedValues = [...otherFeeValue, ...selectedValues];
-    setOtherFeeValue(updatedValues);
-    setOtherCost(updatedValues.includes("other_cost"));
-    setTranslationCost(updatedValues.includes("transaction_fee"));
   };
 
   const isFormValid = () => {
@@ -298,7 +103,6 @@ const Form = () => {
     );
   };
 
-  const Amlist = ["Manager 1", "Manager2", "1"];
   return (
     <div
       className={`${
@@ -313,202 +117,41 @@ const Form = () => {
       >
         <div className="lg:flex inline-block lg:flex-wrap flex-nowrap w-full gap-4">
           <div className="flex flex-col lg:w-[32%] w-full">
-            <LableAndInput
-              labelName={"Project Name"}
-              InputName={"name"}
-              InputType={"text"}
-              inputChange={handleInputChange}
-              InputMin_lenght={"1"}
-              InputMax_lenght={"50"}
-              inputClassName={"p-2 border bg-[#f3eded]"}
-              labelClassName={"pt-4 pb-2"}
-            />
+            <ProjectName />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <Label
-              labelName={"Project Type"}
-              className={"pt-4 pb-2"}
-              required
-            />
-            <Dropdown
-              name={"project_type"}
-              className={
-                "p-2 outline-none cursor-pointer w-[100%] bg-[#f3eded] border"
-              }
-              Option_Name={[
-                "-- Select Project Type --",
-                ...ProjectTypeListData,
-              ]}
-              RequireAddButton={false}
-              required
-              onChange={SelectOptionHandler}
-            />
+            <ProjectTypeComponent />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <Label labelName={"Client"} className={"pt-4 pb-2"} />
-            {clientListData.length > 0 && (
-              <Dropdown
-                name={"clients"}
-                className={
-                  "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border rounded-r-none"
-                }
-                Option_Name={["-- Select Client --", ...clientListData]}
-                RequireAddButton={true}
-                required
-                onChange={SelectOptionHandler}
-              />
-            )}
+            <Client />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <LableAndInput
-              labelName={"Sample"}
-              InputName={"sample"}
-              InputType={"number"}
-              inputChange={handleInputChange}
-              inputClassName={"p-2 border bg-[#f3eded]"}
-              labelClassName={"pt-4 pb-2"}
-              min={0}
-            />
+            <SampleSize />
           </div>
           <div className="lg:w-[32%] w-full flex flex-col">
-            <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
-            <div className="flex w-full">
-              <div className="w-full inline-block">
-                <Input
-                  name={"cpi"}
-                  type={"number"}
-                  onchange={handleInputChange}
-                  className={"p-2 border bg-[#f3eded] w-full"}
-                  min={0}
-                />
-              </div>
-            </div>
+            <CostPerInterview />
           </div>
           <div className="lg:w-[32%] w-full flex flex-col relative">
-            <Label labelName={"Setup Fee"} className={"pt-4 pb-2"} />
-            <div className="flex w-full items-center">
-              <div className="w-full inline-block">
-                <Input
-                  name={"set_up_fee"}
-                  type={"number"}
-                  onchange={handleInputChange}
-                  className={"p-2 border bg-[#f3eded] w-full rounded-r-none"}
-                  min={0}
-                />
-              </div>
-              <div className="w-[7%] bg-yellow-200 flex items-center justify-center rounded-r-full">
-                <button
-                  onClick={OpenOtherFee}
-                  className="inline-block p-[13px] "
-                >
-                  <TiPlus />
-                </button>
-              </div>
-            </div>
+            <SetupFee />
           </div>
           {isOtherFee && (
-            <div className="w-1/2 h-2/3 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
-              <div className="bg-white w-full h-full flex items-center justify-center relative">
-                <div className="flex flex-col w-2/3 relative">
-                  <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
-                  <MultipleValueDropDown
-                    options={[
-                      { value: "other_cost", label: "Other Cost" },
-                      { value: "transaction_fee", label: "Translation Cost" },
-                    ]}
-                    onChange={MultipleValueSection}
-                    className={"w-full bg-[#f3eded] "}
-                  />
-                </div>
-                <Button
-                  name={"X"}
-                  className={
-                    "bg-red-400 p-2 w-8 h-8 rounded-full absolute top-4 right-8 flex items-center justify-center text-white"
-                  }
-                  onClick={CloseOtherFeehandler}
-                />
-              </div>
+            <div className="w-4/12 h-2/4 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <AddOtherCost />
             </div>
           )}
-          {/* Additional fields based on checkbox selection */}
-          {otherCost && (
-            <div className="lg:w-[32%] w-full flex flex-col">
-              <Label labelName={"Other Cost"} className={"pt-4 pb-2"} />
-              <div className="flex w-full">
-                <div className="w-full inline-block">
-                  <Input
-                    name={"other_cost"}
-                    type={"number"}
-                    onchange={handleInputChange}
-                    className={"p-2 border bg-[#f3eded] w-full"}
-                    min={0}
-                    // value={"12"}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-          {translationCost && (
-            <div className="flex flex-col lg:w-[32%] w-full">
-              <Label labelName={"Translator Cost"} className={"pt-4 pb-2"} />
-              <div className="flex w-full">
-                <div className="w-full inline-block">
-                  <Input
-                    name={"transaction_fee"}
-                    type={"number"}
-                    onchange={handleInputChange}
-                    className={"p-2 border bg-[#f3eded] w-full"}
-                    min={0}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          {otherCost && <OtherCost />}
+          {translationCost && <TranslationCost />}
           <div className="flex flex-col lg:w-[32%] w-full">
-            <Label labelName={"Manager  "} className={"pt-4 pb-2"} />
-            <Dropdown
-              name={"project_manager"}
-              className={
-                "p-2 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border"
-              }
-              Option_Name={["-- Select Manager --", ...projectManagerData]}
-              RequireAddButton={false}
-              required
-              onChange={SelectOptionHandler}
-            />
+            <ProjectManager />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <LableAndInput
-              labelName={"Start Date"}
-              InputName={"tentative_start_date"}
-              InputType={"date"}
-              placeholder={"dd/mm/yyyy"}
-              inputChange={handleInputChange}
-              min={minDate.toISOString().split("T")[0]}
-              inputClassName={"p-2 border bg-[#f3eded]"}
-              labelClassName={"pt-4 pb-2"}
-            />
+            <StartDate />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <LableAndInput
-              labelName={"End Date"}
-              InputName={"tentative_end_date"}
-              InputType={"date"}
-              placeholder={"dd/mm/yyyy"}
-              inputChange={handleInputChange}
-              min={minDate.toISOString().split("T")[0]}
-              inputClassName={"p-2 border bg-[#f3eded]"}
-              labelClassName={"pt-4 pb-2"}
-            />
+            <EndDate />
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
-            <Label labelName={"SOW File"} className={"pt-4 pb-2"} />
-            <MultipleFileUpload
-              selectedFiles={selectedFiles}
-              name={"upload_document"}
-              handleFileChange={handleInputChange}
-              className={"p-1 border bg-[#f3eded] w-full"}
-            />
+            <SowFileUpload />
           </div>
         </div>
         <div className="flex flex-col lg:w-[32%] w-full pt-8 pb-2">

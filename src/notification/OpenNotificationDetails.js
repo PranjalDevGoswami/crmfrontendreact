@@ -1,15 +1,15 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import Button from "../components/Button";
 import { putWithAuth } from "../provider/helper/axios";
 import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/urls";
-import { FetchProject } from "../ContextApi/FetchProjectContext";
 import SweetAlert from "../components/SweetAlert";
+import { FilterContext } from "../ContextApi/FilterContext";
+// import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
 
 const OpenNotification = ({ notification_btn_ref }) => {
   const { notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
-  const { projectList, setProjectList } = useContext(FetchProject);
   const [dataToUpdate, setDataToUpdate] = useState({
     project_code: "",
     tentative_end_date: "",
@@ -17,6 +17,14 @@ const OpenNotification = ({ notification_btn_ref }) => {
     reason_for_adjustment: "",
     send_email_manager: "",
   });
+  const { projectData } = useContext(FilterContext);
+  // useEffect(() => {
+  //   const getProject = async () => {
+  //     const response = await ProjectDetails();
+  //     setProjectList(response);
+  //   };
+  //   getProject();
+  // }, []);
 
   const handleAccept = async (projectCode) => {
     const selectedProject = notificationProjectList.find(
@@ -54,7 +62,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
     }
   };
 
-  const getOldProjectData = projectList?.filter((item) => {
+  const getOldProjectData = projectData?.filter((item) => {
     return (
       item?.project_code ==
       notificationProjectList.map((item) => {
@@ -71,7 +79,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
       {notificationProjectList?.map((item, ind) => (
         <div
           key={ind}
-          className="border-b border-black mb-2 border bg-[#bd1d1d] cursor-pointer p-4 rounded-md"
+          className="border-b border-black mb-2 border bg-gray-50 cursor-pointer p-4 rounded-md"
         >
           <div className="flex justify-between">
             <div className="w-1/2 p-4">

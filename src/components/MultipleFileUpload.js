@@ -7,7 +7,7 @@ function MultipleFileUpload({
   name,
 }) {
   return (
-    <div>
+    <div className="mt-2">
       <input
         name={name}
         type="file"

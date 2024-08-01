@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 
 const Input = ({
@@ -18,6 +18,24 @@ const Input = ({
   onfocus,
 }) => {
   const { darkMode } = useContext(ThemeContext);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    const inputElement = inputRef.current;
+    const handleWheel = (e) => {
+      e.preventDefault();
+    };
+
+    if (inputElement) {
+      inputElement.addEventListener("wheel", handleWheel);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, []);
   return (
     <input
       type={type}
@@ -36,6 +54,7 @@ const Input = ({
       disabled={disabled}
       multiple={multiple}
       onFocus={onfocus}
+      ref={inputRef}
     />
   );
 };

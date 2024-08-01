@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
+import React, { useContext, useEffect, useState } from "react";
+// import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
 import { GoProjectRoadmap } from "react-icons/go";
+import { FilterContext } from "../../ContextApi/FilterContext";
 
 const ProjectCount = () => {
-  const [project, setProject] = useState([]);
+  // const [project, setProject] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  useEffect(() => {
-    const ProjectDetail = async () => {
-      const response = await ProjectDetails();
-      setProject(response);
-    };
-    ProjectDetail();
-  }, []);
-  const ProjectTotal = project?.length;
+  const ProjectTotal = projectData?.length;
 
   return (
     <div className="w-80 h-48 bg-[#4CBC9A] text-white rounded-md m-2 shadow-lg">

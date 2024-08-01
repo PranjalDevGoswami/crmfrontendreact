@@ -17,11 +17,16 @@ const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, setShowPasswordIcon] = useState(false);
+  // const [userRole, setUserRole] = useState("");
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
   const { darkMode } = useContext(ThemeContext);
+
+  // const token = localStorage.getItem("token");
+  // const auth = token ? useAuth() : {};
+  // const { setToken } = auth || {};
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +48,7 @@ const Login = () => {
     try {
       const userList = await fetch(USERLIST);
       const userListJson = await userList.json();
-
+      const role = localStorage.getItem("role");
       let email = localStorage.getItem("user");
       const userData = userListJson.users;
       function getUserByEmail(email) {
@@ -55,7 +60,9 @@ const Login = () => {
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department?.id;
         localStorage.setItem("department", department);
-        if (department == 1) {
+        if (role === "Director" || role === "superuser") {
+          navigate("/report");
+        } else if (department == 1) {
           navigate("/sales-dashboard");
         } else if (department == 2) {
           navigate("/operation-dashboard");
@@ -66,8 +73,6 @@ const Login = () => {
         } else {
           navigate("/default-dashboard");
         }
-      } else {
-        console.error("User details not found");
       }
     } catch (error) {
       console.error("Error redirecting user:", error);
@@ -75,9 +80,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (token !== null) {
-      RedirectUser();
-    }
+    RedirectUser();
   }, [token]);
 
   const handleLogin = async (e) => {
@@ -126,9 +129,9 @@ const Login = () => {
   return (
     <form onSubmit={handleLogin}>
       <div className="bg-[url('./assets/HS-blog-post-20-2048x1075.png')] opacity-80 md:w-full md:h-screen xl:bg-contain bg-cover">
-        <div className="md:flex md:h-full block h-auto">
+        <div className="md:flex lg:flex xl:flex 2xl:flex md:h-full block h-auto">
           <div className="md:w-2/3 md:h-2/3 hidden md:flex flex-col items-center justify-center p-8 pl-8"></div>
-          <div className="md:w-1/2 w-full">
+          <div className="md:w-1/2 w-full lg:w-5/12 xl:w-4/12 2xl:w-4/12">
             <div className="h-screen shadow-gray-600 shadow-lg bg-white flex justify-center items-center w-full relative">
               <div className="flex flex-col gap-4 md:p-4 p-1 w-9/12">
                 <h1 className="text-5xl text-center p-8 text-[#e7251e]">

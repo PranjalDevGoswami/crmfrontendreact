@@ -23,9 +23,6 @@ import ManagementPanel from "../dashboard/ManagementRole";
 import ReportDashboard from "../dashboard/ReportDashboard.js";
 
 const Routes = () => {
-  // const { token } = useAuth();
-  // const token = localStorage.getItem("token");
-  // Define public routes accessible to all users
   const routesForPublic = [
     {
       path: "/login",
@@ -46,14 +43,14 @@ const Routes = () => {
     { path: "*", element: <Error /> },
     {
       path: "/logout",
-      element: <LogoutTimer />, // Include LogoutTimer component
+      element: <LogoutTimer />,
     },
   ];
 
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: <ProtectedRoute />,
       children: [
         {
           path: "/operation-dashboard",

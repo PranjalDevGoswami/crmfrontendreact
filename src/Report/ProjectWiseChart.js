@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
+// import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { FilterContext } from "../ContextApi/FilterContext";
 
 export default function ProjectWiseChart() {
   const [projectSampleSize, setProjectSampleSize] = useState([]);
   const [projectAchieveTarget, setProjectAchieveTarget] = useState([]);
   const [projectCode, setProjectCode] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
   useEffect(() => {
     const ProjectDetail = async () => {
-      const response = await ProjectDetails();
-      const monthofProject = response.map((item) => item.tentative_end_date);
+      // const response = await ProjectDetails();
+      const monthofProject = projectData.map((item) => item.tentative_end_date);
       const getCurrentMonthDates = (monthofProject) => {
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth(); // Note: getMonth() returns 0-indexed month (0 for January, 1 for February, etc.)

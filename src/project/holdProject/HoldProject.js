@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
+import React, { useContext, useEffect, useState } from "react";
+// import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
 import { MdPauseCircleOutline } from "react-icons/md";
+import { FilterContext } from "../../ContextApi/FilterContext";
 
 const HoldProject = () => {
-  const [project, setProject] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  useEffect(() => {
-    const ProjectDetail = async () => {
-      const response = await ProjectDetails();
-      const holdProject = response.filter((item) => {
-        return item.status === "hold";
-      });
-      setProject(holdProject);
-    };
-    ProjectDetail();
-  }, []);
-  const ProjectTotal = project?.length;
+  // useEffect(() => {
+  //   const ProjectDetail = async () => {
+  //     const response = await ProjectDetails();
+  //     const holdProject = response.filter((item) => {
+  //       return item.status === "hold";
+  //     });
+  //     setProject(holdProject);
+  //   };
+  //   ProjectDetail();
+  // }, []);
+  const ProjectTotal = projectData?.length;
 
   return (
     <div className="w-80 h-48 bg-[#4CBC9A] text-white rounded-md m-2 shadow-lg">

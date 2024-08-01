@@ -4,7 +4,7 @@ import { Route } from "react-router-dom";
 
 export const checkForTokenExpiredError = (error) => {
   if (error.message === "Network Error") {
-    document.write("Server Down ");
+    document.write("Server Down");
   } else {
     const { status } = error?.response;
     return Number(status) === 401;
@@ -20,24 +20,56 @@ export const createWithAuth = () => {
   });
 };
 
+// const refreshTokenAndSetAuth = async (callback) => {
+//   const refreshToken = localStorage.getItem("refreshToken");
+//   if (refreshToken) {
+//     const response = await refreshUserToken(REFRESH_TOKEN, {
+//       refresh: refreshToken,
+//     });
+//     const { access } = response?.data;
+//     if (response.status == 200) {
+//       localStorage.setItem("token", access);
+//       return callback();
+//     } else {
+//       localStorage.clear();
+//       window.location.href = "/login";
+//       Route.push("/login");
+//     }
+//   } else {
+//     window.location.href = "/login";
+//   }
+// };
+
+// const refreshUserToken = (url, data) => {
+//   return postWithOutAuth(url, data);
+// };
+
 const refreshTokenAndSetAuth = async (callback) => {
   const refreshToken = localStorage.getItem("refreshToken");
   if (refreshToken) {
-    const response = await refreshUserToken(REFRESH_TOKEN, {
-      refresh: refreshToken,
-    });
-    const { access } = response?.data;
-    if (response.status == 200) {
-      localStorage.setItem("token", access);
-      return callback();
-    } else {
-      localStorage.clear();
-      window.location.href = "/login";
-      Route.push("/login");
+    try {
+      const response = await refreshUserToken(REFRESH_TOKEN, {
+        refresh: refreshToken,
+      });
+      const { access } = response?.data;
+      if (response.status === 200) {
+        localStorage.setItem("token", access);
+        return callback();
+      } else {
+        handleAuthFailure();
+      }
+    } catch (error) {
+      handleAuthFailure();
     }
   } else {
-    window.location.href = "/login";
+    handleAuthFailure();
   }
+};
+
+const handleAuthFailure = () => {
+  localStorage.clear();
+  window.location.href = "/login";
+  Route.push("/login");
 };
 
 const refreshUserToken = (url, data) => {

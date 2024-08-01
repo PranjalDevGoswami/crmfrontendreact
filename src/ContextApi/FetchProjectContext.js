@@ -1,25 +1,25 @@
-import { createContext, useEffect, useState } from "react";
-import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
+// import { createContext, useEffect, useState } from "react";
+// import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
 
-export const FetchProject = createContext();
+// export const FetchProject = createContext();
 
-export const FetchProjectProvider = ({ children }) => {
-  const [projectList, setProjectList] = useState([]);
-  const token = localStorage.getItem("token");
+// export const FetchProjectProvider = ({ children }) => {
+//   const [projectList, setProjectList] = useState([]);
+//   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (token) {
-      const getProject = async () => {
-        const response = await ProjectDetails();
-        setProjectList(response);
-      };
-      getProject();
-    }
-  }, []);
+//   useEffect(() => {
+//     if (token) {
+//       const getProject = async () => {
+//         const response = await ProjectDetails();
+//         setProjectList(response);
+//       };
+//       getProject();
+//     }
+//   }, [token]);
 
-  return (
-    <FetchProject.Provider value={{ projectList, setProjectList }}>
-      {children}
-    </FetchProject.Provider>
-  );
-};
+//   return (
+//     <FetchProject.Provider value={{ projectList, setProjectList }}>
+//       {children}
+//     </FetchProject.Provider>
+//   );
+// };

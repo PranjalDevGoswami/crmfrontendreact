@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
+import React, { useContext, useEffect, useState } from "react";
+// import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
 import { MdPauseCircleOutline } from "react-icons/md";
 import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysManWork.js";
 import { BsSkipEnd } from "react-icons/bs";
+import { FilterContext } from "../../ContextApi/FilterContext.js";
 
 const ProjectEndThisMonth = () => {
-  const [project, setProject] = useState([]);
+  // const [project, setProject] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
-  const getCurrentMonthDates = (project) => {
+  const getCurrentMonthDates = (projectData) => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
-    return project.filter((date) => {
+    return projectData.filter((date) => {
       const dateObj = new Date(date);
       return (
         dateObj.getMonth() === currentMonth &&
@@ -21,18 +23,18 @@ const ProjectEndThisMonth = () => {
     });
   };
 
-  const currentMonthDates = getCurrentMonthDates(project);
+  const currentMonthDates = getCurrentMonthDates(projectData);
 
-  useEffect(() => {
-    const ProjectDetail = async () => {
-      const response = await ProjectDetails();
-      const TrendingProject = response.map((item) => {
-        return item?.tentative_end_date;
-      });
-      setProject(TrendingProject);
-    };
-    ProjectDetail();
-  }, []);
+  // useEffect(() => {
+  //   const ProjectDetail = async () => {
+  //     const response = await ProjectDetails();
+  //     const TrendingProject = response.map((item) => {
+  //       return item?.tentative_end_date;
+  //     });
+  //     setProject(TrendingProject);
+  //   };
+  //   ProjectDetail();
+  // }, []);
 
   const ProjectTotal = currentMonthDates?.length;
 

@@ -57,7 +57,7 @@ const SignUp = () => {
         SweetAlert({
           title: "Success",
           text: "Registration Successful !!",
-          icon: "info",
+          icon: "success",
         });
         navigate("/login");
       } else {

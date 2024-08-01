@@ -1,40 +1,42 @@
 import { Navigate, Outlet } from "react-router-dom";
-import MainDashboard from "../dashboard/MainDashboard";
 import Header from "../partials/Header";
-import Breadcrumbs from "../components/Breadcrumbs";
 import { useContext } from "react";
 import { ThemeContext } from "../ContextApi/ThemeContext";
+import SideBar from "../components/Sidebar/SideBar";
 
 export const ProtectedRoute = () => {
   const token = localStorage.getItem("token");
-  const { darkMode } = useContext(ThemeContext);
+  const { darkMode, sideBarOpen } = useContext(ThemeContext);
 
   if (!token) {
     return <Navigate to="/login" />;
   }
+
   return (
-    <>
+    <div
+      className={`h-full min-h-screen container mx-auto max-w-full w-full ${
+        darkMode ? "bg-black" : "bg-gray-200"
+      }`}
+    >
       <div className="fixed top-0 left-0 w-full z-50">
         <Header />
       </div>
-      <div
-        className={` ${
-          darkMode ? "bg-black" : "bg-gray-200"
-        } w-full  h-full min-h-screen`}
-      >
-        <div className="flex">
-          <div className="sticky top-28 left-0 h-28 max-w-52 z-50">
-            <MainDashboard />
-          </div>
-          <div className="w-full mt-36">
-            <div className="container mx-auto">
-              <div className="max-w-full">
-                <Outlet />
-              </div>
-            </div>
-          </div>
+      <div className="flex flex-1 pt-16">
+        <div
+          className={`fixed top-28 left-0 h-full z-40 ${
+            sideBarOpen ? "w-[12%]" : "w-12"
+          } transition-width duration-300 `}
+        >
+          <SideBar />
+        </div>
+        <div
+          className={`flex-1 transition-all duration-300 overflow-scroll no-scrollbar h-screen mr-4 ${
+            sideBarOpen ? "ml-[12%]" : "ml-[4rem]"
+          } mt-8`}
+        >
+          <Outlet />
         </div>
       </div>
-    </>
+    </div>
   );
 };

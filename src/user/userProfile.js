@@ -15,9 +15,10 @@ export const userDetails = () => {
   const token = localStorage.getItem("token");
   if (token) {
     const decoded = jwtDecode(token);
-    const { role, username, user_id } = decoded;
+    const { role, username, user_id, userrole } = decoded;
     localStorage.setItem("role", role);
     localStorage.setItem("user_id", user_id);
+    localStorage.setItem("userrole", userrole);
     localStorage.setItem("username", username);
     return { role, username, user_id };
   }
@@ -94,7 +95,6 @@ export const Profile = ({ profileDataUpdate }) => {
         icon: "success",
       });
     } else {
-      console.log(response);
       setProfileUpdated(false);
     }
   };

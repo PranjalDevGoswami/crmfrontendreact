@@ -1,32 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import React, { useContext, useEffect, useState } from "react";
+// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
+import { FilterContext } from "../ContextApi/FilterContext";
 
 const PerWeekReport = () => {
-  const [project, setProject] = useState([]);
+  // const [project, setProject] = useState([]);
   const [projectInProgress, setProjectInProgress] = useState([]);
   const [manWorkData, setManWorkData] = useState({});
+  const { projectData } = useContext(FilterContext);
+
+  // useEffect(() => {
+  //   const fetchProjectData = async () => {
+  //     try {
+  //       const fetchDataFromApi2 = await GetProjectData();
+  //       const projectDataObject = fetchDataFromApi2?.data || [];
+  //       setProject(projectDataObject);
+  //     } catch (error) {
+  //       console.error("Error fetching project data:", error);
+  //     }
+  //   };
+  //   fetchProjectData();
+  // }, []);
 
   useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data || [];
-        setProject(projectDataObject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
-  }, []);
-
-  useEffect(() => {
-    const ProjectInProgress = project.filter(
+    const ProjectInProgress = projectData.filter(
       (item) => item?.status === "inprogress"
     );
     setProjectInProgress(ProjectInProgress);
-  }, [project]);
+  }, [projectData]);
 
   const fetchManWorkData = async (projectCode) => {
     try {

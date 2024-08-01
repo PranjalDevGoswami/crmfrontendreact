@@ -168,25 +168,25 @@ export const Dummycolumns = [
     width: 100,
     align: "left",
     sortable: false,
-    cell: (record, index) => {
-      return (
-        <div className="relative w-full">
-          <div className="flex items-center">
-            <button
-              // onClick={() => handleAddEditOperation(record, index)}
-              className="border p-2 rounded-md mr-2 cursor-pointer"
-            >
-              edit{" "}
-            </button>
-            {/* {isOperationPerson && openDropdownIndex === index ? (
-                <OpereationButton record={record} />
-              ) : (
-                ""
-              )} */}
-          </div>
-        </div>
-      );
-    },
+    // cell: (record, index) => {
+    //   return (
+    //     <div className="relative w-full">
+    //       <div className="flex items-center">
+    //         <button
+    //           // onClick={() => handleAddEditOperation(record, index)}
+    //           className="border p-2 rounded-md mr-2 cursor-pointer"
+    //         >
+    //           edit
+    //         </button>
+    //         {/* {isOperationPerson && openDropdownIndex === index ? (
+    //             <OpereationButton record={record} />
+    //           ) : (
+    //             ""
+    //           )} */}
+    //       </div>
+    //     </div>
+    //   );
+    // },
   },
 ];
 
@@ -430,12 +430,12 @@ export const customStylesFormanDaysDetailsDarkMode = {
 };
 
 export const editedColumns = [
-  {
-    name: "Sr.No.",
-    selector: (row) => row.id,
-    sortable: true,
-    width: "90px",
-  },
+  // {
+  //   name: "Sr.No.",
+  //   selector: (row) => row.id,
+  //   sortable: true,
+  //   width: "90px",
+  // },
   {
     name: "Project Code",
     selector: (row) => row.project_code?.toUpperCase(),
@@ -450,12 +450,19 @@ export const editedColumns = [
     name: "Project Name",
     selector: (row) => row.name,
     sortable: true,
+    width: "auto",
   },
   {
     name: "Sample",
     selector: (row) => row.sample,
     sortable: true,
     width: "100px",
+  },
+  {
+    name: "Remaining Target",
+    selector: (row) => row.remaining_interview,
+    sortable: true,
+    width: "150px",
   },
   {
     name: "Achieved Target",
@@ -476,12 +483,6 @@ export const editedColumns = [
 ];
 
 export const AssignColumns = [
-  {
-    name: "Sr.No.",
-    selector: (row) => row.id,
-    sortable: true,
-    // width: "90px",
-  },
   {
     name: "Project Code",
     selector: (row) => row.project_code?.toUpperCase(),
@@ -511,74 +512,6 @@ export const AssignColumns = [
 const currentDate = new Date().toISOString().split("T")[0];
 
 export const conditionalRowStyles = [
-  // {
-  //   when: (row) => new Date(row.tentative_end_date) < new Date(currentDate),
-  //   style: {
-  //     backgroundColor: "rgb(255, 63, 58)",
-  //     color: "black",
-  //     "&:hover": {
-  //       cursor: "not-allowed",
-  //     },
-  //   },
-  // },
-
-  // {
-  //   when: (row) => {
-  //     const endDate = new Date(row.tentative_end_date).getTime();
-  //     const diffInMs = endDate - new Date(currentDate);
-  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
-  //     return diffInWeeks <= 2;
-  //   },
-  //   style: {
-  //     backgroundColor: "red",
-  //     color: "white",
-  //     "&:hover": {
-  //       cursor: "not-allowed",
-  //     },
-  //   },
-  // },
-  // {
-  //   when: (row) => {
-  //     const endDate = new Date(row.tentative_end_date).getTime();
-  //     const diffInMs = endDate - new Date(currentDate);
-  //     console.log("🚀 ~ diffInMs:", diffInMs);
-  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
-  //     return diffInWeeks <= 1;
-  //   },
-  //   style: {
-  //     backgroundColor: "orange",
-  //     color: "white",
-  //     "&:hover": {
-  //       cursor: "not-allowed",
-  //     },
-  //   },
-  // },
-  // {
-  //   when: (row) => {
-  //     const endDate = new Date(row.tentative_end_date).getTime();
-  //     const diffInMs = endDate - new Date(currentDate);
-  //     const diffInWeeks = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
-  //     return diffInWeeks < 0;
-  //   },
-  //   style: {
-  //     backgroundColor: "yellow",
-  //     color: "black",
-  //     "&:hover": {
-  //       cursor: "not-allowed",
-  //     },
-  //   },
-  // },
-
-  // {
-  //   when: (row) => row.status == "completed",
-  //   style: {
-  //     backgroundColor: "rgba(63, 195, 128, 0.9)",
-  //     color: "white",
-  //     "&:hover": {
-  //       cursor: "pointer",
-  //     },
-  //   },
-  // },
   {
     when: (row) => row.status === "cbr_raised",
     style: {

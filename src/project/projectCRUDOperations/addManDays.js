@@ -16,12 +16,21 @@ export function AddManDays({ setMultiEditFieldOpen }) {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [mandaysData, setMandaysData] = useState(
-    selectedRow.map(() => ({
-      man_days: "",
-      total_achievement: "",
-      status: "",
-      date: "",
-    }))
+    selectedRow.map(() => [
+      // {
+      //   man_days: "",
+      //   total_achievement: "",
+      //   status: "",
+      //   date: "",
+      // },
+      {
+        // name: viewRecord.name,
+        // project_id: viewRecord.id,
+        update_date: "",
+        total_man_days: "",
+        total_achievement: "",
+      },
+    ])
   );
   const [editIndex, setEditIndex] = useState(null);
 
@@ -68,7 +77,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         maxLength={"2"}
         onChange={(e) => handleMandaysData(index, e)}
         name="man_days"
-        value={mandaysData[index]?.man_days}
+        value={mandaysData[index]?.total_man_days}
       />
     ),
     total_achievement: (
@@ -122,7 +131,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
 
   const finalData = mandaysData.map((item, index) => ({
     ...selectedEditData[index],
-    man_days: parseInt(item.man_days),
+    total_man_days: parseInt(item.total_man_days),
     total_achievement: item.total_achievement,
     status: item.status,
     is_active: true,
@@ -133,14 +142,14 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     .map((item, index) => {
       if (
         item.project_code !== null &&
-        item.man_days !== "" &&
+        item.total_man_days !== "" &&
         item.total_achievement !== "" &&
         item.status !== ""
       ) {
         return {
           project_code: item.project_code,
           name: item.name,
-          man_days: parseInt(item.man_days),
+          total_man_days: parseInt(item.total_man_days),
           total_achievement: item.total_achievement,
           status: item.status,
           date: item.date,
@@ -154,16 +163,16 @@ export function AddManDays({ setMultiEditFieldOpen }) {
       SweetAlert({
         title: "Error",
         text: "Please fill in data for at least one project before updating.",
-        icon: "info",
+        icon: "error",
       });
       return;
     }
     const updatedMandaysData = [...mandaysData];
     updatedMandaysData[editIndex] = {
-      man_days: "",
+      total_man_days: "",
       total_achievement: "",
       status: "",
-      date: "",
+      update_date: "",
     };
     setMandaysData(updatedMandaysData);
     setEditIndex(null);
@@ -185,13 +194,13 @@ export function AddManDays({ setMultiEditFieldOpen }) {
           SweetAlert({
             title: "Error",
             text: "please select date from calender",
-            icon: "info",
+            icon: "error",
           });
         } else {
           SweetAlert({
             title: "Error",
             text: response?.ex?.response?.data?.error,
-            icon: "info",
+            icon: "error",
           });
         }
       }
@@ -200,7 +209,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     }
   };
   return (
-    <React.Fragment>
+    <React.Fragment className="z-40">
       <Drawer
         anchor={"right"}
         PaperProps={{
@@ -212,7 +221,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         open={openRight}
         onClose={closeDrawerRight}
       >
-        <div className="mb-6">
+        <div className="mb-6 z-30">
           <h3 className="text-xl underline pb-4">
             Fill Man Days and Achieve Target
           </h3>

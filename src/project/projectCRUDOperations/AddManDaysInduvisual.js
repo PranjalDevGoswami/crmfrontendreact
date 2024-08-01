@@ -5,41 +5,48 @@ import LableAndInput from "../../components/LableAndInput";
 import Dropdown from "../../components/DropDown";
 import Label from "../../components/Label";
 import SweetAlert from "../../components/SweetAlert";
-import { FetchProject } from "../../ContextApi/FetchProjectContext";
 
-const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
+const AddManDaysInduvisual = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState("");
-  const [updatedValue, setUpdatedValue] = useState({
-    name: viewRecord.name,
-    project_code: viewRecord.project_code,
-    date: "",
-    man_days: "",
-    total_achievement: "",
-  });
-  const { isAddManDays, setIsAddManDays } = useContext(DataTableContext);
-  const { projectList } = useContext(FetchProject);
+  const [updatedValue, setUpdatedValue] = useState([
+    {
+      // name: viewRecord.name,
+      project_id: viewRecord.id,
+      update_date: "",
+      total_man_days: "",
+      total_achievement: "",
+    },
+  ]);
+  const { isAddManDays, setIsAddManDays, setisEdit } =
+    useContext(DataTableContext);
 
   const handleFilterOption = (name, value) => {
-    setUpdatedValue({
-      ...updatedValue,
-      [name]: value,
-    });
+    setUpdatedValue((prevValues) =>
+      prevValues.map((item) => ({
+        ...item,
+        [name]: value,
+      }))
+    );
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedValue({
-      ...updatedValue,
-      [name]: value,
-    });
-    if (name === "date") {
+    setUpdatedValue((prevValues) =>
+      prevValues.map((item) => ({
+        ...item,
+        [name]: value,
+      }))
+    );
+    if (name === "update_date") {
       setShowDate(value);
-      const DateVAlue = new Date(value);
-      const formattedDate = DateVAlue.toISOString();
-      setUpdatedValue({
-        ...updatedValue,
-        date: formattedDate,
-      });
+      const DateValue = new Date(value);
+      const formattedDate = DateValue.toISOString();
+      setUpdatedValue((prevValues) =>
+        prevValues.map((item) => ({
+          ...item,
+          update_date: formattedDate,
+        }))
+      );
     }
   };
 
@@ -77,6 +84,7 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
   };
 
   const handleCancelUpdate = () => {
+    setisEdit(false);
     setIsAddManDays(false);
 
     document.body.classList.remove("DrawerBody");
@@ -92,22 +100,21 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
           text: "",
           icon: "success",
         });
+        setisEdit(false);
       } else {
         SweetAlert({
-          title: "field can not be blank.",
+          title: response?.ex?.response?.data?.error,
           text: "",
-          icon: "info",
+          icon: "error",
         });
       }
     } catch (error) {
       SweetAlert({
-        title: "Error fetching project data:",
-        error,
+        title: "error",
         text: "",
         icon: "error",
       });
     }
-
     document.body.classList.remove("DrawerBody");
     // setIsDrawerOpen(false);
   };
@@ -117,12 +124,12 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
   };
 
   return (
-    <div className="absolute  w-1/2 h-auto top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-30%] z-30">
+    <div className="">
       <h3 className="text-xl underline pb-4">
         Fill Man Days and Achieve Target
       </h3>
-      <div className="flex items-center flex-col justify-between">
-        <div className="w-11/12">
+      <div className="flex items-center flex-wrap justify-center w-full rounded-sm">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Project Code"}
             Inputvalue={viewRecord.project_code.toUpperCase()}
@@ -132,7 +139,7 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Project Name"}
             Inputvalue={viewRecord.name}
@@ -142,10 +149,10 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Date"}
-            InputName={"date"}
+            InputName={"update_date"}
             InputType={"date"}
             inputClassName={"p-2 border w-full"}
             labelClassName={"pt-4 pb-2"}
@@ -156,24 +163,26 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
             InputOnFocus={handleDateFocus}
           />
         </div>
-        <div className="w-11/12 mt-4">
+        <div className="ProjectOperationEdit mt-4">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />
           <Dropdown
             Option_Name={[
               "--Select Status--",
-              "inprogress",
-              "hold",
-              "complete",
+              "Project_Initiated",
+              "To_Be_Started",
+              "In_Progress",
+              "Completed",
+              "On_Hold",
             ]}
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}
             name={"status"}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Man Days"}
-            InputName={"man_days"}
+            InputName={"total_man_days"}
             InputType={"number"}
             inputClassName={"p-2 border"}
             labelClassName={"pt-4 pb-2"}
@@ -183,7 +192,7 @@ const AddManDaysInduvisual = ({ viewRecord, setisEdit }) => {
             min={1}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Achieve Target"}
             InputType={"number"}

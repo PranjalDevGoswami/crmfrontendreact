@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-// import { Drawer } from "@material-tailwind/react";
 import Drawer from "@mui/material/Drawer";
-
 import DataTable from "react-data-table-component";
 import {
   AssignColumns,
@@ -9,68 +7,59 @@ import {
   customStyles,
 } from "../../utils/DataTablesData.js";
 import Dropdown from "../components/DropDown.js";
-import { GetProjectManager } from "../fetchApis/projectManager/projectManager";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import { UpdateTeamLead } from "../fetchApis/projects/updateTeamLead/updateLeamTead.js";
 import SweetAlert from "../components/SweetAlert.js";
 import { DataTableContext } from "../ContextApi/DataTableContext.js";
+import { PROJECT_MANAGER, UPDATETLASSIGNMENT } from "../../utils/urls.js";
+import { getWithAuth } from "../provider/helper/axios.js";
+import { FilterContext } from "../ContextApi/FilterContext.js";
 
-const AssignedProject = ({ setMultiEditFieldOpen, teamLeadAssiged }) => {
+const AssignedProject = ({ setMultiEditFieldOpen }) => {
+  const userrole = localStorage.getItem("userrole");
   const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit } =
     useContext(DataTableContext);
+  const { teamLeadAssiged, setTeamLeadAssiged } = useContext(FilterContext);
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [selectTL, setSelectTL] = useState(["No TL Assigned"]);
-  const [allProjectList, setAllProjectList] = useState();
-  const [project_id, setProject_id] = useState([]);
-  const [teamLeadNameID, setTeamLeadNameID] = useState();
-  const [assignData, setAssignData] = useState({
-    ids: [...project_id],
-    projects: [],
-  });
-  const username = localStorage.getItem("username");
-
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-          return val;
-        });
-        setAllProjectList(projectDataObject);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
-  }, [selectedRow]);
+  const [assignData, setAssignData] = useState([]);
+  const { projectData } = useContext(FilterContext);
 
   useEffect(() => {
     const getTeamLead = async () => {
       try {
-        const ProjectManager = await GetProjectManager();
-        const ManagerName = ProjectManager?.data?.filter((item) => {
-          return item?.name === username;
+        const ProjectManager = await getWithAuth(
+          `${PROJECT_MANAGER}${userrole}/teamleads/`
+        );
+        const TeamLeadList = ProjectManager?.data?.team_leads?.map((item) => {
+          return item;
         });
-        const TeamLeadList = ManagerName?.map((val) => {
-          const tl = val?.manager_teamlead;
-          return tl.map((val) => val);
-        });
-        setTeamLeadNameID(TeamLeadList);
-        const TL_Name = TeamLeadList.map((val) => val);
-        const names = [];
-        TL_Name.forEach((array) => {
-          array.forEach((item) => {
-            names.push(item.name);
-          });
-        });
-        setSelectTL(names);
+        setSelectTL(TeamLeadList);
       } catch (error) {
         console.error("Error fetching project type List:", error);
       }
     };
     getTeamLead();
   }, []);
+
+  useEffect(() => {
+    const CheckTLAssigned = async () => {
+      try {
+        const response = await getWithAuth(UPDATETLASSIGNMENT);
+        const data = response?.data;
+        const ProjectAlreadyAssigned = data.filter((item) => item?.assigned_to);
+        const selectedRowIds = selectedRow.map((item) => item.id);
+        const selectedRowTlAssigned = ProjectAlreadyAssigned.filter((item) =>
+          selectedRowIds.includes(item.project_id)
+        );
+        setTeamLeadAssiged(selectedRowTlAssigned);
+        console.log("🚀 ~ CheckTLAssigned ~ data:", selectedRowTlAssigned);
+      } catch (error) {
+        console.error("Error checking TL assignment:", error);
+      }
+    };
+    CheckTLAssigned();
+  }, [selectedRow]);
 
   const closeDrawerRight = () => {
     document.body.classList.remove("DrawerBody");
@@ -100,74 +89,69 @@ const AssignedProject = ({ setMultiEditFieldOpen, teamLeadAssiged }) => {
   };
 
   const handleAssignedProject = () => {
-    PostProjectData(assignData);
-    setOpenRight(false);
-    setIsDrawerOpen(false);
-    setMultiEditFieldOpen(false);
-    document.body.classList.remove("DrawerBody");
+    if (assignData.length > 0) {
+      PostProjectData(assignData);
+      setOpenRight(false);
+      setIsDrawerOpen(false);
+      setMultiEditFieldOpen(false);
+      setIsMultiEdit(false);
+      document.body.classList.remove("DrawerBody");
+    } else {
+      SweetAlert({
+        title: "Info",
+        text: "Please Select a Project TL for Update",
+        icon: "info",
+      });
+    }
   };
 
   const handleSelectTL = (index, name, value) => {
     if (value === "No TL Assigned") {
       SweetAlert({
-        title: "Alert",
+        title: "info",
         text: "No TL Assiged.",
         icon: "info",
       });
     }
-    if (teamLeadNameID) {
-      const teamleadArray = teamLeadNameID[0];
-      const Selected_TeamLead = teamleadArray.filter(
-        (item) => item.name === value
-      );
-
-      if (value === Selected_TeamLead[0]?.name) {
-        const updatedAssignData = { ...assignData };
-        const projectCode = selectedRow[index].project_code;
-        const filteredItem = allProjectList.find(
-          (item) => item.project_code === projectCode
-        );
-        if (!updatedAssignData.ids.includes(filteredItem.id)) {
-          updatedAssignData.ids.push(filteredItem.id);
-        }
-        const existingProjectIndex = updatedAssignData.projects.findIndex(
-          (project) => project.project_id === filteredItem.id
-        );
-
-        if (existingProjectIndex !== -1) {
-          updatedAssignData.projects[existingProjectIndex].project_teamlead =
-            Selected_TeamLead[0].id;
-        } else {
-          updatedAssignData.projects.push({
-            project_id: filteredItem.id,
-            project_teamlead: Selected_TeamLead[0].id,
-          });
-        }
-        setAssignData(updatedAssignData);
-      }
+    const Selected_TeamLead = selectTL.filter(
+      (item) => item.user_role.name === value
+    );
+    if (value === Selected_TeamLead[0]?.user_role?.name) {
+      const projectCode = selectedRow[index].project_code;
+      const projectId = selectedRow[index].id;
+      setAssignData((prevData) => [
+        ...prevData,
+        {
+          project_id: projectId,
+          assigned_by: parseInt(userrole),
+          assigned_to: parseInt(Selected_TeamLead[0].user_role.id),
+        },
+      ]);
     }
   };
-
   const addField = selectedEditData.map((item, index) => {
-    const projectCode = item.project_code;
+    const projectID = item?.id;
     const projectWithTL = teamLeadAssiged?.find(
-      (project) => project.project_code === projectCode
+      (item) => item?.project_id === projectID
     );
-    if (projectWithTL && projectWithTL.project_teamlead) {
+    if (projectWithTL && projectWithTL?.assigned_to) {
       return {
         ...item,
-        assigned: <p>{projectWithTL?.project_teamlead?.name}</p>,
+        assigned: <p>{projectWithTL?.project_assigned_to?.name}</p>,
       };
     } else {
       return {
         ...item,
         assigned: (
           <Dropdown
-            Option_Name={["--Select TL--", ...selectTL]}
+            Option_Name={[
+              "--Select TL--",
+              ...selectTL.map((item) => item?.user_role?.name),
+            ]}
             onChange={(name, value) => handleSelectTL(index, name, value)}
             className={"p-2 bg-white"}
             name={"project_teamlead"}
-            value={assignData[index]?.status}
+            value={assignData[index]?.user_role?.name}
           />
         ),
       };
@@ -179,7 +163,7 @@ const AssignedProject = ({ setMultiEditFieldOpen, teamLeadAssiged }) => {
     {
       name: (
         <button className="bg-green-300 p-4 " onClick={handleAssignedProject}>
-          update
+          Update
         </button>
       ),
     },
@@ -196,8 +180,6 @@ const AssignedProject = ({ setMultiEditFieldOpen, teamLeadAssiged }) => {
             padding: 2,
           },
         }}
-        // className={"p-4 top-32 !h-[90%]"}
-        // size={1200}
       >
         <div className="mb-6 w-1/3">
           <h3 className="text-xl underline pb-4">
