@@ -20,7 +20,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
   const columns = [
     {
       name: "Date",
-      selector: (row) => row?.date,
+      selector: (row) => row?.update_date,
       sortable: true,
     },
     {
@@ -30,7 +30,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
     },
     {
       name: "Total Man",
-      selector: (row) => row.man_days,
+      selector: (row) => row.total_man_days,
       sortable: true,
     },
     {
@@ -40,9 +40,9 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
     },
   ];
   const data = perDayDetailsData.map((item, index) => ({
-    date: formatDate(item?.date),
+    update_date: formatDate(item?.update_date),
     total_achievement: item?.total_achievement,
-    man_days: item?.man_days,
+    total_man_days: item?.total_man_days,
     remaining_interview: item?.remaining_interview,
   }));
 

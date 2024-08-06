@@ -1,17 +1,7 @@
-export const Deparment = [
-  { id: 1, name: "Sales" },
-  { id: 2, name: "Operation" },
-  { id: 3, name: "Finance" },
-];
+import { createContext } from "react";
 
-export const Role = {
-  Director: "Director",
-  Hod: "Hod",
-  Manager: "Manager",
-  TeamLead: "Team Lead",
-  Admin: "Admin",
-  superuser: "superuser",
+export const UserContext = createContext();
+
+export const UserContextProvider = ({ children }) => {
+  return <UserContext.Provider value={{}}>{children}</UserContext.Provider>;
 };
-export const Director = ["Sandeep Kumar", "Anurag Mangoo", "Kanishk Sheel"];
-
-// export const

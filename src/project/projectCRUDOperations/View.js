@@ -20,8 +20,8 @@ const View = () => {
 
   const { closeView, setCloseView, setisView } = useContext(DataTableContext);
 
-  const handleViewDetails = async (projectCode) => {
-    const response = await ManWorkPerDays({ project_code: projectCode });
+  const handleViewDetails = async (projectid) => {
+    const response = await ManWorkPerDays({ project_id: projectid });
     if (response?.status) {
       setIsManDaysDetails(true);
       setPerDayDetailsData(response.data);
@@ -54,18 +54,6 @@ const View = () => {
   }, [data]);
 
   const renderListItem = (label, value, index, hasDetails = false) => (
-    // <li
-    //   key={label}
-    //   className={`border p-1 flex items-center text-xl justify-between w-1/2 ${
-    //     index % 2 === 0
-    //       ? index % 4 === 0
-    //         ? "bg-white"
-    //         : "bg-gray-100"
-    //       : index % 4 === 1
-    //       ? "bg-gray-100"
-    //       : "bg-white"
-    //   } ${darkMode ? "bg-black text-white border-b border-black" : ""}`}
-    // >
     <li
       key={label}
       className={`border p-1 flex items-center text-xl justify-between w-1/2 ${
@@ -87,9 +75,7 @@ const View = () => {
         {hasDetails && value && (
           <span
             className="absolute top-1 right-1 cursor-pointer underline text-blue-700"
-            onClick={() =>
-              handleViewDetails(currentProjectDetails.project_code)
-            }
+            onClick={() => handleViewDetails(currentProjectDetails.id)}
           >
             Show Details
           </span>

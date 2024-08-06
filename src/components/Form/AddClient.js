@@ -28,6 +28,8 @@ const AddClient = () => {
     }));
 
     if (name === "phone_number") {
+      console.log(closeAddClient);
+
       setClientData((prevData) => ({
         ...prevData,
         [name]: parseInt(value),
@@ -40,7 +42,8 @@ const AddClient = () => {
     try {
       const response = await PostClientList(clientData);
       if (response?.status == true) {
-        setCloseAddClient(false);
+        setCloseAddClient(!closeAddClient);
+        console.log(closeAddClient);
         SweetAlert({
           title: "Client Added Successfully!!",
           text: "",

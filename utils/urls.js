@@ -13,7 +13,7 @@ export const USERLIST = BASEURL + "/api/user/api/users-list/";
 export const PROJECTTYPES = BASEURL + "/api/project/project_type/";
 export const RAISECBR = BASEURL + "/api/operation/project_code/CBR/";
 export const MANDAYSPERDAY =
-  BASEURL + "/api/operation/projects/estimate/perday/";
+  BASEURL + "/api/operation/projects/man-days/perday/";
 export const REGISTER = BASEURL + "/api/user/register/";
 export const REFRESH_TOKEN = BASEURL + "/token/refresh/";
 export const PROJECT_MANAGER = BASEURL + "/api/project/userrole/managers/";
@@ -25,7 +25,8 @@ export const UPDATE_PROFILE = BASEURL + "/api/user/update-profile/";
 export const PROJECT_HOD = BASEURL + "/api/project/hods/";
 export const PROJECT_TL = BASEURL + "/api/project/project-teamleads/";
 export const USERSTATUS = BASEURL + "/api/user/user/status/";
-export const EDITPROJECTREQUEST = BASEURL + "/api/project/send-project-email/";
+export const EDITPROJECTREQUEST =
+  BASEURL + "/api/project/interview/samplesize/edit";
 export const UPDATEDPROJECTLIST =
   BASEURL + "/api/project/project-updated-data/";
 export const PROJECTUPDATEWITHPROJECTCODE =

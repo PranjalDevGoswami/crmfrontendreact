@@ -53,7 +53,6 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
           selectedRowIds.includes(item.project_id)
         );
         setTeamLeadAssiged(selectedRowTlAssigned);
-        console.log("🚀 ~ CheckTLAssigned ~ data:", selectedRowTlAssigned);
       } catch (error) {
         console.error("Error checking TL assignment:", error);
       }
@@ -129,7 +128,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       ]);
     }
   };
-  const addField = selectedEditData.map((item, index) => {
+  const addField = selectedEditData?.map((item, index) => {
     const projectID = item?.id;
     const projectWithTL = teamLeadAssiged?.find(
       (item) => item?.project_id === projectID
@@ -138,6 +137,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       return {
         ...item,
         assigned: <p>{projectWithTL?.project_assigned_to?.name}</p>,
+        // assigned: <p>pawan</p>,
       };
     } else {
       return {
@@ -146,7 +146,9 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
           <Dropdown
             Option_Name={[
               "--Select TL--",
-              ...selectTL.map((item) => item?.user_role?.name),
+              // "abc",
+              // "cde",
+              ...selectTL?.map((item) => item?.user_role?.name),
             ]}
             onChange={(name, value) => handleSelectTL(index, name, value)}
             className={"p-2 bg-white"}

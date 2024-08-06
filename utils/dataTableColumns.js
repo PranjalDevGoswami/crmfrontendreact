@@ -5,10 +5,6 @@ import { useContext } from "react";
 
 export const TableColumn = ({ buttonRef }) => {
   const {
-    setChangeStatus,
-    setisEdit,
-    isView,
-    setisView,
     selectedRecord,
     setSelectedRecord,
     openDropdownIndex,
@@ -58,8 +54,8 @@ export const TableColumn = ({ buttonRef }) => {
       name: "Type",
       selector: (row) => row?.project_type,
       sortable: true,
-      // width: "85px",
-      hide: "md",
+      width: "85px",
+      // hide: "md",
     },
     {
       name: "Start Date",
@@ -77,13 +73,13 @@ export const TableColumn = ({ buttonRef }) => {
       name: "CPI",
       selector: (row) => row?.cpi,
       sortable: true,
-      // width: "75px",
+      width: "75px",
     },
     {
       name: "Project Target",
       selector: (row) => row?.sample,
       sortable: true,
-      // width: "100px",
+      width: "100px",
     },
     {
       name: "Ach. Target",

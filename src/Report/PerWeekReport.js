@@ -25,7 +25,7 @@ const PerWeekReport = () => {
 
   useEffect(() => {
     const ProjectInProgress = projectData.filter(
-      (item) => item?.status === "inprogress"
+      (item) => item?.status === "In Progress"
     );
     setProjectInProgress(ProjectInProgress);
   }, [projectData]);

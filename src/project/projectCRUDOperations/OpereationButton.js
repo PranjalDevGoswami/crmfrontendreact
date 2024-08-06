@@ -25,7 +25,7 @@ const OpereationButton = ({ record }) => {
     setisView,
     setisEdit,
     isEdit,
-    setChangeStatus,
+    setChangeProjectStatus,
   } = useContext(DataTableContext);
 
   const [isInvoice, setIsInvoice] = useState(false);
@@ -33,7 +33,7 @@ const OpereationButton = ({ record }) => {
   const HandleOnEdit = (record) => {
     setisEdit(true);
     setIsAddManDays(false);
-    setChangeStatus(false);
+    setChangeProjectStatus(false);
     setisView(false);
     setEditRecord(record);
     setUpdatedValue({
@@ -43,7 +43,7 @@ const OpereationButton = ({ record }) => {
     });
   };
   const handleStatus = (record) => {
-    setChangeStatus(true);
+    setChangeProjectStatus(true);
     setisEdit(false);
     setIsAddManDays(false);
     setisView(false);
@@ -51,12 +51,12 @@ const OpereationButton = ({ record }) => {
   const HandleAddManDays = () => {
     setIsAddManDays(true);
     setisEdit(false);
-    setChangeStatus(false);
+    setChangeProjectStatus(false);
     setisView(false);
   };
   // const handleAssignProject = () => {
   //   console.log("Assigned Project");
-  //   setChangeStatus(false);
+  //   setChangeProjectStatus(false);
   //   setisEdit(false);
   //   setIsAddManDays(false);
   //   setisView(false);
@@ -64,7 +64,7 @@ const OpereationButton = ({ record }) => {
 
   const handleViewProject = () => {
     setisView(true);
-    setChangeStatus(false);
+    setChangeProjectStatus(false);
     setisEdit(false);
     setIsAddManDays(false);
     navigate("/view", { state: record });
@@ -113,98 +113,74 @@ const OpereationButton = ({ record }) => {
     <div>
       <div className="relative text-white overflow-visible rounded-md rounded-tr-none z-50">
         <div className="w-40 h-54 ">
-          {role === "TeamLeadOperation" ||
-          role === "superuser" ||
-          (role === "Team Lead" && department == 2) ? (
-            <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
-              <button
-                className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                onClick={handleViewProject}
-              >
-                View
-              </button>
-              {record.status !== "completed" &&
-                record.status !== "cbr_raised" &&
-                record.status !== "hold" &&
-                DateValidate == true && (
+          <div className="flex flex-col p-1 ml-2 mr-2 text-sm">
+            <button
+              className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+              onClick={handleViewProject}
+            >
+              View
+            </button>
+            {department == 2 && (
+              <>
+                {record.status !== "Project Initiated" &&
+                  record.status !== "Completed" &&
+                  record.status !== "Cbr Raised" &&
+                  record.status !== "On Hold" &&
+                  DateValidate == true && (
+                    <button
+                      className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                      onClick={HandleAddManDays}
+                    >
+                      Add Mandays
+                    </button>
+                  )}
+                {record.status !== "Project Initiated" &&
+                  record.status !== "Completed" &&
+                  record.status !== "Cbr Raised" &&
+                  record.status !== "On Hold" && (
+                    <button
+                      className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                      onClick={() => {
+                        HandleOnEdit(record);
+                      }}
+                    >
+                      Edit Request
+                    </button>
+                  )}
+                {record.status !== "Project Initiated" &&
+                  record.status !== "Completed" &&
+                  record.status !== "Cbr Raised" && (
+                    // record.status !== "On Hold" &&
+                    // DateValidate == true &&
+                    <button
+                      className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                      onClick={() => handleStatus(record)}
+                    >
+                      Status Update
+                    </button>
+                  )}
+                {record.status === "Completed" &&
+                  record.status !== "On Hold" &&
+                  record.status !== "Cbr Raised" && (
+                    <button
+                      className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
+                      onClick={() => handleRaiseCBR(record)}
+                    >
+                      Raise CBR
+                    </button>
+                  )}
+                {role === "superuser" && (
                   <button
-                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                    onClick={HandleAddManDays}
+                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
+                    onClick={() => handleGetInvoice(record)}
                   >
-                    Add Mandays
+                    Get Invoice
                   </button>
                 )}
-              {record.status !== "completed" &&
-                record.status !== "cbr_raised" &&
-                record.status !== "hold" && (
-                  <button
-                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                    onClick={() => {
-                      HandleOnEdit(record);
-                    }}
-                  >
-                    Edit Request
-                  </button>
-                )}
-              {record.status !== "completed" &&
-                record.status !== "cbr_raised" &&
-                // record.status !== "hold" &&
-                DateValidate == true && (
-                  <button
-                    className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                    onClick={() => handleStatus(record)}
-                  >
-                    Status Update
-                  </button>
-                )}
-              {record.status === "completed" &&
-              record.status !== "hold" &&
-              record.status !== "cbr_raised" ? (
-                <button
-                  className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                  onClick={() => handleRaiseCBR(record)}
-                >
-                  Raise CBR
-                </button>
-              ) : (
-                ""
-              )}
-              {role === "superuser" && (
-                <button
-                  className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-                  onClick={() => handleGetInvoice(record)}
-                >
-                  Get Invoice
-                </button>
-              )}
-            </div>
-          ) : (
-            (department == 1 ||
-              department == 3 ||
-              role === "Director" ||
-              role === "superuser" ||
-              role === "AM/Manager") && (
-              <button
-                className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-                onClick={handleViewProject}
-              >
-                <Link to={"/view"}>View</Link>
-              </button>
-            )
-          )}
+              </>
+            )}
+          </div>
         </div>
-        {/* {(role === "AM/Manager" || department == 2 || department == 1) &&
-          role !== "superuser" &&
-          role !== "Director" && (
-            <div className="">
-              <button
-                className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-                onClick={handleViewProject}
-              >
-                <Link to={"/view"}>View</Link>
-              </button>
-            </div>
-          )} */}
         {department == 3 && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"

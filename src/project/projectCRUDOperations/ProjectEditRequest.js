@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
 import LableAndInput from "../../components/LableAndInput";
-import Dropdown from "../../components/DropDown";
-import Label from "../../components/Label";
-// import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
-import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 import { postWithAuth } from "../../provider/helper/axios";
 import { EDITPROJECTREQUEST } from "../../../utils/urls";
 import { NotifiactionContext } from "../../ContextApi/NotificationContext";
@@ -14,8 +10,7 @@ import { DataTableContext } from "../../ContextApi/DataTableContext";
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
   const [updatedValue, setUpdatedValue] = useState({
-    name: viewRecord.name,
-    project_code: viewRecord.project_code,
+    project_id: viewRecord.id,
     tentative_end_date: "",
     sample: "",
     reason_for_adjustment: "",
@@ -25,13 +20,6 @@ const SampleEdit = ({ viewRecord }) => {
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);
   const [loader, setLoader] = useState(false);
-
-  const handleFilterOption = (name, value) => {
-    setUpdatedValue({
-      ...updatedValue,
-      [name]: value,
-    });
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,8 +37,6 @@ const SampleEdit = ({ viewRecord }) => {
       });
     }
   };
-
-  const handleDateFocus = (e) => {};
 
   const getMinDate = () => {
     let currentDate = new Date();

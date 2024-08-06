@@ -13,7 +13,7 @@ export const FormDataValueProvider = ({ children }) => {
     "demo manager2",
   ]);
   const [managerList, setManagerList] = useState();
-
+  const [projectAdded, SetProjectAdded] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     project_type: "",
@@ -49,6 +49,8 @@ export const FormDataValueProvider = ({ children }) => {
         setProjectManagerData,
         managerList,
         setManagerList,
+        projectAdded,
+        SetProjectAdded,
       }}
     >
       {children}

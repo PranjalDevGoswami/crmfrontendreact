@@ -4,16 +4,18 @@ import Dropdown from "../DropDown";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import { ClientList } from "../../fetchApis/clientList/ClientList";
 import { CloseAddClient } from "../../ContextApi/CloseAddClientContext";
+import { FilterContext } from "../../ContextApi/FilterContext";
 
 const Client = () => {
-  const [clientListData, setClientListData] = useState([
-    "demo Client1",
-    "demo Cliet2",
-  ]);
-  const [clientListDataWithId, setClientListDataWithId] = useState([]);
   const { formData, setFormData } = useContext(FormDataContext);
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
-  const token = localStorage.getItem("token");
+
+  const {
+    clientListDataWithId,
+    setClientListDataWithId,
+    clientListData,
+    setClientListData,
+  } = useContext(FilterContext);
 
   useEffect(() => {
     const fetchDataFromApi = async () => {
@@ -27,7 +29,7 @@ const Client = () => {
       } catch (error) {}
     };
     fetchDataFromApi();
-  }, [closeAddClient, token]);
+  }, [closeAddClient]);
 
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });

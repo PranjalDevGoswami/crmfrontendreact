@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const DataTableContext = createContext();
 
 export const DataTableContextProvider = ({ children }) => {
-  const [changeStatus, setChangeStatus] = useState(false);
+  const [changeProjectStatus, setChangeProjectStatus] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   const [isAddManDays, setIsAddManDays] = useState(false);
   const [isView, setisView] = useState(false);
@@ -20,10 +20,12 @@ export const DataTableContextProvider = ({ children }) => {
   return (
     <DataTableContext.Provider
       value={{
-        changeStatus,
-        setChangeStatus,
+        changeProjectStatus,
+        setChangeProjectStatus,
         isEdit,
         setisEdit,
+        isAddManDays,
+        setIsAddManDays,
         isView,
         setisView,
         selectedRecord,
@@ -38,8 +40,6 @@ export const DataTableContextProvider = ({ children }) => {
         setSelectedIndex,
         closeView,
         setCloseView,
-        isAddManDays,
-        setIsAddManDays,
         isDrawerOpen,
         setIsDrawerOpen,
         isMultiEdit,

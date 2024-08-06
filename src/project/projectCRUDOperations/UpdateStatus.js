@@ -6,38 +6,34 @@ import { ChangeStatus } from "../../fetchApis/projects/changeStatus/changeStatus
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
 
-const ChangeStatus = ({ viewRecord }) => {
+const UpdateStatus = ({ viewRecord }) => {
   const [updatedStatus, setUpdatedStatus] = useState({
-    project_code: viewRecord.project_code,
+    project_id: viewRecord.id,
     status: "",
   });
-  const { setChangeStatus } = useContext(DataTableContext);
+  const { setChangeProjectStatus } = useContext(DataTableContext);
 
   const handleCancelUpdate = () => {
-    setChangeStatus(false);
+    setChangeProjectStatus(false);
     document.body.classList.remove("DrawerBody");
   };
   const PostUpdateEditData = async (data) => {
-    // const response = await ChangeStatus(data);
-    // if (response?.status == true) {
-    //   setUpdatedStatus({
-    //     project_code: "",
-    //     status: "",
-    //   });
-    //   document.body.classList.remove("DrawerBody");
-    //   setChangeStatus(false);
-    //   SweetAlert({
-    //     title: "Status Change Sucessfully!!",
-    //     text: "",
-    //     icon: "success",
-    //   });
-    // } else {
-    //   SweetAlert({
-    //     title: "please select Status",
-    //     text: "",
-    //     icon: "info",
-    //   });
-    // }
+    const response = await ChangeStatus(data);
+    if (response?.status == true) {
+      document.body.classList.remove("DrawerBody");
+      setChangeProjectStatus(false);
+      SweetAlert({
+        title: "Success",
+        text: "Status Change Sucessfully!!",
+        icon: "success",
+      });
+    } else {
+      SweetAlert({
+        title: "Error",
+        text: "please select Status",
+        icon: "error",
+      });
+    }
   };
 
   const handleEditUpdate = () => {
@@ -57,10 +53,11 @@ const ChangeStatus = ({ viewRecord }) => {
     });
   };
   return (
-    <div className="absolute top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-50%] z-40">
+    <div className="">
       <h3 className="text-xl underline pb-4">Change Project Status</h3>
-      <div className="flex items-center flex-col justify-between">
-        <div className="w-11/12">
+      {/* <div className="flex items-center flex-col justify-between"> */}
+      <div className="flex items-center flex-wrap justify-center w-full rounded-sm">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Project Code"}
             Inputvalue={viewRecord.project_code.toUpperCase()}
@@ -70,7 +67,7 @@ const ChangeStatus = ({ viewRecord }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12">
+        <div className="ProjectOperationEdit">
           <LableAndInput
             labelName={"Project Name"}
             Inputvalue={viewRecord.name}
@@ -80,7 +77,17 @@ const ChangeStatus = ({ viewRecord }) => {
             inputChange={handleInputChange}
           />
         </div>
-        <div className="w-11/12 mt-4">
+        <div className="ProjectOperationEdit">
+          <LableAndInput
+            labelName={"Current Status"}
+            Inputvalue={viewRecord.status}
+            desabled={true}
+            inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
+            labelClassName={"pt-4 pb-2"}
+            inputChange={handleInputChange}
+          />
+        </div>
+        <div className="ProjectOperationEdit mt-4">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />
           <Dropdown
             Option_Name={[
@@ -117,4 +124,4 @@ const ChangeStatus = ({ viewRecord }) => {
   );
 };
 
-export default ChangeStatus;
+export default UpdateStatus;

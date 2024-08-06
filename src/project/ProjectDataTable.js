@@ -24,7 +24,8 @@ import OpenNotification from "../notification/OpenNotificationDetails.js";
 import { NotifiactionContext } from "../ContextApi/NotificationContext.js";
 import Shimmer from "../components/Shimmer.js";
 import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual.js";
-import ChangeStatus from "./projectCRUDOperations/ChangeStatus.js";
+import UpdateStatus from "./projectCRUDOperations/UpdateStatus.js";
+import { FormDataContext } from "../ContextApi/FormDataContext.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -36,12 +37,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
 
   const {
     isEdit,
-    setisEdit,
     isView,
     selectedRecord,
     setOpenDropdownIndex,
     setIsViewOptionOpen,
-    changeStatus,
+    changeProjectStatus,
     closeView,
     isAddManDays,
     isDrawerOpen,
@@ -51,6 +51,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     selectedRow,
     setSelectedRow,
   } = useContext(DataTableContext);
+
+  const { projectAdded } = useContext(FormDataContext);
 
   const { darkMode } = useContext(ThemeContext);
   const {
@@ -67,7 +69,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   let token = localStorage.getItem("token");
   let role = localStorage.getItem("role");
   let department = localStorage.getItem("department");
-  let user_id = localStorage.getItem("user_id");
 
   const handleClickOutside = (event) => {
     if (buttonRef.current && !buttonRef.current.contains(event.target)) {
@@ -77,7 +78,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   };
 
   useEffect(() => {
-    if (!isDrawerOpen && !isAddManDays && !changeStatus) {
+    if (!isDrawerOpen && !isAddManDays && !changeProjectStatus) {
       const fetchProjectData = async () => {
         setIsLoading(true);
         try {
@@ -95,11 +96,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   }, [
     token,
     isAddManDays,
-    changeStatus,
+    changeProjectStatus,
     notificationProjectList,
     isDrawerOpen,
     setIsViewNotification,
     isViewNotification,
+    projectAdded,
   ]);
 
   useEffect(() => {
@@ -239,7 +241,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 <div className="relative w-full">
                   <ProjectStatusTabs
                     className={
-                      "absolute top-[15px] overflow-x-auto w-3/5 left-0 z-10 no-scrollbar"
+                      "absolute top-[10px] overflow-x-auto w-3/5 left-0 z-10 no-scrollbar"
                     }
                   />
                 </div>
@@ -262,8 +264,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                         }
                         onClick={handleAddManDays}
                       />
-                    ) : role?.includes("AM/Manager") ||
-                      role?.includes("Manager") ? (
+                    ) : role?.includes("Manager") ? (
                       <Button
                         name={"Assign Project"}
                         className={
@@ -271,7 +272,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                         }
                         onClick={handleAssignProject}
                       />
-                    ) : role?.includes("superuser") ? (
+                    ) : role?.includes("superuser") ||
+                      role?.includes("Director") ? (
                       <div>
                         <Button
                           name={"Add Man Days"}
@@ -295,9 +297,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 )}
                 <div className="w-full tableClass" id="tableClass">
                   {department == 2 &&
-                  (role?.includes("Team Lead") ||
-                    role?.includes("AM/Manager") ||
-                    role?.includes("Manager")) ? (
+                  (role?.includes("Team Lead") || role?.includes("Manager")) ? (
                     <DataTable
                       columns={
                         data?.length > 0
@@ -315,11 +315,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                       selectableRowDisabled={(row) => row.desabled}
                       actions={<ExportCSV data={data} />}
                     />
-                  ) : (department == 1 ||
+                  ) : ((department == 1 ||
                       department == 2 ||
                       department == 3 ||
                       department == 4) &&
-                    role?.includes("superuser") ? (
+                      role?.includes("superuser")) ||
+                    role?.includes("Director") ? (
                     <div className="">
                       <Link to={"/entry-page"}>
                         <Button
@@ -404,12 +405,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                   )}
 
                   {isOperationPerson && isEdit && (
-                    <div className="absolute  w-1/2 h-auto top-1/2 left-1/2 bg-white p-4 border rounded-md  border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div className="absolute  w-1/2 h-auto top-1/3 left-1/2 bg-white p-4 border rounded-md  border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
                       <Edit viewRecord={selectedRecord} />
                     </div>
                   )}
                   {isOperationPerson && isAddManDays && (
-                    <div className="absolute  w-1/2 h-auto top-1/2 left-1/2 bg-white p-4 border  rounded-md border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div className="absolute  w-1/2 h-auto top-1/3 left-1/2 bg-white p-4 border  rounded-md border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
                       <AddManDaysInduvisual viewRecord={selectedRecord} />
                     </div>
                   )}
@@ -418,9 +419,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                       <View />
                     </div>
                   )}
-                  {changeStatus && (
-                    <div className="absolute  w-1/3 h-auto top-1/2 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-30%] z-30">
-                      <ChangeStatus
+                  {changeProjectStatus && (
+                    <div className="absolute  w-1/2z h-auto top-1/3 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-30%] z-30">
+                      <UpdateStatus
                         viewRecord={selectedRecord}
                         closeView={closeView}
                       />

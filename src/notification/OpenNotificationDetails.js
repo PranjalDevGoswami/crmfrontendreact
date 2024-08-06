@@ -18,14 +18,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
     send_email_manager: "",
   });
   const { projectData } = useContext(FilterContext);
-  // useEffect(() => {
-  //   const getProject = async () => {
-  //     const response = await ProjectDetails();
-  //     setProjectList(response);
-  //   };
-  //   getProject();
-  // }, []);
-
+  console.log(notificationProjectList);
   const handleAccept = async (projectCode) => {
     const selectedProject = notificationProjectList.find(
       (item) => item.project_code === projectCode

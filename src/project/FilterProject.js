@@ -2,14 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import Dropdown from "../components/DropDown";
 import { ClientList } from "../fetchApis/clientList/ClientList.js";
 import Input from "../components/InputField.js";
-import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
+// import { GetProjectManager } from "../fetchApis/projectManager/projectManager.js";
 // import { GetProjectHod } from "../fetchApis/projectHod/projectHod.js";
 // import { GetProjectTeamLead } from "../fetchApis/projectTeamLead/projectTl.js";
 import { FilterContext } from "../ContextApi/FilterContext.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
-import { DataTableContext } from "../ContextApi/DataTableContext.js";
-import { UPDATETLASSIGNMENT } from "../../utils/urls.js";
-import { getWithAuth } from "../provider/helper/axios.js";
+import { CloseAddClient } from "../ContextApi/CloseAddClientContext.js";
 // import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 
 const FilterProject = () => {
@@ -26,35 +24,38 @@ const FilterProject = () => {
     setClientsList,
     projectData,
     setFilteredProjectData,
-    teamLeadAssiged,
     setTeamLeadAssiged,
+    clientListDataWithId,
+    setClientListDataWithId,
+    clientListData,
+    setClientListData,
   } = useContext(FilterContext);
 
+  const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
+
   const { darkMode } = useContext(ThemeContext);
-
-  // const [tlAssigned, setTlAssigned] = useState([]);
-
   const role = localStorage.getItem("role");
   let token = localStorage.getItem("token");
   let department = localStorage.getItem("department");
   let userrole = localStorage.getItem("userrole");
-  const username = localStorage.getItem("username");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [clientResponse] = await Promise.all([
-          ClientList(),
-          GetProjectManager(),
-        ]);
+        const [clientResponse] = await Promise.all([ClientList()]);
         setClientsList(clientResponse?.data?.map((val) => val));
+        setClientListDataWithId(clientResponse?.data);
+        const clientDataItems = clientResponse?.data?.map((val) => {
+          return val.name;
+        });
+        setClientListData(clientDataItems);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [role, username]);
+  }, [role, closeAddClient]);
 
   const handleFilterOption = (name, value) => {
     if (name === "Client") {
@@ -64,19 +65,6 @@ const FilterProject = () => {
       setSelectedClient(clientID[0]?.id);
     }
   };
-  // useEffect(() => {
-  //   const CheckTLAssigned = async () => {
-  //     try {
-  //       const response = await getWithAuth(UPDATETLASSIGNMENT);
-  //       const data = response?.data;
-  //       console.log("🚀 ~ CheckTLAssigned ~ data:", data);
-  //       setTlAssigned(data);
-  //     } catch (error) {
-  //       console.error("Error checking TL assignment:", error);
-  //     }
-  //   };
-  //   CheckTLAssigned();
-  // }, []);
 
   useEffect(() => {
     let filteredData = projectData?.length > 0 ? projectData : [];
@@ -113,7 +101,6 @@ const FilterProject = () => {
     }
     // Additional checks based on the role
     if (role === "Team Lead" && department == 2) {
-      console.log(filteredData);
       filteredData = filteredData.filter(
         (item) => item?.project_assigned_to_teamlead == userrole
       );
@@ -182,7 +169,7 @@ const FilterProject = () => {
         ]}
         onChange={handleFilterOption}
         name="Client"
-        className="p-4 m-1 border border-black rounded w-11/12"
+        className="p-2 md:p-4 m-1 border border-black rounded w-11/12"
       />
       <div className="w-full">
         <Input
@@ -192,7 +179,7 @@ const FilterProject = () => {
           onchange={(e) => setSearchTerm(e.target.value)}
           className={`${
             darkMode && "bg-black border-white"
-          } p-4 m-1 border border-black rounded w-11/12 focus:outline-none"`}
+          } p-2 md:p-4 m-1 border border-black rounded w-11/12 focus:outline-none"`}
         />
       </div>
     </div>

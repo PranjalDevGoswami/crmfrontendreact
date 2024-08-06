@@ -27,6 +27,7 @@ const Form = () => {
     isOtherFee,
     otherCost,
     translationCost,
+    SetProjectAdded,
   } = useContext(FormDataContext);
 
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const Form = () => {
           text: "",
           icon: "success",
         });
+        SetProjectAdded(true);
       } else if (
         response?.ex?.response?.data[0] ===
         "Tentative end date cannot be in the past."
@@ -84,7 +86,6 @@ const Form = () => {
     if (!isFormValid()) {
       return;
     } else {
-      console.log(formData);
       PostProjectData(formData);
       navigate("/sales-dashboard");
     }

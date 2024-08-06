@@ -21,6 +21,7 @@ const ProjectManager = () => {
         const Opern_Manager = ProjectManager?.data?.filter((item) => {
           return item?.department?.id == 2;
         });
+
         const ProjectManagerObject = Opern_Manager?.map((val) => {
           return val?.user?.name;
         });

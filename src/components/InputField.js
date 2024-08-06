@@ -36,6 +36,12 @@ const Input = ({
       }
     };
   }, []);
+
+  const preventMinus = (e) => {
+    if (e.code === "Minus") {
+      e.preventDefault();
+    }
+  };
   return (
     <input
       type={type}
@@ -55,6 +61,7 @@ const Input = ({
       multiple={multiple}
       onFocus={onfocus}
       ref={inputRef}
+      onKeyDown={preventMinus}
     />
   );
 };

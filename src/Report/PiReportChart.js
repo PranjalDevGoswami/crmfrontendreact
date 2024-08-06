@@ -23,17 +23,17 @@ export default function PiReportChart() {
   // }, []);
 
   const ToBeStartedProject = projectData.filter(
-    (item) => item.status === "to_be_started"
+    (item) => item.status === "To Be Started"
   );
   const InProgressProject = projectData.filter(
-    (item) => item.status === "inprogress"
+    (item) => item.status === "In Progress"
   );
   const CompletedProject = projectData.filter(
-    (item) => item.status === "completed"
+    (item) => item.status === "Completed"
   );
   const HoldProject = projectData.filter((item) => item.status === "hold");
   const CbrRaisedProject = projectData.filter(
-    (item) => item.status === "cbr_raised"
+    (item) => item.status === "Cbr Raised"
   );
 
   const data = [
@@ -53,7 +53,7 @@ export default function PiReportChart() {
       color: "#FFBB28",
     },
     {
-      label: "Hold",
+      label: "On Hold",
       value: HoldProject.length,
       color: "#FF8042",
     },

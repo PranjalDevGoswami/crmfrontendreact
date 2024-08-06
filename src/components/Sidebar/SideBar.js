@@ -110,14 +110,14 @@ const SideBar = () => {
       <div className="w-2/12">
         {sideBarOpen ? (
           <PiCaretDoubleLeftLight
-            className={`top-4 text-2xl text-black cursor-pointer absolute duration-300 font-extralight ${
+            className={`top-4 text-base text-black cursor-pointer absolute duration-300 font-extralight ${
               darkMode ? "text-white" : "text-black"
             }`}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           />
         ) : (
           <PiCaretDoubleRightLight
-            className={`top-4 text-2xl text-black cursor-pointer absolute duration-300 font-extralight ${
+            className={`top-4 text-base text-black cursor-pointer absolute duration-300 font-extralight ${
               darkMode ? "text-white" : "text-black"
             }`}
             onClick={() => setSideBarOpen(!sideBarOpen)}

@@ -54,6 +54,11 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow-y: visible;
   min-height: 50vh;
 }
+.tableClass .kiYaow {
+  overflow: visible;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+}
 
 .sc-eywPal{
   display: none !important;
@@ -147,4 +152,12 @@ input[type="number"]::-webkit-outer-spin-button {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@media (min-width:320px) and (max-width:1080px) {
+  .filterTabsButton{
+  font-size: 14px;
+    padding: 5px;
+    line-height: 15px;
+  }
 }

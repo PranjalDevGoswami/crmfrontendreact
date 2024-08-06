@@ -104,7 +104,7 @@ const Dropdown = ({
             name="X"
             className="absolute top-3 right-3 bg-red-400 p-2 rounded"
             onClick={() => {
-              setCloseAddClient(false);
+              setCloseAddClient(!closeAddClient);
             }}
           />
         </div>

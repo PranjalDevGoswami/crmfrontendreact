@@ -19,7 +19,7 @@ const RPEWeek = () => {
         // const fetchDataFromApi = await GetProjectData();
         const projectDataObject = projectData?.data || [];
         const filteredProjects = projectDataObject.filter(
-          (item) => item.status === "inprogress"
+          (item) => item.status === "In Progress"
         );
         setProjectInProgress(filteredProjects);
         setLoading(false);

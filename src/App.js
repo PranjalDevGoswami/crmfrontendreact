@@ -14,11 +14,11 @@ import { FormDataValueProvider } from "./ContextApi/FormDataContext.js";
 function App() {
   return (
     <ThemeContextProvider>
-      <CloseAddClientProvider>
-        <DataTableContextProvider>
-          <NotifiactionProvider>
-            <SearchFilterContext>
-              <AuthProvider>
+      <AuthProvider>
+        <CloseAddClientProvider>
+          <DataTableContextProvider>
+            <NotifiactionProvider>
+              <SearchFilterContext>
                 <LogoutTimer />
                 {/* <FetchProjectProvider> */}
                 <ProjectTypeProvider>
@@ -27,11 +27,11 @@ function App() {
                   </FormDataValueProvider>
                 </ProjectTypeProvider>
                 {/* </FetchProjectProvider> */}
-              </AuthProvider>
-            </SearchFilterContext>
-          </NotifiactionProvider>
-        </DataTableContextProvider>
-      </CloseAddClientProvider>
+              </SearchFilterContext>
+            </NotifiactionProvider>
+          </DataTableContextProvider>
+        </CloseAddClientProvider>
+      </AuthProvider>
     </ThemeContextProvider>
   );
 }

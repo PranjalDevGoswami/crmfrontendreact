@@ -10,7 +10,6 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState("");
   const [updatedValue, setUpdatedValue] = useState([
     {
-      // name: viewRecord.name,
       project_id: viewRecord.id,
       update_date: "",
       total_man_days: "",
@@ -93,6 +92,9 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
   const PostUpdateEditData = async (data) => {
     try {
       const response = await PostMandaysData(data);
+      const error = response?.ex?.response?.data?.map((item) => item);
+      console.log("🚀 ~ PostUpdateEditData ~ error:", response);
+
       if (response?.status == true) {
         setIsAddManDays(false);
         SweetAlert({
@@ -103,8 +105,8 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
         setisEdit(false);
       } else {
         SweetAlert({
-          title: response?.ex?.response?.data?.error,
-          text: "",
+          title: "error",
+          text: error[0].total_man_days,
           icon: "error",
         });
       }
@@ -161,6 +163,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             min={getMinDate()}
             max={getMaxDate()}
             InputOnFocus={handleDateFocus}
+            required
           />
         </div>
         <div className="ProjectOperationEdit mt-4">
@@ -168,11 +171,11 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
           <Dropdown
             Option_Name={[
               "--Select Status--",
-              "Project_Initiated",
-              "To_Be_Started",
-              "In_Progress",
+              // "Project Initiated",
+              // "To Be Started",
+              "In Progress",
               "Completed",
-              "On_Hold",
+              "On Hold",
             ]}
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}
@@ -189,7 +192,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             Inputvalue={updatedValue.man_days}
             inputChange={handleInputChange}
             InputMax_lenght={2}
-            min={1}
+            required
           />
         </div>
         <div className="ProjectOperationEdit">
@@ -202,7 +205,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             Inputvalue={updatedValue.total_achievement}
             inputChange={handleInputChange}
             InputMax_lenght={3}
-            min={1}
+            required
           />
         </div>
         <div className="flex pt-10">

@@ -67,6 +67,12 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow-y: visible;
 }
 
+.tableClass .kiYaow {
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  overflow: visible;
+}
+
 .sc-eywPal {
   opacity: 0 !important;
   display: none !important;
@@ -162,5 +168,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@media (width >= 320px) and (width <= 1080px) {
+  .filterTabsButton {
+    padding: 5px;
+    font-size: 14px;
+    line-height: 15px;
+  }
 }
 /*# sourceMappingURL=index.4a5519d3.css.map */

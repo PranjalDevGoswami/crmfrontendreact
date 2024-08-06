@@ -28,7 +28,11 @@ export const SearchFilterContext = ({ children }) => {
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [teamLeadAssiged, setTeamLeadAssiged] = useState();
-
+  const [clientListDataWithId, setClientListDataWithId] = useState([]);
+  const [clientListData, setClientListData] = useState([
+    "demo Client1",
+    "demo Cliet2",
+  ]);
   return (
     <FilterContext.Provider
       value={{
@@ -60,6 +64,10 @@ export const SearchFilterContext = ({ children }) => {
         setIsLoading,
         teamLeadAssiged,
         setTeamLeadAssiged,
+        clientListDataWithId,
+        setClientListDataWithId,
+        clientListData,
+        setClientListData,
       }}
     >
       {children}
