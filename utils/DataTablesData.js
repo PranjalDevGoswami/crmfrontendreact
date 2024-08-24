@@ -168,25 +168,6 @@ export const Dummycolumns = [
     width: 100,
     align: "left",
     sortable: false,
-    // cell: (record, index) => {
-    //   return (
-    //     <div className="relative w-full">
-    //       <div className="flex items-center">
-    //         <button
-    //           // onClick={() => handleAddEditOperation(record, index)}
-    //           className="border p-2 rounded-md mr-2 cursor-pointer"
-    //         >
-    //           edit
-    //         </button>
-    //         {/* {isOperationPerson && openDropdownIndex === index ? (
-    //             <OpereationButton record={record} />
-    //           ) : (
-    //             ""
-    //           )} */}
-    //       </div>
-    //     </div>
-    //   );
-    // },
   },
 ];
 
@@ -246,20 +227,6 @@ export const customStyles = {
       backgroundColor: "NORMALCOLOR",
     },
   },
-  // pagination: {
-  //   style: {
-  //     color: "#000",
-  //     backgroundColor: "rgb(229 231 235 / var(--tw-bg-opacity))",
-  //     borderBottom: "none",
-  //   },
-  // },
-  // header: {
-  //   style: {
-  //     color: "#000",
-  //     backgroundColor: "#e5e7eb",
-  //     borderBottom: "none",
-  //   },
-  // },
 };
 export const customStylesDarkMode = {
   header: {
@@ -512,6 +479,16 @@ export const AssignColumns = [
 const currentDate = new Date().toISOString().split("T")[0];
 
 export const conditionalRowStyles = [
+  {
+    when: (row) => row.status === "Completed",
+    style: {
+      backgroundColor: "rgb(60, 179, 113)",
+      color: "white",
+      "&:hover": {
+        cursor: "not-allowed",
+      },
+    },
+  },
   {
     when: (row) => row.status === "cbr_raised",
     style: {

@@ -42,7 +42,7 @@ const ProjectStatusTabs = ({ className }) => {
     <div className={className}>
       <div
         className={`${
-          darkMode ? "bg-black text-white border" : ""
+          darkMode ? "bg-black text-white" : ""
         } relative flex overflow-x-auto no-scrollbar`}
       >
         <div className="flex flex-nowrap">

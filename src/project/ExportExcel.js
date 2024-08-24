@@ -26,6 +26,8 @@ const convertArrayOfObjectsToCSV = (array) => {
 };
 
 const downloadCSV = (array) => {
+  console.log("🚀 ~ convertArrayOfObjectsToCSV ~ array:", array);
+
   let csv = convertArrayOfObjectsToCSV(array);
   if (!csv) return;
 

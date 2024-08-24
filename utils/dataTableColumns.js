@@ -1,18 +1,17 @@
+import { useContext } from "react";
 import { MdOutlineMoreVert } from "react-icons/md";
 import OpereationButton from "../src/project/projectCRUDOperations/OpereationButton";
 import { DataTableContext } from "../src/ContextApi/DataTableContext";
-import { useContext } from "react";
 
 export const TableColumn = ({ buttonRef }) => {
   const {
-    selectedRecord,
-    setSelectedRecord,
     openDropdownIndex,
     setOpenDropdownIndex,
     setIsViewOptionIndex,
     isViewOptionOpen,
     setIsViewOptionOpen,
     setSelectedIndex,
+    setSelectedRecord,
   } = useContext(DataTableContext);
 
   const handleAddEditOperation = (record, index) => {
@@ -34,7 +33,7 @@ export const TableColumn = ({ buttonRef }) => {
       name: "Project Code",
       selector: (row) => row?.project_code?.toUpperCase(),
       sortable: true,
-      // width: "120px",
+      width: "120px",
     },
     {
       name: "Client Name",
@@ -47,7 +46,7 @@ export const TableColumn = ({ buttonRef }) => {
       selector: (row) => row?.name,
       sortable: true,
       width: "235px",
-      overflow: "wrap",
+      overflow: "wrap !important",
       whiteSpace: "pre-wrap !important",
     },
     {
@@ -61,13 +60,13 @@ export const TableColumn = ({ buttonRef }) => {
       name: "Start Date",
       selector: (row) => row?.tentative_start_date,
       sortable: true,
-      // width: "110px",
+      width: "110px",
     },
     {
       name: "End Date",
       selector: (row) => row?.tentative_end_date,
       sortable: true,
-      // width: "110px",
+      width: "110px",
     },
     {
       name: "CPI",
@@ -103,10 +102,10 @@ export const TableColumn = ({ buttonRef }) => {
       name: "status",
       selector: (row) => row?.status,
       sortable: true,
-      // width: "125px",
+      width: "125px",
       conditionalCellStyles: [
         {
-          when: (row) => row?.status === "completed",
+          when: (row) => row?.status === "Completed",
           style: {
             backgroundColor: "rgba(63, 195, 128, 0.9)",
             color: "white",
@@ -158,7 +157,7 @@ export const TableColumn = ({ buttonRef }) => {
       cell: (record, index) => {
         return (
           <div className="relative w-full overflow-y-visible">
-            <div className="flex items-center overflow-visible">
+            <div className="flex items-center overflow-visible relative">
               <button
                 onClick={() => handleAddEditOperation(record, index)}
                 className="border p-2 rounded-md mr-2 cursor-pointer"
@@ -173,7 +172,7 @@ export const TableColumn = ({ buttonRef }) => {
                     index <= 5 ? "opration_btn" : "opration_btn_bottom"
                   }`}
                 >
-                  <OpereationButton record={selectedRecord} />
+                  <OpereationButton />
                 </div>
               ) : (
                 ""

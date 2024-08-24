@@ -1,7 +1,7 @@
 import React from "react";
 import Input from "./InputField";
 
-const DateComponent = ({ handleDateChange }) => {
+const DateComponent = ({ handleDateChange, dateError }) => {
   const today = new Date();
   const minDate = new Date(today);
   if (today.getDay() === 0) {
@@ -11,15 +11,16 @@ const DateComponent = ({ handleDateChange }) => {
   }
 
   return (
-    <div className="p-2 mr-4 w-2/12">
+    <div className="p-2 mr-4">
       <Input
         name={"update_date"}
         type={"date"}
-        className={"p-2 mr-4 border w-full"}
+        className={"p-2 mr-4 border w-full max-w-56"}
         onchange={handleDateChange}
         min={minDate.toISOString().split("T")[0]}
         max={today.toISOString().split("T")[0]}
       />
+      {dateError && <p className="text-red-500 w-56">{dateError}</p>}
     </div>
   );
 };

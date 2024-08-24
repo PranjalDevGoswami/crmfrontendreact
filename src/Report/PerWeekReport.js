@@ -1,38 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
-import { BarChart } from "@mui/x-charts/BarChart";
+import React, { useEffect, useState } from "react";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
-import { FilterContext } from "../ContextApi/FilterContext";
+import { BarChart } from "@mui/x-charts/BarChart";
+import ReportByTerm from "./ReportByTerm";
 
-const PerWeekReport = () => {
-  // const [project, setProject] = useState([]);
-  const [projectInProgress, setProjectInProgress] = useState([]);
+const PerWeekReport = ({ projectData }) => {
   const [manWorkData, setManWorkData] = useState({});
-  const { projectData } = useContext(FilterContext);
+  const [selectedTerm, setSelectedTerm] = useState();
 
-  // useEffect(() => {
-  //   const fetchProjectData = async () => {
-  //     try {
-  //       const fetchDataFromApi2 = await GetProjectData();
-  //       const projectDataObject = fetchDataFromApi2?.data || [];
-  //       setProject(projectDataObject);
-  //     } catch (error) {
-  //       console.error("Error fetching project data:", error);
-  //     }
-  //   };
-  //   fetchProjectData();
-  // }, []);
-
-  useEffect(() => {
-    const ProjectInProgress = projectData.filter(
-      (item) => item?.status === "In Progress"
-    );
-    setProjectInProgress(ProjectInProgress);
-  }, [projectData]);
-
-  const fetchManWorkData = async (projectCode) => {
+  const fetchManWorkData = async (id) => {
     try {
-      const response = await ManWorkPerDays({ project_code: projectCode });
+      const response = await ManWorkPerDays({ project_id: id });
       if (response?.status) {
         return response.data;
       }
@@ -45,22 +22,20 @@ const PerWeekReport = () => {
   useEffect(() => {
     const fetchAllManWorkData = async () => {
       const manWorkData = {};
-
-      for (const project of projectInProgress) {
-        const { project_code } = project;
-        const data = await fetchManWorkData(project_code);
-        manWorkData[project_code] = data;
+      for (const project of projectData) {
+        const { id } = project;
+        const data = await fetchManWorkData(id);
+        manWorkData[id] = data;
       }
-
       setManWorkData(manWorkData);
     };
-
-    if (projectInProgress.length > 0) {
+    if (projectData.length > 0) {
       fetchAllManWorkData();
     }
-  }, [projectInProgress]);
+  }, [projectData]);
+  console.log(selectedTerm);
 
-  const chartData = projectInProgress.map((project) => {
+  const chartData = projectData.map((project) => {
     const { project_code, sample, tentative_start_date, tentative_end_date } =
       project;
     const startDate = new Date(tentative_start_date);
@@ -119,15 +94,61 @@ const PerWeekReport = () => {
     },
   ];
 
+  const xLabels = combinedData.labels.map((item) => item);
+
+  const chartSetting = {
+    xAxis: [
+      {
+        label: "rainfall (mm)",
+      },
+    ],
+    // width: 500,
+    height: 400,
+  };
+
+  const valueFormatter = (value) => `${value}mm`;
+
+  const dataset = [
+    {
+      london: 59,
+      paris: 57,
+      newYork: 86,
+      seoul: 21,
+      month: "Jan",
+    },
+  ];
+
   return (
     <div className="w-full">
-      <BarChart
-        series={series}
-        xAxis={[{ data: combinedData.labels, scaleType: "band" }]}
-        margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-        height={400}
-        title="Project Weekly Progress"
-      />
+      <div className="text-right w-full">
+        <ReportByTerm setSelectedTerm={setSelectedTerm} />
+      </div>
+      <div className="w-screen overflow-scroll">
+        {/* <LineChart
+          // width={500}
+          height={300}
+          series={series}
+          xAxis={[{ scaleType: "point", data: xLabels }]}
+        /> */}
+        <BarChart
+          dataset={dataset}
+          xAxis={[{ scaleType: "band", dataKey: "month" }]}
+          series={[
+            {
+              dataKey: "Remaining Target",
+              label: "Remaining Target",
+              valueFormatter,
+            },
+            {
+              dataKey: "Achieved Target",
+              label: "Achieved Target",
+              valueFormatter,
+            },
+          ]}
+          layout="horizontal"
+          {...chartSetting}
+        />
+      </div>
     </div>
   );
 };

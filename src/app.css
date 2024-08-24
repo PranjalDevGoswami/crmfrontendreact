@@ -59,6 +59,20 @@ input[type="number"]::-webkit-outer-spin-button {
   white-space: pre-wrap;
   text-overflow: ellipsis;
 }
+.rdt_TableCell div{
+  word-wrap: break-word !important;
+  text-wrap: wrap !important;
+  text-align: left !important;
+}
+.css-13cymwt-control{
+  position: relative;
+}
+.css-1nmdiq5-menu{
+ overflow-y: scroll;
+}
+.cmcNky div:first-child{
+  overflow: visible !important;
+}
 
 .sc-eywPal{
   display: none !important;
@@ -153,7 +167,6 @@ input[type="number"]::-webkit-outer-spin-button {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 @media (min-width:320px) and (max-width:1080px) {
   .filterTabsButton{
   font-size: 14px;

@@ -73,6 +73,24 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: visible;
 }
 
+.rdt_TableCell div {
+  word-wrap: break-word !important;
+  text-wrap: wrap !important;
+  text-align: left !important;
+}
+
+.css-13cymwt-control {
+  position: relative;
+}
+
+.css-1nmdiq5-menu {
+  overflow-y: scroll;
+}
+
+.cmcNky div:first-child {
+  overflow: visible !important;
+}
+
 .sc-eywPal {
   opacity: 0 !important;
   display: none !important;

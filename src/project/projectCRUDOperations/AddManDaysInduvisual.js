@@ -14,8 +14,10 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
       update_date: "",
       total_man_days: "",
       total_achievement: "",
+      status: "",
     },
   ]);
+  const [errorMessage, setErrorMessage] = useState("");
   const { isAddManDays, setIsAddManDays, setisEdit } =
     useContext(DataTableContext);
 
@@ -48,14 +50,14 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
       );
     }
   };
-
   const handleDateFocus = (e) => {
     const selectedDate = new Date(e.target.value);
-
     if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
       e.target.value = "";
+      setErrorMessage("Weekend days cannot be selected");
       e.preventDefault();
-      console.log("Weekend days cannot be selected");
+    } else {
+      setErrorMessage("");
     }
   };
 
@@ -93,8 +95,6 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
     try {
       const response = await PostMandaysData(data);
       const error = response?.ex?.response?.data?.map((item) => item);
-      console.log("🚀 ~ PostUpdateEditData ~ error:", response);
-
       if (response?.status == true) {
         setIsAddManDays(false);
         SweetAlert({
@@ -103,10 +103,16 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
           icon: "success",
         });
         setisEdit(false);
+      } else if (response?.ex?.response?.data[0]?.non_field_errors?.[0]) {
+        SweetAlert({
+          title: "Error",
+          text: response?.ex?.response?.data[0]?.non_field_errors?.[0],
+          icon: "error",
+        });
       } else {
         SweetAlert({
-          title: "error",
-          text: error[0].total_man_days,
+          title: "Error",
+          text: response?.ex?.response?.data?.error || "Something went wrong",
           icon: "error",
         });
       }
@@ -120,9 +126,41 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
     document.body.classList.remove("DrawerBody");
     // setIsDrawerOpen(false);
   };
+  const validateFields = () => {
+    const { update_date, total_man_days, total_achievement, status } =
+      updatedValue[0];
+
+    if (!update_date) {
+      return "Date is required.";
+    }
+    if (!status) {
+      return "Status is required.";
+    }
+    if (!total_man_days) {
+      return "Man Days is required.";
+    } else if (total_man_days == 0) {
+      return "Man Days can not be 0.";
+    }
+    if (!total_achievement) {
+      return "Achieve Target is required.";
+    } else if (total_achievement == 0) {
+      return "Achieve Target can not be 0.";
+    }
+
+    return null;
+  };
 
   const handleEditUpdate = () => {
-    PostUpdateEditData(updatedValue);
+    const errorMessage = validateFields();
+    if (!errorMessage) {
+      PostUpdateEditData(updatedValue);
+    } else {
+      SweetAlert({
+        title: "Error",
+        text: errorMessage,
+        icon: "error",
+      });
+    }
   };
 
   return (
@@ -165,6 +203,9 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             InputOnFocus={handleDateFocus}
             required
           />
+          {errorMessage && ( // Conditionally render the error message
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
         </div>
         <div className="ProjectOperationEdit mt-4">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />

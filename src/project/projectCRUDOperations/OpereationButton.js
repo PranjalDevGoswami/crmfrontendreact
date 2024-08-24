@@ -6,7 +6,7 @@ import AssignedProject from "../../project/AssignedProject.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 
-const OpereationButton = ({ record }) => {
+const OpereationButton = () => {
   const role = localStorage.getItem("role");
   const department = localStorage.getItem("department");
   const navigate = useNavigate();
@@ -25,24 +25,25 @@ const OpereationButton = ({ record }) => {
     setisView,
     setisEdit,
     isEdit,
+    selectedRecord,
     setChangeProjectStatus,
   } = useContext(DataTableContext);
 
   const [isInvoice, setIsInvoice] = useState(false);
 
-  const HandleOnEdit = (record) => {
+  const HandleOnEdit = (selectedRecord) => {
     setisEdit(true);
     setIsAddManDays(false);
     setChangeProjectStatus(false);
     setisView(false);
-    setEditRecord(record);
+    setEditRecord(selectedRecord);
     setUpdatedValue({
       ...updatedValue,
-      project_code: record?.project_code,
-      name: record?.name,
+      project_code: selectedRecord?.project_code,
+      name: selectedRecord?.name,
     });
   };
-  const handleStatus = (record) => {
+  const handleStatus = (selectedRecord) => {
     setChangeProjectStatus(true);
     setisEdit(false);
     setIsAddManDays(false);
@@ -67,16 +68,16 @@ const OpereationButton = ({ record }) => {
     setChangeProjectStatus(false);
     setisEdit(false);
     setIsAddManDays(false);
-    navigate("/view", { state: record });
+    navigate("/view", { state: selectedRecord });
   };
 
-  const handleRaiseCBR = (record) => {
-    PostRaiseCBR({ project_code: record.project_code });
+  const handleRaiseCBR = (selectedRecord) => {
+    PostRaiseCBR({ project_code: selectedRecord.project_code });
   };
-  const handleGetInvoice = (record) => {
+  const handleGetInvoice = (selectedRecord) => {
     // e.preventDefault();
     setIsInvoice(true);
-    navigate("/invoice", { state: record });
+    navigate("/invoice", { state: selectedRecord });
   };
   const PostRaiseCBR = async (data) => {
     try {
@@ -103,7 +104,7 @@ const OpereationButton = ({ record }) => {
     }
   };
 
-  const endDateStr = record.tentative_end_date;
+  const endDateStr = selectedRecord.tentative_end_date;
   const endDate = new Date(endDateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -122,10 +123,11 @@ const OpereationButton = ({ record }) => {
             </button>
             {department == 2 && (
               <>
-                {record.status !== "Project Initiated" &&
-                  record.status !== "Completed" &&
-                  record.status !== "Cbr Raised" &&
-                  record.status !== "On Hold" &&
+                {selectedRecord.status !== "Project Initiated" &&
+                  selectedRecord.status !== "Completed" &&
+                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "On Hold" &&
+                  role !== "HOD" &&
                   DateValidate == true && (
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
@@ -134,37 +136,40 @@ const OpereationButton = ({ record }) => {
                       Add Mandays
                     </button>
                   )}
-                {record.status !== "Project Initiated" &&
-                  record.status !== "Completed" &&
-                  record.status !== "Cbr Raised" &&
-                  record.status !== "On Hold" && (
+                {selectedRecord.status !== "Project Initiated" &&
+                  selectedRecord.status !== "Completed" &&
+                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "On Hold" &&
+                  role !== "HOD" && (
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                       onClick={() => {
-                        HandleOnEdit(record);
+                        HandleOnEdit(selectedRecord);
                       }}
                     >
                       Edit Request
                     </button>
                   )}
-                {record.status !== "Project Initiated" &&
-                  record.status !== "Completed" &&
-                  record.status !== "Cbr Raised" && (
-                    // record.status !== "On Hold" &&
+                {selectedRecord.status !== "Project Initiated" &&
+                  selectedRecord.status !== "Completed" &&
+                  selectedRecord.status !== "Cbr Raised" &&
+                  role !== "HOD" && (
+                    // selectedRecord.status !== "On Hold" &&
                     // DateValidate == true &&
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                      onClick={() => handleStatus(record)}
+                      onClick={() => handleStatus(selectedRecord)}
                     >
                       Status Update
                     </button>
                   )}
-                {record.status === "Completed" &&
-                  record.status !== "On Hold" &&
-                  record.status !== "Cbr Raised" && (
+                {selectedRecord.status === "Completed" &&
+                  selectedRecord.status !== "On Hold" &&
+                  selectedRecord.status !== "Cbr Raised" &&
+                  role !== "HOD" && (
                     <button
                       className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
-                      onClick={() => handleRaiseCBR(record)}
+                      onClick={() => handleRaiseCBR(selectedRecord)}
                     >
                       Raise CBR
                     </button>
@@ -172,7 +177,7 @@ const OpereationButton = ({ record }) => {
                 {role === "superuser" && (
                   <button
                     className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-                    onClick={() => handleGetInvoice(record)}
+                    onClick={() => handleGetInvoice(selectedRecord)}
                   >
                     Get Invoice
                   </button>
@@ -184,7 +189,7 @@ const OpereationButton = ({ record }) => {
         {department == 3 && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
-            onClick={() => handleGetInvoice(record)}
+            onClick={() => handleGetInvoice(selectedRecord)}
           >
             Get Invoice
           </button>

@@ -1,7 +1,7 @@
 // export const BASEURL = "https://crmapi.unimrkt.com"; //live server
-// export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
+export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
 // export const BASEURL = "http://127.0.0.1:8000";
-export const BASEURL = "http://65.0.180.82"; // new Uat Server
+// export const BASEURL = "http://65.0.180.82"; // new Uat Server //temp
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
 export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
@@ -27,7 +27,8 @@ export const PROJECT_TL = BASEURL + "/api/project/project-teamleads/";
 export const USERSTATUS = BASEURL + "/api/user/user/status/";
 export const EDITPROJECTREQUEST =
   BASEURL + "/api/project/interview/samplesize/edit";
-export const UPDATEDPROJECTLIST =
-  BASEURL + "/api/project/project-updated-data/";
+export const UPDATEDPROJECTLIST = BASEURL + "/api/project/updated-data/";
 export const PROJECTUPDATEWITHPROJECTCODE =
-  BASEURL + "/api/project/update/with-projectcode/";
+  BASEURL + "/api/project/update/with-projectid/";
+export const MANDAYSLIST = BASEURL + "/api/operation/projects/man-days/list";
+export const USERROLE = BASEURL + "/api/project/userrole/";

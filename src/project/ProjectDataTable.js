@@ -198,7 +198,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   const desabledRowData = data?.map((item) => {
     let desabled = false;
     if (
-      item.status === "completed" ||
+      item.status === "Completed" ||
       item.status === "cbr_raised" ||
       new Date(item.tentative_end_date) < new Date(currentDate)
     ) {
@@ -297,7 +297,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 )}
                 <div className="w-full tableClass" id="tableClass">
                   {department == 2 &&
-                  (role?.includes("Team Lead") || role?.includes("Manager")) ? (
+                  (role?.includes("Team Lead") ||
+                    role?.includes("Manager") ||
+                    role?.includes("Sr.Manager") ||
+                    // role?.includes("HOD") ||
+                    role?.includes("Ass.Manager")) ? (
                     <DataTable
                       columns={
                         data?.length > 0
@@ -313,6 +317,20 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                       onSelectedRowsChange={handleSelectedRowsChange}
                       enableMultiRowSelection
                       selectableRowDisabled={(row) => row.desabled}
+                      actions={<ExportCSV data={data} />}
+                    />
+                  ) : department == 2 && role?.includes("HOD") ? (
+                    <DataTable
+                      columns={
+                        data?.length > 0
+                          ? TableColumn({ buttonRef })
+                          : Dummycolumns
+                      }
+                      data={data?.length > 0 ? desabledRowData : DummyData}
+                      pagination
+                      customStyles={
+                        darkMode ? customStylesDarkMode : customStyles
+                      }
                       actions={<ExportCSV data={data} />}
                     />
                   ) : ((department == 1 ||

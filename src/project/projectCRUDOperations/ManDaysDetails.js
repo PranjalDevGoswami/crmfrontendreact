@@ -38,12 +38,24 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
       selector: (row) => row.remaining_interview,
       sortable: true,
     },
+    {
+      name: "Updated By",
+      selector: (row) => row.updated_by?.name,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+    },
   ];
   const data = perDayDetailsData.map((item, index) => ({
     update_date: formatDate(item?.update_date),
     total_achievement: item?.total_achievement,
     total_man_days: item?.total_man_days,
     remaining_interview: item?.remaining_interview,
+    updated_by: item?.updated_by,
+    status: item?.status,
   }));
 
   return (

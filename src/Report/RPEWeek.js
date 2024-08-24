@@ -1,67 +1,41 @@
-import React, { useContext, useEffect, useState } from "react";
-// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import React, { useEffect, useState } from "react";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { FilterContext } from "../ContextApi/FilterContext";
 
-const RPEWeek = () => {
-  const [projectInProgress, setProjectInProgress] = useState([]);
+const RPEWeek = ({ projectData }) => {
   const [manWorkData, setManWorkData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [barChartData, setBarChartData] = useState([]);
   const [totalMenRequired, setTotalMenRequired] = useState([]);
-  const { projectData } = useContext(FilterContext);
-
-  useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        // const fetchDataFromApi = await GetProjectData();
-        const projectDataObject = projectData?.data || [];
-        const filteredProjects = projectDataObject.filter(
-          (item) => item.status === "In Progress"
-        );
-        setProjectInProgress(filteredProjects);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-        setError("Error fetching project data. Please try again later.");
-        setLoading(false);
-      }
-    };
-    fetchProjectData();
-  }, []);
 
   useEffect(() => {
     const fetchAllManWorkData = async () => {
       try {
         const updatedManWorkData = {};
-
-        for (const project of projectInProgress) {
-          const { project_code } = project;
-          const response = await ManWorkPerDays({ project_code });
+        for (const project of projectData) {
+          const { id } = project;
+          const response = await ManWorkPerDays({ project_id: id });
           if (response?.status) {
-            updatedManWorkData[project_code] = response.data;
+            updatedManWorkData[id] = response.data;
           }
         }
-
         setManWorkData(updatedManWorkData);
       } catch (error) {
         console.error("Error fetching man work data:", error);
         setError("Error fetching man work data. Please try again later.");
       }
     };
-
-    if (projectInProgress.length > 0) {
+    if (projectData.length > 0) {
       fetchAllManWorkData();
     }
-  }, [projectInProgress]);
+  }, [projectData]);
 
   useEffect(() => {
     const calculateBarChartData = () => {
       const newData = [];
 
-      projectInProgress.forEach(async (project) => {
+      projectData.forEach(async (project) => {
         const { project_code, sample, name } = project;
         const projectData = manWorkData[project_code] || [];
         const firstWeekData = projectData.slice(0, 5);
@@ -87,7 +61,7 @@ const RPEWeek = () => {
           sampleRatio: sampleRatio,
         });
 
-        if (newData.length === projectInProgress.length) {
+        if (newData.length === projectData.length) {
           setBarChartData(newData.slice());
         }
       });
@@ -96,7 +70,7 @@ const RPEWeek = () => {
     if (Object.keys(manWorkData).length > 0) {
       calculateBarChartData();
     }
-  }, [manWorkData, projectInProgress]);
+  }, [manWorkData, projectData]);
 
   if (loading) {
     return <p>Loading...</p>;

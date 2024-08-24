@@ -76,7 +76,7 @@ const SideBar = () => {
     <div className="shadow-slate-400 flex justify-between w-full">
       <div
         className={
-          "bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex items-center flex-col gap-2 w-10/12"
+          "bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex items-start pl-2 pr-2 flex-col gap-2 w-10/12"
         }
       >
         {(role === "Director" || role === "superuser") && (

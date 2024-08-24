@@ -16,15 +16,13 @@ export function AddManDays({ setMultiEditFieldOpen }) {
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [mandaysData, setMandaysData] = useState(
-    selectedRow.map((item) => [
-      {
-        project_id: item?.id,
-        update_date: "",
-        total_man_days: "",
-        total_achievement: "",
-        status: "",
-      },
-    ])
+    selectedRow.map((item) => ({
+      project_id: item?.id,
+      update_date: "",
+      total_man_days: "",
+      total_achievement: "",
+      status: "",
+    }))
   );
   const [editIndex, setEditIndex] = useState(null);
 
@@ -57,6 +55,63 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     setMandaysData(updatedMandaysData);
   };
 
+  const validateFields = () => {
+    for (const item of mandaysData) {
+      if (!item.update_date) {
+        SweetAlert({
+          title: "Error",
+          text: "Update date is required",
+          icon: "error",
+        });
+        return false;
+      }
+      if (!item.total_man_days) {
+        SweetAlert({
+          title: "Error",
+          text: "Total man days is required",
+          icon: "error",
+        });
+        return false;
+      } else if (item.total_man_days == 0) {
+        SweetAlert({
+          title: "Error",
+          text: "Total man days can not be 0",
+          icon: "error",
+        });
+        return false;
+      }
+      if (!item.total_achievement) {
+        SweetAlert({
+          title: "Error",
+          text: "Total achievement is required",
+          icon: "error",
+        });
+        return false;
+      } else if (item.total_achievement == 0) {
+        SweetAlert({
+          title: "Error",
+          text: "Total Achievement can not be 0",
+          icon: "error",
+        });
+        return false;
+      }
+      if (!item.status || item.status === "--Select Status--") {
+        SweetAlert({
+          title: "Error",
+          text: "Status is required",
+          icon: "error",
+        });
+        return false;
+      }
+    }
+    return true;
+  };
+  const preventMinus = (e) => {
+    if (e.code === "Minus") {
+      e.preventDefault();
+    }
+  };
+
   const addField = selectedEditData.map((item, index) => ({
     ...item,
     man_days: (
@@ -68,6 +123,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         onChange={(e) => handleMandaysData(index, e)}
         name="total_man_days"
         value={mandaysData[index]?.total_man_days}
+        onKeyDown={preventMinus}
       />
     ),
     total_achievement: (
@@ -79,6 +135,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         onChange={(e) => handleMandaysData(index, e)}
         name="total_achievement"
         value={mandaysData[index]?.total_achievement}
+        onKeyDown={preventMinus}
       />
     ),
     status: (
@@ -108,7 +165,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
             HandleAddManDays();
           }}
         >
-          update
+          Update
         </button>
       ),
     },
@@ -125,7 +182,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
 
   const finalData = mandaysData.map((item, index) => ({
     ...selectedEditData[index],
-    project_id: item.id,
+    project_id: item.project_id,
     total_man_days: parseInt(item.total_man_days),
     total_achievement: item.total_achievement,
     status: item.status,
@@ -134,76 +191,54 @@ export function AddManDays({ setMultiEditFieldOpen }) {
   }));
 
   const DataToSend = finalData
-    .map((item, index) => {
-      if (
-        item.project_id !== null &&
-        item.total_man_days !== "" &&
-        item.total_achievement !== "" &&
-        item.status !== ""
-      ) {
-        return {
-          project_id: item.id,
-          // name: item.name,
-          total_man_days: parseInt(item.total_man_days),
-          total_achievement: item.total_achievement,
-          status: item.status,
-          update_date: item.update_date,
-        };
-      }
-    })
+    .map((item) => ({
+      project_id: item.project_id,
+      total_man_days: item.total_man_days,
+      total_achievement: item.total_achievement,
+      status: item.status,
+      update_date: item.update_date,
+    }))
     .filter((item) => item !== undefined);
 
   const HandleAddManDays = () => {
-    if (DataToSend?.length === 0) {
-      SweetAlert({
-        title: "Error",
-        text: "Please fill in data for at least one project before updating.",
-        icon: "error",
-      });
-      return;
+    if (validateFields()) {
+      BulkUpdateManDays(DataToSend);
     }
-    const updatedMandaysData = [...mandaysData];
-    updatedMandaysData[editIndex] = {
-      total_man_days: "",
-      total_achievement: "",
-      status: "",
-      update_date: "",
-    };
-    setMandaysData(updatedMandaysData);
-    setEditIndex(null);
-    BulkUpdateManDays(DataToSend);
   };
-
   const BulkUpdateManDays = async (data) => {
     try {
       const response = await PostMandaysData(data);
-      if (response?.status == true) {
+      if (response?.status === true) {
         SweetAlert({
-          title: "Operation Perform Sucessfully",
+          title: "Operation Performed Successfully",
           text: "",
           icon: "success",
         });
         closeDrawerRight();
-      } else if (response?.status == false) {
-        console.log(response);
-        if (response?.ex?.response?.data[0]) {
+      } else {
+        if (response?.ex?.response?.data[0]?.non_field_errors?.[0]) {
           SweetAlert({
             title: "Error",
-            text: "please select date from calender",
+            text: response?.ex?.response?.data[0]?.non_field_errors?.[0],
             icon: "error",
           });
         } else {
           SweetAlert({
             title: "Error",
-            text: response?.ex?.response?.data?.error,
+            text: response?.ex?.response?.data?.error || "Something went wrong",
             icon: "error",
           });
         }
       }
     } catch (error) {
-      console.log("Error fetching project data:", error);
+      SweetAlert({
+        title: "Error",
+        text: "An unexpected error occurred. Please try again.",
+        icon: "error",
+      });
     }
   };
+
   return (
     <React.Fragment>
       <Drawer

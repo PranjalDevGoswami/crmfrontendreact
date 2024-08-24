@@ -44,13 +44,28 @@ const Client = () => {
   return (
     <div className="pt-4">
       <Label labelName={"Client"} className={"pt-4 pb-2"} />
-      {clientListData.length > 0 && (
+      {clientListData.length > 0 ? (
         <Dropdown
           name={"clients"}
           className={
             "p-3 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border rounded-r-none mt-2"
           }
           Option_Name={["-- Select Client --", ...clientListData]}
+          RequireAddButton={true}
+          required
+          onChange={SelectOptionHandler}
+        />
+      ) : (
+        <Dropdown
+          name={"clients"}
+          className={
+            "p-3 outline-none cursor-pointer w-[100%] relative bg-[#f3eded] border rounded-r-none mt-2"
+          }
+          Option_Name={[
+            "-- Select Client --",
+            "demo client 1",
+            "demo client 2",
+          ]}
           RequireAddButton={true}
           required
           onChange={SelectOptionHandler}

@@ -6,34 +6,124 @@ import { NotifiactionContext } from "../../ContextApi/NotificationContext";
 import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
+import { ThemeContext } from "../../ContextApi/ThemeContext";
 
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
   const [updatedValue, setUpdatedValue] = useState({
     project_id: viewRecord.id,
-    tentative_end_date: "",
-    sample: "",
+    tentative_end_date: new Date(viewRecord.tentative_end_date).toISOString(),
+    sample: viewRecord?.sample,
     reason_for_adjustment: "",
   });
+  const [errors, setErrors] = useState({
+    sample: "",
+    reason_for_adjustment: "",
+    tentative_end_date: "",
+  });
+
   const { setisEdit } = useContext(DataTableContext);
+  const { darkMode } = useContext(ThemeContext);
 
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);
   const [loader, setLoader] = useState(false);
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   if (name === "tentative_end_date") {
+  //     const selectedDate = new Date(value);
+  //     const currentDate = new Date();
+  //     let errorMsg = "";
+  //     if (selectedDate < currentDate) {
+  //       errorMsg = "Past dates are not allowed.";
+  //     } else if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
+  //       errorMsg = "Weekend dates are not allowed.";
+  //     }
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       tentative_end_date: errorMsg,
+  //     }));
+
+  //     setShowDate(value);
+  //     setUpdatedValue({
+  //       ...updatedValue,
+  //       tentative_end_date: selectedDate.toISOString(),
+  //     });
+  //   }
+  // };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedValue({
-      ...updatedValue,
-      [name]: value,
-    });
-    if (name === "date") {
+    // if (name === "tentative_end_date") {
+    //   const selectedDate = new Date(value);
+    //   const currentDate = new Date();
+    //   let errorMsg = "";
+
+    //   if (selectedDate <= currentDate) {
+    //     errorMsg = "Past dates are not allowed.";
+    //   } else if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
+    //     errorMsg = "Weekend dates are not allowed.";
+    //   }
+
+    //   setErrors((prevErrors) => ({
+    //     ...prevErrors,
+    //     tentative_end_date: errorMsg,
+    //   }));
+
+    //   setShowDate(value);
+    //   setUpdatedValue({
+    //     ...updatedValue,
+    //     tentative_end_date: selectedDate.toISOString(),
+    //   });
+    // }
+    if (name === "tentative_end_date") {
+      const selectedDate = new Date(value);
+      const tentativeStartDate = new Date(viewRecord.tentative_start_date); // Assuming this is the start date
+      let errorMsg = "";
+
+      if (selectedDate <= tentativeStartDate) {
+        errorMsg = "End date must be after the start date.";
+      } else if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
+        errorMsg = "Weekend dates are not allowed.";
+      }
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        tentative_end_date: errorMsg,
+      }));
+
       setShowDate(value);
-      const DateVAlue = new Date(value);
-      const formattedDate = DateVAlue.toISOString();
       setUpdatedValue({
         ...updatedValue,
-        date: formattedDate,
+        tentative_end_date: selectedDate.toISOString(),
+      });
+    }
+
+    if (name === "sample") {
+      let errorMsg = "";
+      const numericValue = Number(value);
+
+      if (value.trim() === "") {
+        errorMsg = "Sample field cannot be empty.";
+      } else if (numericValue === 0) {
+        errorMsg = "Sample value cannot be 0.";
+      }
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        sample: errorMsg,
+      }));
+
+      setUpdatedValue({
+        ...updatedValue,
+        sample: value,
+      });
+    }
+    if (name === "reason_for_adjustment") {
+      setUpdatedValue({
+        ...updatedValue,
+        reason_for_adjustment: value,
       });
     }
   };
@@ -64,10 +154,30 @@ const SampleEdit = ({ viewRecord }) => {
     document.body.classList.remove("DrawerBody");
   };
 
+  const validateFields = () => {
+    let isValid = true;
+    let errorMessage = "";
+
+    if (!updatedValue.reason_for_adjustment) {
+      isValid = false;
+      errorMessage += "Reason for adjustment is required.\n";
+    }
+
+    if (!isValid) {
+      SweetAlert({
+        title: "Error",
+        text: errorMessage.trim(),
+        icon: "error",
+      });
+    }
+
+    return isValid;
+  };
   const PostUpdateEditData = async (data) => {
+    // console.log("🚀 ~ PostUpdateEditData ~ data:", data);
     setLoader(true);
     const response = await postWithAuth(EDITPROJECTREQUEST, data);
-    if (response.status == true) {
+    if (response.status === true) {
       setLoader(false);
       SweetAlert({
         title: "Edit Request Sent Successfully",
@@ -80,20 +190,17 @@ const SampleEdit = ({ viewRecord }) => {
   };
 
   const handleEditUpdate = () => {
-    const selectedDate = new Date(updatedValue.tentative_end_date);
-    if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
-      updatedValue.tentative_end_date = "";
-      SweetAlert({
-        title: "weekend is not selectable",
-        text: "",
-        icon: "info",
-      });
-    } else {
-      PostUpdateEditData(updatedValue);
-    }
+    if (!validateFields() || errors.tentative_end_date) return;
+
+    PostUpdateEditData(updatedValue);
   };
+
   return (
-    <div>
+    <div
+      className={`${
+        darkMode ? "bg-black text-white" : "bg-gray-50 text-black"
+      }`}
+    >
       <h3 className="text-xl underline pb-4">Project Edit Request</h3>
       <div className="flex items-center flex-wrap justify-center w-full rounded-sm">
         <div className="ProjectOperationEdit hidden">
@@ -127,6 +234,9 @@ const SampleEdit = ({ viewRecord }) => {
             inputChange={handleInputChange}
             min={getMinDate()}
           />
+          {errors.tentative_end_date && (
+            <p className="text-red-500 text-sm">{errors.tentative_end_date}</p>
+          )}
         </div>
         <div className="ProjectOperationEdit">
           <LableAndInput
@@ -140,6 +250,9 @@ const SampleEdit = ({ viewRecord }) => {
             InputMax_lenght={3}
             min={1}
           />
+          {errors.sample && (
+            <p className="text-red-500 text-sm">{errors.sample}</p>
+          )}
         </div>
         <div className="ProjectOperationEdit">
           <LableAndInput
@@ -151,12 +264,6 @@ const SampleEdit = ({ viewRecord }) => {
             Inputvalue={updatedValue.reason_for_adjustment}
             inputChange={handleInputChange}
           />
-          {/* <Label labelName={"Reason"} className={"pt-4 pb-2"} />
-          <textarea
-            className="w-full p-1 border rounded-full"
-            name="reason_for_adjustment"
-            onChange={handleInputChange}
-          /> */}
         </div>
         <div className="flex pt-10">
           <button
@@ -166,7 +273,6 @@ const SampleEdit = ({ viewRecord }) => {
             }
           >
             Update
-            {/* {loader ? <Loader /> : "Update"} */}
           </button>
           <button
             onClick={handleCancelUpdate}

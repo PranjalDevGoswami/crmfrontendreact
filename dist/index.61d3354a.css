@@ -688,12 +688,20 @@ img, video {
   width: 13rem;
 }
 
+.w-56 {
+  width: 14rem;
+}
+
 .w-6\/12 {
   width: 50%;
 }
 
 .w-8 {
   width: 2rem;
+}
+
+.w-8\/12 {
+  width: 66.6667%;
 }
 
 .w-80 {
@@ -732,8 +740,16 @@ img, video {
   width: 100%;
 }
 
+.w-screen {
+  width: 100vw;
+}
+
 .min-w-full {
   min-width: 100%;
+}
+
+.max-w-56 {
+  max-width: 14rem;
 }
 
 .max-w-full {
@@ -809,6 +825,10 @@ img, video {
 
 .flex-nowrap {
   flex-wrap: nowrap;
+}
+
+.items-start {
+  align-items: flex-start;
 }
 
 .items-center {
@@ -908,6 +928,14 @@ img, video {
   white-space: nowrap;
 }
 
+.text-wrap {
+  text-wrap: wrap;
+}
+
+.break-words {
+  overflow-wrap: break-word;
+}
+
 .rounded {
   border-radius: .25rem;
 }
@@ -996,6 +1024,11 @@ img, video {
 .border-b-black {
   --tw-border-opacity: 1;
   border-bottom-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
+.border-b-white {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
 .bg-\[\#4CBC9A\] {
@@ -1103,6 +1136,10 @@ img, video {
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 
+.bg-transparent {
+  background-color: #0000;
+}
+
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1128,10 +1165,6 @@ img, video {
 
 .bg-cover {
   background-size: cover;
-}
-
-.fill-white {
-  fill: #fff;
 }
 
 .p-0 {
@@ -1398,6 +1431,11 @@ img, video {
 .text-green-900 {
   --tw-text-opacity: 1;
   color: rgb(20 83 45 / var(--tw-text-opacity));
+}
+
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
 .text-red-900 {
@@ -1710,6 +1748,11 @@ img, video {
     padding: .5rem;
   }
 
+  .min-\[320px\]\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
   .min-\[320px\]\:text-sm {
     font-size: .875rem;
     line-height: 1.25rem;
@@ -1773,9 +1816,9 @@ img, video {
     padding: .75rem;
   }
 
-  .sm\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
+  .sm\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   .sm\:text-sm {
@@ -1844,20 +1887,12 @@ img, video {
     height: 10rem;
   }
 
-  .lg\:w-4\/12 {
-    width: 33.3333%;
-  }
-
   .lg\:w-40 {
     width: 10rem;
   }
 
   .lg\:w-5\/12 {
     width: 41.6667%;
-  }
-
-  .lg\:w-8\/12 {
-    width: 66.6667%;
   }
 
   .lg\:w-\[32\%\] {

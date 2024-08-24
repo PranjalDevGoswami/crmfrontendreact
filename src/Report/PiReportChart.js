@@ -1,56 +1,69 @@
-import { useContext, useEffect, useState } from "react";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { FilterContext } from "../ContextApi/FilterContext";
-// import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { useEffect, useState } from "react";
 
-export default function PiReportChart() {
-  // const [project, setProject] = useState([]);
-  const { projectData } = useContext(FilterContext);
+export default function PiReportChart({
+  projectData,
+  setProjectType,
+  projectType,
+  filteredData,
+  setFilteredData,
+  setProjectStatus,
+}) {
+  useEffect(() => {
+    if (projectType.length > 0) {
+      let filtered = projectData.filter(
+        (item) =>
+          item.project_type.name.toLowerCase() ===
+          projectType[0].label.toLowerCase()
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(projectData);
+    }
+  }, [projectType, projectData]);
 
-  // useEffect(() => {
-  //   const fetchProjectData = async () => {
-  //     try {
-  //       const fetchDataFromApi2 = await GetProjectData();
-  //       const projectDataObject = fetchDataFromApi2?.data?.map((val) => {
-  //         return val;
-  //       });
-  //       setProject(projectDataObject);
-  //     } catch (error) {
-  //       console.error("Error fetching project data:", error);
-  //     }
-  //   };
-  //   fetchProjectData();
-  // }, []);
-
-  const ToBeStartedProject = projectData.filter(
+  const ToBeStartedProject = filteredData.filter(
     (item) => item.status === "To Be Started"
   );
-  const InProgressProject = projectData.filter(
+  const InProgressProject = filteredData.filter(
     (item) => item.status === "In Progress"
   );
-  const CompletedProject = projectData.filter(
+  const CompletedProject = filteredData.filter(
     (item) => item.status === "Completed"
   );
-  const HoldProject = projectData.filter((item) => item.status === "hold");
-  const CbrRaisedProject = projectData.filter(
+  const HoldProject = filteredData.filter((item) => item.status === "On Hold");
+  const CbrRaisedProject = filteredData.filter(
     (item) => item.status === "Cbr Raised"
   );
+  const InitiatedProject = filteredData.filter(
+    (item) => item.status === "Project Initiated"
+  );
+  const clickHandler = (event, d) => {
+    const points = data[d.dataIndex];
+    setProjectStatus([points]);
+  };
+  // console.log(projectType);
 
   const data = [
     {
-      label: "To be Started",
+      label: "Project Initiated",
+      value: InitiatedProject.length,
+      color: "#E4D4F4",
+    },
+    {
+      label: "To Be Started",
       value: ToBeStartedProject.length,
       color: "#0088FE",
     },
     {
       label: "In Progress",
       value: InProgressProject.length,
-      color: "#00C49F",
+      color: "#FFBB28",
     },
     {
       label: "Completed",
       value: CompletedProject.length,
-      color: "#FFBB28",
+      color: "#00C49F",
     },
     {
       label: "On Hold",
@@ -88,6 +101,14 @@ export default function PiReportChart() {
               </tr>
               <tr>
                 <td className="px-4 py-2 border border-gray-300">
+                  Project Initiated
+                </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {InitiatedProject.length}
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 border border-gray-300">
                   To be Started
                 </td>
                 <td className="px-4 py-2 border border-gray-300">
@@ -109,7 +130,7 @@ export default function PiReportChart() {
                 </td>
               </tr>
               <tr>
-                <td className="px-4 py-2 border border-gray-300">Hold</td>
+                <td className="px-4 py-2 border border-gray-300">On Hold</td>
                 <td className="px-4 py-2 border border-gray-300">
                   {HoldProject.length}
                 </td>
@@ -128,11 +149,14 @@ export default function PiReportChart() {
             series={[
               {
                 data,
-                innerRadius: 15,
+                innerRadius: 10,
                 outerRadius: 100,
                 arcLabel: getArcLabel,
               },
             ]}
+            onItemClick={(event, d) => {
+              clickHandler(event, d);
+            }}
             width={400}
             height={400}
             margin={{ right: -20, top: 30 }}

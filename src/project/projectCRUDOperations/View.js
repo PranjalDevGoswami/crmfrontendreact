@@ -4,7 +4,7 @@ import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysMa
 import ManDaysDetails from "./ManDaysDetails";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { getWithAuth } from "../../provider/helper/axios";
-import { PROJECTDATAAPIS } from "../../../utils/urls.js";
+import { BASEURL, PROJECTDATAAPIS } from "../../../utils/urls.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import { ThemeContext } from "../../ContextApi/ThemeContext.js";
 import SweetAlert from "../../components/SweetAlert.js";
@@ -165,11 +165,11 @@ const View = () => {
               label: "Sow",
               value: currentProjectDetails.upload_document && (
                 <Link
-                  to={currentProjectDetails.upload_document}
+                  to={BASEURL + currentProjectDetails.upload_document}
                   target="_blank"
                 >
                   <img
-                    src={currentProjectDetails.upload_document}
+                    src={BASEURL + currentProjectDetails.upload_document}
                     className="w-8 h-8"
                     alt="sow file"
                   />

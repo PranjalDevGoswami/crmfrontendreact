@@ -21,8 +21,8 @@ export const SearchFilterContext = ({ children }) => {
   const [selectedStatus, setSelectedStatus] = useState(activeTabValue);
   const [clientsList, setClientsList] = useState([]);
   const [managerListArray, setManagerListArray] = useState([]);
-  //  const [hodListArray, setHodListArray] = useState([]);
-  //  const [tlListArray, setTlListArray] = useState([]);
+  const [hodListArray, setHodListArray] = useState([]);
+  const [tlListArray, setTlListArray] = useState([]);
   //  const [managerAssociates, setManagerAssociates] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
@@ -68,6 +68,12 @@ export const SearchFilterContext = ({ children }) => {
         setClientListDataWithId,
         clientListData,
         setClientListData,
+        hodListArray,
+        setHodListArray,
+        managerListArray,
+        setManagerListArray,
+        tlListArray,
+        setTlListArray,
       }}
     >
       {children}

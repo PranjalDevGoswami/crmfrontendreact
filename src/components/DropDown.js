@@ -26,7 +26,7 @@ const Dropdown = ({
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
 
   useEffect(() => {
-    setAddOptionItem(Option_Name.slice());
+    setAddOptionItem(Option_Name?.slice());
   }, [Option_Name]);
 
   const OpenOptionFieldHandler = (e) => {
@@ -74,7 +74,7 @@ const Dropdown = ({
           multiple={multiple}
           value={selectedOption}
         >
-          {addOptionItem.map((option, index) => {
+          {addOptionItem?.map((option, index) => {
             return (
               <option key={index} className="p-4 text-xl" value={option}>
                 {option?.charAt(0)?.toUpperCase() + option?.slice(1)}

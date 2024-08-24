@@ -1,20 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import io from "socket.io-client";
 import { IoNotifications } from "react-icons/io5";
-import { BASEURL, UPDATEDPROJECTLIST } from "../../utils/urls";
-import OpenNotification from "./OpenNotificationDetails";
+import { UPDATEDPROJECTLIST } from "../../utils/urls";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
-// import {
-//   // GetProjectData,
-//   ProjectDetails,
-// } from "../fetchApis/projects/getProjectData/GetProjectData";
 import { getWithAuth } from "../provider/helper/axios";
-// import { FetchProject } from "../ContextApi/FetchProjectContext";
 import { FilterContext } from "../ContextApi/FilterContext";
-
-// const socket = io(BASEURL); // Connect to the server
+import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 
 const Notification = () => {
   const [isNotificationActive, setIsNotificationActive] = useState(false);
@@ -45,8 +37,8 @@ const Notification = () => {
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      // const response = await ProjectDetails();
-      let activeEditProject = projectData?.filter((item) => {
+      const response = await GetProjectData();
+      let activeEditProject = response?.data?.filter((item) => {
         return (
           item?.send_email_manager == true && item?.assigned_to == userrole
         );
@@ -54,7 +46,7 @@ const Notification = () => {
       setNotificationList(activeEditProject);
     };
     fetchProjectData();
-  }, [token]);
+  }, [isViewNotification]);
 
   const notification_btn_ref = useRef(null);
 
@@ -72,8 +64,8 @@ const Notification = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const handleViewNotification = async (project_code) => {
-    const response = await getWithAuth(UPDATEDPROJECTLIST + `${project_code}/`);
+  const handleViewNotification = async (id) => {
+    const response = await getWithAuth(UPDATEDPROJECTLIST + `${id}/`);
     setNotificationProjectList(response?.data);
     setIsViewNotification(true);
   };
@@ -99,35 +91,34 @@ const Notification = () => {
           setIsNotificationActive(!isNotificationActive);
         }}
       >
-        <IoNotifications className="mr-4 cursor-pointer min-[320px]:text-md sm:text-xl text-black" />
+        <IoNotifications className="mr-4 cursor-pointer min-[320px]:text-base sm:text-base text-black" />
         <span className="bg-red-600 text-white rounded-full sm:w-3 sm:h-3 sm:p-3 min-[320px]:w-1 min-[320px]:h-1 min-[320px]:p-2 absolute sm:-top-3 sm:left-2 min-[320px]:-top-2 min-[320px]:left-2 min-[320px]:text-sm sm:text-sm flex justify-center items-center">
-          {role === "Manager" && notificationList?.length > 0
-            ? notificationList.length
+          {role === "Manager" ||
+          role === "Sr.Manager" ||
+          (role === "Ass.Manager" && notificationList?.length > 0)
+            ? notificationList?.length
             : 0}
         </span>
       </div>
       {isNotificationActive && (
         <div
-          className="border bg-[#bd1d1d] text-white cursor-pointer text-left absolute sm:top-10 sm:-left-1/2 min-[320px]:left-1/3 min-[320px]:top-5 min-[320px]:w-44 sm:w-72 p-4 rounded-md min-[320px]:text-md sm:text-2xl"
+          className="border bg-[#bd1d1d] text-white cursor-pointer text-left absolute sm:top-10 sm:-left-1/2 min-[320px]:left-1/3 min-[320px]:top-5 min-[320px]:w-44 sm:w-72 p-2 rounded-md min-[320px]:text-base sm:text-base"
           ref={notification_btn_ref}
         >
-          {role === "Manager" && notificationList.length > 0 ? (
+          {role === "Manager" ||
+          role === "Sr.Manager" ||
+          (role === "Ass.Manager" && notificationList.length > 0) ? (
             <ul>
-              {notificationList.map((item, ind) => {
+              {notificationList?.map((item, ind) => {
                 return (
                   <li
                     key={ind}
-                    className="border-b-black border-b p-4"
-                    onClick={() => handleViewNotification(item.project_code)}
+                    className="border-b-black border-b p-1"
+                    onClick={() => handleViewNotification(item?.id)}
                   >
-                    <span>Project Code: {item.project_code.toUpperCase()}</span>
-                    {/* <Button className={""} onClick={""} name={"Accept"} /> */}
-                    {/* <br />
-              <span>Sample Revised: {item.sample}</span>
-              <br />
-              <span>Date Required: {item.tentative_end_date}</span>
-              <br />
-              <span>Reason: {item.reason_for_adjustment}</span> */}
+                    <span>
+                      Project Code: {item?.project_code?.toUpperCase()}
+                    </span>
                   </li>
                 );
               })}

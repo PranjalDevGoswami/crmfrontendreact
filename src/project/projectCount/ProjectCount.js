@@ -1,12 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-// import { ProjectDetails } from "../../fetchApis/projects/getProjectData/GetProjectData.js";
+import React from "react";
 import { GoProjectRoadmap } from "react-icons/go";
-import { FilterContext } from "../../ContextApi/FilterContext";
 
-const ProjectCount = () => {
-  // const [project, setProject] = useState([]);
-  const { projectData } = useContext(FilterContext);
-
+const ProjectCount = ({ projectData }) => {
   const ProjectTotal = projectData?.length;
 
   return (

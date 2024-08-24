@@ -11,16 +11,43 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineModeEdit } from "react-icons/md";
 import SweetAlert from "../components/SweetAlert.js";
 
+// export const userDetails = () => {
+//   const token = localStorage.getItem("token");
+//   if (token) {
+//     const decoded = jwtDecode(token);
+//     const { role, username, user_id, userrole } = decoded;
+//     localStorage.setItem("role", role);
+//     localStorage.setItem("user_id", user_id);
+//     localStorage.setItem("userrole", userrole);
+//     localStorage.setItem("username", username);
+//     return { role, username, user_id };
+//   }
+// };
+// import { useNavigate } from "react-router-dom";
+// import jwtDecode from "jwt-decode";
+
 export const userDetails = () => {
   const token = localStorage.getItem("token");
-  if (token) {
-    const decoded = jwtDecode(token);
-    const { role, username, user_id, userrole } = decoded;
-    localStorage.setItem("role", role);
-    localStorage.setItem("user_id", user_id);
-    localStorage.setItem("userrole", userrole);
-    localStorage.setItem("username", username);
-    return { role, username, user_id };
+  const navigate = useNavigate();
+
+  if (token && token.split(".").length === 3) {
+    try {
+      const decoded = jwtDecode(token);
+      const { role, username, user_id, userrole } = decoded;
+      localStorage.setItem("role", role);
+      localStorage.setItem("user_id", user_id);
+      localStorage.setItem("userrole", userrole);
+      localStorage.setItem("username", username);
+      return { role, username, user_id };
+    } catch (error) {
+      console.error("Invalid token:", error);
+      localStorage.clear();
+      navigate("/login", { replace: true });
+    }
+  } else {
+    console.error("Token is missing or invalid");
+    localStorage.clear();
+    navigate("/login", { replace: true });
   }
 };
 
@@ -107,9 +134,9 @@ export const Profile = ({ profileDataUpdate }) => {
     <div className="bg-white rounded-md p-4 mt-16">
       <div className="m-8 mb-8 overflow-hidden">
         <h1 className="text-3xl pb-8 ">Update Profile</h1>
-        <div className="w-10/12 m-auto">
+        <div className="w-8/12 m-auto">
           <div className="lg:flex lg:flex-row flex-col items-center justify-around">
-            <div className="profile-pic lg:w-4/12 w-full border-b-2 border-b-black md:border-none">
+            <div className="profile-pic w-6/12 border-b-2 border-b-black md:border-none">
               {profileDetails?.profile_picture !== null ? (
                 <div className="relative">
                   <img
@@ -131,7 +158,9 @@ export const Profile = ({ profileDataUpdate }) => {
               )}
               <div className="flex items-center mt-4">
                 <Label labelName={"Email:"} className={"inline-block"} />
-                <p className="text-xl font-bold p-1">{profileDetails?.email}</p>
+                <p className="text-xl font-bold p-1 text-wrap break-words w-9/12">
+                  {profileDetails?.email}
+                </p>
               </div>
               <div className="flex items-center">
                 <Label labelName={"Gender:"} />
@@ -144,7 +173,7 @@ export const Profile = ({ profileDataUpdate }) => {
                 <p className="text-xl font-bold p-1">{profileDetails?.phone}</p>
               </div>
             </div>
-            <div className="lg:w-8/12 w-full flex flex-col lg:gap-4 gap-3 p-3 lg:p-4 mt-8">
+            <div className="w-6/12 flex flex-col lg:gap-4 gap-3 p-3 lg:p-4 mt-8">
               <Label labelName={"Phone Number"} />
               <Input
                 type={"number"}
