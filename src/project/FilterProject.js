@@ -19,7 +19,9 @@ const FilterProject = () => {
     selectedHod,
     setSelectedHod,
     selectedManager,
+    setSelectedManager,
     selectedTl,
+    setSelectedTl,
     clientsList,
     setClientsList,
     setFilteredProjectData,
@@ -38,7 +40,7 @@ const FilterProject = () => {
   const [projectAssignedTo, setProjectAssignedTo] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [userUnderHOD, setUserUnderHOD] = useState([]);
-  // const [selectedHod,setSelectedHod] = useState([])
+  const [allUserList, setAllUserList] = useState([]);
 
   const { darkMode } = useContext(ThemeContext);
   const role = localStorage.getItem("role");
@@ -70,22 +72,32 @@ const FilterProject = () => {
   useEffect(() => {
     const fetchUSerRole = async () => {
       const userRole = await getWithAuth(USERROLE);
+      setAllUserList(userRole?.data);
       const hodList = userRole.data.filter((item) => item.role.name === "HOD");
-      setHodListArray(hodList.map((item) => item.user));
+      setHodListArray(hodList.map((item) => item.user_role));
+
       const managerList = userRole.data.filter(
-        (item) => item.role.name === "Manager"
+        (item) =>
+          item.role.name === "Sr.Manager" ||
+          item.role.name === "Manager" ||
+          item.role.name === "Ass.Manager"
       );
-      setManagerListArray(managerList.map((item) => item.user.name));
+      setManagerListArray(managerList.map((item) => item.user_role));
+
       const tlList = userRole.data.filter(
         (item) => item.role.name === "Team Lead"
       );
-      setTlListArray(tlList.map((item) => item.user.name));
+      setTlListArray(tlList.map((item) => item.user_role));
+
+      //display data when hod Login
+
       const userRoleFilter = userRole?.data?.filter((item) => {
         return item.reports_to?.id == userrole;
       });
       const AllUserUnderHod = userRoleFilter.map((item) => {
         return item.user_role;
       });
+
       setUserUnderHOD(AllUserUnderHod);
     };
     fetchUSerRole();
@@ -100,14 +112,17 @@ const FilterProject = () => {
     }
     if (name === "HOD") {
       const hodID = hodListArray.filter((item) => item.name.includes(value));
-      setSelectedHod(hodID[0].id);
-      console.log("🚀 ~ handleFilterOption ~ hodID:", hodID[0].id);
+      setSelectedHod(hodID[0]?.id);
     }
     if (name === "Manager") {
-      console.log(value);
+      const ManagerId = managerListArray.filter((item) =>
+        item.name.includes(value)
+      );
+      setSelectedManager(ManagerId[0]?.id);
     }
-    if (name === "Manager") {
-      console.log(value);
+    if (name === "TeamLead") {
+      const TlId = tlListArray.filter((item) => item.name.includes(value));
+      setSelectedTl(TlId[0]?.id);
     }
   };
 
@@ -124,33 +139,78 @@ const FilterProject = () => {
     }
 
     if (selectedHod && selectedHod !== "--Select HOD--") {
-      filteredData = filteredData.filter((item) => {
-        const hodTeams = userUnderHOD.map((user) => user.id);
-        console.log(
-          "🚀 ~ filteredData=filteredData.filter ~ hodTeams:",
-          hodTeams
-        );
-
-        //   item.project_assigned_by_manager.includes(hodTeams);
+      const operTeam = allUserList.filter((item) => item?.department.id == 2);
+      const Hods = operTeam.filter((item) => item?.role?.name === "HOD");
+      const currentSelectHod = Hods.find(
+        (item) => item.user_role.id === selectedHod
+      );
+      const AllMemberUnderCurrentHod = allUserList.filter(
+        (user) => user?.reports_to?.id === currentSelectHod?.id
+      );
+      const ManagerUnderSelectedHod = AllMemberUnderCurrentHod.filter(
+        (item) => {
+          return (
+            item.role.name === "Sr.Manager" ||
+            item.role.name === "Manager" ||
+            item.role.name === "Ass.Manager"
+          );
+        }
+      ).map((item) => {
+        return item.user_role; // Accessing the user_role.name
       });
-      // console.log(
-      //   "🚀 ~ filteredData=filteredData.filter ~ hodTeams:",
-      //   hodTeams
-      // );
-      console.log("hod", filteredData);
+      setManagerListArray(ManagerUnderSelectedHod);
+      const AllManagerAndTl = AllMemberUnderCurrentHod.map((item) =>
+        Number(item?.id)
+      );
+      filteredData = filteredData.filter(
+        (item) =>
+          AllManagerAndTl.includes(Number(item.project_assigned_by_manager)) ||
+          AllManagerAndTl.includes(Number(item.project_assigned_to_teamlead))
+      );
     }
-
     if (selectedManager && selectedManager !== "--Select Manager--") {
-      filteredData = filteredData.filter(
-        (item) => item?.project_manager?.name === selectedManager
+      const operTeam = allUserList.filter((item) => item?.department.id == 2);
+      const Managers = operTeam.filter(
+        (item) => item?.role?.name === "Manager"
+      );
+      const currentSelectManager = Managers.find(
+        (item) => item.user_role.id === selectedManager
+      );
+      console.log(
+        "🚀 ~ useEffect ~ currentSelectManager:",
+        currentSelectManager
+      );
+      // const TLUnderSelectedMAnager = currentSelectManager
+      //   .filter((item) => {
+      //     return item.role.name === "Team Lead";
+      //   })
+      //   .map((item) => {
+      //     return item.user_role; // Accessing the user_role.name
+      //   });
+      // console.log(TLUnderSelectedMAnager);
+
+      // setManagerListArray(TLUnderSelectedMAnager);
+      filteredData = filteredData.filter((item) =>
+        [currentSelectManager?.user_role?.id].includes(
+          Number(item.project_assigned_by_manager)
+        )
       );
     }
 
-    if (selectedTl && selectedTl !== "--Select TeamLead--") {
-      filteredData = filteredData.filter(
-        (item) => item?.project_teamlead?.name === selectedTl
-      );
-    }
+    // if (selectedTl && selectedTl !== "--Select TeamLead--") {
+    //   const operTeam = allUserList.filter((item) => item?.department.id == 2);
+    //   const TeamLeads = operTeam.filter(
+    //     (item) => item?.role?.name === "Team Lead"
+    //   );
+    //   const currentSelectTl = TeamLeads.find(
+    //     (item) => item.user_role.id === selectedTl
+    //   );
+    //   filteredData = filteredData.filter((item) =>
+    //     [currentSelectTl?.user_role?.id].includes(
+    //       Number(item.project_assigned_to_teamlead)
+    //     )
+    //   );
+    // }
     if (selectedClient && selectedClient !== "--Select Client--") {
       filteredData = filteredData.filter(
         (item) => item?.clients?.id === selectedClient
@@ -206,8 +266,6 @@ const FilterProject = () => {
         );
       });
     } else if (role === "HOD") {
-      console.log(userUnderHOD);
-
       filteredData = filteredData.filter((item) => {
         return userUnderHOD
           .map((user) => user.id)
@@ -251,39 +309,26 @@ const FilterProject = () => {
             name="HOD"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
           />
-          {/* <Dropdown
-            Option_Name={["--Select Manager--", ...managerListArray]}
+          <Dropdown
+            Option_Name={[
+              "--Select Manager--",
+              ...managerListArray.map((item) => item.name),
+            ]}
             onChange={handleFilterOption}
             name="Manager"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
           />
-          <Dropdown
-            Option_Name={["--Select TeamLead--", ...tlListArray]}
+          {/* <Dropdown
+            Option_Name={[
+              "--Select TeamLead--",
+              ...tlListArray.map((item) => item.name),
+            ]}
             onChange={handleFilterOption}
             name="TeamLead"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
           /> */}
         </>
       )}
-      {/* {(role === "Director" || role === "HOD" || role === "superuser") && (
-        <Dropdown
-          Option_Name={["--Select Manager--", ...managerListArray]}
-          onChange={handleFilterOption}
-          name="Manager"
-          className="p-4 m-1 border border-black rounded lg:w-full w-11/12"
-        />
-      )}
-      {(role === "Director" ||
-        role === "HOD" ||
-        role === "AM/Manager" ||
-        role === "superuser") && (
-        <Dropdown
-          Option_Name={["--Select TeamLead--", ...tlListArray]}
-          onChange={handleFilterOption}
-          name="TeamLead"
-          className="p-4 m-1 border border-black rounded lg:w-full w-11/12"
-        />
-      )} */}
       <Dropdown
         Option_Name={[
           "--Select Client--",

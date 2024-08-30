@@ -173,19 +173,20 @@ export const Dummycolumns = [
 
 export const DummyData = [
   {
-    id: "1",
-    project_code: "dummyCode",
-    cpi: "dummycpi",
+    id: "",
+    project_code: "",
+    cpi: "",
     clients: "",
+    name: "No Record Found!",
     operation_select: "",
     project_type: "",
     other_cost: "",
     set_up_fee: "",
-    tentative_start_date: "",
+    // tentative_start_date: "No Record Found!",
     tentative_end_date: "",
     sample: "",
-    name: "No data Found",
-    status: "dummy",
+    // name: "",
+    status: "",
   },
 ];
 

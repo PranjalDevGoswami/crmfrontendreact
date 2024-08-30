@@ -38,6 +38,8 @@ const OpenNotification = ({ notification_btn_ref }) => {
     fetchProjectData();
   }, [token]);
 
+  console.log(notificationProjectList);
+
   const handleAccept = async (id) => {
     const selectedProject = notificationProjectList.find(
       (item) => item.id == id

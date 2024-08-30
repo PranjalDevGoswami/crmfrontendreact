@@ -4,14 +4,15 @@ import PiReportChart from "../Report/PiReportChart";
 import NewProject from "../project/newProject/NewProject";
 import HoldProject from "../project/holdProject/HoldProject";
 import InProgressProject from "../project/inprogressProject/InProgressProject";
-import ProjectWiseChart from "../Report/ProjectWiseChart";
 import ProjectEndThisMonth from "../project/ProjectEndThisMonth/ProjectEndThisMonth";
 import Revenue from "../Report/Revenue";
-import PerWeekReport from "../Report/PerWeekReport";
 import RPEWeek from "../Report/RPEWeek";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 import ProjectTypeChart from "../Report/ProjectTypeChart";
-import AllProjectChart from "../Report/AllProjectChart";
+import RPEClientWise from "../Report/RPEClientWise";
+import RPEClientWiseBottom10 from "../Report/RPEClientWiseBottom10";
+import SampleInPipeLineReport from "../Report/SampleInPipeLineReport";
+import AMWiseReport from "../Report/AMWiseReport";
 
 const ReportDashboard = () => {
   const [projectData, setProjectData] = useState([]);
@@ -86,33 +87,32 @@ const ReportDashboard = () => {
           />
         </div>
         <div className="p-4 bg-white rounded-md mt-8 ml-2 w-1/2 flex-grow pb-0">
-          <h3 className="text-3xl mb-6">All Project</h3>
-          <AllProjectChart
-            projectData={projectData}
-            projectType={projectType}
-            setProjectType={setProjectType}
-            filteredData={filteredData}
-            setFilteredData={setFilteredData}
-            setProjectStatus={setProjectStatus}
-          />
+          <h3 className="text-3xl mb-2">AMWise Report</h3>
+          <AMWiseReport projectData={projectData} />
         </div>
       </div>
-
+      <div className="">
+        <div className="p-4 bg-white rounded-md mt-8 ml-2 w-auto flex-grow pb-0 overflow-x-scroll">
+          <h3 className="text-3xl mb-2">RPE</h3>
+          <RPEWeek projectData={projectData} />
+        </div>
+      </div>
       <div className="">
         <div className="p-4 bg-white rounded-md mt-8 ml-2 w-auto flex-grow pb-0 overflow-x-scroll">
           <h3 className="text-3xl mb-2">Sample in PipeLine</h3>
-          <PerWeekReport projectData={projectData} />
+          <SampleInPipeLineReport projectData={projectData} />
         </div>
       </div>
       <div className="overflow-x-scroll w-full">
         <div className="p-4 bg-white rounded-md mt-8 ml-2 w-auto flex-grow pb-0">
-          <h3 className="text-3xl mb-2">RPE</h3>
-          {/* <RPEWeek projectData={projectData} /> */}
-          {/* <iframe
-            src="https://76118af246e04966a21b0c3cbf4ca57e.us-east-2.aws.elastic-cloud.com:9243/app/r/s/Vecug"
-            height="600"
-            width="800"
-          ></iframe> */}
+          <h3 className="text-3xl mb-2">RPE CLientWise(Top 10)</h3>
+          <RPEClientWise projectData={projectData} />
+        </div>
+      </div>
+      <div className="overflow-x-scroll w-full">
+        <div className="p-4 bg-white rounded-md mt-8 ml-2 w-auto flex-grow pb-0">
+          <h3 className="text-3xl mb-2">RPE CLientWise(Bottom 10)</h3>
+          <RPEClientWiseBottom10 projectData={projectData} />
         </div>
       </div>
     </div>

@@ -1,107 +1,108 @@
 import React, { useEffect, useState } from "react";
+import CanvasJSReact from "@canvasjs/react-charts";
+import { USERROLE } from "../../utils/urls";
+import { getWithAuth } from "../provider/helper/axios";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
-import { BarChart } from "@mui/x-charts/BarChart";
 
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const RPEWeek = ({ projectData }) => {
-  const [manWorkData, setManWorkData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [barChartData, setBarChartData] = useState([]);
-  const [totalMenRequired, setTotalMenRequired] = useState([]);
+  const [allUserList, setAllUserList] = useState([]);
+  const [tlListArray, setTlListArray] = useState([]);
+  const [manWorkPerDaysData, setManWorkPerDaysData] = useState([]);
 
   useEffect(() => {
-    const fetchAllManWorkData = async () => {
-      try {
-        const updatedManWorkData = {};
-        for (const project of projectData) {
-          const { id } = project;
-          const response = await ManWorkPerDays({ project_id: id });
-          if (response?.status) {
-            updatedManWorkData[id] = response.data;
+    const fetchUserRole = async () => {
+      const userRole = await getWithAuth(USERROLE);
+      setAllUserList(userRole?.data);
+      const tlList = userRole.data.filter(
+        (item) => item.role.name === "Team Lead"
+      );
+      setTlListArray(tlList.map((item) => item.user_role));
+    };
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    const fetchManWorkPerDays = async () => {
+      const processedData = await Promise.all(
+        tlListArray.map(async (user) => {
+          let totalWork = 0;
+          let totalCPI = 0;
+
+          for (const project of projectData) {
+            const response = await ManWorkPerDays({
+              project_id: project.id,
+            });
+
+            if (response?.status) {
+              const userEntries = response.data
+                .filter((entry) => entry.updated_by.id === user.id)
+                .sort(
+                  (a, b) => new Date(b.update_date) - new Date(a.update_date)
+                )
+                .slice(0, 5);
+
+              const userTotalWork = userEntries.reduce(
+                (acc, entry) => acc + entry.total_man_days,
+                0
+              );
+
+              const projectCPI =
+                projectData.find((proj) => proj.id === project.id)?.cpi || 0;
+
+              if (projectCPI) {
+                totalWork += userTotalWork;
+                totalCPI += userTotalWork * projectCPI;
+              }
+            }
           }
-        }
-        setManWorkData(updatedManWorkData);
-      } catch (error) {
-        console.error("Error fetching man work data:", error);
-        setError("Error fetching man work data. Please try again later.");
-      }
-    };
-    if (projectData.length > 0) {
-      fetchAllManWorkData();
-    }
-  }, [projectData]);
 
-  useEffect(() => {
-    const calculateBarChartData = () => {
-      const newData = [];
+          return {
+            userName: user || "Unknown",
+            totalCPI: totalCPI || 0,
+          };
+        })
+      );
 
-      projectData.forEach(async (project) => {
-        const { project_code, sample, name } = project;
-        const projectData = manWorkData[project_code] || [];
-        const firstWeekData = projectData.slice(0, 5);
-
-        const totalAchievedTarget = firstWeekData.reduce(
-          (sum, entry) => sum + Number(entry?.total_achievement ?? 0),
-          0
-        );
-
-        const totalMenRequired = firstWeekData.reduce(
-          (sum, entry) => sum + (entry.man_days ?? 0),
-          0
-        );
-        setTotalMenRequired(totalMenRequired);
-
-        const sampleRatio =
-          totalMenRequired > 0
-            ? (totalAchievedTarget ?? 0) / totalMenRequired
-            : 0;
-
-        newData.push({
-          project_code: project_code,
-          sampleRatio: sampleRatio,
-        });
-
-        if (newData.length === projectData.length) {
-          setBarChartData(newData.slice());
-        }
-      });
+      setManWorkPerDaysData(processedData);
     };
 
-    if (Object.keys(manWorkData).length > 0) {
-      calculateBarChartData();
+    if (projectData.length > 0 && tlListArray.length > 0) {
+      fetchManWorkPerDays();
     }
-  }, [manWorkData, projectData]);
+  }, [projectData, tlListArray]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // Prepare CanvasJS data
+  const chartData = manWorkPerDaysData.map((data) => ({
+    label: data.userName.name,
+    y: data.totalCPI,
+  }));
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const options = {
+    title: {
+      text: "Total Work * CPI per User",
+    },
+    axisX: {
+      title: "User",
+      interval: 1,
+    },
+    axisY: {
+      title: "Total Work * CPI",
+    },
+    data: [
+      {
+        type: "line",
+        dataPoints: chartData,
+      },
+    ],
+  };
 
   return (
     <div className="w-full">
-      {barChartData.length > 0 ? (
-        <BarChart
-          series={[
-            {
-              data: barChartData.map((item) => item.sampleRatio),
-              label: "Total Achieved Target/Total Men Required (Weekly)",
-            },
-          ]}
-          xAxis={[
-            {
-              data: barChartData.map((item) => item.project_code),
-              scaleType: "band",
-            },
-          ]}
-          margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
-          height={400}
-          title="Project Weekly Progress"
-        />
+      {manWorkPerDaysData.length > 0 ? (
+        <CanvasJSChart options={options} height={300} />
       ) : (
-        <p>No data available</p>
+        <p>No valid data available for the selected projects and users.</p>
       )}
     </div>
   );

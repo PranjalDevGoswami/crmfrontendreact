@@ -23,7 +23,6 @@ export const SearchFilterContext = ({ children }) => {
   const [managerListArray, setManagerListArray] = useState([]);
   const [hodListArray, setHodListArray] = useState([]);
   const [tlListArray, setTlListArray] = useState([]);
-  //  const [managerAssociates, setManagerAssociates] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
