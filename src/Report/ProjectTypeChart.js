@@ -1,14 +1,13 @@
-import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-
+import { PieChart } from "@mui/x-charts/PieChart";
 const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
   const CawiProject = projectData.filter(
-    (item) => item.project_type.name === "CAWI"
+    (item) => item?.project_type?.name === "CAWI"
   );
   const CatiProject = projectData.filter(
-    (item) => item.project_type.name === "CATI"
+    (item) => item?.project_type?.name === "CATI"
   );
   const CapiProject = projectData.filter(
-    (item) => item.project_type.name === "CAPI"
+    (item) => item?.project_type?.name === "CAPI"
   );
 
   const clickHandler = (event, d) => {
@@ -36,13 +35,14 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
   const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
   const getArcLabel = (params) => {
     const percent = params.value / TOTAL;
+    if (percent === 0) return "";
     return `${(percent * 100).toFixed(0)}%`;
   };
   return (
-    <div className="w-1/2">
-      <div className="container mx-auto mt-10 flex justify-between items-stretch">
+    <div className="w-1/3">
+      <div className="container mx-auto mt-2 flex justify-between items-stretch">
         <div className="w-2/3 flex-grow">
-          <table className="min-w-full border-collapse border border-gray-200">
+          <table className="min-w-full border-collapse border border-gray-200 text-xs">
             <thead>
               <tr>
                 <th className="px-4 py-2 border border-gray-300">Category</th>
@@ -51,7 +51,9 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
             </thead>
             <tbody>
               <tr>
-                <td className="px-4 py-2 border border-gray-300">All</td>
+                <td className="px-4 py-2 border border-gray-300">
+                  Total Project
+                </td>
                 <td className="px-4 py-2 border border-gray-300">{TOTAL}</td>
               </tr>
               <tr>
@@ -75,32 +77,37 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
             </tbody>
           </table>
         </div>
-        <div className="w-1/3 flex-grow">
+        <div className="w-1/2 flex-grow relative">
           <PieChart
             series={[
               {
                 data,
-                innerRadius: 10,
-                outerRadius: 100,
+                innerRadius: 45,
+                outerRadius: 120,
                 arcLabel: getArcLabel,
               },
             ]}
             onItemClick={(event, d) => {
               clickHandler(event, d);
             }}
-            width={400}
-            height={400}
-            margin={{ right: -20, top: 30 }}
+            width={380}
+            height={300}
+            margin={{ right: -80, top: -30 }}
             slotProps={{
               legend: {
                 labelStyle: {
-                  tableLayout: "fixed",
+                  tableLayout: "relative",
+                  fontSize: 11,
                 },
                 direction: "row",
                 position: {
                   horizontal: "right",
-                  vertical: "top",
+                  vertical: "bottom",
                 },
+                itemMarkWidth: 20,
+                itemMarkHeight: 10,
+                markGap: 1,
+                itemGap: 10,
               },
             }}
           />

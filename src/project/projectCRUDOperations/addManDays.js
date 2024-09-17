@@ -151,6 +151,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         className={"p-2 border bg-white w-full"}
         name={"status"}
         value={mandaysData[index]?.status}
+        id={"status"}
       />
     ),
   }));

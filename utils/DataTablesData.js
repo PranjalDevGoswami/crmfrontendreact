@@ -22,6 +22,11 @@ export const Data = [
     sortable: true,
   },
   {
+    name: "Project TL",
+    selector: (row) => row.name,
+    sortable: true,
+  },
+  {
     name: "Type",
     selector: (row) => row.project_type,
     sortable: true,
@@ -455,26 +460,26 @@ export const AssignColumns = [
     name: "Project Code",
     selector: (row) => row.project_code?.toUpperCase(),
     sortable: true,
-    // width: "200px",
+    width: "160px",
   },
   {
     name: "Client Name",
     selector: (row) => row.clients,
     sortable: true,
-    // width: "200px",
+    width: "200px",
   },
   {
     name: "Project Name",
     selector: (row) => row.name,
     sortable: true,
-    // width: "400px",
+    width: "460px",
   },
 
   {
     name: "Assign To",
     selector: (row) => row.assigned,
     sortable: true,
-    // width: "260px",
+    width: "260px",
   },
 ];
 const currentDate = new Date().toISOString().split("T")[0];

@@ -2,7 +2,6 @@ import React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 
 const AllProjectChart = ({ ...props }) => {
-  // filteredData = { filteredData };
   const { projectData, filteredData } = props;
 
   const Sample = filteredData.map((item) => item.sample);

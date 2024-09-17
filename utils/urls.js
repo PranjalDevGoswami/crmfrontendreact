@@ -32,3 +32,5 @@ export const PROJECTUPDATEWITHPROJECTCODE =
   BASEURL + "/api/project/update/with-projectid/";
 export const MANDAYSLIST = BASEURL + "/api/operation/projects/man-days/list";
 export const USERROLE = BASEURL + "/api/project/userrole/";
+export const ALLWORKANDMENDAYS =
+  BASEURL + "/api/operation/project/perday/list/";

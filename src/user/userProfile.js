@@ -196,6 +196,7 @@ export const Profile = ({ profileDataUpdate }) => {
                 onChange={(e, value) =>
                   handleDropdownChange(e, "gender", value)
                 }
+                id={"gender"}
               />
               <Label labelName={"Upload Profile pic"} />
 

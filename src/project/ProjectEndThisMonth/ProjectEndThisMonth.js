@@ -8,7 +8,7 @@ const ProjectEndThisMonth = ({ projectData }) => {
     const currentYear = currentDate.getFullYear();
 
     return projectData.filter((date) => {
-      const dateObj = new Date(date);
+      const dateObj = new Date(date.tentative_end_date);
       return (
         dateObj.getMonth() === currentMonth &&
         dateObj.getFullYear() === currentYear
@@ -25,18 +25,18 @@ const ProjectEndThisMonth = ({ projectData }) => {
   };
 
   return (
-    <div className="w-80 h-48 bg-[#4CBC9A] text-white rounded-md m-2 shadow-lg">
-      <h2 className="text-2xl font-bold pt-4 pl-4">
+    <div className="w-1/5 h-40 bg-[#addaec] text-[rgb(0,0,255)] rounded-md m-2 shadow-xl flex flex-col justify-between">
+      <h2 className="text-xl font-bold pt-4 pl-4">
         Project To be End This Month
       </h2>
       <div className="h-24 flex items-center justify-evenly text-xl">
         <span
-          className="text-6xl cursor-pointer text-blue-600"
+          className="text-4xl cursor-pointer text-blue-600"
           onClick={handleTrendingProject}
         >
           {ProjectTotal}
         </span>
-        <BsSkipEnd className="text-6xl" />
+        <BsSkipEnd className="text-4xl" />
       </div>
     </div>
   );

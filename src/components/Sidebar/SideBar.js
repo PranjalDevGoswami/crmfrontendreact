@@ -16,7 +16,14 @@ const SideBar = () => {
   const { darkMode, sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
 
   const getDashboardLink = () => {
-    if (role === "Director" || role === "superuser") {
+    if (
+      role === "Director" ||
+      role === "superuser" ||
+      role === "HOD" ||
+      role === "Ass.Manager" ||
+      role === "Manager" ||
+      role === "Sr.Manager"
+    ) {
       return "/report";
     }
 
@@ -79,7 +86,12 @@ const SideBar = () => {
           "bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex items-start pl-2 pr-2 flex-col gap-2 w-10/12"
         }
       >
-        {(role === "Director" || role === "superuser") && (
+        {(role === "Director" ||
+          role === "superuser" ||
+          role === "HOD" ||
+          role === "Ass.Manager" ||
+          role === "Manager" ||
+          role === "Sr.Manager") && (
           <SidebarItem
             icon={MdDashboard}
             label="Dashboard"

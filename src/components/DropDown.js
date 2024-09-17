@@ -15,6 +15,7 @@ const Dropdown = ({
   multiple,
   defaultValue,
   selectedOption,
+  id,
 }) => {
   const [addOptionValue, setAddOptionValue] = useState("");
   // const [openOptionField, setOpenOptionField] = useState(false);
@@ -73,6 +74,7 @@ const Dropdown = ({
           name={name}
           multiple={multiple}
           value={selectedOption}
+          id={id}
         >
           {addOptionItem?.map((option, index) => {
             return (

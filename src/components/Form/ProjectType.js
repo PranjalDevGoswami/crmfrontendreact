@@ -46,6 +46,7 @@ const ProjectTypeComponent = () => {
         RequireAddButton={false}
         required
         onChange={SelectOptionHandler}
+        id={"project_type"}
       />
     </div>
   );

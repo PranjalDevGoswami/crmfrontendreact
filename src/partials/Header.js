@@ -55,14 +55,14 @@ const Header = () => {
   };
 
   return (
-    <div className="h-28 border-b-2 border-[#F66A3E] bg-white">
+    <div className="h-20 bg-white border-b-gray-700 bg-gradient-to-t from-gray-300">
       {/* <div className=""> */}
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between px-2">
         <div className="w-2/12">
           <img
             src={logo}
             alt="logo"
-            className="w-full sm:max-h-[90px] sm:max-w-[210px] min-[320px]:max-h-full min-[320px]:max-w-full"
+            className="w-1/2 sm:max-h-[100px] sm:max-w-[178px] min-[320px]:max-h-full min-[320px]:max-w-full"
           />
         </div>
         <div className="w-5/12 sm:w-6/12 min-[320px]:w-full text-right justify-end flex flex-wrap items-center">

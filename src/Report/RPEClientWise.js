@@ -3,98 +3,115 @@ import CanvasJSReact from "@canvasjs/react-charts";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const RPEClientWise = ({ projectData }) => {
-  const [clientData, setClientData] = useState([]);
-  const [view, setView] = useState("RevenueWise"); // Toggle view state
+const RPEClientWise = ({
+  projectData,
+  userList,
+  setProjectType,
+  projectType,
+  filteredData,
+  setFilteredData,
+  setProjectStatus,
+}) => {
+  const [topClientData, setTopClientData] = useState([]);
 
   useEffect(() => {
-    if (projectData && projectData.length > 0) {
-      const clientRevenueMap = projectData.reduce((acc, item) => {
-        const clientName = item.clients.name;
-        const sampleSize = parseInt(item.sample, 10);
-        const cpi = parseFloat(item.cpi); // Assume cpi is a string and needs conversion to float
+    if (projectType.length > 0) {
+      let filtered = projectData.filter(
+        (item) =>
+          item.project_type.name.toLowerCase() ===
+          projectType[0].label.toLowerCase()
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(projectData);
+    }
+  }, [projectType, projectData]);
 
-        const revenue = sampleSize * cpi;
+  useEffect(() => {
+    if (filteredData && filteredData.length > 0) {
+      // Step 1: Aggregate CPI * AchieveTarget and total man days for each client
+      const clientAggregateMap = filteredData.reduce((acc, item) => {
+        const clientName = item?.clients?.name;
+        const achieveTarget = parseFloat(item.total_achievement);
+        const cpi = parseFloat(item.cpi);
+        const manDays = parseFloat(item.man_days);
 
-        if (acc[clientName]) {
-          acc[clientName] += revenue;
-        } else {
-          acc[clientName] = revenue;
+        // Ensure the values are valid numbers before performing calculations
+        const isValidAchievement = !isNaN(achieveTarget) && achieveTarget > 0;
+        const isValidCpi = !isNaN(cpi) && cpi > 0;
+        const isValidManDays = !isNaN(manDays) && manDays > 0;
+
+        if (isValidAchievement && isValidCpi) {
+          const revenue = achieveTarget * cpi;
+
+          if (!acc[clientName]) {
+            acc[clientName] = {
+              totalRevenue: 0,
+              totalManDays: 0,
+            };
+          }
+
+          acc[clientName].totalRevenue += revenue;
+          if (isValidManDays) {
+            acc[clientName].totalManDays += manDays;
+          }
         }
 
         return acc;
       }, {});
 
-      const clientArray = Object.keys(clientRevenueMap).map((clientName) => ({
-        name: clientName,
-        totalRevenue: clientRevenueMap[clientName],
-        totalSample: projectData
-          .filter((item) => item.clients.name === clientName)
-          .reduce((sum, item) => sum + parseInt(item.sample, 10), 0),
-      }));
+      // Step 2: Sort clients by total Revenue and get top and top 10
+      const sortedClients = Object.keys(clientAggregateMap)
+        .map((clientName) => ({
+          name: clientName,
+          totalRevenue: clientAggregateMap[clientName].totalRevenue,
+          revenuePerEmployee:
+            clientAggregateMap[clientName].totalRevenue /
+            clientAggregateMap[clientName].totalManDays,
+        }))
+        .sort((a, b) => b.revenuePerEmployee - a.revenuePerEmployee);
 
-      const sortedClients = clientArray
-        .sort(
-          (a, b) =>
-            (view === "RevenueWise" ? b.totalRevenue : b.totalSample) -
-            (view === "RevenueWise" ? a.totalRevenue : a.totalSample)
-        )
-        .slice(0, 10);
-
-      setClientData(sortedClients);
+      // Get top 10 clients
+      const topClients = sortedClients.slice(-10);
+      setTopClientData(topClients);
     }
-  }, [projectData, view]);
+  }, [filteredData]);
 
-  const isValidData = clientData.length > 0;
+  const isValidTopData = topClientData.length > 0;
 
-  const chartOptions = {
+  const topChartOptions = {
     animationEnabled: true,
-    title: {
-      text: view === "RevenueWise" ? "Client Revenue" : "Client Sample Volume",
-    },
+    // title: {
+    //   text: "top 10 Clients by Revenue per Employee",
+    // },
     axisX: {
-      title: "Client",
+      title: "Client Name",
       interval: 1,
       labelAngle: -45,
     },
     axisY: {
-      title: view === "RevenueWise" ? "Revenue" : "Sample Volume",
-      prefix: view === "RevenueWise" ? "$" : "",
+      title: "Revenue per Employee",
+      prefix: "$",
     },
     data: [
       {
-        type: "column", // Change to 'line' or 'column' based on preference
-        name:
-          view === "RevenueWise"
-            ? "Revenue per Client"
-            : "Sample Volume per Client",
-        showInLegend: true,
-        dataPoints: clientData.map((data) => ({
+        type: "column",
+        name: "Revenue per Employee",
+        showInLegend: false,
+        dataPoints: topClientData.map((data) => ({
           label: data.name,
-          y: view === "RevenueWise" ? data.totalRevenue : data.totalSample,
+          y: data.revenuePerEmployee,
         })),
       },
     ],
   };
-
+  const label = { inputProps: { "aria-label": "Switch demo" } };
   return (
     <div className="w-full">
-      <div className="toggle-buttons">
-        <button
-          className="p-2 m-2 rounded-sm bg-red-200"
-          onClick={() => setView("VolumeWise")}
-        >
-          Volume Wise
-        </button>
-        <button
-          className="p-2 m-2 rounded-sm bg-red-200"
-          onClick={() => setView("RevenueWise")}
-        >
-          Revenue Wise
-        </button>
-      </div>
-      {isValidData ? (
-        <CanvasJSChart options={chartOptions} />
+      {isValidTopData ? (
+        <>
+          <CanvasJSChart options={topChartOptions} />
+        </>
       ) : (
         <p>No valid data available for the selected projects.</p>
       )}

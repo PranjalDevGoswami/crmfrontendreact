@@ -221,6 +221,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}
             name={"status"}
+            id={"status induvisual"}
           />
         </div>
         <div className="ProjectOperationEdit">

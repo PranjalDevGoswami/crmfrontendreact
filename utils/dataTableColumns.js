@@ -23,12 +23,6 @@ export const TableColumn = ({ buttonRef }) => {
   };
 
   const columns = [
-    // {
-    //   name: "SN.",
-    //   selector: (row) => row.id,
-    //   sortable: true,
-    //   width: "75px",
-    // },
     {
       name: "Project Code",
       selector: (row) => row?.project_code?.toUpperCase(),

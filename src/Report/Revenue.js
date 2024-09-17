@@ -1,3 +1,5 @@
+import { PieChart } from "@mui/x-charts/PieChart";
+
 const Revenue = ({
   projectType = [],
   filteredData,
@@ -27,15 +29,15 @@ const Revenue = ({
 
   const totalRevenueInField = unexecuted_Sample.reduce(
     (accumulator, item, index) => {
-      const subtotal = item * CPI[index];
-      return accumulator + subtotal;
+      const subtotal = Number(item) * Number(CPI[index]);
+      return accumulator + (isNaN(subtotal) ? 0 : subtotal);
     },
     0
   );
 
   const revenueExecutedNotBilled = executed_Sample.reduce(
     (accumulator, item, index) => {
-      const subtotal = item * CPI[index];
+      const subtotal = Number(item * CPI[index]);
       return accumulator + subtotal;
     },
     0
@@ -58,71 +60,145 @@ const Revenue = ({
   );
 
   const getColorForRevenue = (label) => {
-    const item = projectStatus.find((data) => data?.label === label);
+    const item = projectStatus?.find((data) => data?.label === label);
     return item ? item.color : "transparent";
   };
 
+  const data = [
+    {
+      label: "Revenue Executed Not Billed",
+      value: revenueExecutedNotBilled,
+      color: "#E4D4F4",
+    },
+    {
+      label: "Total Revenue InField",
+      value: totalRevenueInField,
+      color: "#0088FE",
+    },
+    {
+      label: "Billed Project",
+      value: BilledProject,
+      color: "#FFBB28",
+    },
+    {
+      label: "Revenue InProgress",
+      value: RevenueInPipeLine,
+      color: "#00C49F",
+    },
+  ];
+  const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
+  const getArcLabel = (params) => {
+    const percent = params.value / TOTAL;
+    if (percent === 0) return "";
+    return {
+      text: `${(percent * 100).toFixed(0)}%`,
+      position: "outside", // Position the label outside the pie slice
+      distance: 10,
+    };
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Revenue Category
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Amount
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
-          <tr
-            className="bg-white"
-            style={{
-              backgroundColor: getColorForRevenue("In Progress"),
+    <div className="w-2/3">
+      <div className="container mx-auto mt-2 flex justify-between items-stretch">
+        <div className="w-2/3 flex-grow">
+          <table className=" bg-white border border-gray-200 divide-y divide-gray-200 text-xs">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium  tracking-wider">
+                  Revenue Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium  tracking-wider">
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              <tr
+                className="bg-white"
+                style={{
+                  backgroundColor: getColorForRevenue("In Progress"),
+                }}
+              >
+                <td className="px-4 py-1 text-sm  text-gray-900">
+                  Revenue in Field
+                </td>
+                <td className="px-4 py-1 text-md text-black">
+                  ${" " + totalRevenueInField}
+                </td>
+              </tr>
+              <tr
+                className="bg-gray-50"
+                style={{ backgroundColor: getColorForRevenue("Completed") }}
+              >
+                <td className="px-4 py-1 text-sm  text-gray-900">
+                  Revenue Executed but not billed
+                </td>
+                <td className="px-4 py-1 text-md text-black">
+                  ${" " + revenueExecutedNotBilled}
+                </td>
+              </tr>
+              <tr
+                className="bg-white"
+                style={{
+                  backgroundColor: getColorForRevenue("To Be Started"),
+                }}
+              >
+                <td className="px-4 py-1 text-sm  text-gray-900">
+                  Revenue In Progress
+                </td>
+                <td className="px-4 py-1 text-md text-black">
+                  ${" " + RevenueInPipeLine}
+                </td>
+              </tr>
+              <tr className="">
+                <td className="px-4 py-1 text-sm  text-gray-900">
+                  Revenue Billed
+                </td>
+                <td className="px-4 py-1 text-md text-black">
+                  ${" " + BilledProject}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="w-1/3 flex-grow">
+          <PieChart
+            series={[
+              {
+                data,
+                innerRadius: 45,
+                outerRadius: 120,
+                arcLabel: getArcLabel,
+                arcLabel: (params) => getArcLabel(params).text, // Use the text part of the label
+                arcLabelPosition: "outside",
+              },
+            ]}
+            // onItemClick={(event, d) => {
+            //   clickHandler(event, d);
+            // }}
+            width={280}
+            height={320}
+            margin={{ right: 20, top: -40, bottom: 20 }}
+            slotProps={{
+              legend: {
+                labelStyle: {
+                  tableLayout: "fixed",
+                  fontSize: 11,
+                },
+                direction: "row",
+                position: {
+                  horizontal: "left",
+                  vertical: "bottom",
+                },
+                itemMarkWidth: 20,
+                itemMarkHeight: 10,
+                markGap: 1,
+                itemGap: 10,
+              },
             }}
-          >
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Revenue in Field
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-              ${" " + totalRevenueInField}
-            </td>
-          </tr>
-          <tr
-            className="bg-gray-50"
-            style={{ backgroundColor: getColorForRevenue("Completed") }}
-          >
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Revenue Executed but not billed
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-              ${" " + revenueExecutedNotBilled}
-            </td>
-          </tr>
-          <tr
-            className="bg-white"
-            style={{
-              backgroundColor: getColorForRevenue("To Be Started"),
-            }}
-          >
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Revenue In Progress
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-              ${" " + RevenueInPipeLine}
-            </td>
-          </tr>
-          <tr className="bg-gray-50">
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              Revenue Billed
-            </td>
-            <td className="px-6 py-4 whitespace-nowrap text-md text-gray-500 font-bold">
-              ${" " + BilledProject}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          />
+        </div>
+      </div>
     </div>
   );
 };

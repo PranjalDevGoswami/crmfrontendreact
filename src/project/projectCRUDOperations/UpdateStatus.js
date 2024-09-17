@@ -99,6 +99,7 @@ const UpdateStatus = ({ viewRecord }) => {
             onChange={(name, value) => handleFilterOption(name, value)}
             className={"p-2 mt-2 border w-full"}
             name={"status"}
+            id={"status update"}
           />
         </div>
         <div className="flex pt-10">

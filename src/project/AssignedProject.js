@@ -169,7 +169,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
             key={`select-${index}`}
             options={selectTL}
             onChange={(selectedOption) => handleSelectTL(index, selectedOption)}
-            className={"relative"}
+            className={"relative overflow-y-scroll w-56 z-50"}
             name={"project_teamlead"}
             value={assignedDataList[index]?.user_role?.name}
           />
@@ -184,7 +184,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         {
           name: (
             <button
-              className="bg-green-300 p-4 "
+              className="bg-green-300 p-4 float-right"
               onClick={handleAssignedProject}
             >
               Update
@@ -202,7 +202,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         onClose={closeDrawerRight}
         PaperProps={{
           sx: {
-            width: 1200,
+            width: 1130,
             padding: 2,
           },
         }}

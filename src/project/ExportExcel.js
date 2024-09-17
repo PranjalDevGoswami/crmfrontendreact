@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../components/Button";
+import { saveAs } from "file-saver";
 
 const convertArrayOfObjectsToCSV = (array) => {
   if (!array || !array.length) {
@@ -16,47 +17,51 @@ const convertArrayOfObjectsToCSV = (array) => {
     let ctr = 0;
     keys.forEach((key) => {
       if (ctr > 0) result += columnDelimiter;
-      result += item[key];
+      let value = item[key];
+
+      // Check if the field is an array, if so, return the length
+      if (Array.isArray(value)) {
+        value = value.length;
+      }
+
+      // Wrap value in quotes if it's a string and contains the columnDelimiter (comma)
+      if (typeof value === "string" && value.includes(columnDelimiter)) {
+        value = `"${value}"`;
+      }
+
+      result += value;
       ctr++;
     });
     result += lineDelimiter;
   });
-
   return result;
 };
 
-const downloadCSV = (array) => {
-  console.log("🚀 ~ convertArrayOfObjectsToCSV ~ array:", array);
-
-  let csv = convertArrayOfObjectsToCSV(array);
+const downloadCSV = (array, downloadName) => {
+  const csv = convertArrayOfObjectsToCSV(array);
   if (!csv) return;
 
-  const filename = "Project_List.csv";
-
-  if (!csv.match(/^data:text\/csv/i)) {
-    csv = `data:text/csv;charset=utf-8,${csv}`;
-  }
-
-  const link = document.createElement("a");
-  link.setAttribute("href", encodeURI(csv));
-  link.setAttribute("download", filename);
-  link.click();
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  saveAs(blob, downloadName);
 };
 
-const Export = ({ onExport }) => (
-  <Button
-    className={"rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"}
-    onClick={onExport}
-    name="Export"
-  />
+const Export = ({ onExport, name, className }) => (
+  <Button className={className} onClick={onExport} name={name} />
 );
 
-const ExportCSV = ({ data }) => {
+const ExportCSV = ({ data, name, className, downloadName }) => {
   const handleExport = () => {
-    downloadCSV(data);
+    downloadCSV(data, downloadName);
   };
 
-  return <Export onExport={handleExport} />;
+  return (
+    <Export
+      onExport={handleExport}
+      name={name}
+      className={className}
+      downloadName={downloadName}
+    />
+  );
 };
 
 export default ExportCSV;

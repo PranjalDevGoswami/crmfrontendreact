@@ -54,6 +54,7 @@ const Client = () => {
           RequireAddButton={true}
           required
           onChange={SelectOptionHandler}
+          id={"clients"}
         />
       ) : (
         <Dropdown
@@ -69,6 +70,7 @@ const Client = () => {
           RequireAddButton={true}
           required
           onChange={SelectOptionHandler}
+          id={"dummy client"}
         />
       )}
     </div>

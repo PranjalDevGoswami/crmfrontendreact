@@ -9,13 +9,13 @@ const HoldProject = ({ projectData }) => {
   );
 
   return (
-    <div className="w-80 h-48 bg-[#4CBC9A] text-white rounded-md m-2 shadow-lg">
-      <h2 className="text-2xl font-bold pt-4 pl-4">Hold Project</h2>
+    <div className="w-1/5 h-40 bg-[#addaec] text-[rgb(0,0,255)] rounded-md m-2 shadow-xl flex flex-col justify-between">
+      <h2 className="text-xl font-bold pt-4 pl-4">Hold Project</h2>
       <div className="h-24 flex items-center justify-evenly text-xl">
-        <span className="text-6xl cursor-pointer text-blue-600">
+        <span className="text-4xl cursor-pointer text-blue-600">
           {ProjectOnHold && ProjectOnHold.length}
         </span>
-        <MdPauseCircleOutline className="text-6xl " />
+        <MdPauseCircleOutline className="text-4xl " />
       </div>
     </div>
   );

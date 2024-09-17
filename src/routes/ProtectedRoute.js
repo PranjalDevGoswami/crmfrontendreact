@@ -15,7 +15,7 @@ export const ProtectedRoute = () => {
   return (
     <div
       className={`h-full min-h-screen container mx-auto max-w-full w-full ${
-        darkMode ? "bg-black" : "bg-gray-200"
+        darkMode ? "bg-black" : "bg-gray-50"
       }`}
     >
       <div className="fixed top-0 left-0 w-full z-50">
@@ -23,7 +23,7 @@ export const ProtectedRoute = () => {
       </div>
       <div className="flex flex-1 pt-16">
         <div
-          className={`fixed top-28 left-0 h-full z-40 ${
+          className={`fixed top-20 left-0 h-full z-40 ${
             sideBarOpen ? "w-[12%]" : "w-12"
           } transition-width duration-300 `}
         >
@@ -32,7 +32,7 @@ export const ProtectedRoute = () => {
         <div
           className={`flex-1 transition-all duration-300 overflow-scroll no-scrollbar h-screen mr-4 ${
             sideBarOpen ? "ml-[12%]" : "ml-[4rem]"
-          } mt-8`}
+          } mt-4`}
         >
           <Outlet />
         </div>

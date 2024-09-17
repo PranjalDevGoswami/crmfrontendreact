@@ -16,6 +16,8 @@ const Input = ({
   disabled,
   multiple,
   onfocus,
+  onBlur,
+  id,
 }) => {
   const { darkMode } = useContext(ThemeContext);
   const inputRef = useRef(null);
@@ -62,6 +64,8 @@ const Input = ({
       onFocus={onfocus}
       ref={inputRef}
       onKeyDown={preventMinus}
+      onBlur={onBlur}
+      id={id}
     />
   );
 };

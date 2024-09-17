@@ -103,6 +103,10 @@ const Form = () => {
       formData.tentative_end_date !== ""
     );
   };
+  const handleCancel = (e) => {
+    e.preventDefault();
+    navigate(-1);
+  };
 
   return (
     <div
@@ -115,6 +119,7 @@ const Form = () => {
         onSubmit={() => handleSubmit(formData)}
         className="lg:p-2 lg:pl-8 lg:pr-4 pr-8"
         encType="multipart/form-data"
+        id="1234"
       >
         <div className="lg:flex inline-block lg:flex-wrap flex-nowrap w-full gap-4">
           <div className="flex flex-col lg:w-[32%] w-full">
@@ -169,12 +174,16 @@ const Form = () => {
             name={"Submit"}
             onClick={() => handleSubmit(formData)}
           />
-          <Link
+          {/* <Link
             to={"/sales-dashboard"}
             className="bg-red-500 p-4 mt-8 md:w-1/2 w-full text-white font-bold"
-          >
-            <Button className="" name={"Cancel"} />
-          </Link>
+          > */}
+          <Button
+            className="bg-red-500 p-4 mt-8 md:w-1/2 w-full text-white font-bold"
+            name={"Cancel"}
+            onClick={handleCancel}
+          />
+          {/* </Link> */}
         </div>
       </form>
     </div>

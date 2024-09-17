@@ -56,6 +56,7 @@ const ProjectManager = () => {
         RequireAddButton={false}
         required
         onChange={SelectOptionHandler}
+        id={"project_manager"}
       />
     </div>
   );

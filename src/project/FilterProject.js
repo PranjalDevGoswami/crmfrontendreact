@@ -8,6 +8,7 @@ import { CloseAddClient } from "../ContextApi/CloseAddClientContext.js";
 import { UPDATETLASSIGNMENT, USERROLE } from "../../utils/urls.js";
 import { getWithAuth } from "../provider/helper/axios.js";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
+import DateRangeFilter from "../components/DateRangeFilter.js";
 
 const FilterProject = () => {
   const {
@@ -41,7 +42,10 @@ const FilterProject = () => {
   const [projectData, setProjectData] = useState([]);
   const [userUnderHOD, setUserUnderHOD] = useState([]);
   const [allUserList, setAllUserList] = useState([]);
-
+  const [dateRange, setDateRange] = useState({
+    startDate: "",
+    endDate: "",
+  });
   const { darkMode } = useContext(ThemeContext);
   const role = localStorage.getItem("role");
   let token = localStorage.getItem("token");
@@ -73,10 +77,16 @@ const FilterProject = () => {
     const fetchUSerRole = async () => {
       const userRole = await getWithAuth(USERROLE);
       setAllUserList(userRole?.data);
-      const hodList = userRole.data.filter((item) => item.role.name === "HOD");
+      const OperationDeparmentUser = userRole?.data.filter((item) => {
+        return item.department.name === "Operation";
+      });
+
+      const hodList = OperationDeparmentUser.filter(
+        (item) => item.role.name === "HOD"
+      );
       setHodListArray(hodList.map((item) => item.user_role));
 
-      const managerList = userRole.data.filter(
+      const managerList = OperationDeparmentUser.filter(
         (item) =>
           item.role.name === "Sr.Manager" ||
           item.role.name === "Manager" ||
@@ -84,7 +94,7 @@ const FilterProject = () => {
       );
       setManagerListArray(managerList.map((item) => item.user_role));
 
-      const tlList = userRole.data.filter(
+      const tlList = OperationDeparmentUser.filter(
         (item) => item.role.name === "Team Lead"
       );
       setTlListArray(tlList.map((item) => item.user_role));
@@ -138,6 +148,17 @@ const FilterProject = () => {
       );
     }
 
+    if (dateRange.startDate && dateRange.endDate) {
+      filteredData = filteredData.filter((item) => {
+        const projectStartDate = new Date(item?.tentative_start_date);
+        const projectEndDate = new Date(item?.tentative_end_date);
+
+        const startDate = new Date(dateRange.startDate);
+        const endDate = new Date(dateRange.endDate);
+        return projectStartDate >= startDate && projectEndDate <= endDate;
+      });
+    }
+
     if (selectedHod && selectedHod !== "--Select HOD--") {
       const operTeam = allUserList.filter((item) => item?.department.id == 2);
       const Hods = operTeam.filter((item) => item?.role?.name === "HOD");
@@ -176,10 +197,7 @@ const FilterProject = () => {
       const currentSelectManager = Managers.find(
         (item) => item.user_role.id === selectedManager
       );
-      console.log(
-        "🚀 ~ useEffect ~ currentSelectManager:",
-        currentSelectManager
-      );
+
       // const TLUnderSelectedMAnager = currentSelectManager
       //   .filter((item) => {
       //     return item.role.name === "Team Lead";
@@ -294,12 +312,15 @@ const FilterProject = () => {
     selectedTl,
     token,
     projectData,
+    dateRange.endDate,
+    dateRange.startDate,
   ]);
 
   return (
     <div className="flex items-center justify-between">
       {(role === "Director" || role === "superuser") && (
         <>
+          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
           <Dropdown
             Option_Name={[
               "--Select HOD--",
@@ -308,6 +329,7 @@ const FilterProject = () => {
             onChange={handleFilterOption}
             name="HOD"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
+            id={"hod List"}
           />
           <Dropdown
             Option_Name={[
@@ -317,6 +339,7 @@ const FilterProject = () => {
             onChange={handleFilterOption}
             name="Manager"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
+            id={"manager List"}
           />
           {/* <Dropdown
             Option_Name={[
@@ -337,6 +360,7 @@ const FilterProject = () => {
         onChange={handleFilterOption}
         name="Client"
         className="p-2 m-1 border border-black rounded w-11/12 bg-transparent"
+        id={"client List"}
       />
       <div className="w-full">
         <Input
@@ -347,6 +371,7 @@ const FilterProject = () => {
           className={`${
             darkMode && "bg-black border-white"
           } p-2 m-1 border border-black rounded w-11/12 focus:outline-none"`}
+          id={"search"}
         />
       </div>
     </div>
