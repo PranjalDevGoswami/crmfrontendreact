@@ -161,22 +161,20 @@ const Days = ({ date, startDate, endDate, onClick }) => {
 
 const DateRangeFilter = ({ dateRange, setDateRange }) => {
   const [date, setDate] = useState(moment());
-  const [openDateRange, setOpenDateRange] = useState(true);
+  const [openDateRange, setOpenDateRange] = useState(false);
   const [viewMode, setViewMode] = useState("days");
   const [selectedButton, setSelectedButton] = useState(null);
   const calendarRef = useRef();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+      if (!calendarRef.current.contains(event.target)) {
         setOpenDateRange(false);
       }
     };
 
     if (openDateRange) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {

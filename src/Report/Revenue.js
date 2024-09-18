@@ -100,14 +100,14 @@ const Revenue = ({
   return (
     <div className="w-2/3">
       <div className="container mx-auto mt-2 flex justify-between items-stretch">
-        <div className="w-2/3 flex-grow">
+        <div className="w-[70%] flex-grow">
           <table className=" bg-white border border-gray-200 divide-y divide-gray-200 text-xs">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium  tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium  tracking-wider">
                   Revenue Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium  tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium  tracking-wider">
                   Amount
                 </th>
               </tr>
@@ -119,22 +119,22 @@ const Revenue = ({
                   backgroundColor: getColorForRevenue("In Progress"),
                 }}
               >
-                <td className="px-4 py-1 text-sm  text-gray-900">
+                <td className="px-1 py-1 text-sm  text-gray-900">
                   Revenue in Field
                 </td>
-                <td className="px-4 py-1 text-md text-black">
-                  ${" " + totalRevenueInField}
+                <td className="px-1 py-1 text-md text-black">
+                  ${" " + totalRevenueInField.toFixed(2)}
                 </td>
               </tr>
               <tr
                 className="bg-gray-50"
                 style={{ backgroundColor: getColorForRevenue("Completed") }}
               >
-                <td className="px-4 py-1 text-sm  text-gray-900">
+                <td className="px-1 py-1 text-sm  text-gray-900">
                   Revenue Executed but not billed
                 </td>
-                <td className="px-4 py-1 text-md text-black">
-                  ${" " + revenueExecutedNotBilled}
+                <td className="px-1 py-1 text-md text-black">
+                  ${" " + revenueExecutedNotBilled.toFixed(2)}
                 </td>
               </tr>
               <tr
@@ -143,25 +143,25 @@ const Revenue = ({
                   backgroundColor: getColorForRevenue("To Be Started"),
                 }}
               >
-                <td className="px-4 py-1 text-sm  text-gray-900">
+                <td className="px-1 py-1 text-sm  text-gray-900">
                   Revenue In Progress
                 </td>
-                <td className="px-4 py-1 text-md text-black">
-                  ${" " + RevenueInPipeLine}
+                <td className="px-1 py-1 text-md text-black">
+                  ${" " + RevenueInPipeLine.toFixed(2)}
                 </td>
               </tr>
               <tr className="">
-                <td className="px-4 py-1 text-sm  text-gray-900">
+                <td className="px-1 py-1 text-sm  text-gray-900">
                   Revenue Billed
                 </td>
-                <td className="px-4 py-1 text-md text-black">
-                  ${" " + BilledProject}
+                <td className="px-1 py-1 text-md text-black">
+                  ${" " + BilledProject.toFixed(2)}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div className="w-1/3 flex-grow">
+        <div className="w-[30%] flex-grow">
           <PieChart
             series={[
               {
@@ -176,9 +176,9 @@ const Revenue = ({
             // onItemClick={(event, d) => {
             //   clickHandler(event, d);
             // }}
-            width={280}
+            width={260}
             height={320}
-            margin={{ right: 20, top: -40, bottom: 20 }}
+            margin={{ right: 0, top: -40, bottom: 20 }}
             slotProps={{
               legend: {
                 labelStyle: {

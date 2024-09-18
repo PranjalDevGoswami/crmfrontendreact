@@ -581,10 +581,6 @@ img, video {
   display: table;
 }
 
-.grid {
-  display: grid;
-}
-
 .hidden {
   display: none;
 }
@@ -761,12 +757,20 @@ img, video {
   width: 75%;
 }
 
+.w-96 {
+  width: 24rem;
+}
+
 .w-\[100\%\] {
   width: 100%;
 }
 
 .w-\[12\%\] {
   width: 12%;
+}
+
+.w-\[30\%\] {
+  width: 30%;
 }
 
 .w-\[45\%\] {
@@ -789,6 +793,10 @@ img, video {
   width: 7%;
 }
 
+.w-\[70\%\] {
+  width: 70%;
+}
+
 .w-auto {
   width: auto;
 }
@@ -799,10 +807,6 @@ img, video {
 
 .w-full {
   width: 100%;
-}
-
-.w-96 {
-  width: 24rem;
 }
 
 .min-w-full {
@@ -876,18 +880,6 @@ img, video {
   cursor: pointer;
 }
 
-.grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.grid-cols-7 {
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
 .flex-col {
   flex-direction: column;
 }
@@ -946,10 +938,6 @@ img, video {
 
 .gap-4 {
   gap: 1rem;
-}
-
-.gap-1 {
-  gap: .25rem;
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -1236,11 +1224,6 @@ img, video {
   background-color: rgb(254 240 138 / var(--tw-bg-opacity));
 }
 
-.bg-green-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(187 247 208 / var(--tw-bg-opacity));
-}
-
 .bg-\[url\(\'\.\/assets\/HS-blog-post-20-2048x1075\.png\'\)\] {
   background-image: url("HS-blog-post-20-2048x1075.2a3105d9.png");
 }
@@ -1303,6 +1286,11 @@ img, video {
   padding: 6px;
 }
 
+.px-1 {
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+
 .px-2 {
   padding-left: .5rem;
   padding-right: .5rem;
@@ -1311,11 +1299,6 @@ img, video {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.px-6 {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 }
 
 .py-1 {
@@ -1475,10 +1458,6 @@ img, video {
   font-weight: 500;
 }
 
-.font-semibold {
-  font-weight: 600;
-}
-
 .tracking-wider {
   letter-spacing: .05em;
 }
@@ -1556,11 +1535,6 @@ img, video {
 .text-yellow-900 {
   --tw-text-opacity: 1;
   color: rgb(113 63 18 / var(--tw-text-opacity));
-}
-
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -1774,11 +1748,6 @@ img, video {
 .hover\:bg-yellow-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(254 240 138 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-gray-200:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
 .hover\:text-black:hover {

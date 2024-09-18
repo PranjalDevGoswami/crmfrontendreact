@@ -51,12 +51,12 @@ const ReportDashboard = () => {
           const HodUsers = userList.filter(
             (user) => user?.reports_to?.id == userRole
           );
-          console.log("🚀 ~ fetchProjectData ~ HodUsers:", HodUsers);
 
           const ProjectUnderHod = projectDataObject.filter((project) =>
             HodUsers.some(
               (user) =>
-                project.project_assigned_by_manager === user.user_role.id
+                project.project_assigned_by_manager === user.user_role.id ||
+                project.created_by == user.user_role.id
             )
           );
           setProjectData(ProjectUnderHod);

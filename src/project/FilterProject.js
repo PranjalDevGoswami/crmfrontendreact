@@ -77,16 +77,30 @@ const FilterProject = () => {
     const fetchUSerRole = async () => {
       const userRole = await getWithAuth(USERROLE);
       setAllUserList(userRole?.data);
-      const OperationDeparmentUser = userRole?.data.filter((item) => {
-        return item.department.name === "Operation";
+      // const OperationDeparmentUser = userRole?.data.filter((item) => {
+      //   return item.department.name === "Operation";
+      // });
+      const currentUserDepartment = localStorage.getItem("department");
+
+      const filteredUsers = userRole?.data.filter((item) => {
+        // If the current user is from 'Sales', exclude 'Operation' department users
+        if (currentUserDepartment == 1) {
+          return item.department.id == currentUserDepartment;
+        }
+
+        // If the current user is from 'Operation', exclude 'Sales' department users
+        if (currentUserDepartment == 2) {
+          return item.department.id == currentUserDepartment;
+        }
+
+        // Default case: include all users if the department is neither 'Sales' nor 'Operation'
+        return true;
       });
 
-      const hodList = OperationDeparmentUser.filter(
-        (item) => item.role.name === "HOD"
-      );
+      const hodList = filteredUsers.filter((item) => item.role.name === "HOD");
       setHodListArray(hodList.map((item) => item.user_role));
 
-      const managerList = OperationDeparmentUser.filter(
+      const managerList = filteredUsers.filter(
         (item) =>
           item.role.name === "Sr.Manager" ||
           item.role.name === "Manager" ||
@@ -94,7 +108,7 @@ const FilterProject = () => {
       );
       setManagerListArray(managerList.map((item) => item.user_role));
 
-      const tlList = OperationDeparmentUser.filter(
+      const tlList = filteredUsers.filter(
         (item) => item.role.name === "Team Lead"
       );
       setTlListArray(tlList.map((item) => item.user_role));
@@ -107,7 +121,6 @@ const FilterProject = () => {
       const AllUserUnderHod = userRoleFilter.map((item) => {
         return item.user_role;
       });
-
       setUserUnderHOD(AllUserUnderHod);
     };
     fetchUSerRole();
@@ -205,7 +218,6 @@ const FilterProject = () => {
       //   .map((item) => {
       //     return item.user_role; // Accessing the user_role.name
       //   });
-      // console.log(TLUnderSelectedMAnager);
 
       // setManagerListArray(TLUnderSelectedMAnager);
       filteredData = filteredData.filter((item) =>
@@ -215,20 +227,20 @@ const FilterProject = () => {
       );
     }
 
-    // if (selectedTl && selectedTl !== "--Select TeamLead--") {
-    //   const operTeam = allUserList.filter((item) => item?.department.id == 2);
-    //   const TeamLeads = operTeam.filter(
-    //     (item) => item?.role?.name === "Team Lead"
-    //   );
-    //   const currentSelectTl = TeamLeads.find(
-    //     (item) => item.user_role.id === selectedTl
-    //   );
-    //   filteredData = filteredData.filter((item) =>
-    //     [currentSelectTl?.user_role?.id].includes(
-    //       Number(item.project_assigned_to_teamlead)
-    //     )
-    //   );
-    // }
+    if (selectedTl && selectedTl !== "--Select TeamLead--") {
+      // const operTeam = allUserList.filter((item) => item?.department.id == 2);
+      const TeamLeads = allUserList.filter(
+        (item) => item?.role?.name === "Team Lead"
+      );
+      const currentSelectTl = TeamLeads.find(
+        (item) => item.user_role.id === selectedTl
+      );
+      filteredData = filteredData.filter((item) =>
+        [currentSelectTl?.user_role?.id].includes(
+          Number(item.project_assigned_to_teamlead || item.created_by)
+        )
+      );
+    }
     if (selectedClient && selectedClient !== "--Select Client--") {
       filteredData = filteredData.filter(
         (item) => item?.clients?.id === selectedClient
@@ -287,8 +299,16 @@ const FilterProject = () => {
       filteredData = filteredData.filter((item) => {
         return userUnderHOD
           .map((user) => user.id)
-          .includes(item?.project_assigned_by_manager);
+          .includes(
+            item?.project_assigned_by_manager ||
+              item?.created_by ||
+              item?.assigned_to
+          );
       });
+      console.log(
+        "🚀 ~ filteredData=filteredData.filter ~ filteredData:",
+        filteredData
+      );
     } else if (role === "superuser" || role === "Director") {
       if (
         selectedStatus &&
@@ -350,6 +370,31 @@ const FilterProject = () => {
             name="TeamLead"
             className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
           /> */}
+        </>
+      )}
+      {role === "HOD" && (
+        <>
+          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+
+          <Dropdown
+            Option_Name={[
+              "--Select Manager--",
+              ...managerListArray.map((item) => item.name),
+            ]}
+            onChange={handleFilterOption}
+            name="Manager"
+            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
+            id={"manager List"}
+          />
+          <Dropdown
+            Option_Name={[
+              "--Select TeamLead--",
+              ...tlListArray.map((item) => item.name),
+            ]}
+            onChange={handleFilterOption}
+            name="TeamLead"
+            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
+          />
         </>
       )}
       <Dropdown
