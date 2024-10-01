@@ -1,4 +1,4 @@
-import { CHANGE_STATUS } from "../../../../utils/urls.js";
+import { CHANGE_STATUS } from "../../../../utils/constants/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuth } from "../../../provider/helper/axios.js";
 

@@ -1,4 +1,4 @@
-import { RAISECBR } from "../../../../utils/urls";
+import { RAISECBR } from "../../../../utils/constants/urls";
 import SweetAlert from "../../../components/SweetAlert";
 import { postWithAuth } from "../../../provider/helper/axios";
 

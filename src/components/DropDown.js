@@ -3,7 +3,6 @@ import Button from "./Button";
 import AddClient from "./Form/AddClient";
 import { TiPlus } from "react-icons/ti";
 import { ThemeContext } from "../ContextApi/ThemeContext";
-import SweetAlert from "./SweetAlert";
 import { CloseAddClient } from "../ContextApi/CloseAddClientContext";
 
 const Dropdown = ({
@@ -18,7 +17,6 @@ const Dropdown = ({
   id,
 }) => {
   const [addOptionValue, setAddOptionValue] = useState("");
-  // const [openOptionField, setOpenOptionField] = useState(false);
   const [requireAddButton] = useState(RequireAddButton);
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [addOptionItem, setAddOptionItem] = useState([]);
@@ -34,26 +32,6 @@ const Dropdown = ({
     e.preventDefault();
     setAddOptionValue("");
     setCloseAddClient(true);
-  };
-
-  const OptionInputHandler = (e) => {
-    setAddOptionValue(e.target.value);
-  };
-
-  const SubmitInputValueHandler = () => {
-    {
-      addOptionValue !== ""
-        ? setCloseAddClient(false)
-        : SweetAlert({
-            title: "Please Fill the Field",
-            text: "",
-            icon: "info",
-          });
-    }
-    setAddOptionItem([...addOptionItem, addOptionValue]);
-    const item = addOptionItem.filter((val, index) => {
-      return val === addOptionValue;
-    });
   };
 
   const HandleDropdownOnchange = (e) => {
@@ -85,19 +63,17 @@ const Dropdown = ({
             );
           })}
         </select>
-        {requireAddButton ? (
+        {requireAddButton && (
           <button
             onClick={OpenOptionFieldHandler}
             className="bg-yellow-200 p-2 rounded-r-full mt-2"
           >
             <TiPlus />
           </button>
-        ) : (
-          ""
         )}
       </div>
 
-      {closeAddClient ? (
+      {closeAddClient && (
         <div className="absolute w-1/2 left-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%] duration-500 border border-black rounded z-30 shadow-2xl">
           <div className="flex flex-col justify-center items-center w-full h-full bg-white">
             <AddClient />
@@ -110,8 +86,6 @@ const Dropdown = ({
             }}
           />
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

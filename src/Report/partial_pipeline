@@ -25,7 +25,7 @@ const SampleInPipeLineReport = ({ projectData, userList }) => {
   const projectsByTeamLead = {};
 
   filteredProjects.forEach((project) => {
-    const teamLead = project.project_assigned_to_teamlead; // Assume this is the field for team lead
+    const teamLead = project.project_assigned_to_teamlead?.id; // Assume this is the field for team lead
     const startDate = new Date(project.tentative_start_date);
     const endDate = new Date(project.tentative_end_date);
     const sampleSize = parseInt(project.sample, 10);

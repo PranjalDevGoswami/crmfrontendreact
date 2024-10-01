@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { getWithAuth } from "../provider/helper/axios";
-import { ALLWORKANDMENDAYS } from "../../utils/urls";
+import { ALLWORKANDMENDAYS } from "../../utils/constants/urls";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -8,6 +8,8 @@ import CanvasJSReact from "@canvasjs/react-charts";
 import ExportCSV from "../project/ExportExcel";
 import { TiFilter } from "react-icons/ti";
 import { LuDownload } from "react-icons/lu";
+import { isDirector, isTeamLead } from "../config/Role";
+import { isOperationDept } from "../config/Departments";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -27,6 +29,8 @@ const TLWiseReport = ({
   const [selectedItem, setSelectedItem] = useState(null);
   const [showFilter, setShowFilter] = useState(false);
   const [filterOptions, setFilterOptions] = useState([]);
+  const userRole = localStorage.getItem("userrole");
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     if (projectType.length > 0) {
@@ -45,12 +49,28 @@ const TLWiseReport = ({
     const fetchUserRole = async () => {
       try {
         const userListOperationDepartment = userList.filter(
-          (item) => item?.department?.id === 2
+          (user) => user?.department?.id == isOperationDept
+          // && user?.reports_to?.id == userRole
         );
-        const TLList = userListOperationDepartment?.filter(
-          (item) => item.role.name === "Team Lead"
-        );
-        setTLList(TLList);
+
+        if (role === isDirector) {
+          const userListOperationDepartment = userList.filter(
+            (user) =>
+              user?.department?.id == isOperationDept &&
+              user.role.name === isTeamLead
+          );
+          setTLList(userListOperationDepartment);
+        } else {
+          let additionalUsers = userList.filter((user) =>
+            userListOperationDepartment.some(
+              (am) =>
+                user.reports_to?.id == am.user_role.id &&
+                user.role.name === isTeamLead
+            )
+          );
+          let combinedList = additionalUsers;
+          setTLList(combinedList);
+        }
       } catch (error) {
         console.error("Error fetching user roles:", error);
       }
@@ -77,11 +97,11 @@ const TLWiseReport = ({
 
     return tLList.map((tl) => {
       const projectsForTl = projectInField.filter(
-        (project) => project.project_assigned_to_teamlead === tl.id
+        (project) => project.project_assigned_to_teamlead?.id == tl.id
       );
 
       const projectsForTOTALRPE = TOTALRPE.filter(
-        (project) => project.project_assigned_to_teamlead === tl.id
+        (project) => project.project_assigned_to_teamlead?.id == tl.id
       );
 
       const totalRpeData = projectsForTOTALRPE.reduce(
@@ -275,9 +295,9 @@ const TLWiseReport = ({
           <thead className="bg-gray-50 text-sm">
             <tr>
               <th>TL Name</th>
-              <th>Project in field</th>
               <th>Total RPE</th>
-              <th>Current RPE</th>
+              <th>Project in field</th>
+              {/* <th>Current RPE</th> */}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 text-center text-xs">
@@ -286,15 +306,16 @@ const TLWiseReport = ({
                 <td className="px-4 py-2 whitespace-nowrap text-left text-sm text-black">
                   {tl.TLName}
                 </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
-                  {tl.projects.length}
-                </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-black text-right">
                   ${tl.TOTALRPE.toFixed(2)}
                 </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-black text-right">
-                  ${tl.CURRENTRPE.toFixed(2)}
+                <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
+                  {tl.projects.length}
                 </td>
+
+                {/* <td className="px-4 py-2 whitespace-nowrap text-sm text-black text-right">
+                  ${tl.CURRENTRPE.toFixed(2)}
+                </td> */}
               </tr>
             ))}
           </tbody>

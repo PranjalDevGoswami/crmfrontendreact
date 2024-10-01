@@ -7,10 +7,16 @@ import object7 from "../assets/object7.png";
 import { PostLoginData } from "../fetchApis/login/PostLoginData";
 import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
-import { USERLIST } from "../../utils/urls.js";
 import { useAuth } from "../provider/authProvider.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import SweetAlert from "../components/SweetAlert.js";
+import { isDirector, isSuperUser } from "../config/Role.js";
+import {
+  isFinanceDept,
+  isOperationDept,
+  isSalesDept,
+} from "../config/Departments.js";
+import { USERLIST } from "../../utils/constants/urls.js";
 
 const Login = () => {
   const { token, setToken } = useAuth();
@@ -60,13 +66,13 @@ const Login = () => {
       if (userDetails.length > 0) {
         const department = userDetails[0].user_department?.id;
         localStorage.setItem("department", department);
-        if (role === "Director" || role === "superuser") {
+        if (role === isDirector || role === isSuperUser) {
           navigate("/report");
-        } else if (department == 1) {
+        } else if (department == isSalesDept) {
           navigate("/sales-dashboard");
-        } else if (department == 2) {
+        } else if (department == isOperationDept) {
           navigate("/operation-dashboard");
-        } else if (department == 3) {
+        } else if (department == isFinanceDept) {
           navigate("/finance-dashboard");
         } else if (userDetails[0]?.email === "admin@unimrkt.com") {
           navigate("/Admin-dashboard");

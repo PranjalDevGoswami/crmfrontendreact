@@ -273,7 +273,7 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
   };
 
   return (
-    <div className="relative w-10/12">
+    <div className="relative w-full">
       <Button
         name={
           dateRange.startDate && dateRange.endDate

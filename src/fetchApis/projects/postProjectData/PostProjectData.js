@@ -1,4 +1,4 @@
-import { PROJECTDATAAPIS } from "../../../../utils/urls.js";
+import { PROJECTDATAAPIS } from "../../../../utils/constants/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuthForUpload } from "../../../provider/helper/axios.js";
 

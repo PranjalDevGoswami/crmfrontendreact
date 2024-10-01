@@ -3,6 +3,7 @@ import CanvasJSReact from "@canvasjs/react-charts";
 import { USERROLE } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios";
 import { ManWorkPerDays } from "../fetchApis/projects/perDayManWork/GetDaysManWork";
+import { isTeamLead } from "../config/Role";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const RPEWeek = ({ projectData }) => {
@@ -15,7 +16,7 @@ const RPEWeek = ({ projectData }) => {
       const userRole = await getWithAuth(USERROLE);
       setAllUserList(userRole?.data);
       const tlList = userRole.data.filter(
-        (item) => item.role.name === "Team Lead"
+        (item) => item.role.name === isTeamLead
       );
       setTlListArray(tlList.map((item) => item.user_role));
     };

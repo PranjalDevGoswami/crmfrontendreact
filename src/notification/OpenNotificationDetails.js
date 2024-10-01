@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import Button from "../components/Button";
 import { putWithAuth } from "../provider/helper/axios";
-import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/urls";
+import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/constants/urls";
 import SweetAlert from "../components/SweetAlert";
 // import { FilterContext } from "../ContextApi/FilterContext";
 import { ThemeContext } from "../ContextApi/ThemeContext";

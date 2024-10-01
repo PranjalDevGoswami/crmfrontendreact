@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import LableAndInput from "../../components/LableAndInput";
 import { postWithAuth } from "../../provider/helper/axios";
-import { EDITPROJECTREQUEST } from "../../../utils/urls";
+import { EDITPROJECTREQUEST } from "../../../utils/constants/urls";
 import { NotifiactionContext } from "../../ContextApi/NotificationContext";
 import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";

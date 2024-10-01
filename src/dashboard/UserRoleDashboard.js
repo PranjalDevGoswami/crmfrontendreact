@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getWithAuth, postWithAuth } from "../provider/helper/axios";
-import {
-  BASEURL,
-  UPDATE_PROFILE,
-  USERLIST,
-  USERSTATUS,
-} from "../../utils/urls";
+
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../utils/DataTablesData";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
+import {
+  UPDATE_PROFILE,
+  USERLIST,
+  USERSTATUS,
+} from "../../utils/constants/urls";
 
 const UserRoleDashboard = () => {
   const [userListDetails, setUserListDetails] = useState([]);
@@ -123,7 +123,7 @@ const UserRoleDashboard = () => {
         >
           <div className="relative cursor-pointer p-4">
             <BsThreeDots className="relative" />
-            {hoveredRowIndex === index && (
+            {hoveredRowIndex == index && (
               <div
                 className={`${
                   index <= 5

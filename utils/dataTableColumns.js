@@ -1,26 +1,8 @@
-import { useContext } from "react";
-import { MdOutlineMoreVert } from "react-icons/md";
-import OpereationButton from "../src/project/projectCRUDOperations/OpereationButton";
-import { DataTableContext } from "../src/ContextApi/DataTableContext";
+import { allManagerRoles, isDirector } from "../src/config/Role";
+import ActionsButton from "../src/project/projectCRUDOperations/ActionsButton";
 
 export const TableColumn = ({ buttonRef }) => {
-  const {
-    openDropdownIndex,
-    setOpenDropdownIndex,
-    setIsViewOptionIndex,
-    isViewOptionOpen,
-    setIsViewOptionOpen,
-    setSelectedIndex,
-    setSelectedRecord,
-  } = useContext(DataTableContext);
-
-  const handleAddEditOperation = (record, index) => {
-    setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
-    setIsViewOptionIndex(index);
-    setIsViewOptionOpen(!isViewOptionOpen);
-    setSelectedRecord(record);
-    setSelectedIndex(index);
-  };
+  const role = localStorage.getItem("role");
 
   const columns = [
     {
@@ -50,17 +32,39 @@ export const TableColumn = ({ buttonRef }) => {
       width: "85px",
       // hide: "md",
     },
-    {
-      name: "Start Date",
-      selector: (row) => row?.tentative_start_date,
+    role !== isDirector
+      ? {
+          name: "Start Date",
+          selector: (row) => row?.tentative_start_date,
+          sortable: true,
+          width: "110px",
+        }
+      : { width: "5px" },
+    role !== isDirector
+      ? {
+          name: "End Date",
+          selector: (row) => row?.tentative_end_date,
+          sortable: true,
+          width: "110px",
+        }
+      : { width: "5px" },
+    !allManagerRoles.includes(role) && {
+      name: "Unimrkt PM",
+      selector: (row) => row?.assigned_to?.name,
       sortable: true,
-      width: "110px",
+      width: "130px",
     },
     {
-      name: "End Date",
-      selector: (row) => row?.tentative_end_date,
+      name: "Team Lead",
+      selector: (row) => row?.project_assigned_to_teamlead?.name,
       sortable: true,
-      width: "110px",
+      width: "130px",
+    },
+    {
+      name: "Client PM",
+      selector: (row) => row?.project_client_pm?.name,
+      sortable: true,
+      width: "130px",
     },
     {
       name: "CPI",
@@ -150,29 +154,7 @@ export const TableColumn = ({ buttonRef }) => {
       // width: "90px",
       cell: (record, index) => {
         return (
-          <div className="relative w-full overflow-y-visible">
-            <div className="flex items-center overflow-visible relative">
-              <button
-                onClick={() => handleAddEditOperation(record, index)}
-                className="border p-2 rounded-md mr-2 cursor-pointer"
-              >
-                <MdOutlineMoreVert />
-              </button>
-              {openDropdownIndex === index ? (
-                <div
-                  ref={buttonRef}
-                  onClick={(e) => e.stopPropagation()}
-                  className={`absolute z-50 ${
-                    index <= 5 ? "opration_btn" : "opration_btn_bottom"
-                  }`}
-                >
-                  <OpereationButton />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
+          <ActionsButton record={record} index={index} buttonRef={buttonRef} />
         );
       },
     },

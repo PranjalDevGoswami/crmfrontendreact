@@ -1,4 +1,4 @@
-import { PROJECTTYPES } from "../../../../utils/urls.js";
+import { PROJECTTYPES } from "../../../../utils/constants/urls.js";
 import { getWithAuth } from "../../../provider/helper/axios.js";
 
 export const ProjectTypeList = async () => {

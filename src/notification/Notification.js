@@ -1,17 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
-import { UPDATEDPROJECTLIST } from "../../utils/urls";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import { getWithAuth } from "../provider/helper/axios";
 import { FilterContext } from "../ContextApi/FilterContext";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { allManagerRoles } from "../config/Role";
+import { UPDATEDPROJECTLIST } from "../../utils/constants/urls";
 
 const Notification = () => {
   const [isNotificationActive, setIsNotificationActive] = useState(false);
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const { projectData } = useContext(FilterContext);
+  const role = localStorage.getItem("role");
+  const userRole = localStorage.getItem("userrole");
 
   const {
     notificationList,
@@ -22,9 +25,6 @@ const Notification = () => {
     isViewNotification,
   } = useContext(NotifiactionContext);
 
-  const userrole = localStorage.getItem("userrole");
-  const role = localStorage.getItem("role");
-  const token = localStorage.getItem("token");
   useEffect(() => {
     if (darkMode) {
       document.body.style.backgroundColor = "black";
@@ -40,7 +40,7 @@ const Notification = () => {
       const response = await GetProjectData();
       let activeEditProject = response?.data?.filter((item) => {
         return (
-          item?.send_email_manager == true && item?.assigned_to == userrole
+          item?.send_email_manager == true && item?.assigned_to?.id == userRole
         );
       });
       setNotificationList(activeEditProject);
@@ -93,10 +93,7 @@ const Notification = () => {
       >
         <IoNotifications className="mr-4 cursor-pointer min-[320px]:text-base sm:text-base text-black" />
         <span className="bg-red-600 text-white rounded-full sm:w-3 sm:h-3 sm:p-3 min-[320px]:w-1 min-[320px]:h-1 min-[320px]:p-2 absolute sm:-top-3 sm:left-2 min-[320px]:-top-2 min-[320px]:left-2 min-[320px]:text-sm sm:text-sm flex justify-center items-center">
-          {(role === "Manager" ||
-            role === "Sr.Manager" ||
-            role === "Ass.Manager") &&
-          notificationList?.length > 0
+          {allManagerRoles.includes(role) && notificationList?.length > 0
             ? notificationList?.length
             : 0}
         </span>
@@ -106,10 +103,7 @@ const Notification = () => {
           className="border bg-[#bd1d1d] text-white cursor-pointer text-left absolute sm:top-10 sm:-left-1/2 min-[320px]:left-1/3 min-[320px]:top-5 min-[320px]:w-44 sm:w-72 p-2 rounded-md min-[320px]:text-base sm:text-base"
           ref={notification_btn_ref}
         >
-          {(role === "Manager" ||
-            role === "Sr.Manager" ||
-            role === "Ass.Manager") &&
-          notificationList.length > 0 ? (
+          {allManagerRoles.includes(role) && notificationList.length > 0 ? (
             <ul>
               {notificationList?.map((item, ind) => {
                 return (

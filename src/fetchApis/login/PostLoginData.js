@@ -1,4 +1,4 @@
-import { LOGINPOSTAPIS } from "../../../utils/urls";
+import { LOGINPOSTAPIS } from "../../../utils/constants/urls";
 import SweetAlert from "../../components/SweetAlert";
 
 export const PostLoginData = async (data) => {

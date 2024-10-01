@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "../components/InputField";
 import Button from "../components/Button";
-import { RESETPASSWORD } from "../../utils/urls";
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "../components/SweetAlert";
+import { RESETPASSWORD } from "../../utils/constants/urls";
 
 const Reset = () => {
   const [email, setEmail] = useState({

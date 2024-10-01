@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { PROJECTDATAAPIS } from "../../../../utils/urls.js";
+import { PROJECTDATAAPIS } from "../../../../utils/constants/urls.js";
 import { getWithAuth } from "../../../provider/helper/axios";
 import { FetchProject } from "../../../ContextApi/FetchProjectContext.js";
 

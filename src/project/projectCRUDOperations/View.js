@@ -4,7 +4,7 @@ import { ManWorkPerDays } from "../../fetchApis/projects/perDayManWork/GetDaysMa
 import ManDaysDetails from "./ManDaysDetails";
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import { getWithAuth } from "../../provider/helper/axios";
-import { BASEURL, PROJECTDATAAPIS } from "../../../utils/urls.js";
+import { BASEURL, PROJECTDATAAPIS } from "../../../utils/constants/urls.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import { ThemeContext } from "../../ContextApi/ThemeContext.js";
 import SweetAlert from "../../components/SweetAlert.js";

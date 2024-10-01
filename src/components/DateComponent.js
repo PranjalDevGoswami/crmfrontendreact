@@ -4,7 +4,7 @@ import Input from "./InputField";
 const DateComponent = ({ handleDateChange, dateError }) => {
   const today = new Date();
   const minDate = new Date(today);
-  if (today.getDay() === 0) {
+  if (today.getDay() == 0) {
     minDate.setDate(minDate.getDate() - 4);
   } else {
     minDate.setDate(minDate.getDate() - 2);

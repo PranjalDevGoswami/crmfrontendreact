@@ -3,11 +3,10 @@ import React, { useState } from "react";
 const CheckboxList = ({ InputItems, onCheckboxChange }) => {
   const [checkedItems, setCheckedItems] = useState({});
 
-  // Function to handle checkbox change
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
     setCheckedItems({ ...checkedItems, [name]: checked });
-    onCheckboxChange(name, checked); // Trigger the onCheckboxChange function
+    onCheckboxChange(name, checked);
   };
 
   return (

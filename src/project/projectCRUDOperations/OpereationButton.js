@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import AssignedProject from "../../project/AssignedProject.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
+import { department, isHod, isSuperUser } from "../../config/Role.js";
+import { isFinanceDept, isOperationDept } from "../../config/Departments.js";
 
 const OpereationButton = () => {
-  const role = localStorage.getItem("role");
-  const department = localStorage.getItem("department");
   const navigate = useNavigate();
   const [viewEditRecord, setEditRecord] = useState();
   const [updatedValue, setUpdatedValue] = useState({
@@ -30,6 +30,7 @@ const OpereationButton = () => {
   } = useContext(DataTableContext);
 
   const [isInvoice, setIsInvoice] = useState(false);
+  const role = localStorage.getItem("role");
 
   const HandleOnEdit = (selectedRecord) => {
     setisEdit(true);
@@ -121,13 +122,13 @@ const OpereationButton = () => {
             >
               View
             </button>
-            {department == 2 && (
+            {department == isOperationDept && (
               <>
                 {selectedRecord.status !== "Project Initiated" &&
                   selectedRecord.status !== "Completed" &&
                   selectedRecord.status !== "Cbr Raised" &&
                   selectedRecord.status !== "On Hold" &&
-                  role !== "HOD" &&
+                  role !== isHod &&
                   DateValidate == true && (
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
@@ -140,7 +141,7 @@ const OpereationButton = () => {
                   selectedRecord.status !== "Completed" &&
                   selectedRecord.status !== "Cbr Raised" &&
                   selectedRecord.status !== "On Hold" &&
-                  role !== "HOD" && (
+                  role !== isHod && (
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                       onClick={() => {
@@ -153,9 +154,7 @@ const OpereationButton = () => {
                 {selectedRecord.status !== "Project Initiated" &&
                   selectedRecord.status !== "Completed" &&
                   selectedRecord.status !== "Cbr Raised" &&
-                  role !== "HOD" && (
-                    // selectedRecord.status !== "On Hold" &&
-                    // DateValidate == true &&
+                  role !== isHod && (
                     <button
                       className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                       onClick={() => handleStatus(selectedRecord)}
@@ -166,7 +165,7 @@ const OpereationButton = () => {
                 {selectedRecord.status === "Completed" &&
                   selectedRecord.status !== "On Hold" &&
                   selectedRecord.status !== "Cbr Raised" &&
-                  role !== "HOD" && (
+                  role !== isHod && (
                     <button
                       className="border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm"
                       onClick={() => handleRaiseCBR(selectedRecord)}
@@ -174,7 +173,7 @@ const OpereationButton = () => {
                       Raise CBR
                     </button>
                   )}
-                {role === "superuser" && (
+                {role === isSuperUser && (
                   <button
                     className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
                     onClick={() => handleGetInvoice(selectedRecord)}
@@ -186,7 +185,7 @@ const OpereationButton = () => {
             )}
           </div>
         </div>
-        {department == 3 && (
+        {department == isFinanceDept && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={() => handleGetInvoice(selectedRecord)}

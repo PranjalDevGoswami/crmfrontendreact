@@ -1,4 +1,4 @@
-import { UPDATETLASSIGNMENT } from "../../../../utils/urls.js";
+import { UPDATETLASSIGNMENT } from "../../../../utils/constants/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuth, putWithAuth } from "../../../provider/helper/axios.js";
 

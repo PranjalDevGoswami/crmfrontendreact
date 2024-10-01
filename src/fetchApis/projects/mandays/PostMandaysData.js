@@ -1,4 +1,4 @@
-import { POSTMANDAYSDATA } from "../../../../utils/urls.js";
+import { POSTMANDAYSDATA } from "../../../../utils/constants/urls.js";
 import { postWithAuth } from "../../../provider/helper/axios";
 
 export const PostMandaysData = async (data) => {

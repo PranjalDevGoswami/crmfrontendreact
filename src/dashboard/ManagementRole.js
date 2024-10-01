@@ -289,7 +289,7 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { getWithAuth } from "../provider/helper/axios";
-import { USERLIST } from "../../utils/urls";
+import { USERLIST } from "../../utils/constants/urls";
 
 const ManagementPanel = () => {
   const [userList, setUserList] = useState([]);
@@ -357,7 +357,7 @@ const ManagementPanel = () => {
   const getList = (id) => {
     switch (id) {
       case "userList":
-        return userList.filter((user) => user.department === department);
+        return userList.filter((user) => user.department == department);
       case "director-list":
         return hierarchy.directors;
       default:

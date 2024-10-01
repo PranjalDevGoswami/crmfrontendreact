@@ -5,11 +5,11 @@ import Dropdown from "../components/DropDown";
 import { useEffect, useState } from "react";
 import Label from "../components/Label";
 import { getWithAuth, putWithAuthForUpload } from "../provider/helper/axios";
-import { UPDATE_PROFILE } from "../../utils/urls.js";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineModeEdit } from "react-icons/md";
 import SweetAlert from "../components/SweetAlert.js";
+import { UPDATE_PROFILE } from "../../utils/constants/urls.js";
 
 // export const userDetails = () => {
 //   const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ export const userDetails = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
-  if (token && token.split(".").length === 3) {
+  if (token && token.split(".").length == 3) {
     try {
       const decoded = jwtDecode(token);
       const { role, username, user_id, userrole } = decoded;

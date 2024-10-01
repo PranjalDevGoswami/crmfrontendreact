@@ -4,12 +4,12 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import logo from "../assets/mainlogo.png";
 import { useAuth } from "../provider/authProvider";
 import { userDetails } from "../user/userProfile";
-import { UPDATE_PROFILE } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios.js";
 import Notifications from "../notification/Notification.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import { FaUser, FaLock } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
+import { UPDATE_PROFILE } from "../../utils/constants/urls.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();

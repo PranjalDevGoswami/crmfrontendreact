@@ -5,10 +5,28 @@ import Input from "../components/InputField.js";
 import { FilterContext } from "../ContextApi/FilterContext.js";
 import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import { CloseAddClient } from "../ContextApi/CloseAddClientContext.js";
-import { UPDATETLASSIGNMENT, USERROLE } from "../../utils/urls.js";
 import { getWithAuth } from "../provider/helper/axios.js";
 import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import DateRangeFilter from "../components/DateRangeFilter.js";
+import {
+  isOperationDept,
+  isPreSalesDept,
+  isSalesDept,
+} from "../config/Departments.js";
+import {
+  allManagerRoles,
+  isDirector,
+  isHod,
+  isManager,
+  isSuperUser,
+  isTeamLead,
+  Token,
+} from "../config/Role.js";
+import { UPDATETLASSIGNMENT, USERROLE } from "../../utils/constants/urls.js";
+import useProjectData from "../../utils/hooks/useProjectData.js";
+import { CiSearch } from "react-icons/ci";
+import { IoFilter } from "react-icons/io5";
+import FilterDrawer from "../components/FilterDrawer.js";
 
 const FilterProject = () => {
   const {
@@ -36,6 +54,7 @@ const FilterProject = () => {
     tlListArray,
     setTlListArray,
   } = useContext(FilterContext);
+  const role = localStorage.getItem("role");
 
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
   const [projectAssignedTo, setProjectAssignedTo] = useState([]);
@@ -47,10 +66,12 @@ const FilterProject = () => {
     endDate: "",
   });
   const { darkMode } = useContext(ThemeContext);
-  const role = localStorage.getItem("role");
-  let token = localStorage.getItem("token");
-  let department = localStorage.getItem("department");
-  let userrole = localStorage.getItem("userrole");
+  const [openFilter, setOpenFilter] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
+  const department = localStorage.getItem("department");
+  const userRole = localStorage.getItem("userrole");
+
+  const projectResponse = useProjectData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,89 +84,117 @@ const FilterProject = () => {
         const response = await getWithAuth(UPDATETLASSIGNMENT);
         const data = response?.data;
         setProjectAssignedTo(data);
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => val);
-        setProjectData(projectDataObject);
+        setProjectData(projectResponse);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-  }, [role, closeAddClient, token]);
+  }, [role, closeAddClient, Token, projectResponse]);
 
   useEffect(() => {
     const fetchUSerRole = async () => {
-      const userRole = await getWithAuth(USERROLE);
-      setAllUserList(userRole?.data);
-      // const OperationDeparmentUser = userRole?.data.filter((item) => {
-      //   return item.department.name === "Operation";
-      // });
+      const userRoleData = await getWithAuth(USERROLE);
+      setAllUserList(userRoleData?.data);
       const currentUserDepartment = localStorage.getItem("department");
-
-      const filteredUsers = userRole?.data.filter((item) => {
-        // If the current user is from 'Sales', exclude 'Operation' department users
-        if (currentUserDepartment == 1) {
-          return item.department.id == currentUserDepartment;
+      const filteredUsers = userRoleData?.data.filter((item) => {
+        if (currentUserDepartment == isSalesDept) {
+          return item?.department?.id == currentUserDepartment;
         }
-
-        // If the current user is from 'Operation', exclude 'Sales' department users
-        if (currentUserDepartment == 2) {
-          return item.department.id == currentUserDepartment;
+        if (currentUserDepartment == isOperationDept) {
+          return item?.department?.id == currentUserDepartment;
         }
-
-        // Default case: include all users if the department is neither 'Sales' nor 'Operation'
         return true;
       });
 
-      const hodList = filteredUsers.filter((item) => item.role.name === "HOD");
-      setHodListArray(hodList.map((item) => item.user_role));
-
-      const managerList = filteredUsers.filter(
-        (item) =>
-          item.role.name === "Sr.Manager" ||
-          item.role.name === "Manager" ||
-          item.role.name === "Ass.Manager"
+      const hodList = filteredUsers?.filter(
+        (item) => item?.role?.name === isHod
       );
-      setManagerListArray(managerList.map((item) => item.user_role));
+      setHodListArray(hodList?.map((item) => item?.user_role));
+
+      const managerList = filteredUsers.filter((item) =>
+        allManagerRoles?.includes(item?.role?.name)
+      );
+      setManagerListArray(managerList.map((item) => item?.user_role));
 
       const tlList = filteredUsers.filter(
-        (item) => item.role.name === "Team Lead"
+        (item) => item?.role?.name === isTeamLead
       );
-      setTlListArray(tlList.map((item) => item.user_role));
+      setTlListArray(tlList.map((item) => item?.user_role));
 
-      //display data when hod Login
-
-      const userRoleFilter = userRole?.data?.filter((item) => {
-        return item.reports_to?.id == userrole;
+      const userRoleFilter = userRoleData?.data?.filter((item) => {
+        return item?.reports_to?.id == userRole;
       });
       const AllUserUnderHod = userRoleFilter.map((item) => {
-        return item.user_role;
+        return item?.user_role;
       });
       setUserUnderHOD(AllUserUnderHod);
     };
     fetchUSerRole();
   }, []);
 
-  const handleFilterOption = (name, value) => {
+  // const handleFilterOption = (name, value) => {
+  //   console.log(name, value);
+
+  //   if (name === "Client") {
+  //     const clientID = clientsList.filter(
+  //       (item) =>
+  //         item?.name?.toLowerCase() === value?.map((val) => val.toLowerCase())
+  //     );
+  //     setSelectedClient(clientID[0]?.id);
+  //   }
+  //   if (name === isHod) {
+  //     const hodID = hodListArray.filter((item) => item?.name?.includes(value));
+  //     setSelectedHod(hodID[0]?.id);
+  //   }
+  //   if (name === isManager) {
+  //     const ManagerId = managerListArray?.filter((item) =>
+  //       item?.name?.includes(value)
+  //     );
+  //     setSelectedManager(ManagerId[0]?.id);
+  //   }
+  //   if (name === isTeamLead) {
+  //     const TlId = tlListArray?.filter((item) => item?.name?.includes(value));
+  //     setSelectedTl(TlId[0]?.id);
+  //   }
+  // };
+
+  const handleFilterOption = (name, valueObj) => {
+    // Extract the array of selected values
+    const values = valueObj?.value?.map((v) => v.toLowerCase()) || [];
     if (name === "Client") {
-      const clientID = clientsList.filter(
-        (item) => item.name.toLowerCase() === value.toLowerCase()
+      // Find all clients that match any of the selected values
+      const selectedClients = clientsList.filter((item) =>
+        values.includes(item?.name?.toLowerCase())
       );
-      setSelectedClient(clientID[0]?.id);
+      const clientIDs = selectedClients.map((client) => client.id);
+      setSelectedClient(clientIDs); // Update this to set an array of selected client IDs
     }
-    if (name === "HOD") {
-      const hodID = hodListArray.filter((item) => item.name.includes(value));
-      setSelectedHod(hodID[0]?.id);
-    }
-    if (name === "Manager") {
-      const ManagerId = managerListArray.filter((item) =>
-        item.name.includes(value)
+
+    if (name === isHod) {
+      const selectedHods = hodListArray.filter((item) =>
+        values.some((val) => item?.name?.toLowerCase().includes(val))
       );
-      setSelectedManager(ManagerId[0]?.id);
+      const hodIDs = selectedHods.map((hod) => hod.id);
+      setSelectedHod(hodIDs); // Update this to set an array of selected HOD IDs
     }
-    if (name === "TeamLead") {
-      const TlId = tlListArray.filter((item) => item.name.includes(value));
-      setSelectedTl(TlId[0]?.id);
+
+    if (name === isManager) {
+      console.log(managerListArray);
+
+      const selectedManagers = managerListArray.filter((item) =>
+        values.some((val) => item?.name?.toLowerCase().includes(val))
+      );
+      const managerIDs = selectedManagers.map((manager) => manager.id);
+      setSelectedManager(managerIDs); // Update this to set an array of selected Manager IDs
+    }
+
+    if (name === isTeamLead) {
+      const selectedTls = tlListArray.filter((item) =>
+        values.some((val) => item?.name?.toLowerCase().includes(val))
+      );
+      const tlIDs = selectedTls.map((tl) => tl.id);
+      setSelectedTl(tlIDs); // Update this to set an array of selected Team Lead IDs
     }
   };
 
@@ -156,9 +205,9 @@ const FilterProject = () => {
       selectedStatus !== "--Select Status--" &&
       selectedStatus !== "all"
     ) {
-      filteredData = filteredData.filter(
-        (item) => item?.status?.toLowerCase() === selectedStatus?.toLowerCase()
-      );
+      filteredData = filteredData.filter((item) => {
+        return item?.status?.toLowerCase() === selectedStatus?.toLowerCase();
+      });
     }
 
     if (dateRange.startDate && dateRange.endDate) {
@@ -173,21 +222,19 @@ const FilterProject = () => {
     }
 
     if (selectedHod && selectedHod !== "--Select HOD--") {
-      const operTeam = allUserList.filter((item) => item?.department.id == 2);
-      const Hods = operTeam.filter((item) => item?.role?.name === "HOD");
-      const currentSelectHod = Hods.find(
-        (item) => item.user_role.id === selectedHod
+      const operTeam = allUserList.filter(
+        (item) => item?.department.id == isOperationDept
+      );
+      const Hods = operTeam.filter((item) => item?.role?.name === isHod);
+      const currentSelectHod = Hods.find((item) =>
+        selectedHod.includes(item.user_role.id)
       );
       const AllMemberUnderCurrentHod = allUserList.filter(
         (user) => user?.reports_to?.id === currentSelectHod?.id
       );
       const ManagerUnderSelectedHod = AllMemberUnderCurrentHod.filter(
         (item) => {
-          return (
-            item.role.name === "Sr.Manager" ||
-            item.role.name === "Manager" ||
-            item.role.name === "Ass.Manager"
-          );
+          return allManagerRoles.includes(item.role.name);
         }
       ).map((item) => {
         return item.user_role; // Accessing the user_role.name
@@ -198,55 +245,51 @@ const FilterProject = () => {
       );
       filteredData = filteredData.filter(
         (item) =>
-          AllManagerAndTl.includes(Number(item.project_assigned_by_manager)) ||
-          AllManagerAndTl.includes(Number(item.project_assigned_to_teamlead))
+          AllManagerAndTl.includes(
+            Number(item.project_assigned_by_manager?.id)
+          ) ||
+          AllManagerAndTl.includes(
+            Number(item.project_assigned_to_teamlead?.id)
+          )
       );
     }
     if (selectedManager && selectedManager !== "--Select Manager--") {
-      const operTeam = allUserList.filter((item) => item?.department.id == 2);
+      const operTeam = allUserList.filter(
+        (item) => item?.department.id == isOperationDept
+      );
       const Managers = operTeam.filter(
-        (item) => item?.role?.name === "Manager"
+        (item) => item?.role?.name === isManager
       );
-      const currentSelectManager = Managers.find(
-        (item) => item.user_role.id === selectedManager
+      const currentSelectManager = Managers.find((item) =>
+        selectedManager.includes(item.user_role.id)
       );
-
-      // const TLUnderSelectedMAnager = currentSelectManager
-      //   .filter((item) => {
-      //     return item.role.name === "Team Lead";
-      //   })
-      //   .map((item) => {
-      //     return item.user_role; // Accessing the user_role.name
-      //   });
-
-      // setManagerListArray(TLUnderSelectedMAnager);
       filteredData = filteredData.filter((item) =>
         [currentSelectManager?.user_role?.id].includes(
-          Number(item.project_assigned_by_manager)
+          Number(item.project_assigned_by_manager?.id)
         )
       );
     }
 
     if (selectedTl && selectedTl !== "--Select TeamLead--") {
-      // const operTeam = allUserList.filter((item) => item?.department.id == 2);
       const TeamLeads = allUserList.filter(
-        (item) => item?.role?.name === "Team Lead"
+        (item) => item?.role?.name === isTeamLead
       );
       const currentSelectTl = TeamLeads.find(
         (item) => item.user_role.id === selectedTl
       );
       filteredData = filteredData.filter((item) =>
         [currentSelectTl?.user_role?.id].includes(
-          Number(item.project_assigned_to_teamlead || item.created_by)
+          Number(item.project_assigned_to_teamlead?.id || item.created_by?.id)
         )
       );
     }
+
     if (selectedClient && selectedClient !== "--Select Client--") {
-      filteredData = filteredData.filter(
-        (item) => item?.clients?.id === selectedClient
+      filteredData = filteredData.filter((item) =>
+        selectedClient?.includes(item?.clients?.id)
       );
     }
-    if (role === "Team Lead" && department == 2) {
+    if (role === isTeamLead && department == isOperationDept) {
       filteredData = filteredData.filter((item) => {
         const ProjectAssigned = projectAssignedTo.filter(
           (item) => item?.project_assigned_to
@@ -255,61 +298,59 @@ const FilterProject = () => {
           (assigned) => assigned.project_id === item.id
         );
         const isInProjectAssignedTo = projectAssigned?.project_assigned_to.some(
-          (item) => item.id == userrole
+          (item) => item.id == userRole
         );
         const isInProjectAssignedToTeamlead =
-          item.project_assigned_to_teamlead === userrole;
+          item.project_assigned_to_teamlead?.id === userRole;
 
         return isInProjectAssignedTo || isInProjectAssignedToTeamlead;
       });
     }
     if (
-      (role === "Team Lead" || role === "Manager") &&
-      (department == 1 || department == 4)
+      (role === isTeamLead || role === isManager) &&
+      (department == isSalesDept || department == isPreSalesDept)
     ) {
       filteredData = filteredData.filter(
-        (item) => item?.created_by == userrole
+        (item) => item?.created_by?.id == userRole
       );
-    } else if (
-      role === "Manager" ||
-      role === "Sr.Manager" ||
-      role === "Ass.Manager"
-    ) {
+    } else if (allManagerRoles.includes(role)) {
       filteredData = filteredData.filter((item) => {
         const projectAssigned = projectAssignedTo.find(
           (assigned) => assigned.project_id === item.id
         );
-
         const isInProjectAssignedTo = projectAssigned?.project_assigned_to.some(
-          (assigned) => assigned.id == userrole
+          (assigned) => assigned.id == userRole
         );
-
         const isInProjectAssignedToTeamlead =
-          item.project_assigned_to_teamlead == userrole;
-
-        const isInAssignedTo = item.assigned_to == userrole;
-
+          item.project_assigned_to_teamlead?.id == userRole;
+        const isInAssignedTo = item.assigned_to?.id == userRole;
         return (
           isInProjectAssignedTo ||
           isInProjectAssignedToTeamlead ||
           isInAssignedTo
         );
       });
-    } else if (role === "HOD") {
+    } else if (role === isHod) {
       filteredData = filteredData.filter((item) => {
-        return userUnderHOD
-          .map((user) => user.id)
-          .includes(
-            item?.project_assigned_by_manager ||
-              item?.created_by ||
-              item?.assigned_to
-          );
+        const assignedByManagerId = item?.project_assigned_by_manager?.id;
+        const assignedToTeamLeadId = item?.project_assigned_to_teamlead?.id;
+        const createdById = item?.created_by?.id;
+        const assignedToId = item?.assigned_to?.id;
+
+        return (
+          userUnderHOD
+            .map((user) => user.id)
+            .some((userId) => {
+              return (
+                userId === assignedByManagerId ||
+                userId === assignedToTeamLeadId ||
+                userId === createdById ||
+                userId === assignedToId
+              );
+            }) || item?.created_by?.id == userRole
+        );
       });
-      console.log(
-        "🚀 ~ filteredData=filteredData.filter ~ filteredData:",
-        filteredData
-      );
-    } else if (role === "superuser" || role === "Director") {
+    } else if (role === isSuperUser || role === isDirector) {
       if (
         selectedStatus &&
         selectedStatus !== "--Select Status--" &&
@@ -320,7 +361,6 @@ const FilterProject = () => {
             item?.status?.toLowerCase() === selectedStatus?.toLowerCase()
         );
       }
-      // filteredData = projectData;
     }
     setTeamLeadAssiged(filteredData);
     setFilteredProjectData(filteredData);
@@ -330,7 +370,7 @@ const FilterProject = () => {
     selectedManager,
     selectedHod,
     selectedTl,
-    token,
+    Token,
     projectData,
     dateRange.endDate,
     dateRange.startDate,
@@ -338,87 +378,53 @@ const FilterProject = () => {
 
   return (
     <div className="flex items-center justify-between">
-      {(role === "Director" || role === "superuser") && (
-        <>
-          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
-          <Dropdown
-            Option_Name={[
-              "--Select HOD--",
-              ...hodListArray.map((item) => item.name),
-            ]}
-            onChange={handleFilterOption}
-            name="HOD"
-            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
-            id={"hod List"}
+      <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+      {openSearch && (
+        <div className="w-full">
+          <Input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onchange={(e) => setSearchTerm(e.target.value)}
+            className={`${
+              darkMode && "bg-black border-white"
+            } p-2 border border-black rounded w-10/12 focus:outline-none"`}
+            id={"search"}
           />
-          <Dropdown
-            Option_Name={[
-              "--Select Manager--",
-              ...managerListArray.map((item) => item.name),
-            ]}
-            onChange={handleFilterOption}
-            name="Manager"
-            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
-            id={"manager List"}
-          />
-          {/* <Dropdown
-            Option_Name={[
-              "--Select TeamLead--",
-              ...tlListArray.map((item) => item.name),
-            ]}
-            onChange={handleFilterOption}
-            name="TeamLead"
-            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
-          /> */}
-        </>
+        </div>
       )}
-      {role === "HOD" && (
-        <>
-          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
-
-          <Dropdown
-            Option_Name={[
-              "--Select Manager--",
-              ...managerListArray.map((item) => item.name),
-            ]}
-            onChange={handleFilterOption}
-            name="Manager"
-            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
-            id={"manager List"}
-          />
-          <Dropdown
-            Option_Name={[
-              "--Select TeamLead--",
-              ...tlListArray.map((item) => item.name),
-            ]}
-            onChange={handleFilterOption}
-            name="TeamLead"
-            className="p-2 m-1 border border-black rounded lg:w-full w-11/12"
-          />
-        </>
-      )}
-      <Dropdown
-        Option_Name={[
-          "--Select Client--",
-          ...clientsList?.map((item) => item.name),
-        ]}
-        onChange={handleFilterOption}
-        name="Client"
-        className="p-2 m-1 border border-black rounded w-11/12 bg-transparent"
-        id={"client List"}
-      />
-      <div className="w-full">
-        <Input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onchange={(e) => setSearchTerm(e.target.value)}
-          className={`${
-            darkMode && "bg-black border-white"
-          } p-2 m-1 border border-black rounded w-11/12 focus:outline-none"`}
-          id={"search"}
-        />
+      <div className="flex items-center justify-end w-1/2">
+        <div
+          className="w-1/12 mr-4 cursor-pointer text-xl"
+          onClick={() => {
+            setOpenSearch(!openSearch);
+          }}
+        >
+          <CiSearch />
+        </div>
+        <button
+          className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400"
+          onClick={() => {
+            setOpenFilter(!openFilter);
+          }}
+        >
+          <IoFilter className="mr-2" />
+          Filter
+        </button>
       </div>
+      {openFilter && (
+        <FilterDrawer
+          setOpenFilter={setOpenFilter}
+          handleFilterOption={handleFilterOption}
+          role={role}
+          clientsList={clientsList}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          tlListArray={tlListArray}
+          hodListArray={tlListArray}
+          managerListArray={managerListArray}
+        />
+      )}
     </div>
   );
 };

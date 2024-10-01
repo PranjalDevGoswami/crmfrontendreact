@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CLIENTDATAAPIS } from "../../../utils/urls";
+import { CLIENTDATAAPIS } from "../../../utils/constants/urls";
 import { getWithAuth, postWithAuth } from "../../provider/helper/axios";
 
 export const ClientList = async () => {

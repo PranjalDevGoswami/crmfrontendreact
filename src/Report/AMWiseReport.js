@@ -6,6 +6,8 @@ import CanvasJSReact from "@canvasjs/react-charts";
 import ExportCSV from "../project/ExportExcel";
 import { TiFilter } from "react-icons/ti";
 import { LuDownload } from "react-icons/lu";
+import { allManagerRoles, isDirector } from "../config/Role";
+import { isOperationDept } from "../config/Departments";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -23,7 +25,9 @@ const AMWiseReport = ({
   const [selectedItem, setSelectedItem] = useState("");
   const [filteredAm, setFilteredAm] = useState([]);
   const [filterOptions, setFilterOptions] = useState([]);
-  // Fetch and set filtered data based on projectType
+  const userRole = localStorage.getItem("userrole");
+  const role = localStorage.getItem("role");
+
   useEffect(() => {
     if (projectType.length > 0) {
       let filtered = projectData.filter(
@@ -37,20 +41,33 @@ const AMWiseReport = ({
     }
   }, [projectType, projectData, setFilteredData]);
 
-  // Fetch AM list from user list (filter based on department and roles)
   useEffect(() => {
     const fetchUserRole = async () => {
       try {
         const userListOperationDepartment = userList.filter(
-          (item) => item?.department?.id === 2
+          (item) => item?.department?.id == isOperationDept
         );
-        const AMList = userListOperationDepartment?.filter(
-          (item) =>
-            item.role.name === "Sr.Manager" ||
-            item.role.name === "Ass.Manager" ||
-            item.role.name === "Manager"
+
+        const AMList = userListOperationDepartment?.filter((item) =>
+          allManagerRoles.includes(item.role.name)
         );
-        setAmList(AMList);
+        if (role === isDirector) {
+          setAmList(AMList);
+        } else {
+          let AmReportToCurrentUser = AMList.filter(
+            (am) => am.reports_to.id == userRole || am.user_role.id == userRole
+          );
+
+          let additionalUsers = userList.filter((user) =>
+            AmReportToCurrentUser.some(
+              (am) =>
+                user.reports_to?.id == am.user_role.id &&
+                allManagerRoles.includes(user.role.name)
+            )
+          );
+          let combinedList = [...AmReportToCurrentUser, ...additionalUsers];
+          setAmList(combinedList);
+        }
       } catch (error) {
         console.error("Error fetching user roles:", error);
       }
@@ -62,10 +79,12 @@ const AMWiseReport = ({
   const segregatedProjects = useMemo(() => {
     return amList.map((am) => {
       const projectsForAm = projectData.filter(
-        (project) => project.assigned_to === am.user_role.id
+        (project) =>
+          project.assigned_to == am.user_role.id ||
+          project.project_assigned_to_teamlead?.id == am.user_role.id
       );
 
-      if (projectsForAm.length === 0) {
+      if (projectsForAm.length == 0) {
         // If no projects for AM, mark RPE values as 0
         return {
           amName: am.user.name,
@@ -244,9 +263,9 @@ const AMWiseReport = ({
           <thead className="bg-gray-50 text-sm">
             <tr>
               <th>AM Name</th>
-              <th>Project in field</th>
               <th>Total RPE</th>
-              <th>Current RPE</th>
+              <th>Project in field</th>
+              {/* <th>Current RPE</th> */}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 text-center text-xs">
@@ -256,14 +275,15 @@ const AMWiseReport = ({
                   {am.amName}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
-                  {am.projects.length}
-                </td>
-                <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
                   {am.TOTALRPE.toFixed(2)}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
-                  {am.CURRENTRPE.toFixed(2)}
+                  {am.projects.length}
                 </td>
+
+                {/* <td className="px-4 py-2 whitespace-nowrap text-sm text-black">
+                  {am.CURRENTRPE.toFixed(2)}
+                </td> */}
               </tr>
             ))}
           </tbody>

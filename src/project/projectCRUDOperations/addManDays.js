@@ -8,6 +8,7 @@ import Label from "../../components/Label.js";
 import DateComponent from "../../components/DateComponent.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
+import { addManDaysValidation } from "../../../utils/validation/addManDaysValidation.js";
 
 export function AddManDays({ setMultiEditFieldOpen }) {
   const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit } =
@@ -24,7 +25,6 @@ export function AddManDays({ setMultiEditFieldOpen }) {
       status: "",
     }))
   );
-  const [editIndex, setEditIndex] = useState(null);
 
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
@@ -55,57 +55,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     setMandaysData(updatedMandaysData);
   };
 
-  const validateFields = () => {
-    for (const item of mandaysData) {
-      if (!item.update_date) {
-        SweetAlert({
-          title: "Error",
-          text: "Update date is required",
-          icon: "error",
-        });
-        return false;
-      }
-      if (!item.total_man_days) {
-        SweetAlert({
-          title: "Error",
-          text: "Total man days is required",
-          icon: "error",
-        });
-        return false;
-      } else if (item.total_man_days == 0) {
-        SweetAlert({
-          title: "Error",
-          text: "Total man days can not be 0",
-          icon: "error",
-        });
-        return false;
-      }
-      if (!item.total_achievement) {
-        SweetAlert({
-          title: "Error",
-          text: "Total achievement is required",
-          icon: "error",
-        });
-        return false;
-      } else if (item.total_achievement == 0) {
-        SweetAlert({
-          title: "Error",
-          text: "Total Achievement can not be 0",
-          icon: "error",
-        });
-        return false;
-      }
-      if (!item.status || item.status === "--Select Status--") {
-        SweetAlert({
-          title: "Error",
-          text: "Status is required",
-          icon: "error",
-        });
-        return false;
-      }
-    }
-    return true;
-  };
+  const validateFields = addManDaysValidation(mandaysData);
   const preventMinus = (e) => {
     if (e.code === "Minus") {
       e.preventDefault();

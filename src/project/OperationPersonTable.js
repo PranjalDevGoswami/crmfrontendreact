@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import { TableColumn } from "../../utils/dataTableColumns";
@@ -15,6 +15,15 @@ import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual";
 import UpdateStatus from "./projectCRUDOperations/UpdateStatus";
 import View from "./projectCRUDOperations/View";
 import Edit from "./projectCRUDOperations/ProjectEditRequest";
+import {
+  allManagerRoles,
+  isDirector,
+  isHod,
+  isSuperUser,
+  isSuperUserDepartment,
+  isTeamLead,
+} from "../config/Role";
+import { isOperationDept } from "../config/Departments";
 
 const OperationPersonTable = ({
   data,
@@ -30,11 +39,12 @@ const OperationPersonTable = ({
   selectedRecord,
   closeView,
 }) => {
-  let department = localStorage.getItem("department");
-  let role = localStorage.getItem("role");
   const { darkMode } = useContext(ThemeContext);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  const department = localStorage.getItem("department");
+  const role = localStorage.getItem("role");
 
   const handleClickOutside = (event) => {
     if (buttonRef.current && !buttonRef.current.contains(event.target)) {
@@ -63,12 +73,8 @@ const OperationPersonTable = ({
 
   return (
     <>
-      {department == 2 &&
-      (role?.includes("Team Lead") ||
-        role?.includes("Manager") ||
-        role?.includes("Sr.Manager") ||
-        // role?.includes("HOD") ||
-        role?.includes("Ass.Manager")) ? (
+      {department == isOperationDept &&
+      (role?.includes(isTeamLead) || allManagerRoles.includes(role)) ? (
         <DataTable
           columns={data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns}
           data={data?.length > 0 ? desabledRowData : DummyData}
@@ -89,7 +95,7 @@ const OperationPersonTable = ({
             />
           }
         />
-      ) : department == 2 && role?.includes("HOD") ? (
+      ) : department == isOperationDept && role?.includes(isHod) ? (
         <DataTable
           columns={data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns}
           data={data?.length > 0 ? desabledRowData : DummyData}
@@ -106,12 +112,9 @@ const OperationPersonTable = ({
             />
           }
         />
-      ) : ((department == 1 ||
-          department == 2 ||
-          department == 3 ||
-          department == 4) &&
-          role?.includes("superuser")) ||
-        role?.includes("Director") ? (
+      ) : (isSuperUserDepartment.includes(department) &&
+          role?.includes(isSuperUser)) ||
+        role?.includes(isDirector) ? (
         <div className="">
           <Link to={"/entry-page"}>
             <Button
@@ -148,7 +151,7 @@ const OperationPersonTable = ({
         </div>
       ) : (
         <div className="w-full no-scrollbar">
-          {role?.includes("Director") ? (
+          {role?.includes(isDirector) ? (
             <DataTable
               columns={
                 data?.length > 0 ? TableColumn({ buttonRef }) : Dummycolumns

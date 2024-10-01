@@ -3,6 +3,7 @@ import Label from "../Label";
 import Dropdown from "../DropDown";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import { GetProjectManager } from "../../fetchApis/projectManager/projectManager";
+import { isOperationDept } from "../../config/Departments";
 
 const ProjectManager = () => {
   const {
@@ -19,7 +20,7 @@ const ProjectManager = () => {
       try {
         const ProjectManager = await GetProjectManager();
         const Opern_Manager = ProjectManager?.data?.filter((item) => {
-          return item?.department?.id == 2;
+          return item?.department?.id == isOperationDept;
         });
         const ProjectManagerObject = Opern_Manager?.map((val) => {
           return val?.user?.name;

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Input from "../components/InputField";
 import Button from "../components/Button";
 import { postWithAuth } from "../provider/helper/axios";
-import { CHANGE_PASSWORD } from "../../utils/urls";
 import { useNavigate } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
 
 import SweetAlert from "../components/SweetAlert";
+import { CHANGE_PASSWORD } from "../../utils/constants/urls";
 
 const ChangePassword = () => {
   const [changePasswordData, setChangePasswordData] = useState({

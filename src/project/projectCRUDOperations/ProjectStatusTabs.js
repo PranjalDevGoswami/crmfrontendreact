@@ -18,24 +18,24 @@ const ProjectStatusTabs = ({ className }) => {
   const buttonName = [
     "All",
     "Project Initiated",
-    "To be Started",
+    "To Be Started",
     "In Progress",
-    "Completed",
     "On Hold",
+    "Completed",
     "CBR Raised",
   ];
   const buttonValue = [
     "all",
     "Project Initiated",
-    "To be started",
+    "To Be Started",
     "In Progress",
-    "Completed",
     "On Hold",
+    "Completed",
     "cbr_raised",
   ];
 
   useEffect(() => {
-    setActiveTabIndex(buttonValue.indexOf(activeTabValue));
+    setActiveTabIndex(buttonValue?.indexOf(activeTabValue));
   }, [activeTabValue]);
 
   return (
@@ -52,7 +52,7 @@ const ProjectStatusTabs = ({ className }) => {
               name={item}
               value={buttonValue[index]}
               className={`${
-                activeTabValue === buttonValue[index]
+                activeTabValue == buttonValue[index]
                   ? "text-white bg-green-400"
                   : darkMode
                   ? "text-gray-400 hover:text-blue-600"

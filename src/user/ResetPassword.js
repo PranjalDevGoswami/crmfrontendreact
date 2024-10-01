@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Input from "../components/InputField";
 import Button from "../components/Button";
-import { CONFIRM_PASSWORD } from "../../utils/urls";
 import { useNavigate, useLocation } from "react-router-dom";
 import SweetAlert from "../components/SweetAlert";
+import { CONFIRM_PASSWORD } from "../../utils/constants/urls";
 
 const ResetPassword = () => {
   const location = useLocation();

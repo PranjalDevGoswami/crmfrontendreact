@@ -9,6 +9,9 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
   const CapiProject = projectData.filter(
     (item) => item?.project_type?.name === "CAPI"
   );
+  const OnlineProject = projectData.filter(
+    (item) => item?.project_type?.name === "Online"
+  );
 
   const clickHandler = (event, d) => {
     const points = data[d.dataIndex];
@@ -30,6 +33,11 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
       label: "CAPI",
       value: CapiProject.length,
       color: "#FFBB28",
+    },
+    {
+      label: "ONLINE",
+      value: OnlineProject.length,
+      color: "#b72e11",
     },
   ];
   const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
@@ -72,6 +80,12 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
                 <td className="px-4 py-2 border border-gray-300">CAPI </td>
                 <td className="px-4 py-2 border border-gray-300">
                   {CapiProject.length}
+                </td>
+              </tr>
+              <tr>
+                <td className="px-4 py-2 border border-gray-300">ONLINE </td>
+                <td className="px-4 py-2 border border-gray-300">
+                  {OnlineProject.length}
                 </td>
               </tr>
             </tbody>

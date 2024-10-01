@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { BASEURL, REFRESH_TOKEN } from "../../utils/urls";
 import SweetAlert from "../components/SweetAlert";
+import { BASEURL, REFRESH_TOKEN } from "../../utils/constants/urls";
 
 const AuthContext = createContext();
 
@@ -23,8 +23,6 @@ const AuthProvider = ({ children }) => {
 
   const refreshAccessToken = async () => {
     try {
-      console.log("ye chla..........");
-
       const response = await axios.post(REFRESH_TOKEN, { refreshToken });
       const { accessToken } = response.data;
       setToken(accessToken);

@@ -10,11 +10,14 @@ import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectD
 import ProjectTypeChart from "../Report/ProjectTypeChart";
 import AMWiseReport from "../Report/AMWiseReport";
 import { getWithAuth } from "../provider/helper/axios";
-import { USERROLE } from "../../utils/urls";
 import ClientWiseRPE from "../Report/ClientWiseRPE";
 import TLWiseReport from "../Report/TLWiseReport";
 import SalesReport from "../Report/SalesReport";
 import PerdayReport from "../Report/PerdayReport";
+import { allManagerRoles, isDirector, isHod } from "../config/Role";
+import { isSalesDept } from "../config/Departments";
+import ClientInduvisualReport from "../Report/ClientInduvisualReport";
+import { USERROLE } from "../../utils/constants/urls";
 
 const ReportDashboard = () => {
   const [projectData, setProjectData] = useState([]);
@@ -23,8 +26,19 @@ const ReportDashboard = () => {
   const [filteredData, setFilteredData] = useState([projectData]);
   const [projectStatus, setProjectStatus] = useState([]);
   const [userList, setUserList] = useState([]);
-  const role = localStorage.getItem("role");
+  const [clientInduvisualShow, setClientInduvisualShow] = useState(false);
+  const [clientName, setClientName] = useState();
+
+  const department = localStorage.getItem("department");
   const userRole = localStorage.getItem("userrole");
+  const role = localStorage.getItem("role");
+
+  const showReports =
+    role === isDirector || (role === isHod && department == isSalesDept); // Sales department ID = 1
+
+  if (!userList || !filteredData) {
+    return <div>Loading data...</div>;
+  }
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -43,11 +57,11 @@ const ReportDashboard = () => {
       try {
         const fetchDataFromApi2 = await GetProjectData();
         const projectDataObject = fetchDataFromApi2?.data;
-        if (role === "Director") {
+        if (role === isDirector) {
           setProjectData(projectDataObject);
           setActulaProjectData(projectDataObject);
           return;
-        } else if (role === "HOD" && userList.length > 0) {
+        } else if (role === isHod && userList.length > 0) {
           const HodUsers = userList.filter(
             (user) => user?.reports_to?.id == userRole
           );
@@ -55,12 +69,26 @@ const ReportDashboard = () => {
           const ProjectUnderHod = projectDataObject.filter((project) =>
             HodUsers.some(
               (user) =>
-                project.project_assigned_by_manager === user.user_role.id ||
-                project.created_by == user.user_role.id
+                project.project_assigned_by_manager?.id == user.user_role.id ||
+                project.assigned_to?.id == user.user_role.id ||
+                project.created_by?.id == user.user_role.id
             )
           );
           setProjectData(ProjectUnderHod);
           setActulaProjectData(ProjectUnderHod);
+        } else if (allManagerRoles.includes(role)) {
+          const ManagerUsers = userList.filter(
+            (user) => user?.reports_to?.id == userRole
+          );
+
+          const ProjectUnderManager = projectDataObject.filter(
+            (project) =>
+              project.project_assigned_to_teamlead?.id == userRole ||
+              project?.assigned_to?.id == userRole ||
+              project.project_assigned_by_manager?.id == userRole
+          );
+          setProjectData(ProjectUnderManager);
+          setActulaProjectData(ProjectUnderManager);
         }
       } catch (error) {
         console.error("Error fetching project data:", error);
@@ -81,7 +109,7 @@ const ReportDashboard = () => {
   }, [projectStatus]);
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 relative">
       <div className="flex justify-between">
         <ProjectCount projectData={projectData} />
         <NewProject projectData={projectData} />
@@ -174,6 +202,8 @@ const ReportDashboard = () => {
             filteredData={filteredData}
             setFilteredData={setFilteredData}
             setProjectStatus={setProjectStatus}
+            setClientInduvisualShow={setClientInduvisualShow}
+            setClientName={setClientName}
           />
         </div>
         {userList.length > 0 && (
@@ -203,30 +233,40 @@ const ReportDashboard = () => {
           </div>
         )}
       </div>
-      <div className="flex items-stretch">
-        <div className="p-4 bg-white rounded-md mt-4 ml-2 w-1/3 flex-grow pb-4 mb-4 shadow-lg overflow-y-scroll no-scrollbar">
-          <SalesReport
+      {showReports && (
+        <div className="flex items-stretch">
+          <div className="p-4 bg-white rounded-md mt-4 ml-2 w-1/3 flex-grow pb-4 mb-4 shadow-lg overflow-y-scroll no-scrollbar">
+            <SalesReport
+              projectData={projectData}
+              userList={userList}
+              projectType={projectType}
+              setProjectType={setProjectType}
+              filteredData={filteredData}
+              setFilteredData={setFilteredData}
+              setProjectStatus={setProjectStatus}
+            />
+          </div>
+          <div className="p-4 bg-white rounded-md mt-4 ml-2 w-2/3 flex-grow pb-4 mb-4 shadow-lg overflow-y-scroll no-scrollbar">
+            <PerdayReport
+              projectData={projectData}
+              userList={userList}
+              projectType={projectType}
+              setProjectType={setProjectType}
+              filteredData={filteredData}
+              setFilteredData={setFilteredData}
+              setProjectStatus={setProjectStatus}
+            />
+          </div>
+        </div>
+      )}
+      {clientInduvisualShow && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2">
+          <ClientInduvisualReport
             projectData={projectData}
-            userList={userList}
-            projectType={projectType}
-            setProjectType={setProjectType}
-            filteredData={filteredData}
-            setFilteredData={setFilteredData}
-            setProjectStatus={setProjectStatus}
+            clientName={clientName}
           />
         </div>
-        <div className="p-4 bg-white rounded-md mt-4 ml-2 w-2/3 flex-grow pb-4 mb-4 shadow-lg overflow-y-scroll no-scrollbar">
-          <PerdayReport
-            projectData={projectData}
-            userList={userList}
-            projectType={projectType}
-            setProjectType={setProjectType}
-            filteredData={filteredData}
-            setFilteredData={setFilteredData}
-            setProjectStatus={setProjectStatus}
-          />
-        </div>
-      </div>
+      )}
 
       <div className="">
         {/* Render SampleInPipeLineReport only if userList has data */}

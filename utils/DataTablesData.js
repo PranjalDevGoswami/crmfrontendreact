@@ -68,7 +68,7 @@ export const Data = [
   },
   {
     name: "status",
-    selector: (row) => row.status,
+    selector: (row) => row?.status,
     sortable: true,
     right: true,
   },
@@ -466,20 +466,32 @@ export const AssignColumns = [
     name: "Client Name",
     selector: (row) => row.clients,
     sortable: true,
-    width: "200px",
+    width: "170px",
   },
   {
     name: "Project Name",
     selector: (row) => row.name,
     sortable: true,
-    width: "460px",
+    width: "280px",
+  },
+  {
+    name: "Purchase Order No.",
+    selector: (row) => row.purchase_order_no,
+    sortable: true,
+    width: "160px",
+  },
+  {
+    name: "Client PM",
+    selector: (row) => row.project_client_pm,
+    sortable: true,
+    width: "140px",
   },
 
   {
     name: "Assign To",
     selector: (row) => row.assigned,
     sortable: true,
-    width: "260px",
+    width: "240px",
   },
 ];
 const currentDate = new Date().toISOString().split("T")[0];

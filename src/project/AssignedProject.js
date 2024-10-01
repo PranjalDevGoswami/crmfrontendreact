@@ -9,13 +9,16 @@ import {
 import { UpdateTeamLead } from "../fetchApis/projects/updateTeamLead/updateLeamTead.js";
 import SweetAlert from "../components/SweetAlert.js";
 import { DataTableContext } from "../ContextApi/DataTableContext.js";
-import { PROJECT_MANAGER, UPDATETLASSIGNMENT } from "../../utils/urls.js";
+import {
+  PROJECT_MANAGER,
+  UPDATETLASSIGNMENT,
+} from "../../utils/constants/urls.js";
 import { getWithAuth } from "../provider/helper/axios.js";
 import { FilterContext } from "../ContextApi/FilterContext.js";
 import Select from "react-select";
+import InputField from "../components/InputField.js";
 
 const AssignedProject = ({ setMultiEditFieldOpen }) => {
-  const userrole = localStorage.getItem("userrole");
   const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit } =
     useContext(DataTableContext);
   const { teamLeadAssiged, setTeamLeadAssiged } = useContext(FilterContext);
@@ -24,12 +27,14 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const [selectTL, setSelectTL] = useState([]);
   const [isSelectTLLoaded, setIsSelectTLLoaded] = useState(false);
   const [assignedDataList, setAssignedDataList] = useState([]);
+  const [existingAssignedData, setExistingAssignedData] = useState([]);
+  const userRole = localStorage.getItem("userrole");
 
   useEffect(() => {
     const getTeamLead = async () => {
       try {
         const ProjectManager = await getWithAuth(
-          `${PROJECT_MANAGER}${userrole}/teamleads/`
+          `${PROJECT_MANAGER}${userRole}/teamleads/`
         );
         const TeamLeadList = ProjectManager?.data?.subordinates?.map(
           (item) => ({
@@ -44,13 +49,14 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       }
     };
     getTeamLead();
-  }, [userrole]);
+  }, [userRole]);
 
   useEffect(() => {
     const CheckTLAssigned = async () => {
       try {
         const response = await getWithAuth(UPDATETLASSIGNMENT);
-        const data = response?.data;
+        const data = response?.data || [];
+        setExistingAssignedData(data);
         const ProjectAlreadyAssigned = data.filter(
           (item) => item?.project_assigned_to
         );
@@ -77,25 +83,49 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
 
   const PostProjectData = async (data) => {
     try {
-      const response = await UpdateTeamLead(data);
+      const postResponse = await UpdateTeamLead(data);
       SweetAlert({
         title: "Success",
-        text: response.data.message,
+        text: postResponse.data.message,
         icon: "success",
       });
     } catch (error) {
       SweetAlert({
         title: "Error",
-        text: "Error fetching project data:",
-        error,
+        text: "Error updating project data:",
         icon: "error",
       });
     }
   };
 
   const handleAssignedProject = () => {
-    if (assignedDataList.length > 0) {
-      PostProjectData(assignedDataList);
+    const updatedDataList = assignedDataList.map((assignedData) => {
+      const existingAssignedDataItem = existingAssignedData.find(
+        (item) => item.project_id === assignedData.project_id
+      );
+
+      // Merge existing assigned data with the new data if it exists
+      return {
+        ...assignedData,
+        assigned_to: existingAssignedDataItem
+          ? existingAssignedDataItem.assigned_to?.id ||
+            assignedData.assigned_to?.id
+          : assignedData.assigned_to?.id,
+        project_client_pm:
+          assignedData.project_client_pm ||
+          existingAssignedDataItem?.project_client_pm,
+        purchase_order_no:
+          assignedData.purchase_order_no ||
+          existingAssignedDataItem?.purchase_order_no,
+      };
+    });
+
+    // Check if there are any assigned_to values present
+    const hasAssignedTo = updatedDataList.some((data) => data.assigned_to?.id);
+
+    // Only show alert if there's no assigned_to after merging
+    if (hasAssignedTo) {
+      PostProjectData(updatedDataList);
       setOpenRight(false);
       setIsDrawerOpen(false);
       setMultiEditFieldOpen(false);
@@ -104,7 +134,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
     } else {
       SweetAlert({
         title: "Info",
-        text: "Please Select a Project TL for Update",
+        text: "Please ensure you have selected all required fields.",
         icon: "info",
       });
     }
@@ -122,7 +152,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
 
     const newAssignedDataList = selectedOption.map((option) => ({
       project_id: selectedRow[index].id,
-      assigned_by: parseInt(userrole),
+      assigned_by: parseInt(userRole),
       assigned_to: option.value,
     }));
 
@@ -134,7 +164,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         const exists = updatedData.some(
           (data) =>
             data.project_id === newData.project_id &&
-            data.assigned_to === newData.assigned_to
+            data.assigned_to === newData.assigned_to?.id
         );
         if (!exists) {
           updatedData.push(newData);
@@ -143,39 +173,87 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       return updatedData;
     });
   };
+  const handleInputChange = (event, index) => {
+    const { name, value } = event.target;
+
+    // Create a copy of the current assignedDataList
+    const newAssignedDataList = [...assignedDataList];
+
+    // Find the item at the current index
+    const currentData = newAssignedDataList[index];
+
+    // If the current data doesn't exist, create a new object for it
+    if (!currentData) {
+      newAssignedDataList[index] = { project_id: selectedRow[index]?.id };
+    }
+
+    // Update the appropriate field with the new value
+    newAssignedDataList[index] = {
+      ...newAssignedDataList[index],
+      [name]: value || "", // Ensure a default value if the input is empty
+    };
+
+    // Log the updated assigned data list for debugging
+    console.log("Updated Assigned Data List:", newAssignedDataList);
+
+    // Update the state with the new list
+    setAssignedDataList(newAssignedDataList);
+  };
 
   const addField = selectedEditData?.map((item, index) => {
     const projectID = item?.id;
     const projectWithTL = teamLeadAssiged?.find(
       (item) => item?.project_id === projectID
     );
-    if (projectWithTL && projectWithTL?.project_assigned_to) {
-      return {
-        ...item,
-        assigned: (
-          <p key={index}>
-            {projectWithTL?.project_assigned_to
-              ?.map((item) => item.name)
-              .join(" , ")}
-          </p>
-        ),
-      };
-    } else {
-      return {
-        ...item,
-        assigned: (
-          <Select
-            isMulti
-            key={`select-${index}`}
-            options={selectTL}
-            onChange={(selectedOption) => handleSelectTL(index, selectedOption)}
-            className={"relative overflow-y-scroll w-56 z-50"}
-            name={"project_teamlead"}
-            value={assignedDataList[index]?.user_role?.name}
-          />
-        ),
-      };
-    }
+
+    const isTLMandatory = !projectWithTL?.project_assigned_to?.id;
+
+    return {
+      ...item,
+      assigned: projectWithTL?.project_assigned_to?.id ? (
+        <p key={index}>
+          {projectWithTL?.project_assigned_to?.id
+            ?.map((assignedItem) => assignedItem.name)
+            .join(" , ")}
+        </p>
+      ) : (
+        <Select
+          isMulti
+          key={`select-${index}`}
+          options={selectTL}
+          onChange={(selectedOption) => handleSelectTL(index, selectedOption)}
+          className={`relative overflow-y-scroll w-56 z-50 ${
+            isTLMandatory ? "border-red-500" : ""
+          }`}
+          name={"project_teamlead"}
+          placeholder={isTLMandatory ? "Required" : "Optional"}
+        />
+      ),
+      project_client_pm: projectWithTL?.project_client_pm ? (
+        <p>{projectWithTL?.project_client_pm}</p>
+      ) : (
+        <InputField
+          id={`client-pm-${index}`}
+          type={"text"}
+          className={"p-2 border border-black rounded-md w-20"}
+          placeholder="Optional"
+          onchange={handleInputChange}
+          name={"project_client_pm"}
+        />
+      ),
+      purchase_order_no: projectWithTL?.purchase_order_no ? (
+        <p>{projectWithTL?.purchase_order_no}</p>
+      ) : (
+        <InputField
+          id={`purchase-order-${index}`}
+          type={"text"}
+          className={"p-2 border border-black rounded-md w-20"}
+          placeholder="Optional"
+          onchange={handleInputChange}
+          name={"purchase_order_no"}
+        />
+      ),
+    };
   });
 
   const updatedDataWithButton = isSelectTLLoaded
@@ -207,20 +285,16 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
           },
         }}
       >
-        <div className="mb-6 w-1/3">
-          <h3 className="text-xl underline pb-4">
-            Assigned Project to TeamLead
-          </h3>
+        <div className="flex justify-between">
+          <h1 className="text-lg font-semibold">Assign Team Leads</h1>
         </div>
-        <div className="overflow-scroll">
-          <DataTable
-            columns={AssignColumns}
-            data={updatedDataWithButton}
-            customStyles={customStyles}
-            conditionalRowStyles={conditionalRowStylesForTL}
-            pagination
-          />
-        </div>
+        <DataTable
+          columns={AssignColumns}
+          data={updatedDataWithButton}
+          customStyles={customStyles}
+          conditionalRowStyles={conditionalRowStylesForTL}
+          pagination
+        />
       </Drawer>
     </React.Fragment>
   );

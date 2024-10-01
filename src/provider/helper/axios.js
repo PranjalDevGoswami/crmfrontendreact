@@ -1,5 +1,5 @@
 import axios from "axios";
-import { REFRESH_TOKEN } from "../../../utils/urls.js";
+import { REFRESH_TOKEN } from "../../../utils/constants/urls.js";
 import { Route } from "react-router-dom";
 
 export const checkForTokenExpiredError = (error) => {

@@ -8,21 +8,34 @@ import { GrUserManager } from "react-icons/gr";
 import { MdManageAccounts, MdDashboard } from "react-icons/md";
 import SidebarItem from "./SideBarItems";
 import { ThemeContext } from "../../ContextApi/ThemeContext";
+import {
+  isAssManager,
+  isDirector,
+  isHod,
+  isManager,
+  isSrManager,
+  isSuperUser,
+} from "../../config/Role";
+import {
+  isFinanceDept,
+  isOperationDept,
+  isSalesDept,
+} from "../../config/Departments";
 
 const SideBar = () => {
   const userEmail = localStorage.getItem("user");
+  const { darkMode, sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
   const department = localStorage.getItem("department");
   const role = localStorage.getItem("role");
-  const { darkMode, sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
 
   const getDashboardLink = () => {
     if (
-      role === "Director" ||
-      role === "superuser" ||
-      role === "HOD" ||
-      role === "Ass.Manager" ||
-      role === "Manager" ||
-      role === "Sr.Manager"
+      role === isDirector ||
+      role === isSuperUser ||
+      role === isHod ||
+      role === isSrManager ||
+      role === isManager ||
+      role === isAssManager
     ) {
       return "/report";
     }
@@ -30,11 +43,11 @@ const SideBar = () => {
     if (userEmail === "admin@unimrkt.com") return "/Admin-dashboard";
 
     switch (department) {
-      case "1":
+      case isSalesDept:
         return "/sales-dashboard";
-      case "2":
+      case isOperationDept:
         return "/operation-dashboard";
-      case "3":
+      case isFinanceDept:
         return "/finance-dashboard";
       default:
         return "/default-dashboard";
@@ -47,13 +60,13 @@ const SideBar = () => {
     if (userEmail === "admin@unimrkt.com") return "/Admin-dashboard";
 
     switch (department) {
-      case "1":
+      case isSalesDept:
         return label === "Project" ? "/sales-dashboard" : "/sales-dashboard";
-      case "2":
+      case isOperationDept:
         return label === "Project"
           ? "/operation-dashboard"
           : "/operation-dashboard";
-      case "3":
+      case isFinanceDept:
         return label === "Project"
           ? "/finance-dashboard"
           : "/finance-dashboard";
@@ -86,12 +99,12 @@ const SideBar = () => {
           "bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex items-start pl-2 pr-2 flex-col gap-2 w-10/12"
         }
       >
-        {(role === "Director" ||
-          role === "superuser" ||
-          role === "HOD" ||
-          role === "Ass.Manager" ||
-          role === "Manager" ||
-          role === "Sr.Manager") && (
+        {(role === isDirector ||
+          role === isSuperUser ||
+          role === isHod ||
+          role === isSrManager ||
+          role === isManager ||
+          role === isAssManager) && (
           <SidebarItem
             icon={MdDashboard}
             label="Dashboard"

@@ -116,7 +116,7 @@ export default function PiReportChart({
               </tr>
               <tr>
                 <td className="px-4 py-1 border border-gray-300">
-                  To be Started
+                  To Be Started
                 </td>
                 <td className="px-4 py-1 border border-gray-300">
                   {ToBeStartedProject.length}

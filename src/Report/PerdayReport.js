@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CanvasJSReact from "@canvasjs/react-charts";
-import { ALLWORKANDMENDAYS } from "../../utils/urls";
 import { getWithAuth } from "../provider/helper/axios";
+import { ALLWORKANDMENDAYS } from "../../utils/constants/urls";
 
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;

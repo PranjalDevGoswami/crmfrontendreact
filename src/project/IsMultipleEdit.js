@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../components/Button";
+import { isDirector, isManager, isSuperUser, isTeamLead } from "../config/Role";
 
 const IsMultipleEdit = ({
   isMultiEdit,
@@ -7,8 +8,7 @@ const IsMultipleEdit = ({
   handleAssignProject,
   selectedRow,
 }) => {
-  let role = localStorage.getItem("role");
-
+  const role = localStorage.getItem("role");
   return (
     <>
       {isMultiEdit && (
@@ -22,7 +22,7 @@ const IsMultipleEdit = ({
           <span className="text-white text-xl">
             row selected ({selectedRow.length})
           </span>
-          {role?.includes("Team Lead") ? (
+          {role?.includes(isTeamLead) ? (
             <Button
               name={"Add Man Days"}
               className={
@@ -30,7 +30,7 @@ const IsMultipleEdit = ({
               }
               onClick={handleAddManDays}
             />
-          ) : role?.includes("Manager") ? (
+          ) : role?.includes(isManager) ? (
             <Button
               name={"Assign Project"}
               className={
@@ -38,7 +38,7 @@ const IsMultipleEdit = ({
               }
               onClick={handleAssignProject}
             />
-          ) : role?.includes("superuser") || role?.includes("Director") ? (
+          ) : role?.includes(isSuperUser) || role?.includes(isDirector) ? (
             <div>
               <Button
                 name={"Add Man Days"}

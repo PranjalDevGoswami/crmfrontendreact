@@ -6,6 +6,7 @@ import CanvasJSReact from "@canvasjs/react-charts";
 import { LuDownload } from "react-icons/lu";
 import ExportCSV from "../project/ExportExcel";
 import { TiFilter } from "react-icons/ti";
+import ClientInduvisualReport from "./ClientInduvisualReport";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -15,6 +16,8 @@ const ClientWiseRPE = ({
   projectType,
   filteredData,
   setFilteredData,
+  setClientInduvisualShow,
+  setClientName,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showChart, setShowChart] = useState(false);
@@ -154,6 +157,11 @@ const ClientWiseRPE = ({
     setSelectedItem(selectedOption);
   };
 
+  const handleClientInduvisualReport = (client) => {
+    setClientInduvisualShow(true);
+    setClientName(client?.clientName);
+  };
+
   return (
     <div className="relative w-full">
       <div className="relative w-full">
@@ -231,7 +239,11 @@ const ClientWiseRPE = ({
           </thead>
           <tbody className="divide-y divide-gray-200 text-center">
             {filteredClients.map((client, ind) => (
-              <tr className="bg-white text-sm" key={ind}>
+              <tr
+                className="bg-white text-sm cursor-pointer"
+                key={ind}
+                onClick={() => handleClientInduvisualReport(client)}
+              >
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-black text-left">
                   {client.clientName}
                 </td>

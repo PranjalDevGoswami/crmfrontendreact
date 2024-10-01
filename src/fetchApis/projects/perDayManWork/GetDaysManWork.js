@@ -1,4 +1,4 @@
-import { MANDAYSPERDAY } from "../../../../utils/urls.js";
+import { MANDAYSPERDAY } from "../../../../utils/constants/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuth } from "../../../provider/helper/axios.js";
 

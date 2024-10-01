@@ -13,11 +13,14 @@ import { FormDataContext } from "../ContextApi/FormDataContext.js";
 import ProjectNameAndFilter from "./ProjectNameAndFilter";
 import IsMultipleEdit from "./IsMultipleEdit";
 import OperationPersonTable from "./OperationPersonTable";
+import { isDirector, Token } from "../config/Role.js";
+import useProjectData from "../../utils/hooks/useProjectData.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
+  const role = localStorage.getItem("role");
 
   const {
     isEdit,
@@ -47,10 +50,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setProjectData,
     teamLeadAssiged,
   } = useContext(FilterContext);
+
   const { isViewNotification, notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
 
-  let token = localStorage.getItem("token");
+  const department = localStorage.getItem("department");
 
   useEffect(() => {
     if (!isDrawerOpen && !isAddManDays && !changeProjectStatus) {
@@ -69,7 +73,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       fetchProjectData();
     }
   }, [
-    token,
+    Token,
     isAddManDays,
     changeProjectStatus,
     notificationProjectList,
@@ -77,6 +81,8 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     setIsViewNotification,
     isViewNotification,
     projectAdded,
+    department,
+    role,
   ]);
 
   const handleSelectedRowsChange = (row) => {
@@ -129,11 +135,13 @@ const ProjectDataTable = ({ PersonDepartment }) => {
       return false;
     })
   );
+
+  // const TLName =
   const data = filteredData?.map((item, index) => ({
     id: item?.id,
     project_code: item?.project_code,
     name: item?.name,
-    cpi: item?.cpi,
+    cpi: item?.cpi ? Number(item?.cpi).toFixed(2) : "0.00",
     clients: item?.clients?.name,
     operation_select: item?.operation_select,
     project_type: item?.project_type?.name,
@@ -141,14 +149,20 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     project_code: item?.project_code,
     set_up_fee: item?.set_up_fee,
     tentative_end_date: item?.tentative_end_date,
-    tentative_start_date: item?.tentative_start_date?.split("T")[0],
-    tentative_end_date: item?.tentative_end_date?.split("T")[0],
+    tentative_start_date:
+      role !== isDirector && item?.tentative_start_date?.split("T")[0],
+    tentative_end_date:
+      role !== isDirector && item?.tentative_end_date?.split("T")[0],
+    project_assigned_to_teamlead: item?.project_assigned_to_teamlead,
+    assigned_to: item?.assigned_to,
     sample: item?.sample,
     total_achievement: item?.total_achievement,
-    remaining_interview: item.remaining_interview,
+    remaining_interview: item?.remaining_interview,
     man_days: item.man_days,
-    status: item.status,
+    status: item?.status,
+    project_client_pm: item?.project_client_pm,
   }));
+
   const currentDate = new Date().toISOString().split("T")[0];
 
   const desabledRowData = data?.map((item) => {

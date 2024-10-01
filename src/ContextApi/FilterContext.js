@@ -13,7 +13,7 @@ export const SearchFilterContext = ({ children }) => {
   const [status, setStatus] = useState([
     activeTabValue,
     "All",
-    "To be Started",
+    "To Be Started",
     "Completed",
     "CBR Raised",
     "On Hold",
