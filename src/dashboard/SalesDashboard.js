@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
-import Button from "../components/Button.js";
-import { Link } from "react-router-dom";
 import ProjectDataTable from "../project/ProjectDataTable.js";
-import { ThemeContext } from "../ContextApi/ThemeContext.js";
+import { useSelector } from "react-redux";
 
 const SalesDashboard = () => {
   const [isAddProjectOpen, setIsAddProjectOpen] = useState(false);
@@ -10,7 +8,7 @@ const SalesDashboard = () => {
   const AddProjectHandler = () => {
     setIsAddProjectOpen(true);
   };
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   return (
     <div>

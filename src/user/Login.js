@@ -1,38 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from "../components/Button.js";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiShow } from "react-icons/bi";
 import object7 from "../assets/object7.png";
-import { PostLoginData } from "../fetchApis/login/PostLoginData";
 import Input from "../components/InputField.js";
 import Label from "../components/Label.js";
 import { useAuth } from "../provider/authProvider.js";
-import { ThemeContext } from "../ContextApi/ThemeContext.js";
-import SweetAlert from "../components/SweetAlert.js";
-import { isDirector, isSuperUser } from "../config/Role.js";
-import {
-  isFinanceDept,
-  isOperationDept,
-  isSalesDept,
-} from "../config/Departments.js";
-import { USERLIST } from "../../utils/constants/urls.js";
+import { useRedirectUser } from "../../utils/hooks/useRedirectUser.js";
+import { useHandleLogin } from "../../utils/hooks/useHAndleLogin.js";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   const { token, setToken } = useAuth();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, setShowPasswordIcon] = useState(false);
-  // const [userRole, setUserRole] = useState("");
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
-  const { darkMode } = useContext(ThemeContext);
-
-  // const token = localStorage.getItem("token");
-  // const auth = token ? useAuth() : {};
-  // const { setToken } = auth || {};
+  const navigate = useNavigate();
+  const darkMode = useSelector((store) => store?.darkMode?.isDarkMode);
 
   const handleOnchange = (e) => {
     const { name, value } = e.target;
@@ -46,90 +33,14 @@ const Login = () => {
     setLoginData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const RedirectUser = async () => {
-    try {
-      const userList = await fetch(USERLIST);
-      const userListJson = await userList.json();
-      const role = localStorage.getItem("role");
-      let email = localStorage.getItem("user");
-      const userData = userListJson.users;
-      function getUserByEmail(email) {
-        return userData.filter((user) => user.email === email);
-      }
-
-      const userDetails = getUserByEmail(email);
-
-      if (userDetails.length > 0) {
-        const department = userDetails[0].user_department?.id;
-        localStorage.setItem("department", department);
-        if (role === isDirector || role === isSuperUser) {
-          navigate("/report");
-        } else if (department == isSalesDept) {
-          navigate("/sales-dashboard");
-        } else if (department == isOperationDept) {
-          navigate("/operation-dashboard");
-        } else if (department == isFinanceDept) {
-          navigate("/finance-dashboard");
-        } else if (userDetails[0]?.email === "admin@unimrkt.com") {
-          navigate("/Admin-dashboard");
-        } else {
-          navigate("/default-dashboard");
-        }
-      }
-    } catch (error) {
-      console.error("Error redirecting user:", error);
-    }
-  };
-
   useEffect(() => {
-    RedirectUser();
+    useRedirectUser(navigate);
   }, [token]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    try {
-      const response = await PostLoginData(loginData);
-      if (response && response.success) {
-        setToken(response.access);
-        localStorage.setItem("refreshToken", response.refresh);
-        localStorage.setItem("user", loginData.email);
-      }
-      const showAlert = (title, text) => {
-        SweetAlert({
-          title: title,
-          text: text,
-          icon: "error",
-        });
-      };
-
-      if (!response.ok) {
-        if (loginData.password.length < 8) {
-          showAlert(
-            "Error",
-            "Password must be greater than or equal to 8 characters"
-          );
-        } else if (!loginData.email) {
-          showAlert("Error", "UserId/email cannot be blank!!");
-        } else if (!loginData.password) {
-          showAlert("Error", "Password cannot be blank!!");
-        } else if (response.non_field_errors) {
-          showAlert("Error", response.non_field_errors);
-        } else if (response.status === 400) {
-          showAlert("Error", response.message);
-        }
-      }
-    } catch (error) {
-      SweetAlert({
-        title: "Error",
-        text: "Error logging in:",
-        error,
-        icon: "error",
-      });
-    }
+    localStorage.setItem("darkmode", true);
+    useHandleLogin(loginData, setToken);
   };
 
   return (
@@ -169,7 +80,9 @@ const Login = () => {
                       className={` ${
                         darkMode ? "text-white" : "text-black"
                       } absolute top-1/2 right-4 translate-y-[-50%] cursor-pointer`}
-                      onClick={handleShowPassword}
+                      onClick={() => {
+                        setShowPassword(!showPassword);
+                      }}
                     />
                   )}
                 </div>

@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import Input from "../InputField";
 import Button from "../Button";
 import { PostClientList } from "../../fetchApis/clientList/ClientList";
-import { ThemeContext } from "../../ContextApi/ThemeContext";
 import SweetAlert from "../SweetAlert";
 import { CloseAddClient } from "../../ContextApi/CloseAddClientContext";
+import { useSelector } from "react-redux";
 
 const AddClient = () => {
   const [clientData, setClientData] = useState({
@@ -18,7 +18,7 @@ const AddClient = () => {
     email_id_for_cc: "",
   });
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -1,21 +1,17 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
-import { ThemeContext } from "../ContextApi/ThemeContext";
-import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import { getWithAuth } from "../provider/helper/axios";
-import { FilterContext } from "../ContextApi/FilterContext";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
 import { allManagerRoles } from "../config/Role";
 import { UPDATEDPROJECTLIST } from "../../utils/constants/urls";
+import { useSelector } from "react-redux";
+import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
 
 const Notification = () => {
   const [isNotificationActive, setIsNotificationActive] = useState(false);
-  const { darkMode, setDarkMode } = useContext(ThemeContext);
-  const { projectData } = useContext(FilterContext);
   const role = localStorage.getItem("role");
   const userRole = localStorage.getItem("userrole");
-
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const {
     notificationList,
     setNotificationList,
@@ -34,11 +30,13 @@ const Notification = () => {
       document.body.style.color = "black";
     }
   }, [darkMode]);
+  const projectDataResponse = useSelector(
+    (store) => store.projectData.projects
+  );
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const response = await GetProjectData();
-      let activeEditProject = response?.data?.filter((item) => {
+      let activeEditProject = projectDataResponse?.filter((item) => {
         return (
           item?.send_email_manager == true && item?.assigned_to?.id == userRole
         );
@@ -50,20 +48,10 @@ const Notification = () => {
 
   const notification_btn_ref = useRef(null);
 
-  const handleClickOutside = (event) => {
-    if (
-      notification_btn_ref.current &&
-      !notification_btn_ref.current.contains(event.target)
-    ) {
-      setIsNotificationActive(false);
-    }
+  const handleClose = () => {
+    setIsNotificationActive(false);
   };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useHandleOutsideClick(notification_btn_ref, handleClose);
   const handleViewNotification = async (id) => {
     const response = await getWithAuth(UPDATEDPROJECTLIST + `${id}/`);
     setNotificationProjectList(response?.data);
@@ -72,19 +60,6 @@ const Notification = () => {
 
   return (
     <div className="relative flex items-center">
-      <MdDarkMode
-        className="mr-4 cursor-pointer color-black min-[320px]:text-md sm:text-xl"
-        onClick={() => setDarkMode(true)}
-      />
-      {darkMode ? (
-        <MdOutlineDarkMode
-          className="mr-4 cursor-pointer text-black min-[320px]:text-md sm:text-xl"
-          onClick={() => setDarkMode(false)}
-        />
-      ) : (
-        ""
-      )}
-
       <div
         className="relative"
         onClick={() => {
@@ -118,7 +93,6 @@ const Notification = () => {
                   </li>
                 );
               })}
-              {/* <li>height</li> */}
             </ul>
           ) : (
             <ul>

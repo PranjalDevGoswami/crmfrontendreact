@@ -3,10 +3,8 @@ import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import { GrFormView } from "react-icons/gr";
 import Button from "./Button.js";
 import Label from "./Label";
-import ViewProjectDetails from "./ViewProjectDetails.js";
 import { useDispatch, useSelector } from "react-redux";
 import { addFormData } from "./features/projectData/projectDataSlice.js";
-import { GetProjectData } from "./fetchApis/projects/getProjectData/GetProjectData.js";
 import LableAndInput from "./LableAndInput.js";
 
 const ProjectDetail = ({ data }) => {
@@ -16,28 +14,16 @@ const ProjectDetail = ({ data }) => {
   const [totalMandays, setTotalMandays] = useState(0); // Initialize with 0
   const [mandaysEntry, setMandaysEntry] = useState("");
   const [mandaysEntryDate, setMandaysEntryDate] = useState("");
-  const [CalculateEnrty, setCalculateEnrty] = useState(0);
   const [isOperationPerson, setIsOperationPerson] = useState(true);
   const [viewProjectDetails, setViewProjectDetails] = useState(false);
-  const [editedFieldIndex, setEditedFieldIndex] = useState(null);
   const [achieveTarget, setAchieveTarget] = useState();
 
   const dispatchProjectData = useDispatch();
 
+  const projectData = useSelector((store) => store.projectData.projects);
+
   useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        const fetchDataFromApi2 = await GetProjectData();
-        // console.log("fetchDataFromApi2",fetchDataFromApi2);
-        const projectDataObject = fetchDataFromApi2.map((val) => {
-          return val;
-        });
-        dispatchProjectData(addFormData(projectDataObject));
-      } catch (error) {
-        console.error("Error fetching project data:", error);
-      }
-    };
-    fetchProjectData();
+    dispatchProjectData(addFormData(projectData));
   }, []);
 
   const Formdata1 = useSelector((store) => store.FormData.items);

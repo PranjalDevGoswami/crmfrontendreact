@@ -4,15 +4,13 @@ import Button from "../components/Button";
 import { putWithAuth } from "../provider/helper/axios";
 import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/constants/urls";
 import SweetAlert from "../components/SweetAlert";
-// import { FilterContext } from "../ContextApi/FilterContext";
-import { ThemeContext } from "../ContextApi/ThemeContext";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData";
-// import { ProjectDetails } from "../fetchApis/projects/getProjectData/GetProjectData";
+import { useSelector } from "react-redux";
 
 const OpenNotification = ({ notification_btn_ref }) => {
   const { notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+
   const token = localStorage.getItem("token");
 
   const [dataToUpdate, setDataToUpdate] = useState({
@@ -23,14 +21,11 @@ const OpenNotification = ({ notification_btn_ref }) => {
     send_email_manager: "",
   });
   const [projectData, setProjectData] = useState([]);
-  // const { projectData } = useContext(FilterContext);
-
+  const project = useSelector((store) => store.projectData.projects);
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
-        const fetchDataFromApi2 = await GetProjectData();
-        const projectDataObject = fetchDataFromApi2?.data?.map((val) => val);
-        setProjectData(projectDataObject);
+        setProjectData(project);
       } catch (error) {
         console.error("Error fetching project data:", error);
       }
@@ -55,7 +50,6 @@ const OpenNotification = ({ notification_btn_ref }) => {
       setDataToUpdate(updatedData);
       if (Object.keys(updatedData).length > 0) {
         const response = await putWithAuth(
-          // `${PROJECTUPDATEWITHPROJECTCODE + selectedProject?.project_id}`,
           PROJECTUPDATEWITHPROJECTCODE,
           updatedData
         );
@@ -87,9 +81,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
 
   return (
     <div className="z-40" ref={notification_btn_ref}>
-      {/* {notificationProjectList?.map((item, ind) => ( */}
       <div
-        // key={ind}
         className={`${
           darkMode
             ? "bg-black text-white border-b-white"
@@ -148,7 +140,6 @@ const OpenNotification = ({ notification_btn_ref }) => {
           </div>
         </div>
       </div>
-      {/* ))} */}
     </div>
   );
 };

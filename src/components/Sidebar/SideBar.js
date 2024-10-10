@@ -21,12 +21,14 @@ import {
   isOperationDept,
   isSalesDept,
 } from "../../config/Departments";
+import { useSelector } from "react-redux";
 
 const SideBar = () => {
   const userEmail = localStorage.getItem("user");
-  const { darkMode, sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
+  const { sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
   const department = localStorage.getItem("department");
   const role = localStorage.getItem("role");
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const getDashboardLink = () => {
     if (

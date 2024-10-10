@@ -4,8 +4,8 @@ import {
   conditionalRowStyles,
   customStylesFormanDaysDetails,
   customStylesFormanDaysDetailsDarkMode,
-} from "../../../utils/DataTablesData";
-import { ThemeContext } from "../../ContextApi/ThemeContext";
+} from "../../../utils/tableData/DataTablesData";
+import { useSelector } from "react-redux";
 
 const ManDaysDetails = ({ perDayDetailsData }) => {
   if (!Array.isArray(perDayDetailsData)) {
@@ -15,7 +15,7 @@ const ManDaysDetails = ({ perDayDetailsData }) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(); // Adjust locale and formatting options as needed
   };
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const columns = [
     {

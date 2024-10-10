@@ -5,7 +5,7 @@ import {
   AssignColumns,
   conditionalRowStylesForTL,
   customStyles,
-} from "../../utils/DataTablesData.js";
+} from "../../utils/tableData/DataTablesData.js";
 import { UpdateTeamLead } from "../fetchApis/projects/updateTeamLead/updateLeamTead.js";
 import SweetAlert from "../components/SweetAlert.js";
 import { DataTableContext } from "../ContextApi/DataTableContext.js";
@@ -104,7 +104,6 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         (item) => item.project_id === assignedData.project_id
       );
 
-      // Merge existing assigned data with the new data if it exists
       return {
         ...assignedData,
         assigned_to: existingAssignedDataItem
@@ -120,10 +119,8 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       };
     });
 
-    // Check if there are any assigned_to values present
     const hasAssignedTo = updatedDataList.some((data) => data.assigned_to?.id);
 
-    // Only show alert if there's no assigned_to after merging
     if (hasAssignedTo) {
       PostProjectData(updatedDataList);
       setOpenRight(false);
@@ -175,28 +172,16 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   };
   const handleInputChange = (event, index) => {
     const { name, value } = event.target;
-
-    // Create a copy of the current assignedDataList
     const newAssignedDataList = [...assignedDataList];
-
-    // Find the item at the current index
     const currentData = newAssignedDataList[index];
-
-    // If the current data doesn't exist, create a new object for it
     if (!currentData) {
       newAssignedDataList[index] = { project_id: selectedRow[index]?.id };
     }
-
-    // Update the appropriate field with the new value
     newAssignedDataList[index] = {
       ...newAssignedDataList[index],
-      [name]: value || "", // Ensure a default value if the input is empty
+      [name]: value || "",
     };
-
-    // Log the updated assigned data list for debugging
     console.log("Updated Assigned Data List:", newAssignedDataList);
-
-    // Update the state with the new list
     setAssignedDataList(newAssignedDataList);
   };
 
@@ -239,6 +224,18 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
           placeholder="Optional"
           onchange={handleInputChange}
           name={"project_client_pm"}
+        />
+      ),
+      email: projectWithTL?.project_client_pm ? (
+        <p>{projectWithTL?.project_client_pm}</p>
+      ) : (
+        <InputField
+          id={`client-pm-${index}`}
+          type={"email"}
+          className={"p-2 border border-black rounded-md w-20"}
+          placeholder="Optional"
+          onchange={handleInputChange}
+          name={"email"}
         />
       ),
       purchase_order_no: projectWithTL?.purchase_order_no ? (

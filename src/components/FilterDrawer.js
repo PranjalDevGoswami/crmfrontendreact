@@ -1,17 +1,26 @@
 import { Drawer } from "@mui/material";
-import React from "react";
-
+import React, { useContext, useState } from "react";
 import Accordion from "./Accordian";
+import FilterOptionSelected from "./FilterOptionSelected";
+import { FilterContext } from "../ContextApi/FilterContext";
+import { useSelector } from "react-redux";
 
 const FilterDrawer = ({
   setOpenFilter,
-  handleFilterOption,
   role,
-  clientsList,
-  tlListArray,
-  hodListArray,
-  managerListArray,
+  selectedOptions,
+  setSelectedOptions,
 }) => {
+  const handleOptionChange = (name, updatedOptions) => {
+    setSelectedOptions(updatedOptions.value);
+  };
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+
+  const { clientsList, hodListArray, managerListArray, tlListArray } =
+    useContext(FilterContext);
+
+  const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
+
   const accordionData = [
     {
       title: "Client",
@@ -39,12 +48,23 @@ const FilterDrawer = ({
     Director: ["Client", "HOD", "MANAGER"],
     HOD: ["Client", "MANAGER", "Team Lead"],
     Manager: ["Client", "Team Lead"],
+    "Team Lead": ["Client"],
   };
 
   const visibleAccordions = visibleAccordionsByRole[role] || [];
 
+  const handleAccordionToggle = (index) => {
+    setOpenAccordionIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const handleClearAllSelection = () => {
+    setSelectedOptions([]); // Reset all selected options
+  };
+
   return (
-    <div>
+    <div
+      className={`${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
+    >
       <Drawer
         anchor={"right"}
         open={true}
@@ -58,10 +78,21 @@ const FilterDrawer = ({
           },
         }}
       >
-        <div className="no-scrollbar">
+        <div
+          className={`${
+            darkMode ? "bg-black text-white" : "bg-white text-black"
+          } no-scrollbar`}
+        >
           <h1 className="text-blue-500 pb-4 font-bold text-xl">
             Filter Project
           </h1>
+          <div>
+            <FilterOptionSelected
+              selectedItems={selectedOptions}
+              setSelectedItems={setSelectedOptions}
+              handleClearAllSelection={handleClearAllSelection}
+            />
+          </div>
 
           {accordionData
             .filter((accordion) => visibleAccordions.includes(accordion.title))
@@ -70,8 +101,11 @@ const FilterDrawer = ({
                 key={index}
                 title={accordion.title}
                 options={accordion.options}
-                onChange={handleFilterOption}
+                onChange={handleOptionChange}
                 name={accordion.name}
+                isOpen={openAccordionIndex === index}
+                onToggle={() => handleAccordionToggle(index)}
+                selectedOptions={selectedOptions}
               />
             ))}
         </div>

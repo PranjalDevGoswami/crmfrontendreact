@@ -30,6 +30,7 @@ export const FormDataValueProvider = ({ children }) => {
     operation_select: true,
     finance_select: advancePAyment,
     upload_document: "",
+    project_samples: [],
   });
 
   return (

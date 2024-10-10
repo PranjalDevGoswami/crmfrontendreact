@@ -1,26 +1,22 @@
 import React, { useEffect, useState, useContext } from "react";
-import { GetProjectData } from "../fetchApis/projects/getProjectData/GetProjectData.js";
 import { AddManDays } from "../project/projectCRUDOperations/addManDays.js";
 import AssignedProject from "./AssignedProject.js";
-import { ThemeContext } from "../ContextApi/ThemeContext";
 import { FilterContext } from "../ContextApi/FilterContext.js";
 import { DataTableContext } from "../ContextApi/DataTableContext.js";
 import ProjectStatusTabs from "./projectCRUDOperations/ProjectStatusTabs.js";
 import OpenNotification from "../notification/OpenNotificationDetails.js";
 import { NotifiactionContext } from "../ContextApi/NotificationContext.js";
 import Shimmer from "../components/Shimmer.js";
-import { FormDataContext } from "../ContextApi/FormDataContext.js";
 import ProjectNameAndFilter from "./ProjectNameAndFilter";
 import IsMultipleEdit from "./IsMultipleEdit";
 import OperationPersonTable from "./OperationPersonTable";
-import { isDirector, Token } from "../config/Role.js";
-import useProjectData from "../../utils/hooks/useProjectData.js";
+import { Data } from "../../utils/tableData/data.js";
+import { useSelector } from "react-redux";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
   const [multiEditFieldOpen, setMultiEditFieldOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState(null);
-  const role = localStorage.getItem("role");
 
   const {
     isEdit,
@@ -39,51 +35,21 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     closeView,
   } = useContext(DataTableContext);
 
-  const { projectAdded } = useContext(FormDataContext);
-
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const {
     searchTerm,
     filteredProjectData,
     isLoading,
     setIsLoading,
-    setProjectData,
+    projectData,
     teamLeadAssiged,
   } = useContext(FilterContext);
 
-  const { isViewNotification, notificationProjectList, setIsViewNotification } =
-    useContext(NotifiactionContext);
-
-  const department = localStorage.getItem("department");
+  const { isViewNotification } = useContext(NotifiactionContext);
 
   useEffect(() => {
-    if (!isDrawerOpen && !isAddManDays && !changeProjectStatus) {
-      const fetchProjectData = async () => {
-        setIsLoading(true);
-        try {
-          const fetchDataFromApi2 = await GetProjectData();
-          const projectDataObject = fetchDataFromApi2?.data?.map((val) => val);
-          setProjectData(projectDataObject);
-          setIsLoading(false);
-        } catch (error) {
-          console.error("Error fetching project data:", error);
-          setIsLoading(false);
-        }
-      };
-      fetchProjectData();
-    }
-  }, [
-    Token,
-    isAddManDays,
-    changeProjectStatus,
-    notificationProjectList,
-    isDrawerOpen,
-    setIsViewNotification,
-    isViewNotification,
-    projectAdded,
-    department,
-    role,
-  ]);
+    setIsLoading(false);
+  }, [projectData]);
 
   const handleSelectedRowsChange = (row) => {
     const inCompletedTask = row.selectedRows.filter((item) => {
@@ -137,31 +103,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   );
 
   // const TLName =
-  const data = filteredData?.map((item, index) => ({
-    id: item?.id,
-    project_code: item?.project_code,
-    name: item?.name,
-    cpi: item?.cpi ? Number(item?.cpi).toFixed(2) : "0.00",
-    clients: item?.clients?.name,
-    operation_select: item?.operation_select,
-    project_type: item?.project_type?.name,
-    other_cost: item?.other_cost,
-    project_code: item?.project_code,
-    set_up_fee: item?.set_up_fee,
-    tentative_end_date: item?.tentative_end_date,
-    tentative_start_date:
-      role !== isDirector && item?.tentative_start_date?.split("T")[0],
-    tentative_end_date:
-      role !== isDirector && item?.tentative_end_date?.split("T")[0],
-    project_assigned_to_teamlead: item?.project_assigned_to_teamlead,
-    assigned_to: item?.assigned_to,
-    sample: item?.sample,
-    total_achievement: item?.total_achievement,
-    remaining_interview: item?.remaining_interview,
-    man_days: item.man_days,
-    status: item?.status,
-    project_client_pm: item?.project_client_pm,
-  }));
+  const data = Data();
 
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -194,7 +136,11 @@ const ProjectDataTable = ({ PersonDepartment }) => {
                 : "opacity-100"
             }`}
           >
-            <ProjectNameAndFilter data={data} />
+            <ProjectNameAndFilter
+              data={data}
+              ProjectHeading={"All Project Details"}
+              NoProjectHeading={"No Project Found"}
+            />
             <div className="">
               <div className="relative">
                 <div className="relative w-full">

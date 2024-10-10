@@ -20,30 +20,6 @@ export const createWithAuth = () => {
   });
 };
 
-// const refreshTokenAndSetAuth = async (callback) => {
-//   const refreshToken = localStorage.getItem("refreshToken");
-//   if (refreshToken) {
-//     const response = await refreshUserToken(REFRESH_TOKEN, {
-//       refresh: refreshToken,
-//     });
-//     const { access } = response?.data;
-//     if (response.status == 200) {
-//       localStorage.setItem("token", access);
-//       return callback();
-//     } else {
-//       localStorage.clear();
-//       window.location.href = "/login";
-//       Route.push("/login");
-//     }
-//   } else {
-//     window.location.href = "/login";
-//   }
-// };
-
-// const refreshUserToken = (url, data) => {
-//   return postWithOutAuth(url, data);
-// };
-
 const refreshTokenAndSetAuth = async (callback) => {
   const refreshToken = localStorage.getItem("refreshToken");
   if (refreshToken) {

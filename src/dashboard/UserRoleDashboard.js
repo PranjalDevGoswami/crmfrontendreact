@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getWithAuth, postWithAuth } from "../provider/helper/axios";
 
 import DataTable from "react-data-table-component";
-import { customStyles } from "../../utils/DataTablesData";
 import { BsThreeDots } from "react-icons/bs";
 import { FaRegUserCircle } from "react-icons/fa";
 import {
@@ -10,6 +9,7 @@ import {
   USERLIST,
   USERSTATUS,
 } from "../../utils/constants/urls";
+import { customStyles } from "../../utils/tableData/DataTablesData";
 
 const UserRoleDashboard = () => {
   const [userListDetails, setUserListDetails] = useState([]);

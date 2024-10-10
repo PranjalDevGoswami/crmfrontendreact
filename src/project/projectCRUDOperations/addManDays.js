@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import DataTable from "react-data-table-component";
-import { customStyles, editedColumns } from "../../../utils/DataTablesData";
+import {
+  customStyles,
+  editedColumns,
+} from "../../../utils/tableData/DataTablesData.js";
 import Dropdown from "../../components/DropDown";
 import { PostMandaysData } from "../../fetchApis/projects/mandays/PostMandaysData";
 import Label from "../../components/Label.js";

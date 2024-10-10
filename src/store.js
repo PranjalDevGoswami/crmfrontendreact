@@ -1,16 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
-import formReducer from "./features/projectData/projectDataSlice.js";
-import loginReducer from "./features/login/loginSlice.js";
-import departmentReducer from "./features/department/departmentSlice.js";
-import { toggleDarkMode } from "./features/darkmode/DarkmodeSlice.js";
-// import {RowDataReducer} from './components/features/dataTableSelectedRow/dataTableSelectedRow.js'
+import formReducer from "../utils/slices/projectDataSlice.js";
+import loginReducer from "../utils/slices/loginSlice.js";
+import darkModeReducer from "../utils/slices/DarkmodeSlice.js";
+import projectReducer from "../utils/slices/ProjectSlice.js";
+import userReducer from "../utils/slices/UserSlice.js";
+import FilterProjectDataReducer from "../utils/slices/FilterProjectDataSlice.js";
+import addMultipleSampleCpiReducer from "../utils/slices/AddMutipleSampleCpiSlice.js";
+import MultiSampleCpiRecordReducer from "../utils/slices/MultipleSampleCpiSlice.js";
 
 export default configureStore({
   reducer: {
     login: loginReducer,
     FormData: formReducer,
-    getDepartment: departmentReducer,
-    darkMode: toggleDarkMode,
-    // getSelectedRowData:getSelectedRowDataReducer
+    darkMode: darkModeReducer,
+    projectData: projectReducer,
+    userData: userReducer,
+    projectDataFiltered: FilterProjectDataReducer,
+    addMultipleSampleCpi: addMultipleSampleCpiReducer,
+    MultiSampleCpiRecord: MultiSampleCpiRecordReducer,
   },
 });

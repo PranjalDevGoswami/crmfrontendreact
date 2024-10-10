@@ -3,10 +3,12 @@ import Header from "../partials/Header";
 import { useContext } from "react";
 import { ThemeContext } from "../ContextApi/ThemeContext";
 import SideBar from "../components/Sidebar/SideBar";
+import { useSelector } from "react-redux";
 
 export const ProtectedRoute = () => {
   const token = localStorage.getItem("token");
-  const { darkMode, sideBarOpen } = useContext(ThemeContext);
+  const { sideBarOpen } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   if (!token) {
     return <Navigate to="/login" />;

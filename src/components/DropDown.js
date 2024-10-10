@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import Button from "./Button";
 import AddClient from "./Form/AddClient";
 import { TiPlus } from "react-icons/ti";
-import { ThemeContext } from "../ContextApi/ThemeContext";
 import { CloseAddClient } from "../ContextApi/CloseAddClientContext";
+import { useSelector } from "react-redux";
 
 const Dropdown = ({
   className,
@@ -21,7 +21,7 @@ const Dropdown = ({
   const [selectedDropdownValue, setSelectedDropdownValue] = useState("");
   const [addOptionItem, setAddOptionItem] = useState([]);
 
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
 
   useEffect(() => {

@@ -6,8 +6,8 @@ import { FaLongArrowAltLeft } from "react-icons/fa";
 import { getWithAuth } from "../../provider/helper/axios";
 import { BASEURL, PROJECTDATAAPIS } from "../../../utils/constants/urls.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
-import { ThemeContext } from "../../ContextApi/ThemeContext.js";
 import SweetAlert from "../../components/SweetAlert.js";
+import { useSelector } from "react-redux";
 
 const View = () => {
   const [isManDaysDetails, setIsManDaysDetails] = useState(false);
@@ -16,7 +16,7 @@ const View = () => {
   const location = useLocation();
   const { state: data } = location;
   const navigate = useNavigate();
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const { closeView, setCloseView, setisView } = useContext(DataTableContext);
 

@@ -1,23 +1,31 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/mainlogo.png";
 import { useAuth } from "../provider/authProvider";
 import { userDetails } from "../user/userProfile";
 import { getWithAuth } from "../provider/helper/axios.js";
 import Notifications from "../notification/Notification.js";
-import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import { FaUser, FaLock } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
 import { UPDATE_PROFILE } from "../../utils/constants/urls.js";
+import useProjectData from "../../utils/hooks/useProjectData.js";
+import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick.js";
+import useUserData from "../../utils/hooks/useUserData.js";
+import useProjectDataWIthRoleWiseFilter from "../../utils/hooks/useProjectDataWIthRoleWiseFilter.js";
+import DarkMode from "../components/DarkMode.js";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const { token, setToken } = useAuth();
   const [isProfileSetting, setIsProfileSetting] = useState(false);
   const navigate = useNavigate();
   const headerBtn = useRef();
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
-  const { darkMode } = useContext(ThemeContext);
+  useProjectData();
+  useUserData();
+  useProjectDataWIthRoleWiseFilter();
 
   const handleLogout = () => {
     setToken();
@@ -42,13 +50,10 @@ const Header = () => {
   }, []);
   const username = userDetails();
 
-  useEffect(() => {
-    document.body.addEventListener("mousedown", (e) => {
-      if (!headerBtn?.current?.contains(e?.target)) {
-        setIsProfileSetting(false);
-      }
-    });
-  }, []);
+  const handleClose = () => {
+    setIsProfileSetting(false);
+  };
+  useHandleOutsideClick(headerBtn, handleClose);
 
   const handleProfileSetting = () => {
     navigate("/profile");
@@ -56,7 +61,6 @@ const Header = () => {
 
   return (
     <div className="h-20 bg-white border-b-gray-700 bg-gradient-to-t from-gray-300">
-      {/* <div className=""> */}
       <div className="flex justify-between px-2">
         <div className="w-2/12">
           <img
@@ -68,7 +72,8 @@ const Header = () => {
         <div className="w-5/12 sm:w-6/12 min-[320px]:w-full text-right justify-end flex flex-wrap items-center">
           {token ? (
             <div className="flex flex-wrap items-center">
-              <div className="relative">
+              <div className="relative flex">
+                <DarkMode />
                 <Notifications className="relative" />
               </div>
               <span className="m-2 text-black min-[320px]:text-sm sm:text-xl">
@@ -97,7 +102,7 @@ const Header = () => {
                     }}
                   />
                 )}
-                {isProfileSetting ? (
+                {isProfileSetting && (
                   <ul className="absolute top-10 right-0 w-48 h-auto rounded-md text-left bg-[#bd1d1d] text-white z-10 p-4 cursor-pointer">
                     <li
                       onClick={handleProfileSetting}
@@ -122,8 +127,6 @@ const Header = () => {
                       </li>
                     </Link>
                   </ul>
-                ) : (
-                  ""
                 )}
               </div>
             </div>
@@ -132,7 +135,6 @@ const Header = () => {
           )}
         </div>
       </div>
-      {/* </div> */}
     </div>
   );
 };

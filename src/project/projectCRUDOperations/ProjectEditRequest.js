@@ -6,7 +6,6 @@ import { NotifiactionContext } from "../../ContextApi/NotificationContext";
 import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
-import { ThemeContext } from "../../ContextApi/ThemeContext";
 
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
@@ -23,7 +22,7 @@ const SampleEdit = ({ viewRecord }) => {
   });
 
   const { setisEdit } = useContext(DataTableContext);
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);

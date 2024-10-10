@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import Button from "../components/Button.js";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CheckboxList from "../components/Checkbox.js";
 import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
-import { ThemeContext } from "../ContextApi/ThemeContext.js";
 import SweetAlert from "../components/SweetAlert.js";
 import ProjectTypeComponent from "../components/Form/ProjectType.js";
 import { FormDataContext } from "../ContextApi/FormDataContext.js";
@@ -19,6 +18,12 @@ import SetupFee from "../components/Form/SetupFee.js";
 import CostPerInterview from "../components/Form/CostPerInterview.js";
 import SampleSize from "../components/Form/SampleSize.js";
 import ProjectName from "../components/Form/ProjectName.js";
+import { useSelector } from "react-redux";
+import AddMultipleSample from "../components/Form/AddMultipleSample.js";
+import IsMultipleSample from "../components/Form/IsMultipleSample.js";
+import { toggleMultipleSampleCpi } from "../../utils/slices/AddMutipleSampleCpiSlice.js";
+import { useDispatch } from "react-redux";
+import MultipleSampleCpiRecord from "../components/Form/MultipleSampleCpiRecord.js";
 
 const Form = () => {
   const {
@@ -30,8 +35,13 @@ const Form = () => {
     SetProjectAdded,
   } = useContext(FormDataContext);
 
+  const isMultipleSample = useSelector(
+    (store) => store.addMultipleSampleCpi.isMultipleSample
+  );
+  const dispatchAddMultipleSampleCpi = useDispatch();
+
   const navigate = useNavigate();
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const handleCheckboxChange = (name, checked) => {
     setAdvancePAyment(checked);
@@ -86,6 +96,8 @@ const Form = () => {
     if (!isFormValid()) {
       return;
     } else {
+      console.log(formData);
+
       PostProjectData(formData);
       navigate("/sales-dashboard");
     }
@@ -133,7 +145,21 @@ const Form = () => {
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
             <SampleSize />
+            <IsMultipleSample />
           </div>
+          {isMultipleSample && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8/12 min-h-48 h-auto bg-white border shadow-md z-20">
+              <AddMultipleSample />
+              <button
+                onClick={() =>
+                  dispatchAddMultipleSampleCpi(toggleMultipleSampleCpi(false))
+                }
+                className="absolute top-2 right-2 p-1 bg-red-400 text-white text-xs rounded-sm"
+              >
+                X
+              </button>
+            </div>
+          )}
           <div className="lg:w-[32%] w-full flex flex-col">
             <CostPerInterview />
           </div>
@@ -158,6 +184,9 @@ const Form = () => {
           </div>
           <div className="flex flex-col lg:w-[32%] w-full">
             <SowFileUpload />
+          </div>
+          <div className="flex w-full">
+            <MultipleSampleCpiRecord />
           </div>
         </div>
         <div className="flex flex-col lg:w-[32%] w-full pt-8 pb-2">

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { ThemeContext } from "../ContextApi/ThemeContext";
+import { useSelector } from "react-redux";
 
 const Input = ({
   type,
@@ -19,7 +19,7 @@ const Input = ({
   onBlur,
   id,
 }) => {
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const inputRef = useRef(null);
 
   useEffect(() => {

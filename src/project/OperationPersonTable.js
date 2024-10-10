@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
-import { TableColumn } from "../../utils/dataTableColumns";
 import {
   customStyles,
   customStylesDarkMode,
   Dummycolumns,
   DummyData,
-} from "../../utils/DataTablesData";
-import { ThemeContext } from "../ContextApi/ThemeContext";
+} from "../../utils/tableData/DataTablesData";
 import ExportCSV from "./ExportExcel";
 import Button from "../components/Button";
 import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual";
@@ -24,6 +22,9 @@ import {
   isTeamLead,
 } from "../config/Role";
 import { isOperationDept } from "../config/Departments";
+import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
+import { TableColumn } from "../../utils/tableData/dataTableColumns";
+import { useSelector } from "react-redux";
 
 const OperationPersonTable = ({
   data,
@@ -39,37 +40,17 @@ const OperationPersonTable = ({
   selectedRecord,
   closeView,
 }) => {
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const buttonRef = useRef(null);
-  const dropdownRef = useRef(null);
 
   const department = localStorage.getItem("department");
   const role = localStorage.getItem("role");
 
-  const handleClickOutside = (event) => {
-    if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-      setIsViewOptionOpen(false);
-      setOpenDropdownIndex(-1);
-    }
+  const handleClose = () => {
+    setIsViewOptionOpen(false);
+    setOpenDropdownIndex(-1);
   };
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdownIndex(-1);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  useHandleOutsideClick(buttonRef, handleClose);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import moment from "moment";
 import Button from "./Button";
+import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
 
 const Heading = ({
   date,
@@ -166,21 +167,11 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
   const [selectedButton, setSelectedButton] = useState(null);
   const calendarRef = useRef();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!calendarRef.current.contains(event.target)) {
-        setOpenDateRange(false);
-      }
-    };
+  const handleClose = () => {
+    setOpenDateRange(false);
+  };
 
-    if (openDateRange) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openDateRange]);
+  useHandleOutsideClick(calendarRef, handleClose);
 
   const resetDate = () => {
     setDate(moment());
@@ -290,7 +281,7 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
 
       {openDateRange && (
         <div
-          className="absolute top-11 left-0 w-96 overflow-visible bg-gray-50 z-50"
+          className="absolute top-11 left-0 w-96 overflow-visible bg-gray-50 z-50 -translate-x-1/2"
           ref={calendarRef}
         >
           <div className="w-full relative flex items-center shadow-md">

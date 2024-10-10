@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import Button from "../../components/Button";
 import { FilterContext } from "../../ContextApi/FilterContext";
-import { ThemeContext } from "../../ContextApi/ThemeContext";
+import { useSelector } from "react-redux";
 
 const ProjectStatusTabs = ({ className }) => {
   const { activeTabValue, setActiveTabValue, setSelectedStatus } =
     useContext(FilterContext);
-  const { darkMode } = useContext(ThemeContext);
+  const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const handleActiveTab = (e, index) => {

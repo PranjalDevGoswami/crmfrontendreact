@@ -1,18 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import useProjectData from "./useProjectData";
-import {
-  department,
-  isHod,
-  isManager,
-  isTeamLead,
-  role,
-} from "../../src/config/Role";
+import { isHod, isManager, isTeamLead, role } from "../../src/config/Role";
 import {
   isOperationDept,
   isPreSalesDept,
   isSalesDept,
 } from "../../src/config/Departments";
 import { FilterContext } from "../../src/ContextApi/FilterContext";
+import { useSelector } from "react-redux";
 
 const useRoleWiseProjectData = () => {
   const {
@@ -44,7 +38,7 @@ const useRoleWiseProjectData = () => {
   const department = localStorage.getItem("department");
   const userRole = localStorage.getItem("userrole");
 
-  const projectData = useProjectData();
+  const projectData = useSelector((store) => store.projectData.projects);
 
   useEffect(() => {
     let filteredData = projectData?.length > 0 ? projectData : [];
