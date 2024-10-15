@@ -1,17 +1,38 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import LableAndInput from "../LableAndInput";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import SweetAlert from "../SweetAlert";
+import { useSelector } from "react-redux";
 
 const SampleSize = () => {
   const { formData, setFormData } = useContext(FormDataContext);
 
+  const isMultipleSample = useSelector(
+    (store) => store.addMultipleSampleCpi.isMultipleSampleSelected
+  );
+  const isMultipleSampleRecord = useSelector(
+    (store) => store.MultiSampleCpiRecord.sampleCpiRecord
+  );
+
+  const totalSample = isMultipleSampleRecord.reduce((acc, item) => {
+    return acc + Number(item.sample);
+  }, 0);
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      sample: totalSample || 0,
+    }));
+  }, [totalSample]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-    e.preventDefault();
+
     if (/^\d*$/.test(value)) {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevData) => ({
+        ...prevData,
+        sample: value,
+      }));
     } else {
       SweetAlert({
         title: "Error",
@@ -20,17 +41,33 @@ const SampleSize = () => {
       });
     }
   };
+
   return (
     <div>
-      <LableAndInput
-        labelName={"Sample"}
-        InputName={"sample"}
-        InputType={"number"}
-        inputChange={handleInputChange}
-        inputClassName={"p-2 border bg-[#f3eded]"}
-        labelClassName={"pb-2"}
-        min={0}
-      />
+      {!isMultipleSample ? (
+        <LableAndInput
+          labelName={"Sample"}
+          InputName={"sample"}
+          InputType={"number"}
+          inputChange={handleInputChange}
+          inputClassName={"p-2 border bg-[#f3eded]"}
+          labelClassName={"pb-2"}
+          min={0}
+          Inputvalue={formData?.sample || ""}
+        />
+      ) : (
+        <LableAndInput
+          labelName={"Sample"}
+          InputName={"sample"}
+          InputType={"number"}
+          inputChange={handleInputChange}
+          inputClassName={"p-2 border bg-[#f3eded]"}
+          labelClassName={"pb-2"}
+          min={0}
+          disabled
+          Inputvalue={formData?.sample || 0}
+        />
+      )}
     </div>
   );
 };

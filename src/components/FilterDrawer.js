@@ -4,6 +4,8 @@ import Accordion from "./Accordian";
 import FilterOptionSelected from "./FilterOptionSelected";
 import { FilterContext } from "../ContextApi/FilterContext";
 import { useSelector } from "react-redux";
+import useUserData from "../../utils/hooks/useUserData";
+import { isHod, userRole } from "../config/Role";
 
 const FilterDrawer = ({
   setOpenFilter,
@@ -11,15 +13,56 @@ const FilterDrawer = ({
   selectedOptions,
   setSelectedOptions,
 }) => {
+  const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
+  const [selectedManager, setSelectedManager] = useState(null);
+  const [selectedTl, setSelectedTl] = useState(null);
+  const [selectedHod, setSelectedHod] = useState(null);
+
   const handleOptionChange = (name, updatedOptions) => {
     setSelectedOptions(updatedOptions.value);
+
+    if (name === "HOD") {
+      if (updatedOptions.value) {
+        setSelectedHod(updatedOptions.value);
+        setSelectedManager(null);
+      } else {
+        setSelectedHod(null);
+        setSelectedManager(null);
+      }
+    }
+
+    if (name === "Manager") {
+      if (updatedOptions.value) {
+        setSelectedManager(updatedOptions.value);
+      } else {
+        setSelectedManager(null);
+        setSelectedTl(null);
+      }
+    }
   };
+
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
-  const { clientsList, hodListArray, managerListArray, tlListArray } =
+  const { clientsList, managerListArray, tlListArray } =
     useContext(FilterContext);
+  const userData = useUserData();
 
-  const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
+  const filteredHodsList = userData.filter(
+    (item) => item?.role?.name === "HOD"
+  );
+
+  const filteredManagerList =
+    isHod || selectedHod
+      ? userData.filter(
+          (user) =>
+            (isHod && user.reports_to?.id == userRole) ||
+            (selectedHod && user.reports_to?.name == selectedHod)
+        )
+      : managerListArray;
+
+  const filteredTeamLeadList = selectedManager
+    ? userData.filter((tl) => tl.reports_to?.name == selectedManager)
+    : tlListArray;
 
   const accordionData = [
     {
@@ -29,17 +72,17 @@ const FilterDrawer = ({
     },
     {
       title: "HOD",
-      options: hodListArray?.map((item) => item.name),
+      options: filteredHodsList?.map((item) => item?.user_role?.name),
       name: "HOD",
     },
     {
       title: "MANAGER",
-      options: managerListArray?.map((item) => item.name),
+      options: filteredManagerList?.map((item) => item?.user_role?.name),
       name: "Manager",
     },
     {
       title: "Team Lead",
-      options: tlListArray?.map((item) => item.name),
+      options: filteredTeamLeadList?.map((item) => item?.user_role?.name),
       name: "Team Lead",
     },
   ];
@@ -58,7 +101,9 @@ const FilterDrawer = ({
   };
 
   const handleClearAllSelection = () => {
-    setSelectedOptions([]); // Reset all selected options
+    setSelectedOptions([]);
+    setSelectedHod(null);
+    setSelectedManager(null);
   };
 
   return (

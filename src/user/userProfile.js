@@ -52,7 +52,7 @@ export const userDetails = () => {
 };
 
 export const Profile = ({ profileDataUpdate }) => {
-  const [profilePic, setProfilePic] = useState("pawan");
+  const [profilePic, setProfilePic] = useState("");
 
   const navigate = useNavigate();
 

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import moment from "moment";
 import Button from "./Button";
 import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
+import { BsCalendarDate } from "react-icons/bs";
 
 const Heading = ({
   date,
@@ -264,21 +265,21 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
   };
 
   return (
-    <div className="relative w-full">
-      <Button
-        name={
-          dateRange.startDate && dateRange.endDate
-            ? `${moment(dateRange?.startDate).format("DD MMM")}  -  ${moment(
-                dateRange?.endDate
-              ).format("DD MMM")}`
-            : "Select Date Range"
-        }
-        className={
-          "bg-transparent rounded-full border-black border p-[6px] m-1"
-        }
-        onClick={() => setOpenDateRange(!openDateRange)}
-      />
-
+    <div className="relative  mr-1">
+      <div className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400">
+        <BsCalendarDate className="mr-2" />
+        <Button
+          name={
+            dateRange.startDate && dateRange.endDate
+              ? `${moment(dateRange?.startDate).format("DD MMM")}  -  ${moment(
+                  dateRange?.endDate
+                ).format("DD MMM")}`
+              : "Date Range"
+          }
+          className={"text-sm"}
+          onClick={() => setOpenDateRange(!openDateRange)}
+        />
+      </div>
       {openDateRange && (
         <div
           className="absolute top-11 left-0 w-96 overflow-visible bg-gray-50 z-50 -translate-x-1/2"

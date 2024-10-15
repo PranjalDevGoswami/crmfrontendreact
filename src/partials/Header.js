@@ -15,6 +15,7 @@ import useUserData from "../../utils/hooks/useUserData.js";
 import useProjectDataWIthRoleWiseFilter from "../../utils/hooks/useProjectDataWIthRoleWiseFilter.js";
 import DarkMode from "../components/DarkMode.js";
 import { useSelector } from "react-redux";
+import useManagerList from "../../utils/hooks/useProjectManager.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();
@@ -26,6 +27,7 @@ const Header = () => {
   useProjectData();
   useUserData();
   useProjectDataWIthRoleWiseFilter();
+  useManagerList();
 
   const handleLogout = () => {
     setToken();

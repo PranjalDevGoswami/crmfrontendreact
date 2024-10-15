@@ -9,7 +9,7 @@ const FilterOptionSelected = ({
     const updatedSelectedItems = selectedItems.filter(
       (item) => item !== option
     );
-    setSelectedItems(updatedSelectedItems); // Update the selected items state
+    setSelectedItems(updatedSelectedItems);
   };
 
   return (
@@ -22,7 +22,7 @@ const FilterOptionSelected = ({
           >
             <span
               className="mr-2 cursor-pointer"
-              onClick={() => handleSingleCrossOption(value)} // Call handler for single option removal
+              onClick={() => handleSingleCrossOption(value)}
             >
               X
             </span>

@@ -3,9 +3,13 @@ import Label from "../Label";
 import Input from "../InputField";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import SweetAlert from "../SweetAlert";
+import { useSelector } from "react-redux";
 
 const CostPerInterview = () => {
   const { formData, setFormData } = useContext(FormDataContext);
+  const isMultipleSample = useSelector(
+    (store) => store.addMultipleSampleCpi.isMultipleSampleSelected
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,13 +31,26 @@ const CostPerInterview = () => {
       <Label labelName={"Cost Per Interview"} className={"pt-4 pb-2"} />
       <div className="flex w-full">
         <div className="w-full inline-block">
-          <Input
-            name={"cpi"}
-            type={"number"}
-            onchange={handleInputChange}
-            className={"p-2 border bg-[#f3eded] w-full mt-2"}
-            min={0}
-          />
+          {!isMultipleSample ? (
+            <Input
+              name={"cpi"}
+              type={"number"}
+              onchange={handleInputChange}
+              className={"p-2 border bg-[#f3eded] w-full mt-2"}
+              min={0}
+              value={formData?.cpi || ""}
+            />
+          ) : (
+            <Input
+              name={"cpi"}
+              type={"number"}
+              onchange={handleInputChange}
+              className={"p-2 border bg-[#f3eded] w-full mt-2"}
+              min={0}
+              disabled
+              value={formData?.cpi || 0}
+            />
+          )}
         </div>
       </div>
     </div>

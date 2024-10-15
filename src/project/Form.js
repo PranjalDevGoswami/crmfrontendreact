@@ -24,6 +24,7 @@ import IsMultipleSample from "../components/Form/IsMultipleSample.js";
 import { toggleMultipleSampleCpi } from "../../utils/slices/AddMutipleSampleCpiSlice.js";
 import { useDispatch } from "react-redux";
 import MultipleSampleCpiRecord from "../components/Form/MultipleSampleCpiRecord.js";
+import { usePostFormData } from "../../utils/hooks/usePostFormData.js";
 
 const Form = () => {
   const {
@@ -47,58 +48,18 @@ const Form = () => {
     setAdvancePAyment(checked);
   };
 
-  const PostProjectData = async (data) => {
-    try {
-      const response = await PostFormData(data);
-      if (response?.status == true) {
-        SweetAlert({
-          title: "Project Added Successfully!!",
-          text: "",
-          icon: "success",
-        });
-        SetProjectAdded(true);
-      } else if (
-        response?.ex?.response?.data[0] ===
-        "Tentative end date cannot be in the past."
-      ) {
-        SweetAlert({
-          title: "Error",
-          text: response?.ex?.response?.data[0] || "An error occurred",
-          icon: "error",
-        });
-      } else if (
-        response?.ex?.response?.data?.upload_document[0] ===
-        "The submitted data was not a file. Check the encoding type on the form."
-      ) {
-        SweetAlert({
-          title: "Error",
-          text: "File Formate Not supported",
-          icon: "error",
-        });
-      } else {
-        SweetAlert({
-          title: "Error",
-          text: "something went wrong",
-          icon: "error",
-        });
-      }
-    } catch (error) {
-      SweetAlert({
-        title: "Error",
-        text: "Error fetching project data:",
-        error,
-        icon: "error",
-      });
-    }
-  };
-
   const handleSubmit = (e) => {
-    if (!isFormValid()) {
-      return;
-    } else {
-      console.log(formData);
+    e.preventDefault();
+    console.log(formData);
 
-      PostProjectData(formData);
+    if (!isFormValid()) {
+      return SweetAlert({
+        title: "Warning",
+        text: "Fill all required fields",
+        icon: "warning",
+      });
+    } else {
+      usePostFormData(formData, SetProjectAdded);
       navigate("/sales-dashboard");
     }
   };
@@ -109,10 +70,11 @@ const Form = () => {
       formData.project_type?.name !== "" &&
       formData.clients?.name !== "" &&
       formData.sample !== "" &&
-      formData.cpi !== "" &&
+      // (!isMultipleSample ? formData.cpi !== "" : "") &&
       formData.set_up_fee !== "" &&
       formData.tentative_start_date !== "" &&
-      formData.tentative_end_date !== ""
+      formData.tentative_end_date !== "" &&
+      formData.project_samples !== ""
     );
   };
   const handleCancel = (e) => {
@@ -128,7 +90,7 @@ const Form = () => {
     >
       <h2 className="text-3xl p-8 mt-8 underline">Add Project Details</h2>
       <form
-        onSubmit={() => handleSubmit(formData)}
+        onSubmit={(e) => handleSubmit(e, formData)}
         className="lg:p-2 lg:pl-8 lg:pr-4 pr-8"
         encType="multipart/form-data"
         id="1234"
@@ -201,7 +163,7 @@ const Form = () => {
               isFormValid() ? "" : "opacity-50 cursor-not-allowed"
             }`}
             name={"Submit"}
-            onClick={() => handleSubmit(formData)}
+            onClick={(e) => handleSubmit(e, formData)}
           />
           {/* <Link
             to={"/sales-dashboard"}

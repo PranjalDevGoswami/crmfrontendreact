@@ -14,6 +14,7 @@ export const FormDataValueProvider = ({ children }) => {
   ]);
   const [managerList, setManagerList] = useState();
   const [projectAdded, SetProjectAdded] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     project_type: "",
@@ -31,6 +32,7 @@ export const FormDataValueProvider = ({ children }) => {
     finance_select: advancePAyment,
     upload_document: "",
     project_samples: [],
+    is_multiple_sample_cpi: null,
   });
 
   return (

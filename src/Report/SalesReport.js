@@ -54,7 +54,7 @@ const SalesReport = (props) => {
       <div className="w-full mb-4">
         <h3 className="text-base">
           {isDirector
-            ? "HOD Project Report"
+            ? "Sales HOD Project Report"
             : isSalesHod
             ? managersUnderHod.length > 0
               ? "Manager Report"

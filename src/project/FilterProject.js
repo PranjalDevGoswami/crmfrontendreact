@@ -254,33 +254,41 @@ const FilterProject = () => {
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
-      {openSearch && (
-        <div className="w-full">
-          <Input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onchange={(e) => setSearchTerm(e.target.value)}
-            className={`${
-              darkMode && "bg-black border-white"
-            } p-2 border border-black rounded w-10/12 focus:outline-none"`}
-            id={"search"}
-          />
-        </div>
-      )}
-      <div className="flex items-center justify-end w-1/2">
+    <div className="flex items-center">
+      <div className="flex items-center justify-center">
+        {openSearch && (
+          <div className="text-right">
+            <Input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onchange={(e) => setSearchTerm(e.target.value)}
+              className={`${
+                darkMode && "bg-black border-white"
+              } p-1 border-b border-blue-400 !rounded-none w-8/12 focus:outline-none text-blue-400 text-sm"`}
+              id={"search"}
+            />
+          </div>
+        )}
         <div
-          className="w-1/12 mr-4 cursor-pointer text-xl"
+          className="p-2 mr-1 ml-1 cursor-pointer text-lg text-blue-400"
           onClick={() => {
             setOpenSearch(!openSearch);
           }}
         >
-          <CiSearch />
+          <CiSearch
+            onClick={() => {
+              setOpenSearch(!openSearch);
+            }}
+          />
         </div>
+      </div>
+      <div className="flex items-center">
+        <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+      </div>
+      <div className="flex items-center">
         <button
-          className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400"
+          className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center text-blue-400"
           onClick={() => {
             setOpenFilter(!openFilter);
           }}

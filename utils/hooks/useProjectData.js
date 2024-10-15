@@ -10,7 +10,7 @@ const useProjectData = () => {
   const getProjectData = async () => {
     const data = await getWithAuth(PROJECTDATAAPIS);
     const response = data?.data;
-    response.length > 0 && dispatchProjectData(setProjects(response));
+    response?.length > 0 && dispatchProjectData(setProjects(response));
 
     setProjectData(response);
   };
