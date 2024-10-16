@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 
 const ProjectNameAndFilter = ({ data, ProjectHeading, NoProjectHeading }) => {
   const ExportData = useSelector((store) => store.ExportData.items);
-
   return (
     <div className="sm:flex items-center justify-between w-full min-[320px]:block pr-2">
       <div className="sm:w-4/12 min-[320px]:w-full">
@@ -21,7 +20,7 @@ const ProjectNameAndFilter = ({ data, ProjectHeading, NoProjectHeading }) => {
             data={ExportData}
             name={<TbTableExport />}
             className={
-              "p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400"
+              "p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 ml-2"
             }
             downloadName={"Project_List.csv"}
           />

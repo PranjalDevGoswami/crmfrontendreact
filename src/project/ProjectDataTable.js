@@ -14,6 +14,7 @@ import { Data } from "../../utils/tableData/data.js";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addExportData } from "../../utils/slices/ExportDataSlice.js";
+import { useExportData } from "../../utils/hooks/useExportData.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -120,7 +121,12 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     }
     return { ...item, desabled };
   });
-  dispatchExportData(addExportData(desabledRowData));
+
+  const dataForExport = useExportData(desabledRowData);
+  useEffect(() => {
+    dispatchExportData(addExportData(dataForExport));
+  }, [dataForExport]);
+
   return (
     <div
       className={`${

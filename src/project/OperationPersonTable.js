@@ -7,13 +7,11 @@ import {
   Dummycolumns,
   DummyData,
 } from "../../utils/tableData/DataTablesData";
-import ExportCSV from "./ExportExcel";
 import Button from "../components/Button";
 import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual";
 import UpdateStatus from "./projectCRUDOperations/UpdateStatus";
 import View from "./projectCRUDOperations/View";
 import Edit from "./projectCRUDOperations/ProjectEditRequest";
-import { TbTableExport } from "react-icons/tb";
 import { MdAddTask } from "react-icons/md";
 
 import {
@@ -93,7 +91,7 @@ const OperationPersonTable = ({
               }
               className={`${
                 darkMode ? "bg-black text-white border-white" : "border-black"
-              } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-9 -top-8 z-10`}
+              } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-10`}
             />
           </Link>
           <DataTable
@@ -138,7 +136,7 @@ const OperationPersonTable = ({
                     darkMode
                       ? "bg-black text-white border-white"
                       : " border-black"
-                  } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-9 -top-8 z-20 hover:scale-110`}
+                  } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
                 />
               </Link>
               <DataTable

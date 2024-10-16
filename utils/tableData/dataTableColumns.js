@@ -16,7 +16,7 @@ export const TableColumn = ({ buttonRef }) => {
       name: "Client Name",
       selector: (row) => row?.clients,
       sortable: true,
-      // width: "100px",
+      width: "120px",
     },
     {
       name: "Project Name",

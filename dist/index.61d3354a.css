@@ -354,6 +354,10 @@ img, video {
   right: .25rem;
 }
 
+.right-11 {
+  right: 2.75rem;
+}
+
 .right-2 {
   right: .5rem;
 }
@@ -368,10 +372,6 @@ img, video {
 
 .right-8 {
   right: 2rem;
-}
-
-.right-9 {
-  right: 2.25rem;
 }
 
 .right-full {
