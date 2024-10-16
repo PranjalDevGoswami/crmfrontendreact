@@ -13,6 +13,9 @@ import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual";
 import UpdateStatus from "./projectCRUDOperations/UpdateStatus";
 import View from "./projectCRUDOperations/View";
 import Edit from "./projectCRUDOperations/ProjectEditRequest";
+import { TbTableExport } from "react-icons/tb";
+import { MdAddTask } from "react-icons/md";
+
 import {
   allManagerRoles,
   isDirector,
@@ -25,6 +28,8 @@ import { isOperationDept } from "../config/Departments";
 import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
 import { TableColumn } from "../../utils/tableData/dataTableColumns";
 import { useSelector } from "react-redux";
+import FilterProject from "./FilterProject";
+import Tooltip from "../components/Tooltip";
 
 const OperationPersonTable = ({
   data,
@@ -65,16 +70,7 @@ const OperationPersonTable = ({
           onSelectedRowsChange={handleSelectedRowsChange}
           enableMultiRowSelection
           selectableRowDisabled={(row) => row.desabled}
-          actions={
-            <ExportCSV
-              data={desabledRowData}
-              name={"Exports"}
-              className={
-                "rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"
-              }
-              downloadName={"Project_List.csv"}
-            />
-          }
+          actions={<FilterProject />}
         />
       ) : department == isOperationDept && role?.includes(isHod) ? (
         <DataTable
@@ -82,16 +78,7 @@ const OperationPersonTable = ({
           data={data?.length > 0 ? desabledRowData : DummyData}
           pagination
           customStyles={darkMode ? customStylesDarkMode : customStyles}
-          actions={
-            <ExportCSV
-              data={desabledRowData}
-              name={"Exports"}
-              className={
-                "rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"
-              }
-              downloadName={"Project_List.csv"}
-            />
-          }
+          actions={<FilterProject />}
         />
       ) : (isSuperUserDepartment.includes(department) &&
           role?.includes(isSuperUser)) ||
@@ -99,12 +86,14 @@ const OperationPersonTable = ({
         <div className="">
           <Link to={"/entry-page"}>
             <Button
-              name={"Add Project"}
+              name={
+                <Tooltip text="Add New Project" position="top">
+                  <MdAddTask />
+                </Tooltip>
+              }
               className={`${
-                darkMode
-                  ? "bg-black text-white border-white"
-                  : "bg-yellow-200 border-black"
-              } border rounded-lg p-2 absolute right-28 top-2 z-10`}
+                darkMode ? "bg-black text-white border-white" : "border-black"
+              } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-9 -top-8 z-10`}
             />
           </Link>
           <DataTable
@@ -118,16 +107,7 @@ const OperationPersonTable = ({
             onSelectedRowsChange={handleSelectedRowsChange}
             enableMultiRowSelection
             selectableRowDisabled={(row) => row.desabled}
-            actions={
-              <ExportCSV
-                data={desabledRowData}
-                name={"Exports"}
-                className={
-                  "rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"
-                }
-                downloadName={"Project_List.csv"}
-              />
-            }
+            actions={<FilterProject />}
           />
         </div>
       ) : (
@@ -143,27 +123,22 @@ const OperationPersonTable = ({
               onSelectedRowsChange={handleSelectedRowsChange}
               enableMultiRowSelection
               selectableRowDisabled={(row) => row.desabled}
-              actions={
-                <ExportCSV
-                  data={desabledRowData}
-                  name={"Exports"}
-                  className={
-                    "rounded-full bg-green-300 p-2 pl-4 pr-4 text-white text-lg"
-                  }
-                  downloadName={"Project_List.csv"}
-                />
-              }
+              actions={<FilterProject />}
             />
           ) : (
             <div>
               <Link to={"/entry-page"}>
                 <Button
-                  name={"Add Project"}
+                  name={
+                    <Tooltip text="Add New Project" position="top">
+                      <MdAddTask />
+                    </Tooltip>
+                  }
                   className={`${
                     darkMode
                       ? "bg-black text-white border-white"
-                      : "bg-yellow-200 border-black"
-                  } border rounded-lg p-2 absolute right-0 top-2 z-20`}
+                      : " border-black"
+                  } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-9 -top-8 z-20 hover:scale-110`}
                 />
               </Link>
               <DataTable
@@ -176,7 +151,7 @@ const OperationPersonTable = ({
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
-                actions={<div />}
+                actions={<FilterProject />}
               />
             </div>
           )}

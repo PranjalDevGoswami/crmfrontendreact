@@ -1,9 +1,10 @@
+import { useSelector } from "react-redux";
 import { allManagerRoles, isDirector } from "../../src/config/Role";
 import ActionsButton from "../../src/project/projectCRUDOperations/ActionsButton";
+import { TiEyeOutline } from "react-icons/ti";
 
 export const TableColumn = ({ buttonRef }) => {
   const role = localStorage.getItem("role");
-
   const columns = [
     {
       name: "Project Code",
@@ -72,6 +73,16 @@ export const TableColumn = ({ buttonRef }) => {
       sortable: true,
       width: "75px",
     },
+    // desabledRowData?.project_samples.length && {
+    //   name: "CPI",
+    //   selector: (row) => row?.cpi,
+    //   sortable: true,
+    //   width: "75px",
+    //   cell: (record, index) => {
+    //     return <TiEyeOutline />;
+    //   },
+    // },
+
     {
       name: "Project Target",
       selector: (row) => row?.sample,

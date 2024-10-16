@@ -6,6 +6,7 @@ import { NotifiactionContext } from "../../ContextApi/NotificationContext";
 import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
+import { useSelector } from "react-redux";
 
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
@@ -28,58 +29,11 @@ const SampleEdit = ({ viewRecord }) => {
     useContext(NotifiactionContext);
   const [loader, setLoader] = useState(false);
 
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   if (name === "tentative_end_date") {
-  //     const selectedDate = new Date(value);
-  //     const currentDate = new Date();
-  //     let errorMsg = "";
-  //     if (selectedDate < currentDate) {
-  //       errorMsg = "Past dates are not allowed.";
-  //     } else if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
-  //       errorMsg = "Weekend dates are not allowed.";
-  //     }
-  //     setErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       tentative_end_date: errorMsg,
-  //     }));
-
-  //     setShowDate(value);
-  //     setUpdatedValue({
-  //       ...updatedValue,
-  //       tentative_end_date: selectedDate.toISOString(),
-  //     });
-  //   }
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // if (name === "tentative_end_date") {
-    //   const selectedDate = new Date(value);
-    //   const currentDate = new Date();
-    //   let errorMsg = "";
-
-    //   if (selectedDate <= currentDate) {
-    //     errorMsg = "Past dates are not allowed.";
-    //   } else if (selectedDate.getDay() === 6 || selectedDate.getDay() === 0) {
-    //     errorMsg = "Weekend dates are not allowed.";
-    //   }
-
-    //   setErrors((prevErrors) => ({
-    //     ...prevErrors,
-    //     tentative_end_date: errorMsg,
-    //   }));
-
-    //   setShowDate(value);
-    //   setUpdatedValue({
-    //     ...updatedValue,
-    //     tentative_end_date: selectedDate.toISOString(),
-    //   });
-    // }
     if (name === "tentative_end_date") {
       const selectedDate = new Date(value);
-      const tentativeStartDate = new Date(viewRecord.tentative_start_date); // Assuming this is the start date
+      const tentativeStartDate = new Date(viewRecord.tentative_start_date);
       let errorMsg = "";
 
       if (selectedDate <= tentativeStartDate) {
@@ -147,9 +101,6 @@ const SampleEdit = ({ viewRecord }) => {
 
   const handleCancelUpdate = () => {
     setisEdit(false);
-    // setViewEdit(false);
-    // setIsMultiEdit(false);
-    // setMultiEditFieldOpen(false);
     document.body.classList.remove("DrawerBody");
   };
 
@@ -173,7 +124,6 @@ const SampleEdit = ({ viewRecord }) => {
     return isValid;
   };
   const PostUpdateEditData = async (data) => {
-    // console.log("🚀 ~ PostUpdateEditData ~ data:", data);
     setLoader(true);
     const response = await postWithAuth(EDITPROJECTREQUEST, data);
     if (response.status === true) {
@@ -224,7 +174,7 @@ const SampleEdit = ({ viewRecord }) => {
         </div>
         <div className="ProjectOperationEdit">
           <LableAndInput
-            labelName={"Date Required(Tentative)"}
+            labelName={"Date End Required(Tentative)"}
             InputName={"tentative_end_date"}
             InputType={"date"}
             inputClassName={"p-2 border w-full"}

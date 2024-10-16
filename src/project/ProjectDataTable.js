@@ -12,6 +12,8 @@ import IsMultipleEdit from "./IsMultipleEdit";
 import OperationPersonTable from "./OperationPersonTable";
 import { Data } from "../../utils/tableData/data.js";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addExportData } from "../../utils/slices/ExportDataSlice.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -36,6 +38,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
   } = useContext(DataTableContext);
 
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+  const dispatchExportData = useDispatch();
   const {
     searchTerm,
     filteredProjectData,
@@ -102,7 +105,6 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     })
   );
 
-  // const TLName =
   const data = Data();
 
   const currentDate = new Date().toISOString().split("T")[0];
@@ -118,7 +120,7 @@ const ProjectDataTable = ({ PersonDepartment }) => {
     }
     return { ...item, desabled };
   });
-
+  dispatchExportData(addExportData(desabledRowData));
   return (
     <div
       className={`${

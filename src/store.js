@@ -7,7 +7,7 @@ import userReducer from "../utils/slices/UserSlice.js";
 import FilterProjectDataReducer from "../utils/slices/FilterProjectDataSlice.js";
 import addMultipleSampleCpiReducer from "../utils/slices/AddMutipleSampleCpiSlice.js";
 import MultiSampleCpiRecordReducer from "../utils/slices/MultipleSampleCpiSlice.js";
-
+import ExportDataReducer from "../utils/slices/ExportDataSlice.js";
 export default configureStore({
   reducer: {
     login: loginReducer,
@@ -18,5 +18,6 @@ export default configureStore({
     projectDataFiltered: FilterProjectDataReducer,
     addMultipleSampleCpi: addMultipleSampleCpiReducer,
     MultiSampleCpiRecord: MultiSampleCpiRecordReducer,
+    ExportData: ExportDataReducer,
   },
 });

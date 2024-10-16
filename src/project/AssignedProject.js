@@ -328,7 +328,6 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const [selectTL, setSelectTL] = useState([]);
   const [isSelectTLLoaded, setIsSelectTLLoaded] = useState(false);
   const [assignedDataList, setAssignedDataList] = useState([]);
-  console.log(selectedRow);
 
   useEffect(() => {
     const getTeamLead = async () => {
@@ -424,8 +423,9 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       });
       return;
     }
+    console.log(selectedOption);
 
-    const newAssignedDataList = selectedOption.map((option, index) => ({
+    const newAssignedDataList = selectedOption.map((option) => ({
       project_id: selectedRow[index].id,
       assigned_by: parseInt(userrole),
       assigned_to: option.value,
@@ -474,7 +474,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
             key={`select-${index}`}
             options={selectTL}
             onChange={(selectedOption) => handleSelectTL(index, selectedOption)}
-            className={"relative overflow-y-scroll w-56 z-50"}
+            className={"relative overflow-y-scroll w-56"}
             name={"project_teamlead"}
             value={assignedDataList[index]?.user_role?.name}
           />

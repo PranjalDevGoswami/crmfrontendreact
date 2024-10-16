@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import ProjectNameAndFilter from "../project/ProjectNameAndFilter";
 import ReportDashBoardTopCard from "./ReportDashBoardTopCard";
 import { isDirector, isHod } from "../config/Role";
+import FilterProject from "../project/FilterProject";
 
 const ReportDashboard = () => {
   const [projectData, setProjectData] = useState([]);
@@ -53,12 +54,15 @@ const ReportDashboard = () => {
   }, [projectStatus]);
 
   return (
-    <div className="mt-8 relative">
+    <div className="mt-12 relative">
       <ProjectNameAndFilter
         data={projectDataResponse}
         ProjectHeading={"All Project Report"}
         NoProjectHeading={"No Project"}
       />
+      <div className="flex justify-end mr-2 mt-2">
+        <FilterProject />
+      </div>
 
       <div>
         <ReportDashBoardTopCard projectData={projectDataResponse} />

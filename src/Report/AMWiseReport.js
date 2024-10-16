@@ -49,20 +49,21 @@ const AMWiseReport = ({
         );
 
         const AMList = userListOperationDepartment?.filter((item) =>
-          allManagerRoles.includes(item.role.name)
+          allManagerRoles.includes(item?.role?.name)
         );
         if (role === isDirector) {
           setAmList(AMList);
         } else {
-          let AmReportToCurrentUser = AMList.filter(
-            (am) => am.reports_to.id == userRole || am.user_role.id == userRole
+          let AmReportToCurrentUser = AMList?.filter(
+            (am) =>
+              am?.reports_to?.id == userRole || am?.user_role?.id == userRole
           );
 
-          let additionalUsers = userList.filter((user) =>
+          let additionalUsers = userList?.filter((user) =>
             AmReportToCurrentUser.some(
               (am) =>
-                user.reports_to?.id == am.user_role.id &&
-                allManagerRoles.includes(user.role.name)
+                user?.reports_to?.id == am?.user_role?.id &&
+                allManagerRoles.includes(user?.role.name)
             )
           );
           let combinedList = [...AmReportToCurrentUser, ...additionalUsers];

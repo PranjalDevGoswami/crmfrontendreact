@@ -265,8 +265,11 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
   };
 
   return (
-    <div className="relative  mr-1">
-      <div className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400">
+    <div className="relative mr-1">
+      <div
+        className="p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 cursor-pointer"
+        onClick={() => setOpenDateRange(!openDateRange)}
+      >
         <BsCalendarDate className="mr-2" />
         <Button
           name={
@@ -277,15 +280,14 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
               : "Date Range"
           }
           className={"text-sm"}
-          onClick={() => setOpenDateRange(!openDateRange)}
         />
       </div>
       {openDateRange && (
         <div
-          className="absolute top-11 left-0 w-96 overflow-visible bg-gray-50 z-50 -translate-x-1/2"
+          className="fixed top-52 -right-20 w-96 h-96 overflow-visible bg-gray-50 z-50 -translate-x-1/2"
           ref={calendarRef}
         >
-          <div className="w-full relative flex items-center shadow-md">
+          <div className="w-full relative flex items-center shadow-md z-50 h-96">
             <div className="calendar w-8/12">
               <Heading
                 date={date}
