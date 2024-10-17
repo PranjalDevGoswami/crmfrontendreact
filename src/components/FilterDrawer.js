@@ -191,15 +191,14 @@ const FilterDrawer = ({
     (item) => item?.role?.name === "HOD"
   );
 
-  const filteredManagerList = !selectedHod
-    ? managerListArray
-    : isHod || selectedHod
-    ? userData.filter(
-        (user) =>
-          (isHod && user.reports_to?.id == userRole) ||
-          (selectedHod && user.reports_to?.name == selectedHod)
-      )
-    : managerListArray;
+  const filteredManagerList =
+    !selectedHod && !isHod
+      ? managerListArray
+      : selectedHod
+      ? userData.filter((user) => user.reports_to?.name == selectedHod)
+      : isHod
+      ? userData.filter((user) => user.reports_to?.id == userRole)
+      : managerListArray;
 
   const filteredTeamLeadList = selectedManager
     ? userData.filter((tl) => tl.reports_to?.name == selectedManager)
