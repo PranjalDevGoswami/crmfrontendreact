@@ -331,4 +331,48 @@ input[type="number"]::-webkit-outer-spin-button {
 .calendar--days span.start.end:after {
   display: none;
 }
+
+.open-popup-btn {
+  color: #fff;
+  cursor: pointer;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.popup-container {
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.backdrop {
+  backdrop-filter: blur(2px);
+  z-index: 999;
+  background: #0006;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.popup-content {
+  z-index: 1000;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  width: 50%;
+  height: fit-content;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 4px 8px #0000001a;
+}
 /*# sourceMappingURL=index.4a5519d3.css.map */

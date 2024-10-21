@@ -5,11 +5,14 @@ import { putWithAuth } from "../provider/helper/axios";
 import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/constants/urls";
 import SweetAlert from "../components/SweetAlert";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addReRender } from "../../utils/slices/ReRenderSlice";
 
 const OpenNotification = ({ notification_btn_ref }) => {
   const { notificationProjectList, setIsViewNotification } =
     useContext(NotifiactionContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+  const dispatchReRender = useDispatch();
 
   const token = localStorage.getItem("token");
 
@@ -59,6 +62,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
             text: response?.data?.message,
             icon: "success",
           });
+          dispatchReRender(addReRender());
           setIsViewNotification(false);
         } else {
           SweetAlert({

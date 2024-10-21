@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isMultipleSample: false,
-  isMultipleSampleSelected: false,
+  isMultipleSampleCheckbox: false,
 };
 
 const AddMultipleSampleCpiSlice = createSlice({
@@ -12,7 +12,7 @@ const AddMultipleSampleCpiSlice = createSlice({
       state.isMultipleSample = action.payload;
     },
     checkedMultipleSampleCpi(state, action) {
-      state.isMultipleSampleSelected = action.payload;
+      state.isMultipleSampleCheckbox = action.payload;
     },
   },
 });

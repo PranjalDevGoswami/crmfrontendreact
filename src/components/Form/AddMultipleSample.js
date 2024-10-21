@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
 import Button from "../Button";
 import LableAndInput from "../LableAndInput";
-import { toggleMultipleSampleCpi } from "../../../utils/slices/AddMutipleSampleCpiSlice";
+import {
+  checkedMultipleSampleCpi,
+  toggleMultipleSampleCpi,
+} from "../../../utils/slices/AddMutipleSampleCpiSlice";
 import { useDispatch } from "react-redux";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import { addMultipleSample } from "../../../utils/slices/MultipleSampleCpiSlice";
@@ -10,15 +13,28 @@ import SweetAlert from "../SweetAlert";
 
 const AddMultipleSample = () => {
   const dispatchIsMultipleSample = useDispatch();
+
+  const dispatchIsMultipleSampleCheckbox = useDispatch();
+  const dispatchIsMultipleSampleCheckboxRecord = useDispatch();
+
   const { formData, setFormData } = useContext(FormDataContext);
   const dispatchRecord = useDispatch();
 
   const MultiSampleCpiRecord = useSelector(
     (store) => store.MultiSampleCpiRecord.sampleCpiRecord
   );
+
   const isMultipleSelected = useSelector(
-    (store) => store.addMultipleSampleCpi.isMultipleSampleSelected
+    (store) => store.addMultipleSampleCpi.isMultipleSampleCheckbox
   );
+
+  const handleCross = () => {
+    dispatchIsMultipleSampleCheckbox(toggleMultipleSampleCpi(false));
+    MultiSampleCpiRecord.length > 1
+      ? dispatchIsMultipleSampleCheckboxRecord(checkedMultipleSampleCpi(true))
+      : dispatchIsMultipleSampleCheckboxRecord(checkedMultipleSampleCpi(false));
+  };
+
   const initialInputData =
     MultiSampleCpiRecord.length > 0
       ? MultiSampleCpiRecord.map((record) => [
@@ -108,8 +124,8 @@ const AddMultipleSample = () => {
                       labelName={item.field}
                       InputName={item.field}
                       InputType={item.type}
-                      inputClassName={"p-1 border bg-[#f3eded] w-full"}
-                      labelClassName={"pb-2"}
+                      inputClassName={"p-1 px-4 border bg-[#f3eded] w-full"}
+                      labelClassName={"pb-2 text-left"}
                       inputChange={(e) =>
                         handleInputChange(e, rowIndex * 3 + index)
                       }
@@ -133,7 +149,7 @@ const AddMultipleSample = () => {
                   name={"Add More"}
                   onClick={HandleAddMore}
                   className={
-                    "bg-green-400 text-white p-1 border rounded-sm w-1/2 text-xs mt-[30px]"
+                    "bg-green-400 text-white p-1 border rounded-sm w-2/3 text-xs mt-[30px]"
                   }
                 />
               </div>
@@ -144,8 +160,14 @@ const AddMultipleSample = () => {
       <Button
         name={"Submit"}
         onClick={handleSubmit}
-        className={"bg-green-300 p-2 text-white mt-4"}
+        className={"bg-green-300 p-2 text-white mt-4 cursor-pointer"}
       />
+      <button
+        onClick={handleCross}
+        className="absolute top-2 right-2 p-1 bg-red-400 text-white text-xs rounded-sm cursor-pointer"
+      >
+        X
+      </button>
     </div>
   );
 };

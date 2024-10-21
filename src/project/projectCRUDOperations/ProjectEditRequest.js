@@ -7,6 +7,8 @@ import Loader from "../../components/Loader";
 import SweetAlert from "../../components/SweetAlert";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
 import { useSelector } from "react-redux";
+import { addReRender } from "../../../utils/slices/ReRenderSlice";
+import { useDispatch } from "react-redux";
 
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState();
@@ -24,6 +26,7 @@ const SampleEdit = ({ viewRecord }) => {
 
   const { setisEdit } = useContext(DataTableContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+  const dispatchReRender = useDispatch();
 
   const { notificationList, setNotificationList } =
     useContext(NotifiactionContext);
@@ -134,6 +137,7 @@ const SampleEdit = ({ viewRecord }) => {
         icon: "success",
       });
       setisEdit(false);
+      dispatchReRender(addReRender());
     }
     setNotificationList([...notificationList, response?.data]);
   };
@@ -158,7 +162,7 @@ const SampleEdit = ({ viewRecord }) => {
             Inputvalue={viewRecord.project_code.toUpperCase()}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -168,7 +172,7 @@ const SampleEdit = ({ viewRecord }) => {
             Inputvalue={viewRecord.name}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -178,7 +182,7 @@ const SampleEdit = ({ viewRecord }) => {
             InputName={"tentative_end_date"}
             InputType={"date"}
             inputClassName={"p-2 border w-full"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={showDate}
             inputChange={handleInputChange}
             min={getMinDate()}
@@ -193,7 +197,7 @@ const SampleEdit = ({ viewRecord }) => {
             InputType={"number"}
             InputName={"sample"}
             inputClassName={"p-2 border"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={updatedValue.sample}
             inputChange={handleInputChange}
             InputMax_lenght={3}
@@ -209,7 +213,7 @@ const SampleEdit = ({ viewRecord }) => {
             InputType={"text"}
             InputName={"reason_for_adjustment"}
             inputClassName={"p-2 border"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={updatedValue.reason_for_adjustment}
             inputChange={handleInputChange}
           />

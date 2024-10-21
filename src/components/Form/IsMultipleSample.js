@@ -11,17 +11,33 @@ const IsMultipleSample = () => {
   const dispatchMultipleSample = useDispatch();
   const dispatchIsMultipleSampleSelected = useDispatch();
 
-  const isMultiple = useSelector(
+  const isMultipleSampleSelected = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
   );
+  const isMultipleRecord = useSelector(
+    (store) => store.MultiSampleCpiRecord.sampleCpiRecord
+  );
   const isMultipleSelected = useSelector(
-    (store) => store.addMultipleSampleCpi.isMultipleSampleSelected
+    (store) => store.addMultipleSampleCpi.isMultipleSampleCheckbox
   );
 
+  // const handleCheckBox = () => {
+
+  //   isMultipleRecord.length > 1
+  //     ? dispatchIsMultipleSampleSelected(checkedMultipleSampleCpi(true))
+  //     : dispatchIsMultipleSampleSelected(
+  //         checkedMultipleSampleCpi(!isMultipleSample)
+  //       );
+  //   dispatchMultipleSample(toggleMultipleSampleCpi(!isMultipleSample));
+  // };
+
   const handleCheckBox = () => {
-    dispatchMultipleSample(toggleMultipleSampleCpi(true));
-    dispatchIsMultipleSampleSelected(checkedMultipleSampleCpi(true));
+    dispatchMultipleSample(toggleMultipleSampleCpi(!isMultipleSampleSelected));
+    dispatchIsMultipleSampleSelected(
+      checkedMultipleSampleCpi(!isMultipleSelected)
+    );
   };
+
   return (
     <div className="flex items-center pt-2">
       <input

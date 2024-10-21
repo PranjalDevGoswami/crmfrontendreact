@@ -1,11 +1,9 @@
 import React, { useContext, useState } from "react";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import AssignedProject from "../../project/AssignedProject.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
-import { department, isHod, isSuperUser } from "../../config/Role.js";
+import { isHod, isSuperUser } from "../../config/Role.js";
 import { isFinanceDept, isOperationDept } from "../../config/Departments.js";
 
 const OpereationButton = () => {
@@ -31,6 +29,7 @@ const OpereationButton = () => {
 
   const [isInvoice, setIsInvoice] = useState(false);
   const role = localStorage.getItem("role");
+  const department = localStorage.getItem("department");
 
   const HandleOnEdit = (selectedRecord) => {
     setisEdit(true);

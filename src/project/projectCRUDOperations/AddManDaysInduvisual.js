@@ -175,7 +175,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             Inputvalue={viewRecord.project_code.toUpperCase()}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -185,7 +185,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             Inputvalue={viewRecord.name}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -195,7 +195,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             InputName={"update_date"}
             InputType={"date"}
             inputClassName={"p-2 border w-full"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={showDate}
             inputChange={handleInputChange}
             min={getMinDate()}
@@ -207,7 +207,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
         </div>
-        <div className="ProjectOperationEdit mt-4">
+        <div className="ProjectOperationEdit mt-4 text-left">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />
           <Dropdown
             Option_Name={[
@@ -230,7 +230,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             InputName={"total_man_days"}
             InputType={"number"}
             inputClassName={"p-2 border"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={updatedValue.man_days}
             inputChange={handleInputChange}
             InputMax_lenght={2}
@@ -243,7 +243,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
             InputType={"number"}
             InputName={"total_achievement"}
             inputClassName={"p-2 border"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             Inputvalue={updatedValue.total_achievement}
             inputChange={handleInputChange}
             InputMax_lenght={3}

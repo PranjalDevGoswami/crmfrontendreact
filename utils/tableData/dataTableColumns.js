@@ -50,7 +50,7 @@ export const TableColumn = ({ buttonRef }) => {
         }
       : { width: "5px" },
     !allManagerRoles.includes(role) && {
-      name: "Unimrkt PM",
+      name: "UniMrkt PM",
       selector: (row) => row?.assigned_to?.name,
       sortable: true,
       width: "130px",
@@ -102,13 +102,13 @@ export const TableColumn = ({ buttonRef }) => {
       // width: "100px",
     },
     {
-      name: "T. Man Days",
+      name: "Man Days",
       selector: (row) => row?.man_days,
       sortable: true,
       // width: "110px",
     },
     {
-      name: "status",
+      name: "Status",
       selector: (row) => row?.status,
       sortable: true,
       width: "125px",

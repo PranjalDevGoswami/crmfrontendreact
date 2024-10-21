@@ -2,10 +2,21 @@ import React, { useContext, useState } from "react";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
 import { useSelector, useDispatch } from "react-redux";
 import { addMultipleSample } from "../../../utils/slices/MultipleSampleCpiSlice";
+import Tooltip from "../Tooltip";
+import { toggleMultipleSampleCpi } from "../../../utils/slices/AddMutipleSampleCpiSlice";
 
 const MultipleSampleCpiRecord = () => {
   const { formData, setFormData } = useContext(FormDataContext);
+
+  const MultiSampleCpiRecord = useSelector(
+    (store) => store.MultiSampleCpiRecord.sampleCpiRecord
+  );
+  const isMultipleSelected = useSelector(
+    (store) => store.addMultipleSampleCpi.isMultipleSampleCheckbox
+  );
+
   const dispatch = useDispatch();
+  const dispatchCheckbox = useDispatch();
   const MultipleSampleRecord = useSelector(
     (store) => store.MultiSampleCpiRecord.sampleCpiRecord
   );
@@ -35,10 +46,15 @@ const MultipleSampleCpiRecord = () => {
     }));
   };
 
+  const handleAddRow = (e) => {
+    e.preventDefault();
+    dispatchCheckbox(toggleMultipleSampleCpi(true));
+  };
+
   return (
     <div className="overflow-x-auto p-4">
       {MultipleSampleRecord.length > 0 && (
-        <table className="min-w-full border-collapse border border-gray-200">
+        <table className="min-w-full border-collapse">
           <thead>
             <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 border border-gray-200 text-left">
@@ -58,7 +74,7 @@ const MultipleSampleCpiRecord = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="text-gray-600 text-sm font-light">
+          <tbody className="text-gray-600 text-sm font-light relative">
             {MultipleSampleRecord.map((item, index) => (
               <tr
                 key={index}
@@ -125,6 +141,20 @@ const MultipleSampleCpiRecord = () => {
                 </td>
               </tr>
             ))}
+            <tr className="border-none">
+              <td colSpan={5} className="relative border-none">
+                <div className="relative flex justify-end text-right cursor-pointer">
+                  <Tooltip text={"Add More Sample/CPI"} position="left">
+                    <button
+                      onClick={handleAddRow}
+                      className="bg-green-500 text-white rounded-sm p-3 flex justify-center items-center h-3"
+                    >
+                      +
+                    </button>
+                  </Tooltip>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       )}

@@ -28,6 +28,7 @@ import { TableColumn } from "../../utils/tableData/dataTableColumns";
 import { useSelector } from "react-redux";
 import FilterProject from "./FilterProject";
 import Tooltip from "../components/Tooltip";
+import Popup from "../components/Popup";
 
 const OperationPersonTable = ({
   data,
@@ -129,14 +130,14 @@ const OperationPersonTable = ({
                 <Button
                   name={
                     <Tooltip text="Add New Project" position="top">
-                      <MdAddTask />
+                      <MdAddTask className="text-white text-xl" />
                     </Tooltip>
                   }
                   className={`${
                     darkMode
                       ? "bg-black text-white border-white"
                       : " border-black"
-                  } p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
+                  } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
                 />
               </Link>
               <DataTable
@@ -157,14 +158,14 @@ const OperationPersonTable = ({
       )}
 
       {isOperationPerson && isEdit && (
-        <div className="absolute  w-1/2 h-auto top-1/3 left-1/2 bg-white p-4 border rounded-md  border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
+        <Popup>
           <Edit viewRecord={selectedRecord} />
-        </div>
+        </Popup>
       )}
       {isOperationPerson && isAddManDays && (
-        <div className="absolute  w-1/2 h-auto top-1/3 left-1/2 bg-white p-4 border  rounded-md border-black drop-shadow-lg shadow-2xl shadow-slate-400 -translate-x-1/2 -translate-y-1/2 z-30">
+        <Popup>
           <AddManDaysInduvisual viewRecord={selectedRecord} />
-        </div>
+        </Popup>
       )}
       {isView && (
         <div className="z-50">
@@ -172,9 +173,9 @@ const OperationPersonTable = ({
         </div>
       )}
       {changeProjectStatus && (
-        <div className="absolute  w-1/2z h-auto top-1/3 left-1/2 bg-white p-8 border border-black drop-shadow-lg shadow-2xl shadow-slate-400 translate-x-[-50%] translate-y-[-30%] z-30">
+        <Popup>
           <UpdateStatus viewRecord={selectedRecord} closeView={closeView} />
-        </div>
+        </Popup>
       )}
     </>
   );

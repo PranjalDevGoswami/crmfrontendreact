@@ -323,7 +323,7 @@ const SignUp = () => {
   };
 
   return (
-    <form id="RegForm" className="h-screen relative">
+    <form id="RegForm" className="h-screen relative overflow-hidden">
       <div className="flex justify-center items-center h-full">
         {/* Background Gradient */}
         <div className="absolute top-0 left-0 w-3/5 h-full bg-gradient-to-r rounded-tr-full rounded-br-full from-red-500 to-orange-300 -z-10">

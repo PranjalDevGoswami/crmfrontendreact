@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import Button from "../components/Button.js";
 import { useNavigate } from "react-router-dom";
 import CheckboxList from "../components/Checkbox.js";
-import { PostFormData } from "../fetchApis/projects/postProjectData/PostProjectData.js";
 import SweetAlert from "../components/SweetAlert.js";
 import ProjectTypeComponent from "../components/Form/ProjectType.js";
 import { FormDataContext } from "../ContextApi/FormDataContext.js";
@@ -25,6 +24,7 @@ import { toggleMultipleSampleCpi } from "../../utils/slices/AddMutipleSampleCpiS
 import { useDispatch } from "react-redux";
 import MultipleSampleCpiRecord from "../components/Form/MultipleSampleCpiRecord.js";
 import { usePostFormData } from "../../utils/hooks/usePostFormData.js";
+import Popup from "../components/Popup.js";
 
 const Form = () => {
   const {
@@ -39,7 +39,6 @@ const Form = () => {
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
   );
-  const dispatchAddMultipleSampleCpi = useDispatch();
 
   const navigate = useNavigate();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
@@ -50,8 +49,6 @@ const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-
     if (!isFormValid()) {
       return SweetAlert({
         title: "Warning",
@@ -59,7 +56,7 @@ const Form = () => {
         icon: "warning",
       });
     } else {
-      usePostFormData(formData, SetProjectAdded);
+      usePostFormData(formData, SetProjectAdded, dispatchAddMultipleSampleCpi);
       navigate("/sales-dashboard");
     }
   };
@@ -110,17 +107,9 @@ const Form = () => {
             <IsMultipleSample />
           </div>
           {isMultipleSample && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8/12 min-h-48 h-auto bg-white border shadow-md z-20">
+            <Popup>
               <AddMultipleSample />
-              <button
-                onClick={() =>
-                  dispatchAddMultipleSampleCpi(toggleMultipleSampleCpi(false))
-                }
-                className="absolute top-2 right-2 p-1 bg-red-400 text-white text-xs rounded-sm"
-              >
-                X
-              </button>
-            </div>
+            </Popup>
           )}
           <div className="lg:w-[32%] w-full flex flex-col">
             <CostPerInterview />
@@ -129,9 +118,9 @@ const Form = () => {
             <SetupFee />
           </div>
           {isOtherFee && (
-            <div className="w-4/12 h-2/4 bg-white border rounded-md shadow-md z-50 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <Popup>
               <AddOtherCost />
-            </div>
+            </Popup>
           )}
           {otherCost && <OtherCost />}
           {translationCost && <TranslationCost />}

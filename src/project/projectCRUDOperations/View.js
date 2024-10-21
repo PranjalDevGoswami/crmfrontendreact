@@ -8,6 +8,7 @@ import { BASEURL, PROJECTDATAAPIS } from "../../../utils/constants/urls.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import SweetAlert from "../../components/SweetAlert.js";
 import { useSelector } from "react-redux";
+import Popup from "../../components/Popup.js";
 
 const View = () => {
   const [isManDaysDetails, setIsManDaysDetails] = useState(false);
@@ -185,25 +186,25 @@ const View = () => {
         </ul>
       )}
       {isManDaysDetails && (
-        <div
-          className={`${
-            darkMode ? "bg-black text-white" : "bg-gray-300"
-          } absolute top-1/2 left-1/2 border mt-16 pl-2 pr-2 w-6/12 h-auto min-h-48 translate-x-[-50%] translate-y-[-50%] `}
-        >
-          <h3
-            className={`${
-              darkMode ? "bg-black text-white" : "bg-white"
-            } text-xl mt-4 p-2 `}
+        <Popup>
+          <div
+            className={`${darkMode ? "bg-black text-white" : "bg-gray-300"}`}
           >
-            Day wise Detail View of achieving Target and Men-days utilization
-            for Targeted Sample Size:
-            <span className="font-bold">{' "' + data.sample + '" '}</span>
-          </h3>
-          <ManDaysDetails perDayDetailsData={perDayDetailsData} />
-          <div className="absolute top-3 right-1 p-0 m-0 rounded w-8 h-8 flex items-center justify-center text-xl">
-            <button onClick={handleCloseManDaysDetails}>X</button>
+            <h3
+              className={`${
+                darkMode ? "bg-black text-white" : "bg-white"
+              } text-xl mt-4 p-2 `}
+            >
+              Day wise Detail View of achieving Target and Men-days utilization
+              for Targeted Sample Size:
+              <span className="font-bold">{' "' + data.sample + '" '}</span>
+            </h3>
+            <ManDaysDetails perDayDetailsData={perDayDetailsData} />
+            <div className="absolute top-3 right-1 p-0 m-0 rounded w-8 h-8 flex items-center justify-center text-xl">
+              <button onClick={handleCloseManDaysDetails}>X</button>
+            </div>
           </div>
-        </div>
+        </Popup>
       )}
     </div>
   );

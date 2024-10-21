@@ -63,7 +63,7 @@ const UpdateStatus = ({ viewRecord }) => {
             Inputvalue={viewRecord.project_code.toUpperCase()}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -73,7 +73,7 @@ const UpdateStatus = ({ viewRecord }) => {
             Inputvalue={viewRecord.name}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
@@ -83,11 +83,11 @@ const UpdateStatus = ({ viewRecord }) => {
             Inputvalue={viewRecord.status}
             desabled={true}
             inputClassName={"cursor-not-allowed p-2 border bg-[#f3eded]"}
-            labelClassName={"pt-4 pb-2"}
+            labelClassName={"pt-4 pb-2 text-left"}
             inputChange={handleInputChange}
           />
         </div>
-        <div className="ProjectOperationEdit mt-4">
+        <div className="ProjectOperationEdit mt-4 text-left">
           <Label labelName={"Status"} className={"pb-2 mt-4"} />
           <Dropdown
             Option_Name={[

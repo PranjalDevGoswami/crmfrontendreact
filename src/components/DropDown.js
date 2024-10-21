@@ -4,6 +4,7 @@ import AddClient from "./Form/AddClient";
 import { TiPlus } from "react-icons/ti";
 import { CloseAddClient } from "../ContextApi/CloseAddClientContext";
 import { useSelector } from "react-redux";
+import Popup from "./Popup";
 
 const Dropdown = ({
   className,
@@ -74,10 +75,8 @@ const Dropdown = ({
       </div>
 
       {closeAddClient && (
-        <div className="absolute w-1/2 left-1/2 top-1/2 translate-y-[-50%] translate-x-[-50%] duration-500 border border-black rounded z-30 shadow-2xl">
-          <div className="flex flex-col justify-center items-center w-full h-full bg-white">
-            <AddClient />
-          </div>
+        <Popup>
+          <AddClient />
           <Button
             name="X"
             className="absolute top-3 right-3 bg-red-400 p-2 rounded"
@@ -85,7 +84,7 @@ const Dropdown = ({
               setCloseAddClient(!closeAddClient);
             }}
           />
-        </div>
+        </Popup>
       )}
     </div>
   );

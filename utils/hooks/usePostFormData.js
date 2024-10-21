@@ -1,7 +1,12 @@
 import { PostFormData } from "../../src/fetchApis/projects/postProjectData/PostProjectData";
 import SweetAlert from "../../src/components/SweetAlert";
+import { removeMultipleSample } from "../slices/MultipleSampleCpiSlice";
 
-export const usePostFormData = async (data, SetProjectAdded) => {
+export const usePostFormData = async (
+  data,
+  SetProjectAdded,
+  dispatchAddMultipleSampleCpi
+) => {
   try {
     const response = await PostFormData(data);
     if (response?.status == true) {
@@ -11,6 +16,7 @@ export const usePostFormData = async (data, SetProjectAdded) => {
         icon: "success",
       });
       SetProjectAdded(true);
+      dispatchAddMultipleSampleCpi(removeMultipleSample());
     } else if (
       response?.ex?.response?.data[0] ===
       "Tentative end date cannot be in the past."

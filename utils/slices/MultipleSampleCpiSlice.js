@@ -9,11 +9,14 @@ const MultipleSampleCpiSlice = createSlice({
   initialState,
   reducers: {
     addMultipleSample(state, action) {
-      // state.sampleCpiRecord.push(...action.payload);
-      state.sampleCpiRecord = action.payload; // Replace the entire record with updated data
+      state.sampleCpiRecord = action.payload;
+    },
+    removeMultipleSample(state) {
+      state.sampleCpiRecord = [];
     },
   },
 });
 
-export const { addMultipleSample } = MultipleSampleCpiSlice.actions;
+export const { addMultipleSample, removeMultipleSample } =
+  MultipleSampleCpiSlice.actions;
 export default MultipleSampleCpiSlice.reducer;

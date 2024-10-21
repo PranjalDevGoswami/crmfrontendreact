@@ -20,7 +20,7 @@ const ProjectNameAndFilter = ({ data, ProjectHeading, NoProjectHeading }) => {
             data={ExportData}
             name={<TbTableExport />}
             className={
-              "p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 ml-2"
+              "p-2 border border-gray-200 bg-gray-100 rounded-sm text-sm flex items-center justify-around text-blue-400 ml-2 hover:scale-110"
             }
             downloadName={"Project_List.csv"}
           />

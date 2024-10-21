@@ -300,6 +300,7 @@ const FilterProject = () => {
       {openFilter && (
         <FilterDrawer
           setOpenFilter={setOpenFilter}
+          openFilter={openFilter}
           handleFilterOption={handleFilterOption}
           role={role}
           clientsList={clientsList}

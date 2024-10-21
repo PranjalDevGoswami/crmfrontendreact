@@ -77,11 +77,7 @@ const AddClient = () => {
     }
   };
   return (
-    <div
-      className={`${
-        darkMode && "bg-black text-white border-white border "
-      } p-8 shadow-lg shadow-slate-600`}
-    >
+    <div className={`${darkMode && "bg-black text-white"}`}>
       <h3 className="pt-4 pb-4 underline text-2xl">Add Client Details</h3>
       <div className="flex flex-wrap gap-4">
         <Input

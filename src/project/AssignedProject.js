@@ -317,6 +317,8 @@ import {
   PROJECT_MANAGER,
   UPDATETLASSIGNMENT,
 } from "../../utils/constants/urls.js";
+import { useDispatch } from "react-redux";
+import { addReRender } from "../../utils/slices/ReRenderSlice.js";
 
 const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const userrole = localStorage.getItem("userrole");
@@ -328,6 +330,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const [selectTL, setSelectTL] = useState([]);
   const [isSelectTLLoaded, setIsSelectTLLoaded] = useState(false);
   const [assignedDataList, setAssignedDataList] = useState([]);
+  const dispatchReRender = useDispatch();
 
   useEffect(() => {
     const getTeamLead = async () => {
@@ -387,6 +390,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         text: response.data.message,
         icon: "success",
       });
+      dispatchReRender(addReRender());
     } catch (error) {
       SweetAlert({
         title: "Error",
@@ -398,6 +402,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   };
 
   const handleAssignedProject = () => {
+    dispatchReRender(addReRender());
     if (assignedDataList.length > 0) {
       PostProjectData(assignedDataList);
       setOpenRight(false);

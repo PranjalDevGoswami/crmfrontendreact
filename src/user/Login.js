@@ -136,12 +136,8 @@
 // export default Login;
 
 import React, { useContext, useEffect, useState } from "react";
-import Button from "../components/Button.js";
 import { Link, useNavigate } from "react-router-dom";
 import { BiShow } from "react-icons/bi";
-import object7 from "../assets/object7.png";
-import Input from "../components/InputField.js";
-import Label from "../components/Label.js";
 import { useAuth } from "../provider/authProvider.js";
 import { useRedirectUser } from "../../utils/hooks/useRedirectUser.js";
 import { useHandleLogin } from "../../utils/hooks/useHAndleLogin.js";
@@ -181,8 +177,12 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} id="loginForm" className="h-screen relative">
-      <div className="flex justify-center items-center h-full">
+    <form
+      onSubmit={handleLogin}
+      id="loginForm"
+      className="h-screen relative overflow-hidden"
+    >
+      <div className="flex justify-center items-center h-full  container mx-auto">
         {/* Circle design for the left side */}
         <div className="absolute top-0 left-0 w-3/5 h-full bg-gradient-to-r rounded-tr-full rounded-br-full from-red-500 to-orange-300 -z-10">
           <div className="flex flex-col justify-center h-full pl-20">
