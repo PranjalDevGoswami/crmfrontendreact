@@ -39,6 +39,7 @@ const Form = () => {
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
   );
+  const dispatchAddMultipleSampleCpi = useDispatch();
 
   const navigate = useNavigate();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
