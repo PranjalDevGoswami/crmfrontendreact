@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addExportData } from "../../utils/slices/ExportDataSlice.js";
 import { useExportData } from "../../utils/hooks/useExportData.js";
+import Popup from "../components/Popup.js";
 
 const ProjectDataTable = ({ PersonDepartment }) => {
   const [isOperationPerson, setisOperationPerson] = useState(PersonDepartment);
@@ -194,9 +195,9 @@ const ProjectDataTable = ({ PersonDepartment }) => {
               />
             )}
             {isViewNotification && (
-              <div className="absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 p-2 h-auto">
+              <Popup>
                 <OpenNotification />
-              </div>
+              </Popup>
             )}
           </div>
         </div>

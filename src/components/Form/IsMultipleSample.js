@@ -6,6 +6,7 @@ import {
   toggleMultipleSampleCpi,
 } from "../../../utils/slices/AddMutipleSampleCpiSlice";
 import { useSelector } from "react-redux";
+import { addMultipleSample } from "../../../utils/slices/MultipleSampleCpiSlice";
 
 const IsMultipleSample = () => {
   const dispatchMultipleSample = useDispatch();
@@ -21,21 +22,15 @@ const IsMultipleSample = () => {
     (store) => store.addMultipleSampleCpi.isMultipleSampleCheckbox
   );
 
-  // const handleCheckBox = () => {
-
-  //   isMultipleRecord.length > 1
-  //     ? dispatchIsMultipleSampleSelected(checkedMultipleSampleCpi(true))
-  //     : dispatchIsMultipleSampleSelected(
-  //         checkedMultipleSampleCpi(!isMultipleSample)
-  //       );
-  //   dispatchMultipleSample(toggleMultipleSampleCpi(!isMultipleSample));
-  // };
-
   const handleCheckBox = () => {
-    dispatchMultipleSample(toggleMultipleSampleCpi(!isMultipleSampleSelected));
     dispatchIsMultipleSampleSelected(
       checkedMultipleSampleCpi(!isMultipleSelected)
     );
+    dispatchMultipleSample(toggleMultipleSampleCpi(true));
+    if (isMultipleRecord.length > 1) {
+      dispatchMultipleSample(addMultipleSample([]));
+      dispatchMultipleSample(toggleMultipleSampleCpi(false));
+    }
   };
 
   return (

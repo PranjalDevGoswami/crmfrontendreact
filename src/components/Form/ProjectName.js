@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import LableAndInput from "../LableAndInput";
 import { FormDataContext } from "../../ContextApi/FormDataContext";
-// import SweetAlert from "../SweetAlert";
 
 const ProjectName = () => {
   const { formData, setFormData } = useContext(FormDataContext);

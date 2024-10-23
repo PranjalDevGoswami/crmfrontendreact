@@ -1,11 +1,16 @@
 import { PostFormData } from "../../src/fetchApis/projects/postProjectData/PostProjectData";
 import SweetAlert from "../../src/components/SweetAlert";
 import { removeMultipleSample } from "../slices/MultipleSampleCpiSlice";
+import {
+  checkedMultipleSampleCpi,
+  toggleMultipleSampleCpi,
+} from "../slices/AddMutipleSampleCpiSlice";
 
 export const usePostFormData = async (
   data,
   SetProjectAdded,
-  dispatchAddMultipleSampleCpi
+  dispatchAddMultipleSampleCpi,
+  dispatchAddMultipleSampleCpiCheckbox
 ) => {
   try {
     const response = await PostFormData(data);
@@ -17,6 +22,8 @@ export const usePostFormData = async (
       });
       SetProjectAdded(true);
       dispatchAddMultipleSampleCpi(removeMultipleSample());
+      dispatchAddMultipleSampleCpiCheckbox(toggleMultipleSampleCpi(false));
+      dispatchAddMultipleSampleCpiCheckbox(checkedMultipleSampleCpi(false));
     } else if (
       response?.ex?.response?.data[0] ===
       "Tentative end date cannot be in the past."

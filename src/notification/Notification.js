@@ -6,6 +6,9 @@ import { allManagerRoles } from "../config/Role";
 import { UPDATEDPROJECTLIST } from "../../utils/constants/urls";
 import { useSelector } from "react-redux";
 import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
+import useProjectData from "../../utils/hooks/useProjectData";
+import { useDispatch } from "react-redux";
+import { addReRender } from "../../utils/slices/ReRenderSlice";
 
 const Notification = () => {
   const [isNotificationActive, setIsNotificationActive] = useState(false);
@@ -33,29 +36,42 @@ const Notification = () => {
   const projectDataResponse = useSelector(
     (store) => store.projectData.projects
   );
+  const projectDataReRenderResponse = useSelector(
+    (store) => store.ReRender.count
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(addReRender(1));
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchProjectData = async () => {
       let activeEditProject = projectDataResponse?.filter((item) => {
         return (
-          item?.send_email_manager == true && item?.assigned_to?.id == userRole
+          item?.send_email_manager == true &&
+          (item?.assigned_to?.id == userRole ||
+            item?.project_assigned_by_manager?.id == userRole)
         );
       });
       setNotificationList(activeEditProject);
     };
     fetchProjectData();
-  }, [isViewNotification]);
+  }, [projectDataResponse, projectDataReRenderResponse]);
 
   const notification_btn_ref = useRef(null);
 
   const handleClose = () => {
     setIsNotificationActive(false);
   };
+
   useHandleOutsideClick(notification_btn_ref, handleClose);
+
   const handleViewNotification = async (id) => {
     const response = await getWithAuth(UPDATEDPROJECTLIST + `${id}/`);
     setNotificationProjectList(response?.data);
     setIsViewNotification(true);
+    // useProjectData();
   };
 
   return (

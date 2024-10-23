@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const CostPerInterview = () => {
   const { formData, setFormData } = useContext(FormDataContext);
   const isMultipleSample = useSelector(
-    (store) => store.addMultipleSampleCpi.isMultipleSampleSelected
+    (store) => store.addMultipleSampleCpi.isMultipleSampleCheckbox
   );
 
   const handleInputChange = (e) => {

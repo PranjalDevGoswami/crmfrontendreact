@@ -16,6 +16,8 @@ import useProjectDataWIthRoleWiseFilter from "../../utils/hooks/useProjectDataWI
 import DarkMode from "../components/DarkMode.js";
 import { useSelector } from "react-redux";
 import useManagerList from "../../utils/hooks/useProjectManager.js";
+import { useDispatch } from "react-redux";
+import { setProjects } from "../../utils/slices/ProjectSlice.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();
@@ -23,6 +25,7 @@ const Header = () => {
   const navigate = useNavigate();
   const headerBtn = useRef();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+  const dispatch = useDispatch();
 
   useProjectData();
   useUserData();

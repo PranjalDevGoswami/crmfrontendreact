@@ -25,6 +25,8 @@ import { useDispatch } from "react-redux";
 import MultipleSampleCpiRecord from "../components/Form/MultipleSampleCpiRecord.js";
 import { usePostFormData } from "../../utils/hooks/usePostFormData.js";
 import Popup from "../components/Popup.js";
+import useProjectData from "../../utils/hooks/useProjectData.js";
+import { addReRender } from "../../utils/slices/ReRenderSlice.js";
 
 const Form = () => {
   const {
@@ -40,6 +42,7 @@ const Form = () => {
     (store) => store.addMultipleSampleCpi.isMultipleSample
   );
   const dispatchAddMultipleSampleCpi = useDispatch();
+  const dispatchAddMultipleSampleCpiCheckbox = useDispatch();
 
   const navigate = useNavigate();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
@@ -57,7 +60,13 @@ const Form = () => {
         icon: "warning",
       });
     } else {
-      usePostFormData(formData, SetProjectAdded, dispatchAddMultipleSampleCpi);
+      usePostFormData(
+        formData,
+        SetProjectAdded,
+        dispatchAddMultipleSampleCpi,
+        dispatchAddMultipleSampleCpiCheckbox
+      );
+      dispatchAddMultipleSampleCpi(addReRender(2));
       navigate("/sales-dashboard");
     }
   };

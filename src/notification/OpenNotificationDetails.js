@@ -1,20 +1,28 @@
 import { useContext, useEffect, useState } from "react";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import Button from "../components/Button";
-import { putWithAuth } from "../provider/helper/axios";
-import { PROJECTUPDATEWITHPROJECTCODE } from "../../utils/constants/urls";
+import { getWithAuth, putWithAuth } from "../provider/helper/axios";
+import {
+  PROJECTDATAAPIS,
+  PROJECTUPDATEWITHPROJECTCODE,
+} from "../../utils/constants/urls";
 import SweetAlert from "../components/SweetAlert";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { addReRender } from "../../utils/slices/ReRenderSlice";
 
 const OpenNotification = ({ notification_btn_ref }) => {
-  const { notificationProjectList, setIsViewNotification } =
-    useContext(NotifiactionContext);
+  const {
+    notificationProjectList,
+    setIsViewNotification,
+    setNotificationProjectList,
+  } = useContext(NotifiactionContext);
+
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const dispatchReRender = useDispatch();
 
   const token = localStorage.getItem("token");
+  const count = useSelector((store) => store.ReRender.count);
 
   const [dataToUpdate, setDataToUpdate] = useState({
     id: "",
@@ -25,6 +33,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
   });
   const [projectData, setProjectData] = useState([]);
   const project = useSelector((store) => store.projectData.projects);
+
   useEffect(() => {
     const fetchProjectData = async () => {
       try {
@@ -35,8 +44,6 @@ const OpenNotification = ({ notification_btn_ref }) => {
     };
     fetchProjectData();
   }, [token]);
-
-  console.log(notificationProjectList);
 
   const handleAccept = async (id) => {
     const selectedProject = notificationProjectList.find(
@@ -62,8 +69,9 @@ const OpenNotification = ({ notification_btn_ref }) => {
             text: response?.data?.message,
             icon: "success",
           });
-          dispatchReRender(addReRender());
+          dispatchReRender(addReRender(1));
           setIsViewNotification(false);
+          setNotificationProjectList([]);
         } else {
           SweetAlert({
             title: "Error",

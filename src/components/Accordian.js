@@ -66,7 +66,7 @@ const Accordion = ({
               <div key={index} className="flex items-center p-1">
                 <input
                   type="checkbox"
-                  checked={selectedOptions.includes(option)} // Keep in sync with selectedOptions
+                  checked={selectedOptions.includes(option)}
                   onChange={(e) => handleSelectOption(e, option)}
                 />
                 <span className="ml-2">{option}</span>
