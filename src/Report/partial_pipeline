@@ -1,0 +1,125 @@
+import React, { useState, useRef } from "react";
+import CanvasJSReact from "@canvasjs/react-charts";
+
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+const SampleInPipeLineReport = ({ projectData, userList }) => {
+  const chartRef = useRef(null);
+
+  const getCurrentQuarter = () => {
+    const month = new Date().getMonth() + 1;
+    if (month >= 1 && month <= 3) return "Q1";
+    if (month >= 4 && month <= 6) return "Q2";
+    if (month >= 7 && month <= 9) return "Q3";
+    return "Q4";
+  };
+
+  const [selectedQuarter, setSelectedQuarter] = useState(getCurrentQuarter());
+
+  // Filter projects by status
+  const filteredProjects = projectData.filter(
+    (item) => item.status === "In Progress" || item.status === "To Be Started"
+  );
+
+  // Group projects by team lead and quarter
+  const projectsByTeamLead = {};
+
+  filteredProjects.forEach((project) => {
+    const teamLead = project.project_assigned_to_teamlead?.id; // Assume this is the field for team lead
+    const startDate = new Date(project.tentative_start_date);
+    const endDate = new Date(project.tentative_end_date);
+    const sampleSize = parseInt(project.sample, 10);
+
+    if (!projectsByTeamLead[teamLead]) {
+      projectsByTeamLead[teamLead] = [];
+    }
+
+    // Check if project is in the selected quarter
+    const month = startDate.getMonth() + 1;
+    if (
+      (selectedQuarter === "Q1" && month >= 1 && month <= 3) ||
+      (selectedQuarter === "Q2" && month >= 4 && month <= 6) ||
+      (selectedQuarter === "Q3" && month >= 7 && month <= 9) ||
+      (selectedQuarter === "Q4" && month >= 10 && month <= 12)
+    ) {
+      projectsByTeamLead[teamLead].push({ startDate, endDate, sampleSize });
+    }
+  });
+
+  const getWeeklySamples = (startDate, endDate, totalSampleSize) => {
+    const oneWeek = 1000 * 60 * 60 * 24 * 7;
+    const totalWeeks = Math.ceil((endDate - startDate) / oneWeek);
+    const weeklySample = totalSampleSize / totalWeeks;
+
+    return Array.from({ length: totalWeeks }, (_, i) => ({
+      x: new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate() + i * 7
+      ),
+      y: weeklySample,
+    }));
+  };
+
+  const chartData = Object.keys(projectsByTeamLead).map((teamLead) => {
+    const weeklySamples = [];
+    projectsByTeamLead[teamLead].forEach((project) => {
+      const { startDate, endDate, sampleSize } = project;
+      const projectSamples = getWeeklySamples(startDate, endDate, sampleSize);
+
+      projectSamples.forEach((sample, index) => {
+        if (weeklySamples[index]) {
+          weeklySamples[index].y += sample.y;
+        } else {
+          weeklySamples[index] = { x: sample.x, y: sample.y };
+        }
+      });
+    });
+
+    return {
+      type: "line",
+      name: teamLead,
+      showInLegend: true,
+      dataPoints: weeklySamples,
+    };
+  });
+
+  const options = {
+    animationEnabled: true,
+    theme: "light2",
+    title: {
+      text: "Weekly Sample Size Distribution per Team Lead",
+    },
+    axisX: {
+      title: "Weeks",
+      valueFormatString: "YYYY-MM-DD",
+    },
+    axisY: {
+      title: "Sample Size",
+    },
+    data: chartData,
+  };
+
+  return (
+    <div className="w-full">
+      <div style={{ marginBottom: "20px" }}>
+        <label>Select Quarter: </label>
+        <select
+          value={selectedQuarter}
+          onChange={(e) => setSelectedQuarter(e.target.value)}
+        >
+          <option value="Q1">Q1 (Jan-Mar)</option>
+          <option value="Q2">Q2 (Apr-Jun)</option>
+          <option value="Q3">Q3 (Jul-Sep)</option>
+          <option value="Q4">Q4 (Oct-Dec)</option>
+        </select>
+      </div>
+      <CanvasJSChart
+        options={options}
+        onRef={(ref) => (chartRef.current = ref)}
+      />
+    </div>
+  );
+};
+
+export default SampleInPipeLineReport;

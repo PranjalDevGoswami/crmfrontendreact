@@ -1,0 +1,387 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.faZveH {
+  min-width: 50px !important;
+}
+.lnOUep {
+  white-space: pre-wrap !important;
+}
+
+
+.DrawerBody{
+  overflow: hidden;
+}
+
+.AddManDaysAnimation{
+  animation-name: animated_mandays;
+  animation-duration: 1s;
+  z-index: 10;
+}
+@keyframes animated_mandays {
+  0%   {left:0px; top:-2.7rem;}
+
+  100% {left:0px; top:-0.3rem;}
+}
+.removeManDaysAnimation{
+  animation-name: animated_mandays_remove;
+  animation-duration: 1s;
+}
+.tableClass .sc-dmXWDj {
+  /* overflow-x: visible !important; */
+  overflow-y: visible !important;
+}
+
+.tableClass.sc-ePzkNi
+ {
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+  white-space: pre-wrap !important;
+}
+.tableClass .rdt_TableBody{
+  overflow-y: visible;
+  min-height: 50vh;
+}
+.tableClass .kiYaow {
+  overflow: visible;
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+}
+.rdt_TableCell div{
+  word-wrap: break-word !important;
+  text-wrap: wrap !important;
+  text-align: left !important;
+}
+.css-13cymwt-control{
+  position: relative;
+}
+.css-1nmdiq5-menu{
+ overflow-y: scroll !important;
+ z-index: 9999 !important;
+ /* position:absolute;
+ top: 30px;
+ left: 0;
+ height: 100px;
+ background-color: red;
+ color: #fff; */
+}
+
+.cmcNky div:first-child{
+  overflow: visible !important;
+}
+.bOmZtP div:first-child{
+  overflow: visible !important;
+}
+.sc-eywPal{
+  display: none !important;
+  opacity: 0 !important;
+}
+
+ .opration_btn {
+  position: absolute;
+  top: 0;
+  right: 3.5rem;
+    overflow: visible;
+}
+.opration_btn_bottom {
+  position: absolute;
+  bottom: 0;
+  right: 3.5rem;
+  overflow: visible;
+} 
+
+
+.management-panel {
+  font-family: Arial, sans-serif;
+}
+
+.panel-content {
+  display: flex;
+}
+
+.user-list-section,
+.hierarchy-section {
+  padding: 16px;
+}
+
+.droppable-list {
+  margin: 8px;
+  padding: 8px;
+  border: 1px solid gray;
+  min-width: 200px;
+  background-color: #f0f0f0;
+}
+
+.draggable-item {
+  user-select: none;
+  padding: 16px;
+  margin: 0 0 8px 0;
+  background-color: #fff;
+  color: #333;
+}
+
+.hierarchy-tree {
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-node {
+  position: relative;
+  margin-left: 16px;
+}
+
+.tree-node::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -20px;
+  border-left: 2px solid gray;
+  border-bottom: 2px solid gray;
+  width: 20px;
+  height: 20px;
+}
+
+.tree-node-content {
+  margin-left: 20px;
+}
+
+.branch {
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 2px solid gray;
+}
+.swal2-container {
+  z-index: 2000;
+}
+.ProjectOperationEdit {
+  width: calc(50% - 20px);
+  margin-right: 5px;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+@media (min-width:320px) and (max-width:1080px) {
+  .filterTabsButton{
+  font-size: 14px;
+    padding: 5px;
+    line-height: 15px;
+  }
+}
+
+.css-e47596-MuiDateRangeCalendar-root>div{
+  /* display: none; */
+}
+
+
+
+
+.calendar {
+  padding: 20px;
+  /* box-shadow: 1px 1px 20px 0 rgba(0, 0, 0, 0.4); */
+  
+}
+
+.calendar--nav {
+  color: #000;
+  height: 40px;
+  padding: 0 15px;
+  position: relative;
+}
+
+.calendar--nav a {
+  cursor: pointer;
+  text-align: center;
+  color: #000;
+  -webkit-user-select: none;
+  user-select: none;
+  width: 30px;
+  font-size: 22px;
+  line-height: 20px;
+  display: inline-block;
+  position: absolute;
+  top: 8px;
+  left: 10px;
+}
+
+.calendar--nav a:hover {
+  color: #ad1919;
+}
+
+.calendar--nav a:last-child {
+  left: auto;
+  right: 10px;
+}
+
+.calendar--nav h1 {
+  text-align: center;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 36px;
+  position: absolute;
+  left: 40px;
+  right: 40px;
+}
+
+.calendar--nav small {
+  font-weight: 300;
+  font-size: 60%;
+}
+
+.calendar--days {
+  font-size: 0;
+}
+
+.calendar--days span {
+    text-align: center;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    width: 14.2857%;
+    margin: 2px 0;
+    font-size: 12px;
+    line-height: 24px;
+    display: inline-block;
+    position: relative;
+}
+
+.calendar--days span.label {
+  text-transform: uppercase;
+  color: black;
+  cursor: initial;
+  font-size: 8px;
+  font-weight: 400;
+}
+
+.calendar--days span.active {
+  font-weight: 700;
+  background-color: rgba(182, 112, 244, 0.05);
+  border-radius: 12px;
+}
+
+.calendar--days span.muted {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.calendar--days span.between {
+  border-radius: 0;
+}
+
+.calendar--days span.start,
+.calendar--days span.between,
+.calendar--days span.end {
+  background-color: #b670f4;
+  color: #fff;
+}
+
+.calendar--days span.start {
+  border-radius: 12px 0 0 12px;
+}
+
+.calendar--days span.end {
+  border-radius: 0 12px 12px 0;
+}
+
+.calendar--days span.start.end {
+  border-radius: 12px;
+}
+
+.calendar--days span.between:nth-child(7n):after,
+.calendar--days span.start:nth-child(7n):after {
+  content: "";
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 100%;
+  background-color: #b670f4;
+  width: 20px;
+  z-index: 100000000;
+}
+
+.calendar--days span.between:nth-child(7n+1):after,
+.calendar--days span.end:nth-child(7n+1):after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  background-color: #b670f4;
+  width: 20px;
+}
+
+.calendar--days span.start.end:after {
+  display: none;
+}
+
+/* Button to open the popup */
+.open-popup-btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Popup container */
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Background blur effect */
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+/* Popup content */
+.popup-content {
+  position: relative;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: center;
+  /* max-width: 400px; */
+  /* max-width: 6; */
+  width: 50%;
+  height: fit-content;
+}
+.huyunb{
+  min-height: 100% !important;
+}

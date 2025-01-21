@@ -1,0 +1,85 @@
+// // FilterProject.jsx
+// import React, { useContext, useEffect, useState } from "react";
+// import { FilterContext } from "../ContextApi/FilterContext.js";
+// import DateRangeFilterComponent from "./filter/DateRangeFilterComponent.js";
+// import HodDropdown from "./filter/HodDropdown.js";
+// import ManagerDropdown from "./filter/ManagerDropdown.js";
+// import TeamLeadDropdown from "./filter/TeamLeadDropdown.js";
+// import ClientDropdown from "./filter/ClientDropdown.js";
+// import StatusFilter from "./filter/StatusFilter.js";
+// import { useFilterLogic } from "../../utils/hooks/useFilterLogic.js";
+
+// const FilterProject = () => {
+//   const {
+//     selectedStatus,
+//     setSelectedStatus,
+//     selectedClient,
+//     setSelectedClient,
+//     selectedHod,
+//     setSelectedHod,
+//     selectedManager,
+//     setSelectedManager,
+//     selectedTl,
+//     setSelectedTl,
+//     setClientsList,
+//   } = useContext(FilterContext);
+
+//   const {
+//     clientsList,
+//     hodListArray,
+//     managerListArray,
+//     tlListArray,
+//     dateRange,
+//     setDateRange,
+//   } = useFilterLogic();
+
+//   const handleFilterOption = (name, value) => {
+//     switch (name) {
+//       case "Client":
+//         setSelectedClient(value);
+//         break;
+//       case "HOD":
+//         setSelectedHod(value);
+//         break;
+//       case "Manager":
+//         setSelectedManager(value);
+//         break;
+//       case "TeamLead":
+//         setSelectedTl(value);
+//         break;
+//       default:
+//         break;
+//     }
+//   };
+
+//   return (
+//     <div className="flex items-center justify-between">
+//       <DateRangeFilterComponent
+//         dateRange={dateRange}
+//         setDateRange={setDateRange}
+//       />
+//       <HodDropdown
+//         hodListArray={hodListArray}
+//         handleFilterOption={handleFilterOption}
+//       />
+//       <ManagerDropdown
+//         managerListArray={managerListArray}
+//         handleFilterOption={handleFilterOption}
+//       />
+//       <TeamLeadDropdown
+//         tlListArray={tlListArray}
+//         handleFilterOption={handleFilterOption}
+//       />
+//       <ClientDropdown
+//         clientsList={clientsList}
+//         handleFilterOption={handleFilterOption}
+//       />
+//       {/* <StatusFilter
+//         selectedStatus={selectedStatus}
+//         setSelectedStatus={setSelectedStatus}
+//       /> */}
+//     </div>
+//   );
+// };
+
+// export default FilterProject;
