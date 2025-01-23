@@ -7,6 +7,7 @@ import {
 } from "../slices/AddMutipleSampleCpiSlice";
 import { ProjectData } from "../apis/projectData";
 import { setProjects } from "../slices/ProjectSlice";
+import { useSelector } from "react-redux";
 
 export const usePostFormData = async (
   data,
@@ -15,7 +16,7 @@ export const usePostFormData = async (
   dispatchAddMultipleSampleCpi,
   dispatchAddMultipleSampleCpiCheckbox,
   navigate,
-  setFormData
+  setFormData,page_number,page_size
 ) => {
   try {
     const response = await PostFormData(data);
@@ -48,8 +49,8 @@ export const usePostFormData = async (
         project_samples: [],
         is_multiple_sample_cpi: null,
       });
-      const projectData = await ProjectData();
-      dispatch(setProjects(projectData));
+      const projectData = await ProjectData(page_number,page_size);
+      dispatch(setProjects(projectData?.results));
     } else if (
       response?.ex?.response?.data[0] ===
       "Tentative end date cannot be in the past."

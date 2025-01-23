@@ -12,6 +12,7 @@ import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import { addManDaysValidation } from "../../../utils/validation/addManDaysValidation.js";
 import { useDispatch } from "react-redux";
 import { handlePostMandaysData } from "../../../utils/helperFunction/postAddMandaysData/index.js";
+import { useSelector } from "react-redux";
 
 export function AddManDays({ setMultiEditFieldOpen }) {
   const {
@@ -35,6 +36,8 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     }))
   );
   const dispatch = useDispatch();
+  const {page_number,page_size} = useSelector(store=>store.projectData) 
+  console.log("🚀 ~ AddManDays ~ page_number,page_size}:", page_number,page_size)
 
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
@@ -168,7 +171,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         dispatch,
         setIsAddManDays,
         setisEdit,
-        closeDrawerRight
+        closeDrawerRight,page_number,page_size,
       );
     }
   };

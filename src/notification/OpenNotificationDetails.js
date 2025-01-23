@@ -36,6 +36,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
   const isMultipleCpiSample = useSelector(
     (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
   );
+    const {page_number,page_size} = useSelector(store=>store.projectData)
 
   const token = localStorage.getItem("token");
 
@@ -71,8 +72,8 @@ const OpenNotification = ({ notification_btn_ref }) => {
       setNotificationProjectList([]);
       const notificationCountfreshData = await notificationCount();
       dispatch(setnotification(notificationCountfreshData));
-      const projectData = await ProjectData();
-      dispatch(setProjects(projectData));
+      const projectData = await ProjectData(page_number,page_size);
+      dispatch(setProjects(projectData.results));
     } else {
       SweetAlert({
         title: "Error",

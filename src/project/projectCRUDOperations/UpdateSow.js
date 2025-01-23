@@ -24,10 +24,11 @@ const UpdateSow = ({ viewRecord }) => {
     upload_document: [],
     created_by: userRole,
   });
-  const projectResponse = useSelector((store)=>store.projectData.projects)
+      const {page_number,page_size,projects} = useSelector(store=>store.projectData)
+  
 
   useEffect(()=>{
-    const newList = projectResponse.filter((item)=>item.id == viewRecord.id)
+    const newList = projects.filter((item)=>item.id == viewRecord.id)
   setProjectList(newList)
   },[viewRecord])
   
@@ -97,8 +98,8 @@ const methodRequired = (projectList.map((item)=>item.documents.length)>0) ? patc
           icon: "success",
         });
         setIsUploadSow(false);
-        const projectData = await ProjectData();
-        dispatch(setProjects(projectData));
+        const projectData = await ProjectData(page_number,page_size);
+        dispatch(setProjects(projectData.results));
       }
     } catch (error) {
       console.log("🚀 ~ PostUpdateEditData ~ error:", error)

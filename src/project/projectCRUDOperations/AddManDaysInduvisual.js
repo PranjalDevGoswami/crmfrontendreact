@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { getMinDate } from "../../../utils/helperFunction/dateLimit";
 import { addManDaysValidation } from "../../../utils/validation/addManDaysValidation";
 import { handlePostMandaysData } from "../../../utils/helperFunction/postAddMandaysData";
+import { useSelector } from "react-redux";
 
 const AddManDaysInduvisual = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState("");
@@ -22,6 +23,8 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const { setIsAddManDays, setisEdit } = useContext(DataTableContext);
   const dispatch = useDispatch();
+  const {page_number,page_size} = useSelector(store=>store.projectData) 
+
 
   const handleFilterOption = (name, value) => {
     setUpdatedValue((prevValues) =>
@@ -80,7 +83,7 @@ const AddManDaysInduvisual = ({ viewRecord }) => {
 
   const handleEditUpdate = () => {
     if (validateFields()) {   
-      handlePostMandaysData(updatedValue,dispatch,setIsAddManDays, setisEdit,closeDrawerRight)
+      handlePostMandaysData(updatedValue,dispatch,setIsAddManDays, setisEdit,closeDrawerRight,page_number,page_size)
     }
   };
 

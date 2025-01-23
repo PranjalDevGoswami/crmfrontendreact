@@ -8,8 +8,11 @@ import { DataTableContext } from "../../ContextApi/DataTableContext";
 import { ProjectData } from "../../../utils/apis/projectData";
 import { setProjects } from "../../../utils/slices/ProjectSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const UpdateStatus = ({ viewRecord }) => {
+  const {page_number,page_size} = useSelector(store=>store.projectData)
+
   const [updatedStatus, setUpdatedStatus] = useState({
     project_id: viewRecord.id,
     status: "",
@@ -30,8 +33,8 @@ const UpdateStatus = ({ viewRecord }) => {
         text: "Status Change Sucessfully!!",
         icon: "success",
       });
-      const projectData = await ProjectData();
-      dispatch(setProjects(projectData));
+      const projectData = await ProjectData(page_number,page_size);
+      dispatch(setProjects(projectData?.results));
     } else {
       SweetAlert({
         title: "Error",

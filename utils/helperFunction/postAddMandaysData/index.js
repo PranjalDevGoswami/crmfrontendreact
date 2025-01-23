@@ -3,7 +3,9 @@ import { ProjectData } from "../../apis/projectData";
 import SweetAlert from "../../../src/components/SweetAlert";
 import { setProjects } from "../../slices/ProjectSlice";
 
-export const handlePostMandaysData = async (data,dispatch,setIsAddManDays, setisEdit,closeDrawerRight) => {
+export const handlePostMandaysData = async (data,dispatch,setIsAddManDays, setisEdit,closeDrawerRight,page_number,page_size) => {
+  console.log(page_number,page_size);
+  
     try {
       const response = await PostMandaysData(data);
       const error = response?.ex?.response?.data?.map((item) => item);
@@ -16,8 +18,8 @@ export const handlePostMandaysData = async (data,dispatch,setIsAddManDays, setis
         });
         closeDrawerRight()
         setisEdit(false);
-        const projectData = await ProjectData();
-        dispatch(setProjects(projectData));
+        const projectData = await ProjectData(page_number,page_size);
+        dispatch(setProjects(projectData?.results));
       } else if (response?.ex?.response?.data[0]?.non_field_errors?.[0]) {
         SweetAlert({
           title: "Error",

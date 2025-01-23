@@ -322,6 +322,7 @@ import {
 import { useDispatch } from "react-redux";
 import { ProjectData } from "../../utils/apis/projectData.js";
 import { setProjects } from "../../utils/slices/ProjectSlice.js";
+import { useSelector } from "react-redux";
 
 const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const userrole = localStorage.getItem("userrole");
@@ -334,6 +335,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const [isSelectTLLoaded, setIsSelectTLLoaded] = useState(false);
   const [assignedDataList, setAssignedDataList] = useState([]);
   const dispatch = useDispatch();
+  const {page_number,page_size} = useSelector(store=>store.projectData)
 
   useEffect(() => {
     const getTeamLead = async () => {
@@ -398,8 +400,8 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         icon: "success",
       });
       // dispatchReRender(addReRender());
-      const projectData = await ProjectData();
-      dispatch(setProjects(projectData));
+      const projectData = await ProjectData(page_number,page_size);
+      dispatch(setProjects(projectData?.results));
     } catch (error) {
       SweetAlert({
         title: "Error",

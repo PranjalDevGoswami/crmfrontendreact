@@ -29,14 +29,16 @@ const SampleEdit = ({ viewRecord }) => {
     tentative_end_date: "",
   });
 
-  const projectData = useSelector((store) => store.projectData.projects);
+  // const projects = useSelector((store) => store.projectData.projects);
+    const {page_number,page_size,projects} = useSelector(store=>store.projectData)
+  
   const { setisEdit } = useContext(DataTableContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const dispatchReRender = useDispatch();
   const dispatch = useDispatch();
   const { setNotificationList } = useContext(NotifiactionContext);
 
-  const currentProject = projectData.filter((item) => item.id === viewRecord.id);
+  const currentProject = projects.filter((item) => item.id === viewRecord.id);
   const isMultipleSample = currentProject?.flatMap(
     (item) => item?.project_samples
   );
@@ -155,8 +157,8 @@ const SampleEdit = ({ viewRecord }) => {
       setisEdit(false);
       const response = await notificationCount();
         dispatch(setnotification(response));
-      const projectData = await ProjectData();
-      dispatchReRender(setProjects(projectData));
+      const projectData = await ProjectData(page_number,page_size);
+      dispatchReRender(setProjects(projectData?.results));
     } else {
       SweetAlert({
         title: response?.ex?.response?.data?.error,

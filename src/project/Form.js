@@ -36,6 +36,7 @@ const Form = () => {
     SetProjectAdded,
     setFormData,
   } = useContext(FormDataContext);
+  const {page_number,page_size} = useSelector(store=>store.projectData)
 
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
@@ -96,7 +97,8 @@ const Form = () => {
         dispatchAddMultipleSampleCpi,
         dispatchAddMultipleSampleCpiCheckbox,
         navigate,
-        setFormData
+        setFormData,
+        page_number,page_size
       );
     }
   };
