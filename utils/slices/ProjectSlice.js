@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   projects: [],
+  page_number:1,
+  page_size:10,
+  totalRows:0,
 };
 
 const projectSlice = createSlice({
@@ -19,8 +22,18 @@ const projectSlice = createSlice({
         (project) => project.id !== action.payload
       );
     },
+    addPageNumber:(state,action)=>{
+      state.page_number = action.payload
+    },
+    addPageSize:(state,action)=>{
+      state.page_size = action.payload
+    },
+    addTotalRows:(state,action) =>{
+      state.totalRows = action.payload
+    }
+
   },
 });
 
-export const { setProjects, addProject, removeProject } = projectSlice.actions;
+export const { setProjects, addProject, removeProject,addPageNumber,addPageSize,addTotalRows } = projectSlice.actions;
 export default projectSlice.reducer;

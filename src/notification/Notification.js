@@ -37,7 +37,6 @@ const Notification = () => {
   const projectDataResponse = useSelector(
     (store) => store.projectData.projects
   );
-
   
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -61,7 +60,7 @@ const Notification = () => {
     }
     setIsViewNotification(true);
   };
-  const projectCode = projectDataResponse?.filter((old_item)=>{
+  const projectCode = projectDataResponse.length>0 && projectDataResponse?.filter((old_item)=>{
    return notificationCount?.project_id?.some((item)=>item == old_item.id)
   })
 

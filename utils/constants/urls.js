@@ -3,7 +3,6 @@ export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
 // export const BASEURL = "http://127.0.0.1:8000";
 // export const BASEURL = "http://65.0.180.82"; // new Uat Server //temp
 export const DEPARTMENTSAPIS = BASEURL + "/api/user/department/";
-export const PROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 export const CLIENTDATAAPIS = BASEURL + "/api/project/clients/";
 export const UPDATETLASSIGNMENT = BASEURL + "/api/project/project-assignments/";
 export const LOGINPOSTAPIS = BASEURL + "/api/user/login/";
@@ -68,3 +67,9 @@ export const RAISECBR = (id) => {
   }
   return `${BASEURL}/api/finance/projects/${id}/cbr-raised/`;
 };
+export const PROJECTDATAAPIS = (page_number,page_size) => {
+  if (!page_number) {
+    throw new Error("Page Number is required to get the Project Data");
+  }
+  return `${BASEURL}/api/project/projects/?page=${page_number}&page_size=${page_size}`;
+}

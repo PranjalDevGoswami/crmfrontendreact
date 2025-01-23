@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setProjects } from "../slices/ProjectSlice";
-import { useSelector } from "react-redux";
 import { ProjectData } from "../apis/projectData";
+import { useSelector } from "react-redux";
+import { setProjects } from "../slices/ProjectSlice";
 
 const useProjectData = () => {
   const dispatch = useDispatch();
-  const count = useSelector((store) => store.ReRender.count);
+  const {page_number,page_size} = useSelector(Store=>Store.projectData)
   const [projectData, setProjectData] = useState([]);
 
   const getProjectData = async () => {
     try {
-      const response = await ProjectData();
+      const response = await ProjectData(page_number,page_size);
       if (response) {
         dispatch(setProjects(response));
         setProjectData(response);
@@ -23,7 +23,7 @@ const useProjectData = () => {
 
   useEffect(() => {
     getProjectData();
-  }, [count]);
+  }, [page_size,page_number]);
 
   return projectData;
 };

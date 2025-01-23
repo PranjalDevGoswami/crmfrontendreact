@@ -25,6 +25,7 @@ import { toggleViewMultipleCpiSample } from "../../utils/slices/MultipleSampleCp
 import { useDispatch } from "react-redux";
 import ViewMultipleSampleCpi from "./projectCRUDOperations/ViewMultipleSampleCpi";
 import ViewSowUploadList from "./projectCRUDOperations/ViewSowUploadList";
+import { addPageNumber, addPageSize } from "../../utils/slices/ProjectSlice";
 
 const OperationPersonTable = ({
   data,
@@ -49,6 +50,7 @@ const OperationPersonTable = ({
     toggledClearRows, setToggleClearRows,
     isMultiEdit,isDrawerOpen
   } = useContext(DataTableContext);
+  const totalRows = useSelector(store=>store.projectData.totalRows)
   const [multipleCpiSample, setMultipleCpiSample] = useState([]);
 
   const role = localStorage.getItem("role");
@@ -97,6 +99,13 @@ useEffect(() => {
   }
 }, [isDrawerOpen]);
 
+const handlePerRowsChange = (e) => {
+  dispatch(addPageSize(e))  
+}
+const handlePageChange = (e) => {
+  dispatch(addPageNumber(e))
+}
+
   return (
     <>
       {(department == isOperationDept && isTeamLeadRole) ||
@@ -114,7 +123,9 @@ useEffect(() => {
               : Dummycolumns
           }
           data={data?.length > 0 ? desabledRowData : DummyData}
-          pagination
+                    pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
+                    paginationTotalRows={totalRows}
+
           customStyles={darkMode ? customStylesDarkMode : customStyles}
           selectableRows
           onSelectedRowsChange={handleSelectedRowsChange}
@@ -150,7 +161,7 @@ useEffect(() => {
                 : Dummycolumns
             }
             data={data?.length > 0 ? desabledRowData : DummyData}
-            pagination
+                      pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
             selectableRows
             customStyles={darkMode ? customStylesDarkMode : customStyles}
             onSelectedRowsChange={handleSelectedRowsChange}
@@ -158,6 +169,8 @@ useEffect(() => {
             selectableRowDisabled={(row) => row.desabled}
             actions={<FilterProject />}
             clearSelectedRows={toggledClearRows} // Pass the toggle state here
+            paginationTotalRows={totalRows}
+
           />
         </div>
       ) : (
@@ -175,7 +188,7 @@ useEffect(() => {
                   : Dummycolumns
               }
               data={data?.length > 0 ? desabledRowData : DummyData}
-              pagination
+                        pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
               customStyles={darkMode ? customStylesDarkMode : customStyles}
               onSelectedRowsChange={handleSelectedRowsChange}
               enableMultiRowSelection
@@ -213,7 +226,7 @@ useEffect(() => {
                     : Dummycolumns
                 }
                 data={data?.length > 0 ? desabledRowData : DummyData}
-                pagination
+                          pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
                 customStyles={darkMode ? customStylesDarkMode : customStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
