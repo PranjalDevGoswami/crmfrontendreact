@@ -77,17 +77,15 @@
 import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { addFilterProjectData } from "../slices/FilterProjectDataSlice";
-import { addTotalRows } from "../slices/ProjectSlice";
 
 const useProjectDataWIthRoleWiseFilter = () => {
   const projectDataResponse = useSelector(
     (store) => store.projectData.projects
   );  
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
 
   const fetchProjectData = async () => {
-      dispatch(addFilterProjectData(projectDataResponse.results));
-      dispatch(addTotalRows(projectDataResponse.count))
+      dispatch(addFilterProjectData(projectDataResponse));
       return;
   };
 

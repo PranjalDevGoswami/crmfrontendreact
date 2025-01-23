@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ProjectData } from "../apis/projectData";
 import { useSelector } from "react-redux";
-import { setProjects } from "../slices/ProjectSlice";
+import { addTotalRows, setProjects } from "../slices/ProjectSlice";
 
 const useProjectData = () => {
   const dispatch = useDispatch();
@@ -12,9 +12,10 @@ const useProjectData = () => {
   const getProjectData = async () => {
     try {
       const response = await ProjectData(page_number,page_size);
-      if (response) {
-        dispatch(setProjects(response));
-        setProjectData(response);
+      if (response) { 
+        dispatch(setProjects(response?.results));
+      dispatch(addTotalRows(response?.count))
+        setProjectData(response?.results);
       }
     } catch (error) {
       console.error("Error fetching project data:", error);
