@@ -1,10 +1,10 @@
-import { PROJECTDATAAPIS } from "../../../../utils/constants/urls.js";
+import { POSTPROJECTDATAAPIS } from "../../../../utils/constants/urls.js";
 import SweetAlert from "../../../components/SweetAlert.js";
 import { postWithAuthForUpload } from "../../../provider/helper/axios.js";
 
 export const PostFormData = async (data) => {
   try {
-    return await postWithAuthForUpload(PROJECTDATAAPIS, data, {
+    return await postWithAuthForUpload(POSTPROJECTDATAAPIS, data, {
       method: "POST",
       body: JSON.stringify(data),
     });

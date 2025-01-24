@@ -77,7 +77,7 @@ export const Data = [
     key: "action",
     text: "Action",
     className: "action",
-    width: 100,
+    width: 60,
     align: "left",
     sortable: false,
     cell: (record) => {
@@ -234,67 +234,67 @@ export const customStyles = {
     },
   },
 };
-export const customStylesDarkMode = {
-  header: {
-    style: {
-      color: "#fff",
-      backgroundColor: "#000",
-      borderBottom: "1px solid",
-    },
-  },
-  pagination: {
-    style: {
-      color: "#fff",
-      borderColor: "white",
-      backgroundColor: "#000",
-      borderBottom: "none",
-    },
-  },
-  rows: {
-    style: {
-      backgroundColor: "#000", // override the row height
-      textAlign: "center",
-      position: "relative",
-      text: "#fff",
-      color: "#fff",
-    },
-  },
-  rows: {
-    highlightOnHoverStyle: {
-      // backgroundColor: "rgb(230, 244, 244)",
-      borderBottomColor: "#FFFFFF",
-      borderRadius: "25px",
-      outline: "1px solid #FFFFFF",
-      backgroundColor: "#000",
-    },
-  },
-  headCells: {
-    style: {
-      color: "#fff",
-      // backgroundColor: "#bd1d1d",
-      backgroundColor: "#000",
-      fontSize: "14px",
-      textAlign: "center",
-      whiteSpace: "pre-wrap",
-      wordWrap: "break-word",
-      borderColor: "red",
-      backgroundColor: "#000",
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: "20px", // override the cell padding for data cells
-      paddingRight: "20px",
-      textAlign: "center",
-      backgroundColor: "#000",
-      color: "#fff",
-    },
-    stripedStyle: {
-      color: "NORMALCOLOR",
-      backgroundColor: "#fff",
-    },
-  },
-};
+// export const customStylesDarkMode = {
+//   header: {
+//     style: {
+//       color: "#fff",
+//       backgroundColor: "#000",
+//       borderBottom: "1px solid",
+//     },
+//   },
+//   pagination: {
+//     style: {
+//       color: "#fff",
+//       borderColor: "white",
+//       backgroundColor: "#000",
+//       borderBottom: "none",
+//     },
+//   },
+//   rows: {
+//     style: {
+//       backgroundColor: "#000", // override the row height
+//       textAlign: "center",
+//       position: "relative",
+//       text: "#fff",
+//       color: "#fff",
+//     },
+//   },
+//   rows: {
+//     highlightOnHoverStyle: {
+//       // backgroundColor: "rgb(230, 244, 244)",
+//       borderBottomColor: "#FFFFFF",
+//       borderRadius: "25px",
+//       outline: "1px solid #FFFFFF",
+//       backgroundColor: "#000",
+//     },
+//   },
+//   headCells: {
+//     style: {
+//       color: "#fff",
+//       // backgroundColor: "#bd1d1d",
+//       backgroundColor: "#000",
+//       fontSize: "14px",
+//       textAlign: "center",
+//       whiteSpace: "pre-wrap",
+//       wordWrap: "break-word",
+//       borderColor: "red",
+//       backgroundColor: "#000",
+//     },
+//   },
+//   cells: {
+//     style: {
+//       paddingLeft: "20px", // override the cell padding for data cells
+//       paddingRight: "20px",
+//       textAlign: "center",
+//       backgroundColor: "#000",
+//       color: "#fff",
+//     },
+//     stripedStyle: {
+//       color: "NORMALCOLOR",
+//       backgroundColor: "#fff",
+//     },
+//   },
+// };
 
 export const customStylesFormanDaysDetails = {
   table: {

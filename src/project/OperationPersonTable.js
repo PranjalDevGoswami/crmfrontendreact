@@ -47,10 +47,12 @@ const OperationPersonTable = ({
     setShowSowList,
     sowList,
     setSowList,
-    toggledClearRows, setToggleClearRows,
-    isMultiEdit,isDrawerOpen
+    toggledClearRows,
+    setToggleClearRows,
+    isMultiEdit,
+    isDrawerOpen,
   } = useContext(DataTableContext);
-  const totalRows = useSelector(store=>store.projectData.totalRows)
+  const totalRows = useSelector((store) => store.projectData.totalRows);
   const [multipleCpiSample, setMultipleCpiSample] = useState([]);
 
   const role = localStorage.getItem("role");
@@ -89,28 +91,63 @@ const OperationPersonTable = ({
   const isMultipleCpiSample = useSelector(
     (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
   );
-// Toggle the state so React Data Table changes to clearSelectedRows are triggered
-const handleClearRows = () => {
-  setToggleClearRows(!toggledClearRows);
-}
-useEffect(() => {
-  if(isDrawerOpen == false){
-    handleClearRows(); // Call clear rows when new data is loaded
-  }
-}, [isDrawerOpen]);
+  // Toggle the state so React Data Table changes to clearSelectedRows are triggered
+  const handleClearRows = () => {
+    setToggleClearRows(!toggledClearRows);
+  };
+  useEffect(() => {
+    if (isDrawerOpen == false) {
+      handleClearRows(); // Call clear rows when new data is loaded
+    }
+  }, [isDrawerOpen]);
 
-const handlePerRowsChange = (e) => {
-  dispatch(addPageSize(e))  
-}
-const handlePageChange = (e) => {
-  dispatch(addPageNumber(e))
-}
+  const handlePerRowsChange = (e) => {
+    dispatch(addPageSize(e));
+  };
+  const handlePageChange = (e) => {
+    dispatch(addPageNumber(e));
+  };
+
+  // useEffect(() => {
+  //   const element = document.getElementById("dataTable");
+  //   function handleScrollEvent() {
+  //     console.log(
+  //       "You're at the bottom of the table",
+  //       element.scrollTop , element.clientHeight,
+  //       element.scrollHeight
+  //     );
+  //     if (element) {
+  //       // Check if user has scrolled to the bottom
+  //       if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
+  //         console.log(
+  //           "You're at the bottom of the table",
+  //           element.scrollTop + element.clientHeight,
+  //           element.scrollHeight
+  //         );
+  //         // Add more items to the 'filteredData' state from 'allData'
+  //       }
+  //     }
+  //   }
+  
+  //   // if (element) {
+  //     // Attach event listener to the specific element
+  //     window.addEventListener("scroll", handleScrollEvent);
+  //   // }
+  
+  //   return () => {
+  //     // Cleanup: Remove the event listener when component unmounts
+  //     if (element) {
+  //       element.removeEventListener("scroll", handleScrollEvent);
+  //     }
+  //   };
+  // }, []);
+  
 
   return (
-    <>
+    <div id="dataTable">
       {(department == isOperationDept && isTeamLeadRole) ||
       (department == isOperationDept && allManagerRolesRole) ||
-      ( department == isOperationDept && isHodRole) ? (
+      (department == isOperationDept && isHodRole) ? (
         <DataTable
           columns={
             data?.length > 0
@@ -123,9 +160,11 @@ const handlePageChange = (e) => {
               : Dummycolumns
           }
           data={data?.length > 0 ? desabledRowData : DummyData}
-                    pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
-                    paginationTotalRows={totalRows}
-
+          pagination
+          paginationServer
+          onChangeRowsPerPage={handlePerRowsChange}
+          onChangePage={handlePageChange}
+          paginationTotalRows={totalRows}
           customStyles={darkMode ? customStylesDarkMode : customStyles}
           selectableRows
           onSelectedRowsChange={handleSelectedRowsChange}
@@ -133,7 +172,11 @@ const handlePageChange = (e) => {
           selectableRowDisabled={(row) => row.desabled}
           actions={<FilterProject />}
           clearSelectedRows={toggledClearRows} // Pass the toggle state here
-          />
+          striped={true}
+          highlightOnHover={true}
+          paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+          theme={darkMode ? "dark" : "default"}
+        />
       ) : (isSuperUserDepartment.includes(department) && isSuperUserRole) ||
         isDirectorRole ? (
         <div className="">
@@ -161,16 +204,23 @@ const handlePageChange = (e) => {
                 : Dummycolumns
             }
             data={data?.length > 0 ? desabledRowData : DummyData}
-                      pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
+            pagination
+            paginationServer
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
             selectableRows
-            customStyles={darkMode ? customStylesDarkMode : customStyles}
+            customStyles={customStyles}
             onSelectedRowsChange={handleSelectedRowsChange}
             enableMultiRowSelection
             selectableRowDisabled={(row) => row.desabled}
             actions={<FilterProject />}
             clearSelectedRows={toggledClearRows} // Pass the toggle state here
             paginationTotalRows={totalRows}
-
+            striped={true}
+            highlightOnHover={true}
+            paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+            fixedHeader={true}
+            theme={darkMode ? "dark" : "default"}
           />
         </div>
       ) : (
@@ -188,32 +238,40 @@ const handlePageChange = (e) => {
                   : Dummycolumns
               }
               data={data?.length > 0 ? desabledRowData : DummyData}
-                        pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
+              pagination
+              paginationServer
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
               customStyles={darkMode ? customStylesDarkMode : customStyles}
               onSelectedRowsChange={handleSelectedRowsChange}
               enableMultiRowSelection
               selectableRowDisabled={(row) => row.desabled}
               actions={<FilterProject />}
               clearSelectedRows={toggledClearRows} // Pass the toggle state here
+              striped={true}
+              paginationTotalRows={totalRows}
+              highlightOnHover={true}
+              paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+              theme={darkMode ? "dark" : "default"}
             />
           ) : (
             <div>
-              {isViewerUserRole &&
-              <Link to={"/entry-page"}>
-                <Button
-                  name={
-                    <Tooltip text="Add New Project" position="top">
-                      <MdAddTask className="text-white text-xl" />
-                    </Tooltip>
-                  }
-                  className={`${
-                    darkMode
-                      ? "bg-black text-white border-white"
-                      : " border-black"
-                  } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
-                />
-              </Link>
-}
+              {isViewerUserRole && (
+                <Link to={"/entry-page"}>
+                  <Button
+                    name={
+                      <Tooltip text="Add New Project" position="top">
+                        <MdAddTask className="text-white text-xl" />
+                      </Tooltip>
+                    }
+                    className={`${
+                      darkMode
+                        ? "bg-black text-white border-white"
+                        : " border-black"
+                    } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
+                  />
+                </Link>
+              )}
               <DataTable
                 columns={
                   data?.length > 0
@@ -226,13 +284,18 @@ const handlePageChange = (e) => {
                     : Dummycolumns
                 }
                 data={data?.length > 0 ? desabledRowData : DummyData}
-                          pagination paginationServer  onChangeRowsPerPage={handlePerRowsChange} onChangePage={handlePageChange}
+                pagination
+                paginationServer
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
                 customStyles={darkMode ? customStylesDarkMode : customStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
                 actions={<FilterProject />}
                 clearSelectedRows={toggledClearRows} // Pass the toggle state here
+                striped={true}
+                theme={darkMode ? "dark" : "default"}
               />
             </div>
           )}
@@ -275,7 +338,7 @@ const handlePageChange = (e) => {
           <ViewSowUploadList viewRecord={sowList} />
         </Popup>
       )}
-    </>
+    </div>
   );
 };
 

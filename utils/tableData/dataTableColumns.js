@@ -270,7 +270,7 @@ export const TableColumn = ({
           </p>
         ),
       sortable: true,
-      width: "110px",
+      width: "60px",
     },
     {
       name: "Actions",
@@ -279,7 +279,7 @@ export const TableColumn = ({
       className: "action",
       align: "left",
       sortable: false,
-      // width: "90px",
+      width: "60px",
       cell: (record, index) => {
         return (
           <ActionsButton record={record} index={index} buttonRef={buttonRef} />
