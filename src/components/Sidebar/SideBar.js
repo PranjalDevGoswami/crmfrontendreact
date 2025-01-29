@@ -18,9 +18,9 @@ const SideBar = () => {
   const { sideBarOpen, setSideBarOpen } = useContext(ThemeContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
-  const isFinanceDept = department == "3";
   const isSalesDept = department == "1";
   const isOperationDept = department == "2";
+  const isFinanceDept = department == "3";
 
   const isAssManagerRole = role === "Ass.Manager";
   const isDirectorRole = role === "Director";
@@ -68,7 +68,7 @@ const SideBar = () => {
   ];
 
   const commonItems = [
-    !isFinanceDept && { icon: GoProjectRoadmap, label: "Project", link: "/operation-projects" },
+    !isFinanceDept && isOperationDept ? { icon: GoProjectRoadmap, label: "Project", link: "/operation-projects" } : { icon: GoProjectRoadmap, label: "Project", link: "/sales-projects" },
   ].filter(Boolean); // Removes undefined values
 
   return (

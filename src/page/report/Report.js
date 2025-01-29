@@ -137,11 +137,9 @@ const navigate = useNavigate()
                   onChangeRowsPerPage={handlePerRowsChange}
                   onChangePage={handlePageChange}
                   customStyles={customStyles}
-                //   onSelectedRowsChange={handleSelectedRowsChange}
-                //   enableMultiRowSelection
                   selectableRowDisabled={(row) => row.desabled}
                   actions={<FilterProject />}
-                  clearSelectedRows={toggledClearRows} // Pass the toggle state here
+                  clearSelectedRows={toggledClearRows}
                   striped={true}
                   paginationTotalRows={totalRows}
                   highlightOnHover={true}
