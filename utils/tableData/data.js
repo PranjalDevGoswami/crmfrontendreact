@@ -58,6 +58,8 @@ export const Data = () => {
     project_assigned_to_teamlead: item?.project_assigned_to_teamlead?.map((user) => user.name).join(' , ') || 'N/A',
     assigned_to: item?.assigned_to,
     sample: item?.sample,
+    project_samples:item?.project_samples,
+    project_actual_start_date:item?.project_actual_start_date,
     total_achievement: item?.total_achievement,
     remaining_interview: item?.remaining_interview,
     man_days: item.man_days,
@@ -67,6 +69,10 @@ export const Data = () => {
     documents: item?.documents,
     initial_sample_size:
       (isDirectorRole || isHodRole) && item.initial_sample_size,
+      created_by:item.created_by,
+      created_at:item.created_at,
+      project_actual_start_date:item.project_actual_start_date,
+      initial_sample_size:item.initial_sample_size
   }));
   return data;
 };

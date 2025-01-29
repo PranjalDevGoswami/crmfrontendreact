@@ -7,7 +7,6 @@ import {
 } from "../slices/AddMutipleSampleCpiSlice";
 import { ProjectData } from "../apis/projectData";
 import { setProjects } from "../slices/ProjectSlice";
-import { useSelector } from "react-redux";
 
 export const usePostFormData = async (
   data,
@@ -30,7 +29,7 @@ export const usePostFormData = async (
       dispatchAddMultipleSampleCpi(removeMultipleSample());
       dispatchAddMultipleSampleCpiCheckbox(toggleMultipleSampleCpi(false));
       dispatchAddMultipleSampleCpiCheckbox(checkedMultipleSampleCpi(false));
-      navigate("/sales-dashboard");
+      navigate("/sales-projects");
       setFormData({
         name: "",
         project_type: "",

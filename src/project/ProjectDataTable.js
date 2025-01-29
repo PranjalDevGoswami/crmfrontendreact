@@ -148,7 +148,7 @@ const ProjectDataTable = ({ config, PersonDepartment }) => {
                 <div className="relative w-full">
                   <ProjectStatusTabs
                     className={
-                      "absolute top-[10px] overflow-x-auto w-3/5 left-0 z-10 no-scrollbar"
+                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-full"
                     }
                   />
                 </div>

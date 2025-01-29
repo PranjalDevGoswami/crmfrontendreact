@@ -1,10 +1,10 @@
 import { RAISECBR } from "../../../../utils/constants/urls";
 import SweetAlert from "../../../components/SweetAlert";
-import { postWithAuth } from "../../../provider/helper/axios";
+import { patchWithAuth } from "../../../provider/helper/axios";
 
-export const RaiseCBRPostApi = async (data) => {
+export const RaiseCBRPostApi = async (id,data) => {
   try {
-    const response = await postWithAuth(RAISECBR(id), data, {
+    const response = await patchWithAuth(RAISECBR(id), data, {
       method: "POST",
       body: JSON.stringify(data),
     });

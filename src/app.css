@@ -385,3 +385,9 @@ input[type="number"]::-webkit-outer-spin-button {
 .huyunb{
   min-height: 100% !important;
 }
+.ddvZdT {
+  overflow: visible !important;
+  white-space: pre-wrap !important;
+  text-overflow: ellipsis;
+  text-align: center !important;
+}

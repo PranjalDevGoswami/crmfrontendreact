@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { isSalesDept } from "../config/Departments";
+import { isSalesDept,isFinanceDept } from "../config/Departments";
 
 export const FilterContext = createContext();
 
@@ -7,6 +7,7 @@ export const SearchFilterContext = ({ children }) => {
   const [department, setDepartment] = useState(
     localStorage.getItem("department")
   );
+
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -27,17 +28,26 @@ export const SearchFilterContext = ({ children }) => {
   const [selectedTl, setSelectedTl] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [tlAssociates, setTlAssociates] = useState([]);
-  const [activeTabValue, setActiveTabValue] = useState(
-    department === isSalesDept ? "all" : "In Progress"
-  );
+  // const [activeTabValue, setActiveTabValue] = useState(
+  //   department == isSalesDept ? "all" : "In Progress"
+  // );
 
+  const [activeTabValue, setActiveTabValue] = useState(
+    isFinanceDept ? "cbr raised" : (department == isSalesDept) ? "all" : "In Progress"
+  );
+  
   const [status, setStatus] = useState([
     activeTabValue,
     "All",
     "To Be Started",
     "Completed",
-    "CBR Raised",
+    "Invoice to be Raised",
     "On Hold",
+    "Invoice Generated",
+    "Payment Received",
+  "Advanced Billing Raised",
+  "Advanced Invoice Generated",
+  "Advance Payment Received"
   ]);
   const [selectedStatus, setSelectedStatus] = useState(activeTabValue);
   const [clientsList, setClientsList] = useState([]);

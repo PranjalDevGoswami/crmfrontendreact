@@ -1,19 +1,29 @@
-import {
-  allManagerRolesRole,
-  isDirectorRole,
-  isHodRole,
-} from "../../src/config/Role";
+import { allManagerRolesRole } from "../../src/config/Role";
 import ActionsButton from "../../src/project/projectCRUDOperations/ActionsButton";
 import { MdDownload, MdFileDownloadOff, MdRemoveRedEye } from "react-icons/md";
 import Tooltip from "../../src/components/Tooltip";
+import { isFinanceDept } from "../../src/config/Departments";
+import viewInvoice from "../../src/assets/invoice.png";
+import viewCBR from "../..//src/assets/bill_requisition.png";
 
 export const TableColumn = ({
   buttonRef,
   handleViewCpi,
   setShowSowList,
   setSowList,
+  navigate,
+  desabledRowData
 }) => {
-  
+
+  const invoice_generated = desabledRowData.filter((item)=>item.status === "Invoice generated")
+
+  const handleGetInvoice = (selectedRecord) => {
+    console.log("🚀 ~ handleGetInvoice ~ selectedRecord:", selectedRecord);
+    // e.preventDefault();
+    // setIsInvoice(true);
+    navigate("/view-cbr", { state: selectedRecord });
+  };
+
   const columns = [
     {
       name: "Project Code",
@@ -22,49 +32,44 @@ export const TableColumn = ({
       width: "120px",
     },
     {
+      name: "Project Name",
+      selector: (row) => row?.name,
+      sortable: true,
+      width: "180px",
+      overflow: "wrap !important",
+      whiteSpace: "pre-wrap !important",
+    },
+    {
+      name: "Project Type",
+      selector: (row) => row?.project_type,
+      sortable: true,
+      width: "85px",
+    },
+    {
       name: "Client Name",
       selector: (row) => row?.clients,
       sortable: true,
       width: "120px",
     },
     {
-      name: "Project Name",
-      selector: (row) => row?.name,
+      name: "Start Date",
+      selector: (row) => row?.tentative_start_date,
       sortable: true,
-      width: "235px",
-      overflow: "wrap !important",
-      whiteSpace: "pre-wrap !important",
+      width: "110px",
     },
     {
-      name: "Type",
-      selector: (row) => row?.project_type,
+      name: "End Date",
+      selector: (row) => row?.tentative_end_date,
       sortable: true,
-      width: "85px",
-      // hide: "md",
+      width: "110px",
     },
-    // !isDirectorRole ? 
-    {
-          name: "Start Date",
-          selector: (row) => row?.tentative_start_date,
-          sortable: true,
-          width: "110px",
-        },
-      // : { width: "5px" },
-    // !isDirectorRole ?
-     {
-          name: "End Date",
-          selector: (row) => row?.tentative_end_date,
-          sortable: true,
-          width: "110px",
-        },
-      // : { width: "5px" },
     !allManagerRolesRole && {
       name: "UniMrkt PM",
       selector: (row) => row?.assigned_to?.name,
       sortable: true,
       width: "130px",
     },
-    {
+    !isFinanceDept && {
       name: "Team Lead",
       selector: (row) => row?.project_assigned_to_teamlead,
       sortable: true,
@@ -75,6 +80,11 @@ export const TableColumn = ({
       selector: (row) => row?.project_client_pm?.name,
       sortable: true,
       width: "130px",
+    },
+    isFinanceDept && {
+      name: "Sample",
+      selector: (row) => row?.sample,
+      width: "80px",
     },
     {
       name: "CPI",
@@ -92,32 +102,48 @@ export const TableColumn = ({
       sortable: true,
       width: "85px",
     },
-    (isDirectorRole || isHodRole) && {
-      name: "Initial Target",
-      selector: (row) => row?.initial_sample_size,
-      sortable: true,
-      width: "140px",
+    isFinanceDept && {
+      name: "Addnl. Fee",
+      selector: (row) => (
+        <Tooltip text={"View Additional Fee"} className={"w-40"}>
+          <MdRemoveRedEye
+            onClick={() => handleViewAddnl(row)}
+            className="cursor-pointer text-base"
+          />
+        </Tooltip>
+      ),
+      width: "80px",
     },
-
-    // {
-    //   name: "Project Target",
-    //   selector: (row) => row?.sample,
-    //   sortable: true,
-    //   width: "100px",
-    // },
-    // {
-    //   name: "Ach. Target",
-    //   selector: (row) => row?.total_achievement,
-    //   sortable: true,
-    //   // width: "100px",
-    // },
-    // {
-    //   name: "Rem. Target",
-    //   selector: (row) => row?.remaining_interview,
-    //   sortable: true,
-    //   // width: "100px",
-    // },
-    {
+    isFinanceDept &&  {
+      name: "View CBR",
+      selector: (row) => (
+        <Tooltip text={"View CBR"} className={"w-40"}>
+          <img
+            alt="CBR"
+            src={viewCBR}
+            className="w-4 h-4 cursor-pointer"
+            onClick={() => {
+              handleGetInvoice(row);
+            }}
+          />
+        </Tooltip>
+      ),
+      width: "80px",
+    },
+    isFinanceDept && invoice_generated.length>0 && {
+      name: "View Invoice",
+      selector: (row) => (
+        <Tooltip text={"View Invoice"} className={"w-40"}>
+          <img
+            alt="invoice"
+            src={viewInvoice}
+            className="w-4 h-4 cursor-pointer"
+          />
+        </Tooltip>
+      ),
+      width: "80px",
+    },
+    !isFinanceDept && {
       name: "Project Target",
       selector: (row) => (
         <div className="flex">
@@ -129,54 +155,41 @@ export const TableColumn = ({
           </Tooltip>
         </div>
       ),
-
       sortable: true,
-      width: "150px",
+      width: "110px",
     },
-    {
+    !isFinanceDept && {
       name: "Progress",
       selector: (row) => {
-        const progressPercentage = 
+        const progressPercentage =
           row?.sample && parseFloat(row?.sample) !== 0
-            ? (parseFloat(row?.total_achievement || 0) / parseFloat(row?.sample)) * 100
-            : 0; 
+            ? (parseFloat(row?.total_achievement || 0) /
+                parseFloat(row?.sample)) *
+              100
+            : 0;
 
         return (
           <div className="w-full">
             <div className="relative w-full h-4 bg-gray-200 border border-gray-400 overflow-hidden">
               <div
                 className="h-full"
-                // style={{
-                //   width: `${Math.min(progressPercentage, 100)}%`, // Cap width to 100%
-                //   backgroundColor:
-                //     progressPercentage > 100 ? "#FF6347" : "#38A169", // Reddish color if > 100%
-                // }}
                 style={{
-                  width: `${Math.min(progressPercentage, 100)}%`, // Cap width to 100%
-                  backgroundColor:
-                    progressPercentage === 100
-                      ? "#38A169" // Greenish color for exactly 100%
-                      : progressPercentage > 100
-                      ? "#FF6347" // Reddish color for > 100%
-                      : "#FFD700", // Gold color for < 100%
+                  width: `${progressPercentage}%`,
+                  background:
+                    progressPercentage <= 100
+                      ? `hsl(${60 + progressPercentage * 0.6}, 100%, 50%)`
+                      : `hsl(${
+                          120 - (progressPercentage - 100) * 1.2
+                        }, 100%, 50%)`,
+                  color: "#fff",
+                  textAlign: "center",
+                  padding: "5px 0",
+                  borderRadius: "8px",
+                  transition:
+                    "width 0.5s ease-in-out, background 0.5s ease-in-out",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                 }}
-                
               ></div>
-              {parseFloat(row?.initial_sample_size) <
-                parseFloat(row?.sample) && (
-                <div
-                  className="absolute top-0 left-0 h-full bg-yellow-400 opacity-50"
-                  style={{
-                    width: `${Math.min(
-                      ((parseFloat(row?.sample) -
-                        parseFloat(row?.initial_sample_size)) /
-                        parseFloat(row?.sample)) *
-                        100,
-                      100
-                    )}%`,
-                  }}
-                ></div>
-              )}
             </div>
             <span className="text-gray-700">
               {progressPercentage.toFixed(2)}%
@@ -187,68 +200,16 @@ export const TableColumn = ({
       sortable: true,
       width: "100px",
     },
-    {
+    !isFinanceDept && {
       name: "Man Days",
       selector: (row) => row?.man_days,
       sortable: true,
-      // width: "110px",
     },
     {
       name: "Status",
       selector: (row) => row?.status,
       sortable: true,
       width: "125px",
-      conditionalCellStyles: [
-        {
-          when: (row) => row?.status === "In Progress",
-          style: {
-            color: "rgba(29, 78, 216,1)",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          },
-        },
-        {
-          when: (row) => row?.status === "Completed",
-          style: {
-            // backgroundColor: "#888",
-            color: "rgba(63, 195, 128, 1)",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          },
-        },
-        {
-          when: (row) => row?.status === "cbr_raised",
-          style: {
-            backgroundColor: "rgb(128,128,128,1)",
-            color: "white",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          },
-        },
-        {
-          when: (row) => row?.status === "undefined",
-          style: {
-            backgroundColor: "rgba(248, 148, 6, 0.9)",
-            color: "white",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          },
-        },
-        {
-          when: (row) => row?.status === null,
-          style: {
-            backgroundColor: "rgba(242, 38, 19, 0.9)",
-            color: "white",
-            "&:hover": {
-              cursor: "not-allowed",
-            },
-          },
-        },
-      ],
     },
     {
       name: "SOW",
@@ -286,7 +247,7 @@ export const TableColumn = ({
         );
       },
     },
-  ];
+  ].filter(Boolean); // This removes all falsy values (false, null, undefined)
 
   return columns;
 };

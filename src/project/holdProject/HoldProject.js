@@ -12,7 +12,7 @@ const HoldProject = ({ projectData }) => {
     (item) => item?.status === "On Hold"
   );
   const handleProjectReport = () => {
-    Navigate("/operation-dashboard");
+    Navigate("/operation-projects");
     setActiveTabValue("On Hold");
     setSelectedStatus("On Hold");
   };

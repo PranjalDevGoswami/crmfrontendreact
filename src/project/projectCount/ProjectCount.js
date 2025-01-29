@@ -9,7 +9,7 @@ const ProjectCount = ({ projectData }) => {
     useContext(FilterContext);
   const ProjectTotal = projectData?.length;
   const handleProjectReport = () => {
-    Navigate("/operation-dashboard");
+    Navigate("/operation-projects");
     setActiveTabValue("all");
     setSelectedStatus("all");
   };

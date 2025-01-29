@@ -25,17 +25,19 @@ export const useRedirectUser = async (navigate) => {
 
       localStorage.setItem("department", department);
       if (role === "Director" || role === "superUser") {
-        navigate("/report");
+        navigate("/dashboard");
       } else if (department == 1) {
-        navigate("/sales-dashboard");
+        navigate("/sales-projects");
       } else if (department == 2) {
-        navigate("/operation-dashboard");
-      } else if (department == 3) {
-        navigate("/finance-dashboard");
-      } else if (userDetails[0]?.email === "admin@unimrkt.com") {
-        navigate("/Admin-dashboard");
+        navigate("/operation-projects");
+      } 
+      else if (department == 3) {
+        navigate("/report");
+      } 
+      else if (userDetails[0]?.email === "admin@unimrkt.com") {
+        navigate("/Admin-projects");
       } else {
-        navigate("/default-dashboard");
+        navigate("/default-projects");
       }
     }
   } catch (error) {

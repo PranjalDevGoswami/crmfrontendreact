@@ -18,6 +18,7 @@ export const DataTableContextProvider = ({ children }) => {
   const [isUploadSow, setIsUploadSow] = useState(false);
   const [selectedRow, setSelectedRow] = useState([]);
   const [showSowList, setShowSowList] = useState(false);
+  const [showRaiseCbr, setShowRaiseCbr] = useState(false);
   const [sowList, setSowList] = useState([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
 
@@ -56,7 +57,10 @@ export const DataTableContextProvider = ({ children }) => {
         setShowSowList,
         sowList,
         setSowList,
-        toggledClearRows, setToggleClearRows
+        toggledClearRows,
+        setToggleClearRows,
+        showRaiseCbr,
+        setShowRaiseCbr,
       }}
     >
       {children}

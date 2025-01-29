@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import { useNavigate } from "react-router-dom";
-import SweetAlert from "../../components/SweetAlert.js";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import { useSelector } from "react-redux";
 const isSalesDept = "1";
@@ -26,6 +25,7 @@ const OpereationButton = () => {
     selectedRecord,
     setChangeProjectStatus,
     setIsUploadSow,
+    showRaiseCbr,setShowRaiseCbr
   } = useContext(DataTableContext);
   const [projectList,setProjectList] = useState()
 
@@ -80,7 +80,8 @@ const OpereationButton = () => {
     setIsUploadSow(true);
   };
   const handleRaiseCBR = (selectedRecord) => {    
-    PostRaiseCBR(selectedRecord.id,{ project_code: selectedRecord.project_code });
+    // PostRaiseCBR(selectedRecord.id,{ project_code: selectedRecord.project_code });
+        setShowRaiseCbr(!showRaiseCbr)
   };
   const handleGetInvoice = (selectedRecord) => {
     // e.preventDefault();
@@ -209,16 +210,17 @@ const OpereationButton = () => {
                   }
               </button>
             )}
-          </div>
-        </div>
-        {department == isFinanceDept && (
+             {/* {department == isFinanceDept && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={() => handleGetInvoice(selectedRecord)}
           >
             Get Invoice
           </button>
-        )}
+        )} */}
+          </div>
+        </div>
+       
       </div>
     </div>
   );

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   customStyles,
-  customStylesDarkMode,
   Dummycolumns,
   DummyData,
 } from "../../utils/tableData/DataTablesData";
@@ -26,6 +25,7 @@ import { useDispatch } from "react-redux";
 import ViewMultipleSampleCpi from "./projectCRUDOperations/ViewMultipleSampleCpi";
 import ViewSowUploadList from "./projectCRUDOperations/ViewSowUploadList";
 import { addPageNumber, addPageSize } from "../../utils/slices/ProjectSlice";
+import RaisedCbr from "./projectCRUDOperations/RaisedCbr";
 
 const OperationPersonTable = ({
   data,
@@ -33,6 +33,8 @@ const OperationPersonTable = ({
   isOperationPerson,
   desabledRowData,
 }) => {
+  const tableRef = useRef(null);
+
   const {
     isEdit,
     isView,
@@ -51,9 +53,11 @@ const OperationPersonTable = ({
     setToggleClearRows,
     isMultiEdit,
     isDrawerOpen,
+    showRaiseCbr,
   } = useContext(DataTableContext);
   const totalRows = useSelector((store) => store.projectData.totalRows);
   const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+  const { page_size, projects } = useSelector((store) => store.projectData);
 
   const role = localStorage.getItem("role");
   const isViewerUserRole = role !== "viewer";
@@ -72,6 +76,7 @@ const OperationPersonTable = ({
   const isPreSalesDept = "4";
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const ProjectData = useSelector((store) => store.projectData.projects);
@@ -110,76 +115,98 @@ const OperationPersonTable = ({
 
   // useEffect(() => {
   //   const element = document.getElementById("dataTable");
-  //   function handleScrollEvent() {
-  //     console.log(
-  //       "You're at the bottom of the table",
-  //       element.scrollTop , element.clientHeight,
-  //       element.scrollHeight
-  //     );
-  //     if (element) {
-  //       // Check if user has scrolled to the bottom
-  //       if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
-  //         console.log(
-  //           "You're at the bottom of the table",
-  //           element.scrollTop + element.clientHeight,
-  //           element.scrollHeight
-  //         );
-  //         // Add more items to the 'filteredData' state from 'allData'
-  //       }
-  //     }
-  //   }
-  
-  //   // if (element) {
-  //     // Attach event listener to the specific element
-  //     window.addEventListener("scroll", handleScrollEvent);
-  //   // }
-  
+
+  //   if (!element) return;
+
+  //   const handleScrollEvent = () => {
+  //     console.log("Scroll Height:", element.scrollHeight);
+  //     console.log("Scroll Top:", element.scrollTop);
+  //     console.log("Offset Height:", element.offsetHeight);
+
+  //     // Detect when user scrolls to the bottom
+  //     if (element.scrollTop + element.offsetHeight >= element.scrollHeight) {
+  //       let pageSize  = page_size+1;
+  //       console.log("🚀 ~ handleScrollEvent ~ pageSize:", pageSize)
+
+  //     dispatch(addPageSize(pageSize))
+  //      }
+  //   };
+
+  //   // Attach event listener
+  //   element.addEventListener("scroll", handleScrollEvent);
+
+  //   // Cleanup function
   //   return () => {
-  //     // Cleanup: Remove the event listener when component unmounts
-  //     if (element) {
-  //       element.removeEventListener("scroll", handleScrollEvent);
-  //     }
+  //     element.removeEventListener("scroll", handleScrollEvent);
   //   };
   // }, []);
-  
+  // useEffect(() => {
+  //   const element = document.getElementById("dataTable");
+
+  //   if (!element) return;
+
+  //   const handleScrollEvent = () => {
+  //     console.log("Scroll Height:", element.scrollHeight);
+  //     console.log("Scroll Top:", element.scrollTop);
+  //     console.log("Offset Height:", element.offsetHeight);
+
+  //     // Detect when user scrolls to the bottom
+  //     if (element.scrollTop + element.offsetHeight >= element.scrollHeight - 20) {
+  //       if (projects.length < totalRows) {  // Ensure we load only when more data exists
+  //         dispatch(addPageSize(page_size + 10));  // Increment page_size dynamically
+  //       }
+  //     }
+  //   };
+
+  //   element.addEventListener("scroll", handleScrollEvent);
+
+  //   return () => {
+  //     element.removeEventListener("scroll", handleScrollEvent);
+  //   };
+  // }, [page_size, projects.length]);  // Re-run when page_size or projects change
 
   return (
-    <div id="dataTable">
+    // <div id="dataTable" ref={tableRef} className="overflow-auto no-scrollbar" style={{ height: `${desabledRowData.length * 50}px` ,maxHeight : "600px" }} >
+    <div>
       {(department == isOperationDept && isTeamLeadRole) ||
       (department == isOperationDept && allManagerRolesRole) ||
       (department == isOperationDept && isHodRole) ? (
-        <DataTable
-          columns={
-            data?.length > 0
-              ? TableColumn({
-                  buttonRef,
-                  handleViewCpi,
-                  setShowSowList,
-                  setSowList,
-                })
-              : Dummycolumns
-          }
-          data={data?.length > 0 ? desabledRowData : DummyData}
-          pagination
-          paginationServer
-          onChangeRowsPerPage={handlePerRowsChange}
-          onChangePage={handlePageChange}
-          paginationTotalRows={totalRows}
-          customStyles={darkMode ? customStylesDarkMode : customStyles}
-          selectableRows
-          onSelectedRowsChange={handleSelectedRowsChange}
-          enableMultiRowSelection
-          selectableRowDisabled={(row) => row.desabled}
-          actions={<FilterProject />}
-          clearSelectedRows={toggledClearRows} // Pass the toggle state here
-          striped={true}
-          highlightOnHover={true}
-          paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
-          theme={darkMode ? "dark" : "default"}
-        />
+        <div>
+          <DataTable
+            columns={
+              data?.length > 0
+                ? TableColumn({
+                    buttonRef,
+                    handleViewCpi,
+                    setShowSowList,
+                    setSowList,
+                    navigate,
+                    desabledRowData,
+                  })
+                : Dummycolumns
+            }
+            data={data?.length > 0 ? desabledRowData : DummyData}
+            pagination
+            paginationServer
+            onChangeRowsPerPage={handlePerRowsChange}
+            onChangePage={handlePageChange}
+            paginationTotalRows={totalRows}
+            customStyles={customStyles}
+            selectableRows
+            onSelectedRowsChange={handleSelectedRowsChange}
+            enableMultiRowSelection
+            selectableRowDisabled={(row) => row.desabled}
+            actions={<FilterProject />}
+            clearSelectedRows={toggledClearRows} // Pass the toggle state here
+            striped={true}
+            highlightOnHover={true}
+            paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+            theme={darkMode ? "dark" : "default"}
+          />
+        </div>
       ) : (isSuperUserDepartment.includes(department) && isSuperUserRole) ||
         isDirectorRole ? (
-        <div className="">
+        <div>
           <Link to={"/entry-page"}>
             <Button
               name={
@@ -200,6 +227,8 @@ const OperationPersonTable = ({
                     handleViewCpi,
                     setShowSowList,
                     setSowList,
+                    navigate,
+                    desabledRowData,
                   })
                 : Dummycolumns
             }
@@ -224,54 +253,8 @@ const OperationPersonTable = ({
           />
         </div>
       ) : (
-        <div className="w-full no-scrollbar">
-          {isDirectorRole ? (
-            <DataTable
-              columns={
-                data?.length > 0
-                  ? TableColumn({
-                      buttonRef,
-                      handleViewCpi,
-                      setShowSowList,
-                      setSowList,
-                    })
-                  : Dummycolumns
-              }
-              data={data?.length > 0 ? desabledRowData : DummyData}
-              pagination
-              paginationServer
-              onChangeRowsPerPage={handlePerRowsChange}
-              onChangePage={handlePageChange}
-              customStyles={darkMode ? customStylesDarkMode : customStyles}
-              onSelectedRowsChange={handleSelectedRowsChange}
-              enableMultiRowSelection
-              selectableRowDisabled={(row) => row.desabled}
-              actions={<FilterProject />}
-              clearSelectedRows={toggledClearRows} // Pass the toggle state here
-              striped={true}
-              paginationTotalRows={totalRows}
-              highlightOnHover={true}
-              paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
-              theme={darkMode ? "dark" : "default"}
-            />
-          ) : (
-            <div>
-              {isViewerUserRole && (
-                <Link to={"/entry-page"}>
-                  <Button
-                    name={
-                      <Tooltip text="Add New Project" position="top">
-                        <MdAddTask className="text-white text-xl" />
-                      </Tooltip>
-                    }
-                    className={`${
-                      darkMode
-                        ? "bg-black text-white border-white"
-                        : " border-black"
-                    } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
-                  />
-                </Link>
-              )}
+        <div>
+          {isDirectorRole || (department == isFinanceDept) ? (
               <DataTable
                 columns={
                   data?.length > 0
@@ -280,6 +263,8 @@ const OperationPersonTable = ({
                         handleViewCpi,
                         setShowSowList,
                         setSowList,
+                        navigate,
+                        desabledRowData,
                       })
                     : Dummycolumns
                 }
@@ -288,7 +273,55 @@ const OperationPersonTable = ({
                 paginationServer
                 onChangeRowsPerPage={handlePerRowsChange}
                 onChangePage={handlePageChange}
-                customStyles={darkMode ? customStylesDarkMode : customStyles}
+                customStyles={customStyles}
+                onSelectedRowsChange={handleSelectedRowsChange}
+                enableMultiRowSelection
+                selectableRowDisabled={(row) => row.desabled}
+                actions={<FilterProject />}
+                clearSelectedRows={toggledClearRows} // Pass the toggle state here
+                striped={true}
+                paginationTotalRows={totalRows}
+                highlightOnHover={true}
+                paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+                theme={darkMode ? "dark" : "default"}
+              />
+          ) : (
+            <div>
+              {isViewerUserRole && (
+                  <Link to={"/entry-page"}>
+                    <Button
+                      name={
+                        <Tooltip text="Add New Project" position="top">
+                          <MdAddTask className="text-white text-xl" />
+                        </Tooltip>
+                      }
+                      className={`${
+                        darkMode
+                          ? "bg-black text-white border-white"
+                          : " border-black"
+                      } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
+                    />
+                  </Link>
+                )}
+              <DataTable
+                columns={
+                  data?.length > 0
+                    ? TableColumn({
+                        buttonRef,
+                        handleViewCpi,
+                        setShowSowList,
+                        setSowList,
+                        navigate,
+                        desabledRowData,
+                      })
+                    : Dummycolumns
+                }
+                data={data?.length > 0 ? desabledRowData : DummyData}
+                pagination
+                paginationServer
+                onChangeRowsPerPage={handlePerRowsChange}
+                onChangePage={handlePageChange}
+                customStyles={customStyles}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 enableMultiRowSelection
                 selectableRowDisabled={(row) => row.desabled}
@@ -301,7 +334,6 @@ const OperationPersonTable = ({
           )}
         </div>
       )}
-
       {isOperationPerson && isEdit && (
         <Popup>
           <Edit viewRecord={selectedRecord} />
@@ -336,6 +368,13 @@ const OperationPersonTable = ({
         <Popup>
           <h1>This is Sow List</h1>
           <ViewSowUploadList viewRecord={sowList} />
+        </Popup>
+      )}
+      {showRaiseCbr && (
+        <Popup>
+          <div className="flex">
+            <RaisedCbr viewRecord={selectedRecord} />
+          </div>
         </Popup>
       )}
     </div>

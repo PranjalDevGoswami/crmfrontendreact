@@ -2,6 +2,8 @@ import React, { useContext, useState, useEffect } from "react";
 import Button from "../../Atom/Button";
 import { FilterContext } from "../../ContextApi/FilterContext";
 import { useSelector } from "react-redux";
+import { isFinanceDept } from "../../config/Departments";
+import { useLocation, useParams } from "react-router-dom";
 
 const ProjectStatusTabs = ({ className }) => {
   const { activeTabValue, setActiveTabValue, setSelectedStatus } =
@@ -14,25 +16,98 @@ const ProjectStatusTabs = ({ className }) => {
     setSelectedStatus(e.target.value);
     setActiveTabIndex(index);
   };
+  const location = useLocation();
+  
+  // const buttonName = [
+  //   "All",
+  //   "Project Initiated",
+  //   "To Be Started",
+  //   "In Progress",
+  //   "On Hold",
+  //   "Completed",
+  //   "CBR Raised",
+  // ];
+  // const buttonValue = [
+  //   "all",
+  //   "Project Initiated",
+  //   "To Be Started",
+  //   "In Progress",
+  //   "On Hold",
+  //   "Completed",
+  //   "cbr_raised",
+  // ];
 
-  const buttonName = [
-    "All",
-    "Project Initiated",
-    "To Be Started",
-    "In Progress",
-    "On Hold",
-    "Completed",
-    "CBR Raised",
-  ];
-  const buttonValue = [
-    "all",
-    "Project Initiated",
-    "To Be Started",
-    "In Progress",
-    "On Hold",
-    "Completed",
-    "cbr_raised",
-  ];
+  const department = localStorage.getItem('department') 
+
+// Define button names and values with all possible options
+// const allButtons = [
+//   { name: "All", value: "all" },
+//   { name: "Project Initiated", value: "Project Initiated" },
+//   { name: "To Be Started", value: "To Be Started" },
+//   { name: "In Progress", value: "In Progress" },
+//   { name: "On Hold", value: "On Hold" },
+//   { name: "Completed", value: "Completed" },
+//   { name: "CBR", value: "cbr raised" },
+//   (department == isFinanceDept) && { name: "VBR", value: "vbr_raised" },
+//   (department ==  isFinanceDept) && { name: "ABR", value: "abr_raised" },
+// ];
+// console.log("🚀 ~ ProjectStatusTabs ~ allButtons:", allButtons)
+
+// // Separate into buttonName and buttonValue arrays
+// const buttonName = allButtons.map(({ name }) => name);
+// const buttonValue = allButtons.map(({ value }) => value);
+
+
+// const allButtons = department == isFinanceDept
+//   ? [
+//       { name: "Invoice to be Raised", value: "cbr raised" },
+//       { name: "Invoice Generated", value: "Invoice Generated" },
+//       { name: "Payment Received", value: "Payment Received" },
+//       { name: "Advanced Billing Raised", value: "Advanced Billing Raised" },
+//       { name: "Advanced Invoice Generated", value: "Advanced Invoice Generated" },
+//       { name: "Advance Payment Received", value: "Advance Payment Received" },      
+//     ]
+//   : [
+//       { name: "All", value: "all" },
+//       { name: "Project Initiated", value: "Project Initiated" },
+//       { name: "To Be Started", value: "To Be Started" },
+//       { name: "In Progress", value: "In Progress" },
+//       { name: "On Hold", value: "On Hold" },
+//       { name: "Completed", value: "Completed" },
+//       { name: "CBR", value: "cbr raised" },
+//     ];
+
+
+const allButtons =
+  isFinanceDept
+    ? location.pathname === "/cbr"
+      ? [
+          { name: "Invoice to be Raised", value: "cbr raised" },
+          { name: "Invoice Generated", value: "Invoice Generated" },
+          { name: "Payment Received", value: "Payment Received" },
+        ]
+      : location.pathname === "/abr"
+      ? [
+          { name: "Advanced Billing Raised", value: "Advanced Billing Raised" },
+          { name: "Advanced Invoice Generated", value: "Advanced Invoice Generated" },
+          { name: "Advance Payment Received", value: "Advance Payment Received" },
+        ]
+      : [] // Default case when not /cbr or /abr
+    : [
+        { name: "All", value: "all" },
+        { name: "Project Initiated", value: "Project Initiated" },
+        { name: "To Be Started", value: "To Be Started" },
+        { name: "In Progress", value: "In Progress" },
+        { name: "On Hold", value: "On Hold" },
+        { name: "Completed", value: "Completed" },
+        { name: "CBR", value: "cbr raised" },
+      ];
+
+
+// Separate into buttonName and buttonValue arrays
+const buttonName = allButtons.map(({ name }) => name);
+const buttonValue = allButtons.map(({ value }) => value);
+
 
   useEffect(() => {
     setActiveTabIndex(buttonValue?.indexOf(activeTabValue));
