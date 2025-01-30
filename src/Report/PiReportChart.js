@@ -39,7 +39,7 @@ export default function PiReportChart({
   );
   const HoldProject = filteredData.filter((item) => item.status === "On Hold");
   const CbrRaisedProject = filteredData.filter(
-    (item) => item.status === "Cbr Raised"
+    (item) => item.status === "CBR Raised"
   );
   const InitiatedProject = filteredData.filter(
     (item) => item.status === "Project Initiated"

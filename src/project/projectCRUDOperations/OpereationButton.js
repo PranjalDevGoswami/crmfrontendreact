@@ -137,7 +137,7 @@ const OpereationButton = () => {
               <>
                 {selectedRecord.status !== "Project Initiated" &&
                   selectedRecord.status !== "Completed" &&
-                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "CBR Raised" &&
                   selectedRecord.status !== "On Hold" &&
                   // !isHodRole &&
                   DateValidate == true && (
@@ -148,9 +148,9 @@ const OpereationButton = () => {
                       Add Mandays
                     </button>
                   )}
-                {selectedRecord.status !== "Project Initiated" &&
+                {
                   selectedRecord.status !== "Completed" &&
-                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "CBR Raised" &&
                   selectedRecord.status !== "On Hold" &&
                   // !isHodRole && 
                   (
@@ -165,7 +165,7 @@ const OpereationButton = () => {
                   )}
                 {selectedRecord.status !== "Project Initiated" &&
                   // selectedRecord.status !== "Completed" &&
-                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "CBR Raised" &&
                   // !isHodRole && 
                   (
                     <button
@@ -177,7 +177,7 @@ const OpereationButton = () => {
                   )}
                 {selectedRecord.status === "Completed" &&
                   selectedRecord.status !== "On Hold" &&
-                  selectedRecord.status !== "Cbr Raised" &&
+                  selectedRecord.status !== "CBR Raised" &&
                   // !isHodRole && 
                   (
                     <button

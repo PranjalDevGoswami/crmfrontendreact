@@ -19,29 +19,33 @@ import { toggleViewMultipleCpiSample } from "../../../utils/slices/MultipleSampl
 import { useDispatch } from "react-redux";
 import Popup from "../../Atom/Popup";
 import ViewMultipleSampleCpi from "../../project/projectCRUDOperations/ViewMultipleSampleCpi";
+import { addPageNumber, addPageSize } from "../../../utils/slices/ProjectSlice";
 
 const Report = () => {
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const buttonRef = useRef();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
-  const { isLoading, setIsLoading,setActiveTabValue } = useContext(FilterContext);
+  const dispatch = useDispatch();
+  const { isLoading, setIsLoading, setActiveTabValue } =
+    useContext(FilterContext);
   const { setShowSowList, setSowList, toggledClearRows, isDrawerOpen } =
     useContext(DataTableContext);
-  const {totalRows,projects} = useSelector((store) => store.projectData);
-    const [multipleCpiSample, setMultipleCpiSample] = useState([]);
-   const isMultipleCpiSample = useSelector(
-      (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
-    );
-    useEffect(() => {
-      setActiveTabValue("all");
-    }, []);
+  const { totalRows, projects, page_size } = useSelector(
+    (store) => store.projectData
+  );
+  const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+  const isMultipleCpiSample = useSelector(
+    (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
+  );
+  useEffect(() => {
+    setActiveTabValue("all");
+  }, []);
 
   useEffect(() => {
     setIsLoading(false);
   }, [projects]);
 
-  const handleViewCpi = (row) => {    
+  const handleViewCpi = (row) => {
     const viewSampleCpi = projects?.filter((item) => item?.id === row?.id);
     setMultipleCpiSample(viewSampleCpi);
     dispatch(toggleViewMultipleCpiSample(true));
@@ -127,6 +131,7 @@ const Report = () => {
                   highlightOnHover={true}
                   paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                   theme={darkMode ? "dark" : "default"}
+                  paginationPerPage={page_size}
                 />
               </div>
             </div>

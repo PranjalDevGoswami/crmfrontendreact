@@ -15,7 +15,7 @@ const CBRStatusTabs = ({ className }) => {
     setActiveTabIndex(index);
   };
   const allButtons = [
-    { name: "Invoice to be Raised", value: "cbr raised" },
+    { name: "Invoice to be Raised", value: "CBR Raised" },
     { name: "Invoice Generated", value: "Invoice Generated" },
     { name: "Payment Received", value: "Payment Received" },
   ];

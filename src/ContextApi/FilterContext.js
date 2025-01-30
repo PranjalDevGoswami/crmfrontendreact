@@ -32,7 +32,7 @@ export const SearchFilterContext = ({ children }) => {
   // );
 
   const [activeTabValue, setActiveTabValue] = useState(
-    (department == isFinanceDept) ? "cbr raised" : (department == isSalesDept) ? "all" : "In Progress"
+    (department == isFinanceDept) ? "CBR Raised" : (department == isSalesDept) ? "all" : "In Progress"
   );  
   const [status, setStatus] = useState([
     activeTabValue,

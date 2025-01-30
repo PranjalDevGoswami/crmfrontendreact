@@ -143,6 +143,20 @@ export const TableColumnReport = ({
       reorder: true,
     },
     {
+      name: "Act. Start Date",
+      selector: (row) => row?.project_actual_start_date?.split("T")[0],
+      sortable: true,
+      width: "130px",
+      reorder: true,
+    },
+    {
+      name: "Act. End Date",
+      selector: (row) => row?.project_actual_end_date?.split("T")[0],
+      sortable: true,
+      width: "130px",
+      reorder: true,
+    },
+    {
       name: "Revised Sample",
       selector: (row) => row?.sample,
       width: "80px",
@@ -198,23 +212,7 @@ export const TableColumnReport = ({
       width: "100px",
       reorder: true,
     },
-     {
-      name: "View CBR",
-      selector: (row) => (
-        <Tooltip text={"View CBR"} className={"w-40"}>
-          <img
-            alt="CBR"
-            src={viewCBR}
-            className="w-4 h-4 cursor-pointer"
-            onClick={() => {
-              handleGetInvoice(row);
-            }}
-          />
-        </Tooltip>
-      ),
-      width: "80px",
-      reorder: true,
-    },
+     
     isFinanceDept && invoice_generated.length>0 && {
       name: "View Invoice",
       selector: (row) => (
@@ -285,6 +283,77 @@ export const TableColumnReport = ({
       width: "125px",
       reorder: true,
     },
+    {
+      name: "View ABR/CBR/Invoice",
+      selector: (row) => {
+        if (row.status === "CBR Raised") {
+          return (
+            <Tooltip text={"View CBR"} className={"w-40"}>
+              <img
+                alt="CBR"
+                src={viewCBR}
+                className="w-4 h-4 cursor-pointer"
+                onClick={() => handleGetInvoice(row)}
+              />
+            </Tooltip>
+          );
+        }else if (row.status === "CBR Raised" || row.status === "CBR Raised"){
+          return (<>
+            <Tooltip text={"View CBR"} className={"w-40"}>
+              <img
+                alt="ABR"
+                src={viewCBR}
+                className="w-4 h-4 cursor-pointer"
+                onClick={() => handleGetInvoice(row)}
+              />
+            </Tooltip>
+             <Tooltip text={"View CBR"} className={"w-40"}>
+             <img
+               alt="CBR"
+               src={viewCBR}
+               className="w-4 h-4 cursor-pointer"
+               onClick={() => handleGetInvoice(row)}
+             />
+           </Tooltip></>
+          );
+        }else if(row.status === "CBR Raised" || row.status === "CBR Raised" || row.status === "CBR Raised"){
+          return (
+            <>
+            <Tooltip text={"View CBR"} className={"w-40"}>
+              <img
+                alt="ABR"
+                src={viewCBR}
+                className="w-4 h-4 cursor-pointer"
+                onClick={() => handleGetInvoice(row)}
+              />
+            </Tooltip>
+             <Tooltip text={"View CBR"} className={"w-40"}>
+             <img
+               alt="CBR"
+               src={viewCBR}
+               className="w-4 h-4 cursor-pointer"
+               onClick={() => handleGetInvoice(row)}
+             />
+             
+           </Tooltip>
+           <Tooltip text={"View CBR"} className={"w-40"}>
+             <img
+               alt="CBR"
+               src={viewCBR}
+               className="w-4 h-4 cursor-pointer"
+               onClick={() => handleGetInvoice(row)}
+             />
+             
+           </Tooltip>
+           </>
+          );
+        }
+        return null; // Ensure a valid return
+      },
+
+      width: "140px",
+      reorder: true,
+    },    
     {
       name: "SOW",
       selector: (row) =>

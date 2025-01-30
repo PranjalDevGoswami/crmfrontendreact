@@ -49,7 +49,7 @@ export const useExportData = (data) => {
       "Other Cost": item?.other_cost || 0,
       "Total Man Days": item?.man_days || 0,
       "Status": item?.status || "N/A",
-      "Start Date": item?.project_actual_start_date || "N/A",
+      "Start Date": item?.project_actual_start_date?.split("T")[0] || "N/A",
       "Tentative End Date": item?.tentative_end_date || "N/A",
       "Remaining Interview": item?.remaining_interview || "N/A",
       "Total Achieved Target": item?.total_achievement || "N/A",

@@ -20,7 +20,7 @@ const CbrDashboard = () => {
   const dispatch = useDispatch();
   const { setActiveTabValue } = useContext(FilterContext);
   useEffect(() => {
-    setActiveTabValue("cbr raised");
+    setActiveTabValue("CBR Raised");
   }, []);
   const {
     setShowSowList,

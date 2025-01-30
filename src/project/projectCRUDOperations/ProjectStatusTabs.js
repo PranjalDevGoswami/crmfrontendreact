@@ -45,7 +45,7 @@ const ProjectStatusTabs = ({ className }) => {
 //   { name: "In Progress", value: "In Progress" },
 //   { name: "On Hold", value: "On Hold" },
 //   { name: "Completed", value: "Completed" },
-//   { name: "CBR", value: "cbr raised" },
+//   { name: "CBR", value: "CBR Raised" },
 //   (department == isFinanceDept) && { name: "VBR", value: "vbr_raised" },
 //   (department ==  isFinanceDept) && { name: "ABR", value: "abr_raised" },
 // ];
@@ -58,7 +58,7 @@ const ProjectStatusTabs = ({ className }) => {
 
 // const allButtons = department == isFinanceDept
 //   ? [
-//       { name: "Invoice to be Raised", value: "cbr raised" },
+//       { name: "Invoice to be Raised", value: "CBR Raised" },
 //       { name: "Invoice Generated", value: "Invoice Generated" },
 //       { name: "Payment Received", value: "Payment Received" },
 //       { name: "Advanced Billing Raised", value: "Advanced Billing Raised" },
@@ -72,7 +72,7 @@ const ProjectStatusTabs = ({ className }) => {
 //       { name: "In Progress", value: "In Progress" },
 //       { name: "On Hold", value: "On Hold" },
 //       { name: "Completed", value: "Completed" },
-//       { name: "CBR", value: "cbr raised" },
+//       { name: "CBR", value: "CBR Raised" },
 //     ];
 
 
@@ -83,7 +83,7 @@ const allButtons = [
         { name: "In Progress", value: "In Progress" },
         { name: "On Hold", value: "On Hold" },
         { name: "Completed", value: "Completed" },
-        { name: "CBR", value: "cbr raised" },
+        { name: "CBR", value: "CBR Raised" },
       ];
 
 
