@@ -25,6 +25,7 @@ import MultipleSampleCpiRecord from "../components/Form/MultipleSampleCpiRecord.
 import { usePostFormData } from "../../utils/hooks/usePostFormData.js";
 import Popup from "../Atom/Popup.js";
 import { useProjectEntryFormValidation } from "../../utils/hooks/useProjectEntryFormValidation.js";
+import { FilterContext } from "../ContextApi/FilterContext.js";
 
 const Form = () => {
   const {
@@ -37,6 +38,7 @@ const Form = () => {
     setFormData,
   } = useContext(FormDataContext);
   const {page_number,page_size} = useSelector(store=>store.projectData)
+    const activeTabValue = useContext(FilterContext);
 
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
@@ -98,7 +100,8 @@ const Form = () => {
         dispatchAddMultipleSampleCpiCheckbox,
         navigate,
         setFormData,
-        page_number,page_size
+        page_number,page_size,
+        activeTabValue
       );
     }
   };

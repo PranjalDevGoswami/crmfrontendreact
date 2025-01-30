@@ -20,13 +20,13 @@ const FilterDrawer = ({
   setSelectedOptions,
   openFilter,
 }) => {
-  const { clientsList } = useContext(FilterContext);
+  const { clientsList, setSelectedClient } = useContext(FilterContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const dispatch = useDispatch();
   const userData = useUserData();
 
   const role = localStorage.getItem("role");
-const username = localStorage.getItem('username')
+  const username = localStorage.getItem("username");
   const [openAccordionIndex, setOpenAccordionIndex] = useState(null);
   const [selectedHod, setSelectedHod] = useState(null);
   const [selectedSrManager, setSelectedSrManager] = useState(null);
@@ -46,7 +46,7 @@ const username = localStorage.getItem('username')
     let filteredManagerList = [];
     let filteredAssManagerList = [];
     let filteredTeamLeadList = [];
-  
+
     // Filter logic based on role
     if (role === "Director") {
       // If Director, include all users in the hierarchy
@@ -64,20 +64,20 @@ const username = localStorage.getItem('username')
         filteredSrManagerList = userData.filter(
           (item) => item?.role?.name === "Sr.Manager" && item?.reports_to?.name == username
         );
-  
+
         filteredManagerList = userData.filter(
           (item) => item?.role?.name === "Manager" && item?.reports_to?.name == username
         );
-  
+
         filteredAssManagerList = userData.filter(
           (item) => item?.role?.name === "Ass.Manager" && item?.reports_to?.name == username
         );
         filteredTeamLeadList = userData.filter(
           (item) => item?.role?.name === "Team Lead" && item?.reports_to?.name == username
         );
-      
+
     }
-  
+
     // Dynamically update the hierarchy based on selections
     if (selectedHod) {
       filteredSrManagerList = userData.filter(
@@ -91,7 +91,7 @@ const username = localStorage.getItem('username')
       setSelectedAssManager(null);
       setSelectedTl(null);
     }
-  
+
     if (selectedSrManager) {
       filteredManagerList = userData.filter(
         (item) =>
@@ -103,7 +103,7 @@ const username = localStorage.getItem('username')
       setSelectedAssManager(null);
       setSelectedTl(null);
     }
-  
+
     if (selectedManager) {
       filteredAssManagerList = userData.filter(
         (item) =>
@@ -114,27 +114,27 @@ const username = localStorage.getItem('username')
       setSelectedAssManager(null);
       setSelectedTl(null);
     }
-  
+
     if (selectedAssManager) {
       filteredTeamLeadList = userData.filter(
         (item) =>
           item?.role?.name === "Team Lead" &&
           selectedAssManager?.includes(item?.reports_to?.name)
       );
-      console.log("🚀 ~ useEffect ~ filteredTeamLeadList first:", filteredTeamLeadList)
+      // console.log("🚀 ~ useEffect ~ filteredTeamLeadList first:", filteredTeamLeadList)
       // Reset lower hierarchy if selected Ass. Manager changes
       setSelectedTl(null);
     }
-  
+
     // Update state with filtered lists
     setFilteredHods(filteredHodsList);
     setFilteredSrManager(filteredSrManagerList);
     setFilteredManager(filteredManagerList);
     setFilteredAssManager(filteredAssManagerList);
-    console.log("🚀 ~ useEffect ~ filteredTeamLeadList before:", filteredTeamLeadList,filteredTeamLeads)
+    // console.log("🚀 ~ useEffect ~ filteredTeamLeadList before:", filteredTeamLeadList,filteredTeamLeads)
 
     setFilteredTeamLeads(filteredTeamLeadList);
-    console.log("🚀 ~ useEffect ~ filteredTeamLeadList after:", filteredTeamLeadList,filteredTeamLeads)
+    // console.log("🚀 ~ useEffect ~ filteredTeamLeadList after:", filteredTeamLeadList,filteredTeamLeads)
 
   }, [
     role,
@@ -145,14 +145,24 @@ const username = localStorage.getItem('username')
     selectedManager,
     selectedAssManager,
   ]);
-  console.log("🚀 ~ useEffect ~ filteredTeamLeadList after loop:",filteredTeamLeads)
-  
+  // console.log("🚀 ~ useEffect ~ filteredTeamLeadList after loop:",filteredTeamLeads)
 
-  
-  
+
   const handleOptionChange = (name, updatedOptions) => {
+    console.log(name, updatedOptions);
+
     const value = updatedOptions.value || null;
     switch (name) {
+      case "Client":
+        setSelectedOptions(value);
+        setSelectedHod(null);
+        setSelectedSrManager(null);
+        setSelectedManager(null);
+        setSelectedAssManager(null);
+        setSelectedClient(value);
+        // dispatch(addselectedClient(value));
+        break;
+
       case "HOD":
         setSelectedOptions(value);
         setSelectedHod(value);
@@ -186,12 +196,12 @@ const username = localStorage.getItem('username')
         dispatch(addSelectedAssManager(value));
         break;
 
-        case "Team Lead":
-          setSelectedOptions(value);
-          setSelectedAssManager(null);
-          setSelectedTl(value);
-          dispatch(addSelectedTeamLead(value));
-          break;
+      case "Team Lead":
+        setSelectedOptions(value);
+        setSelectedAssManager(null);
+        setSelectedTl(value);
+        dispatch(addSelectedTeamLead(value));
+        break;
 
       default:
         break;
@@ -236,11 +246,10 @@ const username = localStorage.getItem('username')
     },
     {
       title: "Team Lead",
-      options:filteredTeamLeads?.map((item) => item?.user_role?.name),
+      options: filteredTeamLeads?.map((item) => item?.user_role?.name),
       name: "Team Lead",
     },
   ];
-  
 
   const visibleAccordionsByRole = {
     Director: ["Client", "HOD", , "Sr.Manager", "Manager", "Ass.Manager"],

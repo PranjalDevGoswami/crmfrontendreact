@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { patchWithAuthFiles, postWithAuthFiles } from "../../provider/helper/axios";
 import { useSelector } from "react-redux";
 import { getMinDate } from "../../../utils/helperFunction/dateLimit";
+import { FilterContext } from "../../ContextApi/FilterContext";
 
 const UpdateSow = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState("");
@@ -25,6 +26,7 @@ const UpdateSow = ({ viewRecord }) => {
     created_by: userRole,
   });
       const {page_number,page_size,projects} = useSelector(store=>store.projectData)
+    const {activeTabValue} = useContext(FilterContext);
   
 
   useEffect(()=>{
@@ -98,7 +100,7 @@ const methodRequired = (projectList.map((item)=>item.documents.length)>0) ? patc
           icon: "success",
         });
         setIsUploadSow(false);
-        const projectData = await ProjectData(page_number,page_size);
+        const projectData = await ProjectData(page_number,page_size,activeTabValue);
         dispatch(setProjects(projectData.results));
       }
     } catch (error) {

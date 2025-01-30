@@ -67,13 +67,13 @@ export const TableColumn = ({
       name: "UniMrkt PM",
       selector: (row) => row?.assigned_to?.name,
       sortable: true,
-      width: "130px",
+      width: "140px",
     },
     !isFinanceDept && {
       name: "Team Lead",
       selector: (row) => row?.project_assigned_to_teamlead,
       sortable: true,
-      width: "130px",
+      width: "140px",
     },
     {
       name: "Client PM",
@@ -84,7 +84,7 @@ export const TableColumn = ({
     isFinanceDept && {
       name: "Sample",
       selector: (row) => row?.sample,
-      width: "80px",
+      width: "120px",
     },
     {
       name: "CPI",
@@ -112,7 +112,7 @@ export const TableColumn = ({
           />
         </Tooltip>
       ),
-      width: "80px",
+      width: "120px",
     },
     isFinanceDept &&  {
       name: "View CBR",
@@ -128,7 +128,7 @@ export const TableColumn = ({
           />
         </Tooltip>
       ),
-      width: "80px",
+      width: "100px",
     },
     isFinanceDept && invoice_generated.length>0 && {
       name: "View Invoice",
@@ -141,7 +141,7 @@ export const TableColumn = ({
           />
         </Tooltip>
       ),
-      width: "80px",
+      width: "120px",
     },
     !isFinanceDept && {
       name: "Project Target",
@@ -204,6 +204,7 @@ export const TableColumn = ({
       name: "Man Days",
       selector: (row) => row?.man_days,
       sortable: true,
+      width:"100px"
     },
     {
       name: "Status",
@@ -231,7 +232,7 @@ export const TableColumn = ({
           </p>
         ),
       sortable: true,
-      width: "60px",
+      width: "100px",
     },
     {
       name: "Actions",
@@ -240,7 +241,7 @@ export const TableColumn = ({
       className: "action",
       align: "left",
       sortable: false,
-      width: "60px",
+      width: "80px",
       cell: (record, index) => {
         return (
           <ActionsButton record={record} index={index} buttonRef={buttonRef} />

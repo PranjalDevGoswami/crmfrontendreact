@@ -22,14 +22,16 @@ export const TableColumnReport = ({
     // setIsInvoice(true);
     navigate("/view-cbr", { state: selectedRecord });
   };
-
+  const handleViewAddnl = () =>{console.log("");
+  }
   const columns = [
     {
       name: "Project Code",
       selector: (row) => row?.project_code?.toUpperCase(),
       sortable: true,
       width: "120px",
-      rowspan:"2"
+      rowspan:"2",
+      reorder: true,
     },
     {
       name: "Project Name",
@@ -38,30 +40,35 @@ export const TableColumnReport = ({
       width: "180px",
       overflow: "wrap !important",
       whiteSpace: "pre-wrap !important",
+      reorder: true,
     },
     {
       name: "Project Type",
       selector: (row) => row?.project_type,
       sortable: true,
       width: "85px",
+      reorder: true,
     },
     {
       name: "Client Name",
       selector: (row) => row?.clients,
       sortable: true,
       width: "120px",
+      reorder: true,
     },
     {
       name: "Sales Executive",
       selector: (row) => row?.created_by.name,
       sortable: true,
-      width: "110px",
+      width: "130px",
+      reorder: true,
     },
     {
       name: "Month",
       selector: (row) => new Date(row?.created_at).toLocaleString('default', { month: 'long' }),
       sortable: true,
       width: "110px",
+      reorder: true,
     },
     
     {
@@ -76,11 +83,13 @@ export const TableColumnReport = ({
     },
       sortable: true,
       width: "110px",
+      reorder: true,
     },
     {
       name: "Initial Sample",
       selector: (row) => row?.initial_sample_size,
       width: "80px",
+      reorder: true,
     },
     {
       name: "CPI",
@@ -97,18 +106,20 @@ export const TableColumnReport = ({
         ),
       sortable: true,
       width: "85px",
+      reorder: true,
     },
     {
       name: "Addnl. Fee",
       selector: (row) => (
         <Tooltip text={"View Additional Fee"} className={"w-40"}>
           <MdRemoveRedEye
-            onClick={() => handleViewAddnl(row)}
+            onClick={(handleViewAddnl)}
             className="cursor-pointer text-base"
           />
         </Tooltip>
       ),
       width: "80px",
+      reorder: true,
     },
     {
       name: "Project Value",
@@ -121,23 +132,27 @@ export const TableColumnReport = ({
         const result = formatter.format(Number(row.initial_sample_size || 0) * Number(row.cpi || 0));
         return result;
     },
-      width: "80px",
+      width: "100px",
+      reorder: true,
     },
      {
       name: "UniMrkt PM",
       selector: (row) => row?.assigned_to?.name,
       sortable: true,
       width: "130px",
+      reorder: true,
     },
     {
       name: "Revised Sample",
       selector: (row) => row?.sample,
       width: "80px",
+      reorder: true,
     },
     {
       name: "Sample Achieved",
       selector: (row) => row?.total_achievement,
       width: "80px",
+      reorder: true,
     },
     {
       name: "CPI",
@@ -154,6 +169,7 @@ export const TableColumnReport = ({
         ),
       sortable: true,
       width: "85px",
+      reorder: true,
     },
     {
       name: "Addnl. Fee",
@@ -166,6 +182,7 @@ export const TableColumnReport = ({
         </Tooltip>
       ),
       width: "80px",
+      reorder: true,
     },
     {
       name: "Actual Value",
@@ -178,7 +195,8 @@ export const TableColumnReport = ({
         const result = formatter.format(Number(row.total_achievement || 0) * Number(row.cpi || 0));
         return result;
     },
-      width: "80px",
+      width: "100px",
+      reorder: true,
     },
      {
       name: "View CBR",
@@ -195,6 +213,7 @@ export const TableColumnReport = ({
         </Tooltip>
       ),
       width: "80px",
+      reorder: true,
     },
     isFinanceDept && invoice_generated.length>0 && {
       name: "View Invoice",
@@ -208,6 +227,7 @@ export const TableColumnReport = ({
         </Tooltip>
       ),
       width: "80px",
+      reorder: true,
     },
     {
       name: "Progress",
@@ -250,17 +270,20 @@ export const TableColumnReport = ({
       },
       sortable: true,
       width: "100px",
+      reorder: true,
     },
     {
       name: "Man Days",
       selector: (row) => row?.man_days,
       sortable: true,
+      reorder: true,
     },
     {
       name: "Status",
       selector: (row) => row?.status,
       sortable: true,
       width: "125px",
+      reorder: true,
     },
     {
       name: "SOW",
@@ -283,6 +306,7 @@ export const TableColumnReport = ({
         ),
       sortable: true,
       width: "60px",
+      reorder: true,
     },
     // {
     //   name: "Actions",

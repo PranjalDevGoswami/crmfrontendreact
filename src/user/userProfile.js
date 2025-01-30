@@ -29,6 +29,7 @@ import { UPDATE_PROFILE } from "../../utils/constants/urls.js";
 export const userDetails = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  
 
   if (token && token.split(".").length == 3) {
     try {

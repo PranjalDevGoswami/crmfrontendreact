@@ -12,7 +12,7 @@ const InProgressProject = ({ projectData }) => {
     (item) => item?.status === "In Progress"
   );
   const handleProjectReport = () => {
-    Navigate("/operation-dashboard");
+    Navigate("/operation-projects");
     setActiveTabValue("In Progress");
     setSelectedStatus("In Progress");
   };

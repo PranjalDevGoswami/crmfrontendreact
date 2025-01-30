@@ -2,7 +2,6 @@ import React, { useContext, useState, useEffect } from "react";
 import Button from "../../Atom/Button";
 import { FilterContext } from "../../ContextApi/FilterContext";
 import { useSelector } from "react-redux";
-import { isFinanceDept } from "../../config/Departments";
 import { useLocation, useParams } from "react-router-dom";
 
 const ProjectStatusTabs = ({ className }) => {
@@ -37,7 +36,6 @@ const ProjectStatusTabs = ({ className }) => {
   //   "cbr_raised",
   // ];
 
-  const department = localStorage.getItem('department') 
 
 // Define button names and values with all possible options
 // const allButtons = [
@@ -78,22 +76,7 @@ const ProjectStatusTabs = ({ className }) => {
 //     ];
 
 
-const allButtons =
-  isFinanceDept
-    ? location.pathname === "/cbr"
-      ? [
-          { name: "Invoice to be Raised", value: "cbr raised" },
-          { name: "Invoice Generated", value: "Invoice Generated" },
-          { name: "Payment Received", value: "Payment Received" },
-        ]
-      : location.pathname === "/abr"
-      ? [
-          { name: "Advanced Billing Raised", value: "Advanced Billing Raised" },
-          { name: "Advanced Invoice Generated", value: "Advanced Invoice Generated" },
-          { name: "Advance Payment Received", value: "Advance Payment Received" },
-        ]
-      : [] // Default case when not /cbr or /abr
-    : [
+const allButtons = [
         { name: "All", value: "all" },
         { name: "Project Initiated", value: "Project Initiated" },
         { name: "To Be Started", value: "To Be Started" },

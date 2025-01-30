@@ -17,7 +17,7 @@ export const useHandleFilterOption = ({ setSelectedItems }) => {
 
   const handleFilterOption = (name, valueObj) => {
     const values = valueObj?.value?.map((v) => v.toLowerCase()) || [];
-    if (name === "Client") {
+    if (name === "Client") {      
       const selectedClients = clientsList.filter((item) =>
         values.includes(item?.name?.toLowerCase())
       );

@@ -16,6 +16,7 @@ import { DateValidationForWeekend } from "../../../utils/helperFunction/dateVali
 import useNotificationCount from "../../../utils/hooks/useNotificationCount";
 import { setnotification } from "../../../utils/slices/notificationCountSlice";
 import { notificationCount } from "../../../utils/apis/notificationCount";
+import { FilterContext } from "../../ContextApi/FilterContext";
 
 const SampleEdit = ({ viewRecord }) => {
   const [showDate, setShowDate] = useState(viewRecord?.tentative_end_date);
@@ -31,6 +32,7 @@ const SampleEdit = ({ viewRecord }) => {
 
   // const projects = useSelector((store) => store.projectData.projects);
     const {page_number,page_size,projects} = useSelector(store=>store.projectData)
+    const {activeTabValue} = useContext(FilterContext);
   
   const { setisEdit } = useContext(DataTableContext);
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
@@ -157,7 +159,7 @@ const SampleEdit = ({ viewRecord }) => {
       setisEdit(false);
       const response = await notificationCount();
         dispatch(setnotification(response));
-      const projectData = await ProjectData(page_number,page_size);
+      const projectData = await ProjectData(page_number,page_size,activeTabValue);
       dispatchReRender(setProjects(projectData?.results));
     } else {
       SweetAlert({

@@ -8,7 +8,6 @@ export const SearchFilterContext = ({ children }) => {
     localStorage.getItem("department")
   );
 
-
   useEffect(() => {
     const handleStorageChange = () => {
       const newDepartment = localStorage.getItem("department");
@@ -33,9 +32,8 @@ export const SearchFilterContext = ({ children }) => {
   // );
 
   const [activeTabValue, setActiveTabValue] = useState(
-    isFinanceDept ? "cbr raised" : (department == isSalesDept) ? "all" : "In Progress"
-  );
-  
+    (department == isFinanceDept) ? "cbr raised" : (department == isSalesDept) ? "all" : "In Progress"
+  );  
   const [status, setStatus] = useState([
     activeTabValue,
     "All",

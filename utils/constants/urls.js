@@ -67,12 +67,18 @@ export const RAISECBR = (id) => {
   }
   return `${BASEURL}/api/finance/projects/${id}/cbr-raised/`;
 };
-export const PROJECTDATAAPIS = (page_number,page_size) => {
+export const PROJECTDATAAPIS = (page_number,page_size,activeTabValue) => {
   if (!page_number) {
     throw new Error("Page Number is required to get the Project Data");
   }
-  return `${BASEURL}/api/project/projects/?page=${page_number}&page_size=${page_size}`;
+  return `${BASEURL}/api/project/projects/?page=${page_number}&page_size=${page_size}&status=${activeTabValue}`;
 }
 export const POSTPROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 
- 
+export const GETCBR = (id) => {
+  if (!id) {
+    throw new Error("ID is required to raised CBR!!");
+  }
+  return `${BASEURL}/api/finance/project-cbr-data/${id}/`;
+};
+export const DASHBOARDPROJECT = BASEURL + "/api/project/dashbord-projects/"

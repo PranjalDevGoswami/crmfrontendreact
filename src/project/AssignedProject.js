@@ -328,7 +328,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
   const userrole = localStorage.getItem("userrole");
   const { setIsDrawerOpen, selectedRow, setSelectedRow, setIsMultiEdit} =
     useContext(DataTableContext);
-  const { teamLeadAssiged, setTeamLeadAssiged } = useContext(FilterContext);
+  const { teamLeadAssiged, setTeamLeadAssiged,activeTabValue } = useContext(FilterContext);
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
   const [selectTL, setSelectTL] = useState([]);
@@ -358,7 +358,6 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
     };
     getTeamLead();
   }, [userrole]);
-  console.log("🚀 ~ getTeamLead ~ ProjectManager:", selectTL)
 
 
   useEffect(() => {
@@ -400,7 +399,7 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         icon: "success",
       });
       // dispatchReRender(addReRender());
-      const projectData = await ProjectData(page_number,page_size);
+      const projectData = await ProjectData(page_number,page_size,activeTabValue);
       dispatch(setProjects(projectData?.results));
     } catch (error) {
       SweetAlert({

@@ -13,7 +13,6 @@ export default function PiReportChart({
     if (projectType.length > 0) {
       let filtered = projectData.filter(
         (item) =>{
-          console.log("item.project_type.name",item.project_type?.name);
           // console.log("projectType[0].label",projectType[0].label);
           item.project_type?.name.toLowerCase() ===
           projectType[0]?.label.toLowerCase()

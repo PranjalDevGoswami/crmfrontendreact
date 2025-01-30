@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import PiReportChart from "../Report/PiReportChart";
 import Revenue from "../Report/Revenue";
 import ProjectTypeChart from "../Report/ProjectTypeChart";
@@ -13,6 +13,8 @@ import ProjectNameAndFilter from "../project/ProjectNameAndFilter";
 import ReportDashBoardTopCard from "./ReportDashBoardTopCard";
 import FilterProject from "../project/FilterProject";
 import { FilterContext } from "../ContextApi/FilterContext";
+import { getWithAuth } from "../provider/helper/axios";
+import { DASHBOARDPROJECT } from "../../utils/constants/urls";
 
 const ReportDashboard = () => {
   const [projectData, setProjectData] = useState([]);
@@ -30,7 +32,7 @@ const ReportDashboard = () => {
   const isOperationDept = "2";
   const userList = useSelector((store) => store.userData.users);
 
-  const {filteredProjectDataWithoutStatus} = useContext(FilterContext);
+  const {filteredProjectDataWithoutStatus,setFilteredProjectDataWithoutStatus} = useContext(FilterContext);
 
   const showReports =
     isDirectorRole || (isHodRole && department == isSalesDept); // Sales department ID = 1
@@ -38,6 +40,19 @@ const ReportDashboard = () => {
   if (!userList || !filteredData) {
     return <div>Loading data...</div>;
   }
+  useEffect(() => {
+    const getDashboardProject = async () => {
+      try {
+        const response = await getWithAuth(DASHBOARDPROJECT);
+        setFilteredProjectDataWithoutStatus(response?.data || []);
+      } catch (error) {
+        console.error("Error fetching dashboard projects:", error);
+      }
+    };
+  
+    getDashboardProject();
+  }, []);  // No need for useMemo, just use useEffect
+  
 
   const projectDataResponse = useSelector(
     (store) => store.projectDataFiltered.projects

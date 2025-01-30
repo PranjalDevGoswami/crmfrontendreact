@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import {
-    customStyles,
+  customStyles,
   Dummycolumns,
   DummyData,
 } from "../../../utils/tableData/DataTablesData";
@@ -12,53 +12,37 @@ import ProjectStatusTabs from "../../project/projectCRUDOperations/ProjectStatus
 import { FilterContext } from "../../ContextApi/FilterContext";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
 import { useSelector } from "react-redux";
-import { Data } from "../../../utils/tableData/data";
 import { useNavigate } from "react-router-dom";
 import { TableColumnReport } from "../../../utils/tableData/dataTableColumnsReport";
 import { ReportData } from "../../../utils/tableData/reportData";
+import { toggleViewMultipleCpiSample } from "../../../utils/slices/MultipleSampleCpiRecordsSlice";
+import { useDispatch } from "react-redux";
+import Popup from "../../Atom/Popup";
+import ViewMultipleSampleCpi from "../../project/projectCRUDOperations/ViewMultipleSampleCpi";
 
 const Report = () => {
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
-const buttonRef = useRef()
-const navigate = useNavigate()
-  const {
-    searchTerm,
-    filteredProjectData,
-    isLoading,
-    setIsLoading,
-    projectData,
-    teamLeadAssiged,
-  } = useContext(FilterContext);
-  const {
-    isEdit,
-    isView,
-    selectedRecord,
-    setOpenDropdownIndex,
-    setIsViewOptionOpen,
-    changeProjectStatus,
-    isAddManDays,
-    closeView,
-    isUploadSow,
-    showSowList,
-    setShowSowList,
-    sowList,
-    setSowList,
-    toggledClearRows,
-    setToggleClearRows,
-    isMultiEdit,
-    isDrawerOpen,
-    showRaiseCbr,
-  } = useContext(DataTableContext);
-  const totalRows = useSelector((store) => store.projectData.totalRows);
-  const projects = useSelector((store) => store.projectData.projects);
-  const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+  const buttonRef = useRef();
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const { isLoading, setIsLoading,setActiveTabValue } = useContext(FilterContext);
+  const { setShowSowList, setSowList, toggledClearRows, isDrawerOpen } =
+    useContext(DataTableContext);
+  const {totalRows,projects} = useSelector((store) => store.projectData);
+    const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+   const isMultipleCpiSample = useSelector(
+      (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
+    );
+    useEffect(() => {
+      setActiveTabValue("all");
+    }, []);
 
   useEffect(() => {
     setIsLoading(false);
-  }, [projectData]);
+  }, [projects]);
 
-  const handleViewCpi = (row) => {
-    const viewSampleCpi = projectData.filter((item) => item?.id === row?.id);
+  const handleViewCpi = (row) => {    
+    const viewSampleCpi = projects?.filter((item) => item?.id === row?.id);
     setMultipleCpiSample(viewSampleCpi);
     dispatch(toggleViewMultipleCpiSample(true));
   };
@@ -69,7 +53,7 @@ const navigate = useNavigate()
     dispatch(addPageNumber(e));
   };
 
- const data = ReportData();
+  const data = ReportData();
 
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -84,8 +68,6 @@ const navigate = useNavigate()
     }
     return { ...item, desabled };
   });
-
-
 
   return (
     <div
@@ -111,13 +93,13 @@ const navigate = useNavigate()
             />
             <div className="">
               <div className="relative">
-                <div className="relative w-full">
+                {/* <div className="relative w-full">
                   <ProjectStatusTabs
                     className={
-                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-full"
+                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-8/12"
                     }
                   />
-                </div>{" "}
+                </div>{" "} */}
                 <DataTable
                   columns={
                     data?.length > 0
@@ -145,12 +127,16 @@ const navigate = useNavigate()
                   highlightOnHover={true}
                   paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                   theme={darkMode ? "dark" : "default"}
-                  subHeader={true}
                 />
               </div>
             </div>
           </div>
         </div>
+      )}
+      {isMultipleCpiSample && (
+        <Popup>
+          <ViewMultipleSampleCpi viewRecord={multipleCpiSample} />
+        </Popup>
       )}
     </div>
   );

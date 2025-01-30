@@ -10,6 +10,8 @@ import { MdManageAccounts, MdDashboard } from "react-icons/md";
 import SidebarItem from "./SideBarItems";
 import { ThemeContext } from "../../ContextApi/ThemeContext";
 import { useSelector } from "react-redux";
+import { GoReport } from "react-icons/go";
+
 
 const SideBar = () => {
   const userEmail = localStorage.getItem("user");
@@ -64,43 +66,94 @@ const SideBar = () => {
 
   const adminItems = [
     { icon: GrUserManager, label: "User Management", link: "/Admin-dashboard" },
-    { icon: MdManageAccounts, label: "Role Management", link: "/Management-Role" },
+    {
+      icon: MdManageAccounts,
+      label: "Role Management",
+      link: "/Management-Role",
+    },
   ];
 
+
   const commonItems = [
-    !isFinanceDept && isOperationDept ? { icon: GoProjectRoadmap, label: "Project", link: "/operation-projects" } : { icon: GoProjectRoadmap, label: "Project", link: "/sales-projects" },
+    !isFinanceDept && isOperationDept
+    ? {
+        icon: GoProjectRoadmap,
+        label: "Project",
+        link: "/operation-projects",
+      }       
+    : { icon: GoProjectRoadmap, label: "Project", link: "/sales-projects" },
+    isDirectorRole && 
+      {
+        icon: GoReport,
+        label: "Report",
+        link: "/report",
+      },
+   
   ].filter(Boolean); // Removes undefined values
 
   return (
     <div className="shadow-slate-400 flex justify-between w-full">
       <div className="bg-[#bd1d1d] text-white h-screen min-h-dvh duration-300 relative flex flex-col gap-2 w-10/12 pl-2 pr-2">
-        {((isDirectorRole || isSuperUserRole || isHodRole || isSrManagerRole || isManagerRole || isAssManagerRole) && !isFinanceDept) && (
-          <SidebarItem icon={MdDashboard} label="Dashboard" link={dashboardLink} sideBarOpen={sideBarOpen} />
-        )}
+        {(isDirectorRole ||
+          isSuperUserRole ||
+          isHodRole ||
+          isSrManagerRole ||
+          isManagerRole ||
+          isAssManagerRole) &&
+          !isFinanceDept && (
+            <SidebarItem
+              icon={MdDashboard}
+              label="Dashboard"
+              link={dashboardLink}
+              sideBarOpen={sideBarOpen}
+            />
+          )}
 
         {userEmail === "admin@unimrkt.com" &&
           adminItems.map((item, index) => (
-            <SidebarItem key={index} icon={item.icon} label={item.label} link={item.link} sideBarOpen={sideBarOpen} />
+            <SidebarItem
+              key={index}
+              icon={item.icon}
+              label={item.label}
+              link={item.link}
+              sideBarOpen={sideBarOpen}
+            />
           ))}
 
         {isFinanceDept
           ? financeItems.map((item, index) => (
-              <SidebarItem key={index} icon={item.icon} label={item.label} link={item.link} sideBarOpen={sideBarOpen} />
+              <SidebarItem
+                key={index}
+                icon={item.icon}
+                label={item.label}
+                link={item.link}
+                sideBarOpen={sideBarOpen}
+              />
             ))
           : commonItems.map((item, index) => (
-              <SidebarItem key={index} icon={item.icon} label={item.label} link={item.link} sideBarOpen={sideBarOpen} />
+              <SidebarItem
+                key={index}
+                icon={item.icon}
+                label={item.label}
+                link={item.link}
+                sideBarOpen={sideBarOpen}
+              />
             ))}
       </div>
 
       <div className="w-2/12">
         {sideBarOpen ? (
           <PiCaretDoubleLeftLight
-            className={`top-4 text-base cursor-pointer absolute duration-300 font-extralight ${darkMode ? "text-white" : "text-black"}`}
+            className={`top-4 text-base cursor-pointer absolute duration-300 font-extralight ${
+              darkMode ? "text-white" : "text-black"
+            }`}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           />
         ) : (
           <PiCaretDoubleRightLight
-            className={`top-4 text-base cursor-pointer absolute duration-300 font-extralight ${darkMode ? "text-white" : "text-black"}`}
+            className={`top-4 text-base cursor-pointer absolute duration-300 font-extralight ${
+              darkMode ? "text-white" : "text-black"
+            }`}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           />
         )}

@@ -15,7 +15,8 @@ export const usePostFormData = async (
   dispatchAddMultipleSampleCpi,
   dispatchAddMultipleSampleCpiCheckbox,
   navigate,
-  setFormData,page_number,page_size
+  setFormData,page_number,page_size,
+  activeTabValue
 ) => {
   try {
     const response = await PostFormData(data);
@@ -48,7 +49,7 @@ export const usePostFormData = async (
         project_samples: [],
         is_multiple_sample_cpi: null,
       });
-      const projectData = await ProjectData(page_number,page_size);
+      const projectData = await ProjectData(page_number,page_size,activeTabValue);
       dispatch(setProjects(projectData?.results));
     } else if (
       response?.ex?.response?.data[0] ===

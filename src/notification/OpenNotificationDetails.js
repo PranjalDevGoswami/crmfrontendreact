@@ -23,6 +23,7 @@ import { setnotification } from "../../utils/slices/notificationCountSlice";
 import { notificationCount } from "../../utils/apis/notificationCount";
 import { ProjectData } from "../../utils/apis/projectData";
 import { setProjects } from "../../utils/slices/ProjectSlice";
+import { FilterContext } from "../ContextApi/FilterContext";
 
 const OpenNotification = ({ notification_btn_ref }) => {
   const {
@@ -30,7 +31,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
     setIsViewNotification,
     setNotificationProjectList,
   } = useContext(NotifiactionContext);
-    console.log("🚀 ~ OpenNotification ~ notificationProjectList:", notificationProjectList)
+  const {activeTabValue} = useContext(FilterContext)
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const dispatch = useDispatch();
   const isMultipleCpiSample = useSelector(
@@ -72,7 +73,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
       setNotificationProjectList([]);
       const notificationCountfreshData = await notificationCount();
       dispatch(setnotification(notificationCountfreshData));
-      const projectData = await ProjectData(page_number,page_size);
+      const projectData = await ProjectData(page_number,page_size,activeTabValue);
       dispatch(setProjects(projectData.results));
     } else {
       SweetAlert({
@@ -118,7 +119,7 @@ const OpenNotification = ({ notification_btn_ref }) => {
       setNotificationProjectList([]);
       const notificationCountfreshData = await notificationCount();
       dispatch(setnotification(notificationCountfreshData));
-      const projectData = await ProjectData();
+      const projectData = await ProjectData(page_number,page_size,activeTabValue);
       dispatch(setProjects(projectData));
     }
     setIsViewNotification(false);

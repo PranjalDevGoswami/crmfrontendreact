@@ -15,7 +15,7 @@ const FilterOptionSelected = ({
   return (
     <div>
       <ul className="flex items-center flex-wrap pb-2">
-        {selectedItems.map((value, index) => (
+        {selectedItems?.map((value, index) => (
           <li
             className="p-1 px-2 m-1 bg-[#e0e0e0] rounded-sm text-sm cursor-pointer"
             key={index}
@@ -30,7 +30,7 @@ const FilterOptionSelected = ({
           </li>
         ))}
 
-        {selectedItems.length > 1 && (
+        {selectedItems?.length > 1 && (
           <button
             className="p-1 px-2 m-1 bg-[#e0e0e0] rounded-sm text-sm cursor-pointer"
             onClick={handleClearAllSelection}

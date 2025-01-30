@@ -40,31 +40,24 @@ const FilterProject = () => {
     setManagerListArray,
     tlListArray,
     setTlListArray,
-    dateRange, setDateRange,
-    filteredProjectDataWithoutStatus, setFilteredProjectDataWithoutStatus
+    dateRange,
+    setDateRange,
+    filteredProjectDataWithoutStatus,
+    setFilteredProjectDataWithoutStatus,
   } = useContext(FilterContext);
-  
+    console.log("🚀 ~ FilterProject ~ selectedClient:", selectedClient)
+
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
 
   const role = localStorage.getItem("role");
-  const isSuperUser = "superUser";
-  const isDirector = "Director";
   const isHod = "HOD";
-  const isSrManager = "Sr.Manager";
-  const isManager = "Manager";
-  const isAssManager = "Ass.Manager";
   const isTeamLead = "Team Lead";
   const allManagerRoles = ["Sr.Manager", "Ass.Manager", "Manager"];
 
-  const department = localStorage.getItem("department");
-  const isSuperUserDepartment = [1, 2, 3, 4];
   const userRole = localStorage.getItem("userrole");
-  const userName = localStorage.getItem("username");
   const Token = localStorage.getItem("token");
   const isSalesDept = "1";
   const isOperationDept = "2";
-  const isFinanceDept = "3";
-  const isPreSalesDept = "4";
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
   const projectResponse = useSelector(
@@ -134,6 +127,13 @@ const FilterProject = () => {
     ) {
       filteredData = filteredData.filter((item) => {
         return item?.status?.toLowerCase() === selectedStatus?.toLowerCase();
+      });
+    }
+    if (
+      selectedClient &&
+      selectedClient !== "--Select Client--" ) {
+      filteredData = filteredData.filter((item) => {
+        return selectedClient.includes(item?.clients?.name);
       });
     }
 
@@ -219,23 +219,27 @@ const FilterProject = () => {
   useEffect(() => {
     let filteredData = projectData?.length > 0 ? projectData : [];
     const currentYear = new Date().getFullYear();
-const startDate = new Date(`1 Jan ${currentYear}`);
-const endDate = new Date(`31 Dec ${currentYear}`);
+    const startDate = new Date(`1 Jan ${currentYear}`);
+    const endDate = new Date(`31 Dec ${currentYear}`);
 
-// Step 1: Filter `filteredData` for the current year considering overlapping date ranges
-if (!dateRange.startDate && !dateRange.endDate && !selectedOptions.length > 0) {
-  filteredData = filteredData.filter((item) => {
-    const projectStartDate = new Date(item?.tentative_start_date);
-    const projectEndDate = new Date(item?.tentative_end_date);
+    // Step 1: Filter `filteredData` for the current year considering overlapping date ranges
+    if (
+      !dateRange.startDate &&
+      !dateRange.endDate &&
+      !selectedOptions.length > 0
+    ) {
+      filteredData = filteredData.filter((item) => {
+        const projectStartDate = new Date(item?.tentative_start_date);
+        const projectEndDate = new Date(item?.tentative_end_date);
 
-    // Check if any part of the project lies within the date range
-    return (
-      (projectStartDate >= startDate && projectStartDate <= endDate) || // Start date is within the range
-      (projectEndDate >= startDate && projectEndDate <= endDate) ||   // End date is within the range
-      (projectStartDate <= startDate && projectEndDate >= endDate)    // Project spans the entire range
-    );
-  });
-}
+        // Check if any part of the project lies within the date range
+        return (
+          (projectStartDate >= startDate && projectStartDate <= endDate) || // Start date is within the range
+          (projectEndDate >= startDate && projectEndDate <= endDate) || // End date is within the range
+          (projectStartDate <= startDate && projectEndDate >= endDate) // Project spans the entire range
+        );
+      });
+    }
 
     if (dateRange.startDate && dateRange.endDate) {
       filteredData = filteredData.filter((item) => {

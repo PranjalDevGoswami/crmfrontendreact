@@ -9,9 +9,15 @@ import FilterProject from '../project/FilterProject';
 import ProjectNameAndFilter from '../project/ProjectNameAndFilter';
 import ProjectStatusTabs from '../project/projectCRUDOperations/ProjectStatusTabs';
 import { useNavigate } from 'react-router-dom';
+import ABRStatusTabs from '../project/projectCRUDOperations/ABRStatusTabs';
+import { FilterContext } from '../ContextApi/FilterContext';
 
 const AbrDashboard = () => {
  const dispatch = useDispatch();
+ const { setActiveTabValue } = useContext(FilterContext);
+ useEffect(() => {
+   setActiveTabValue("Advanced Billing Raised");
+ }, []);
 
    const {
      setShowSowList,
@@ -75,9 +81,9 @@ const navigate = useNavigate()
               NoProjectHeading={"No Project Found"}
             />
             <div className="relative w-full">
-                  <ProjectStatusTabs
+                  <ABRStatusTabs
                     className={
-                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-full"
+                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-8/12"
                     }
                   />
                 </div>

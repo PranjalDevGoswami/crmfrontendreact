@@ -202,6 +202,8 @@ const OperationPersonTable = ({
             highlightOnHover={true}
             paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
             theme={darkMode ? "dark" : "default"}
+            paginationPerPage={page_size}
+
           />
         </div>
       ) : (isSuperUserDepartment.includes(department) && isSuperUserRole) ||
@@ -250,6 +252,8 @@ const OperationPersonTable = ({
             paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
             fixedHeader={true}
             theme={darkMode ? "dark" : "default"}
+            paginationPerPage={page_size}
+
           />
         </div>
       ) : (
@@ -284,6 +288,8 @@ const OperationPersonTable = ({
                 highlightOnHover={true}
                 paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                 theme={darkMode ? "dark" : "default"}
+            paginationPerPage={page_size}
+
               />
           ) : (
             <div>
@@ -329,6 +335,8 @@ const OperationPersonTable = ({
                 clearSelectedRows={toggledClearRows} // Pass the toggle state here
                 striped={true}
                 theme={darkMode ? "dark" : "default"}
+            paginationPerPage={page_size}
+
               />
             </div>
           )}
