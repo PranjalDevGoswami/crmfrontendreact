@@ -38,7 +38,7 @@ const Form = () => {
     setFormData,
   } = useContext(FormDataContext);
   const {page_number,page_size} = useSelector(store=>store.projectData)
-    const activeTabValue = useContext(FilterContext);
+    const {activeTabValue} = useContext(FilterContext);
 
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample

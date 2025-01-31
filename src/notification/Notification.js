@@ -5,6 +5,7 @@ import { getWithAuth } from "../provider/helper/axios";
 import { DASHBOARDPROJECT, EDITPROJECTREQUEST } from "../../utils/constants/urls";
 import { useSelector } from "react-redux";
 import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
+import { isDirector } from "../config/Role";
 
 const Notification = () => {
   const role = localStorage.getItem("role");
@@ -100,7 +101,7 @@ const Notification = () => {
           className="border bg-[#bd1d1d] text-white cursor-pointer text-left absolute sm:top-10 sm:-left-1/2 min-[320px]:left-1/3 min-[320px]:top-5 min-[320px]:w-44 sm:w-72 p-2 rounded-md min-[320px]:text-base sm:text-base"
           ref={notification_btn_ref}
         >
-          {allManagerRolesRole || isHodRole && notificationCount?.notification_count ? (
+          {(allManagerRolesRole || isHodRole) && notificationCount?.notification_count ? (
             <ul>
               {projectCode?.map((item, ind) => {
                 return (
