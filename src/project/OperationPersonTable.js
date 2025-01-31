@@ -334,6 +334,9 @@ const OperationPersonTable = ({
                 actions={<FilterProject />}
                 clearSelectedRows={toggledClearRows} // Pass the toggle state here
                 striped={true}
+                paginationTotalRows={totalRows}
+                highlightOnHover={true}
+                paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                 theme={darkMode ? "dark" : "default"}
             paginationPerPage={page_size}
 

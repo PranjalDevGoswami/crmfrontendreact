@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   projects: [],
   page_number:1,
-  page_size: 100,
+  page_size: 30,
   totalRows:0,
 };
 

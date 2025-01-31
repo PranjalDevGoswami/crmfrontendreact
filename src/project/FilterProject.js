@@ -21,6 +21,7 @@ const FilterProject = () => {
   const [openSearch, setOpenSearch] = useState(false);
 
   const {
+    activeTabValue,
     selectedStatus,
     selectedClient,
     setSelectedClient,
@@ -45,7 +46,6 @@ const FilterProject = () => {
     filteredProjectDataWithoutStatus,
     setFilteredProjectDataWithoutStatus,
   } = useContext(FilterContext);
-    console.log("🚀 ~ FilterProject ~ selectedClient:", selectedClient)
 
   const { closeAddClient, setCloseAddClient } = useContext(CloseAddClient);
 
@@ -214,6 +214,7 @@ const FilterProject = () => {
     selectedTl,
     selectedClient,
     selectedOptions,
+    activeTabValue
   ]);
 
   useEffect(() => {
@@ -319,6 +320,7 @@ const FilterProject = () => {
     selectedTl,
     selectedClient,
     selectedOptions,
+    activeTabValue
   ]);
 
   const handleClearAllSelection = () => {

@@ -8,7 +8,7 @@ const ViewMultipleSampleCpi = ({ viewRecord }) => {
   const handleCloseCpiView = () => {
     dispatch(toggleViewMultipleCpiSample(false));
   };
-  const projectSample = viewRecord?.map((item) => item?.project_samples || viewRecord?.map((item)=>item?.pending_changes));
+  const projectSample = viewRecord?.map((item) => item?.project_samples || viewRecord?.map((item)=>item));
   return (
     <div className="relative p-4">
        <h2 className="p-2 m-2 text-xl font-bold">Multiple Sample Cpi Details</h2>

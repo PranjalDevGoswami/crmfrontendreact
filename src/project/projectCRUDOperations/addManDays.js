@@ -13,6 +13,7 @@ import { addManDaysValidation } from "../../../utils/validation/addManDaysValida
 import { useDispatch } from "react-redux";
 import { handlePostMandaysData } from "../../../utils/helperFunction/postAddMandaysData/index.js";
 import { useSelector } from "react-redux";
+import { FilterContext } from "../../ContextApi/FilterContext.js";
 
 export function AddManDays({ setMultiEditFieldOpen }) {
   const {
@@ -23,6 +24,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
     setIsAddManDays,
     setisEdit,
   } = useContext(DataTableContext);
+  const {activeTabValue} = useContext(FilterContext)
 
   const [openRight, setOpenRight] = useState(true);
   const [selectedEditData, setSelectedEditData] = useState(selectedRow);
@@ -37,8 +39,6 @@ export function AddManDays({ setMultiEditFieldOpen }) {
   );
   const dispatch = useDispatch();
   const {page_number,page_size} = useSelector(store=>store.projectData) 
-  console.log("🚀 ~ AddManDays ~ page_number,page_size}:", page_number,page_size)
-
   const handleMandaysData = (index, e) => {
     const { name, value } = e.target;
     const updatedMandaysData = [...mandaysData];
@@ -171,7 +171,7 @@ export function AddManDays({ setMultiEditFieldOpen }) {
         dispatch,
         setIsAddManDays,
         setisEdit,
-        closeDrawerRight,page_number,page_size,
+        closeDrawerRight,page_number,page_size,activeTabValue
       );
     }
   };

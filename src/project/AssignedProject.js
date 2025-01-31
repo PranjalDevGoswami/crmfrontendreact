@@ -520,17 +520,17 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
         onClose={closeDrawerRight}
         PaperProps={{
           sx: {
-            width: 1200,
+            width: 860,
             padding: 2,
           },
         }}
       >
-        <div className="mb-6 w-1/3">
+        <div className="mb-6 w-2/3">
           <h3 className="text-xl underline pb-4">
             Assigned Project to TeamLead
           </h3>
         </div>
-        <div className="overflow-scroll">
+        <div className="">
           <DataTable
             columns={AssignColumns}
             data={updatedDataWithButton}

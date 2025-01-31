@@ -65,7 +65,7 @@ const Report = () => {
     let desabled = false;
     if (
       item.status === "Completed" ||
-      item.status === "cbr_raised" ||
+      item.status === "CBR Raised" ||
       new Date(item.tentative_end_date) < new Date(currentDate)
     ) {
       desabled = true;
@@ -92,18 +92,11 @@ const Report = () => {
           >
             <ProjectNameAndFilter
               data={data}
-              ProjectHeading={"All Project Details"}
+              ProjectHeading={"Report"}
               NoProjectHeading={"No Project Found"}
             />
             <div className="">
               <div className="relative">
-                {/* <div className="relative w-full">
-                  <ProjectStatusTabs
-                    className={
-                      "absolute top-[10px] overflow-x-auto left-0 z-10 no-scrollbar w-8/12"
-                    }
-                  />
-                </div>{" "} */}
                 <DataTable
                   columns={
                     data?.length > 0

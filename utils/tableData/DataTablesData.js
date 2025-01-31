@@ -460,13 +460,13 @@ export const AssignColumns = [
     name: "Project Code",
     selector: (row) => row.project_code?.toUpperCase(),
     sortable: true,
-    width: "160px",
+    width: "140px",
   },
   {
     name: "Client Name",
     selector: (row) => row.clients,
     sortable: true,
-    width: "170px",
+    width: "140px",
   },
   {
     name: "Project Name",
@@ -474,30 +474,30 @@ export const AssignColumns = [
     sortable: true,
     width: "280px",
   },
-  {
-    name: "Purchase Order No.",
-    selector: (row) => row.purchase_order_no,
-    sortable: true,
-    width: "160px",
-  },
-  {
-    name: "Client PM",
-    selector: (row) => row.project_client_pm,
-    sortable: true,
-    width: "140px",
-  },
-  {
-    name: "Client Email",
-    selector: (row) => row.project_client_email,
-    sortable: true,
-    width: "140px",
-  },
+  // {
+  //   name: "Purchase Order No.",
+  //   selector: (row) => row.purchase_order_no,
+  //   sortable: true,
+  //   width: "160px",
+  // },
+  // {
+  //   name: "Client PM",
+  //   selector: (row) => row.project_client_pm,
+  //   sortable: true,
+  //   width: "140px",
+  // },
+  // {
+  //   name: "Client Email",
+  //   selector: (row) => row.project_client_email,
+  //   sortable: true,
+  //   width: "140px",
+  // },
 
   {
     name: "Assign To",
     selector: (row) => row.assigned,
     sortable: true,
-    width: "240px",
+    width: "260px",
   },
 ];
 const currentDate = new Date().toISOString().split("T")[0];

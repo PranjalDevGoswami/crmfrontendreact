@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { TableColumn } from "../../utils/tableData/dataTableColumns";
 import { Data } from "../../utils/tableData/data";
@@ -15,13 +15,20 @@ import ProjectStatusTabs from "../project/projectCRUDOperations/ProjectStatusTab
 import { useNavigate } from "react-router-dom";
 import CBRStatusTabs from "../project/projectCRUDOperations/CBRStatusTabs";
 import { FilterContext } from "../ContextApi/FilterContext";
+import { ProjectData } from "../../utils/apis/projectData";
+import { addPageNumber, addPageSize, setProjects } from "../../utils/slices/ProjectSlice";
 
 const CbrDashboard = () => {
   const dispatch = useDispatch();
-  const { setActiveTabValue } = useContext(FilterContext);
+  const { activeTabValue, setActiveTabValue } = useContext(FilterContext);
+  const { page_number, page_size } = useSelector((store) => store.projectData);
+  const [localActiveTab, setLocalActiveTab] = useState("CBR Raised");
+
   useEffect(() => {
-    setActiveTabValue("CBR Raised");
-  }, []);
+    setActiveTabValue(localActiveTab);
+  }, [localActiveTab]); 
+  
+
   const {
     setShowSowList,
     setSowList,
@@ -41,7 +48,7 @@ const CbrDashboard = () => {
     let desabled = false;
     if (
       item.status === "Completed" ||
-      item.status === "cbr_raised" ||
+      item.status === "CBR Raised" ||
       new Date(item.tentative_end_date) < new Date(currentDate)
     ) {
       desabled = true;

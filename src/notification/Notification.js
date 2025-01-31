@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
 import { NotifiactionContext } from "../ContextApi/NotificationContext";
 import { getWithAuth } from "../provider/helper/axios";
-import { EDITPROJECTREQUEST } from "../../utils/constants/urls";
+import { DASHBOARDPROJECT, EDITPROJECTREQUEST } from "../../utils/constants/urls";
 import { useSelector } from "react-redux";
 import { useHandleOutsideClick } from "../../utils/hooks/useHandleOutSideClick";
 
@@ -24,6 +24,7 @@ const Notification = () => {
     setIsViewNotification,
   } = useContext(NotifiactionContext);
   const notificationCount = useSelector((store)=>store.notificationCount.notification)
+  const [projectList,setProjectList] = useState([])
  
   useEffect(() => {
     if (darkMode) {
@@ -55,14 +56,29 @@ const Notification = () => {
 
   const handleViewNotification = async (id) => {
     const response = await getWithAuth(EDITPROJECTREQUEST(id));
+    // console.log("🚀 ~ handleViewNotification ~ response:", response)
     if(response.status == true){
       setNotificationProjectList(response?.data);
     }
     setIsViewNotification(true);
   };
-  const projectCode = projectDataResponse.length>0 && projectDataResponse?.filter((old_item)=>{
+  useEffect(() => {
+      const getDashboardProject = async () => {
+        try {
+          const response = await getWithAuth(DASHBOARDPROJECT);
+          setProjectList(response?.data || []);
+        } catch (error) {
+          console.error("Error fetching dashboard projects:", error);
+        }
+      };
+    
+      getDashboardProject();
+    }, []);  // No need for useMemo, just use useEffect
+
+  const projectCode = projectList.length>0 && projectList?.filter((old_item)=>{
    return notificationCount?.project_id?.some((item)=>item == old_item.id)
   })
+
 
   return (
     <div className="relative flex items-center">

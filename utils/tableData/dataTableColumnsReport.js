@@ -187,17 +187,28 @@ export const TableColumnReport = ({
     },
     {
       name: "Addnl. Fee",
-      selector: (row) => (
-        <Tooltip text={"View Additional Fee"} className={"w-40"}>
-          <MdRemoveRedEye
-            onClick={() => handleViewAddnl(row)}
-            className="cursor-pointer text-base"
-          />
-        </Tooltip>
-      ),
+      selector: (row) => {
+        // Ensure at least one field has a valid value
+        if (
+          row?.other_cost?.toString().trim() || 
+          row?.transaction_fee?.toString().trim() || 
+          row?.set_up_fee?.toString().trim()
+        ) {    
+          return (
+            <Tooltip text={"View Additional Fee"} className={"w-40"}>
+              <MdRemoveRedEye
+                onClick={() => handleViewAddnl(row)}
+                className="cursor-pointer text-base"
+              />
+            </Tooltip>
+          );
+        }
+        return null;
+      },
       width: "80px",
       reorder: true,
-    },
+    }
+    ,    
     {
       name: "Actual Value",
       selector: (row) => {
