@@ -39,7 +39,6 @@ export const Data = () => {
       })
     );
 // const getSow1 = getSow(2077)
-console.log("🚀 ~ Data ~ filteredData:", filteredData)
 
 
   const data = filteredData?.map((item, index) => ({

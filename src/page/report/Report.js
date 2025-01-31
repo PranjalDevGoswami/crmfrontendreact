@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import Popup from "../../Atom/Popup";
 import ViewMultipleSampleCpi from "../../project/projectCRUDOperations/ViewMultipleSampleCpi";
 import { addPageNumber, addPageSize } from "../../../utils/slices/ProjectSlice";
+import ViewAddlnFee from "../../project/projectCRUDOperations/ViewAddlnFee";
 
 const Report = () => {
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
@@ -34,9 +35,11 @@ const Report = () => {
     (store) => store.projectData
   );
   const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+  const [addlnFee, setAddlnFee] = useState([]);
   const isMultipleCpiSample = useSelector(
     (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
   );
+  const [isAddlnFee,setisAddlnFee] = useState(false)
   useEffect(() => {
     setActiveTabValue("all");
   }, []);
@@ -47,9 +50,21 @@ const Report = () => {
 
   const handleViewCpi = (row) => {
     const viewSampleCpi = projects?.filter((item) => item?.id === row?.id);
+    console.log("🚀 ~ handleViewCpi ~ viewSampleCpi:", viewSampleCpi)
     setMultipleCpiSample(viewSampleCpi);
     dispatch(toggleViewMultipleCpiSample(true));
   };
+  const handleViewAddnl = (row) =>{    
+    setisAddlnFee(true)
+    const addlnfee1 = 
+        {
+          setupFee:row.set_up_fee,
+          otherFee:row.other_cost,
+          translationFee:row.transaction_fee
+        }
+          
+    setAddlnFee(addlnfee1)
+  }
   const handlePerRowsChange = (e) => {
     dispatch(addPageSize(e));
   };
@@ -107,6 +122,7 @@ const Report = () => {
                           setSowList,
                           navigate,
                           desabledRowData,
+                          handleViewAddnl
                         })
                       : Dummycolumns
                   }
@@ -134,6 +150,11 @@ const Report = () => {
       {isMultipleCpiSample && (
         <Popup>
           <ViewMultipleSampleCpi viewRecord={multipleCpiSample} />
+        </Popup>
+      )}
+        {isAddlnFee && (
+        <Popup>
+          <ViewAddlnFee viewRecord={addlnFee} setisAddlnFee={setisAddlnFee}/>
         </Popup>
       )}
     </div>

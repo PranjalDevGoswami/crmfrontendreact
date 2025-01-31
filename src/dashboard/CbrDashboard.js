@@ -22,12 +22,13 @@ const CbrDashboard = () => {
   const dispatch = useDispatch();
   const { activeTabValue, setActiveTabValue } = useContext(FilterContext);
   const { page_number, page_size } = useSelector((store) => store.projectData);
-  const [localActiveTab, setLocalActiveTab] = useState("CBR Raised");
 
   useEffect(() => {
-    setActiveTabValue(localActiveTab);
-  }, [localActiveTab]); 
-  
+    setActiveTabValue("CBR Raised");
+    
+  }, []); 
+  console.log("🚀 ~ CbrDashboard ~ activeTabValue:", activeTabValue)
+
 
   const {
     setShowSowList,

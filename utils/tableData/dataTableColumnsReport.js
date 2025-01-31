@@ -12,25 +12,29 @@ export const TableColumnReport = ({
   setShowSowList,
   setSowList,
   navigate,
-  desabledRowData
+  desabledRowData,
+  handleViewAddnl
 }) => {
-
-  const invoice_generated = desabledRowData.filter((item)=>item?.status === "Invoice generated")
+  const invoice_generated = desabledRowData.filter(
+    (item) => item?.status === "Invoice generated"
+  );
 
   const handleGetInvoice = (selectedRecord) => {
     // e.preventDefault();
     // setIsInvoice(true);
     navigate("/view-cbr", { state: selectedRecord });
   };
-  const handleViewAddnl = () =>{console.log("");
-  }
+
+  // const handleViewAddnl = () => {
+  //   console.log("");
+  // };
   const columns = [
     {
       name: "Project Code",
       selector: (row) => row?.project_code?.toUpperCase(),
       sortable: true,
       width: "120px",
-      rowspan:"2",
+      rowspan: "2",
       reorder: true,
     },
     {
@@ -65,22 +69,24 @@ export const TableColumnReport = ({
     },
     {
       name: "Month",
-      selector: (row) => new Date(row?.created_at).toLocaleString('default', { month: 'long' }),
+      selector: (row) =>
+        new Date(row?.created_at).toLocaleString("default", { month: "long" }),
       sortable: true,
       width: "110px",
       reorder: true,
     },
-    
+
     {
       name: "Week Of",
       selector: (row) => {
         const date = new Date(row?.created_at);
-        const startOfWeek = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-        const month = date.getMonth()+1;
+        const startOfWeek =
+          date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+        const month = date.getMonth() + 1;
         const year = date.getFullYear();
-        
+
         return `${startOfWeek}-${month}-${year}`;
-    },
+      },
       sortable: true,
       width: "110px",
       reorder: true,
@@ -110,32 +116,61 @@ export const TableColumnReport = ({
     },
     {
       name: "Addnl. Fee",
-      selector: (row) => (
-        <Tooltip text={"View Additional Fee"} className={"w-40"}>
-          <MdRemoveRedEye
-            onClick={(handleViewAddnl)}
-            className="cursor-pointer text-base"
-          />
-        </Tooltip>
-      ),
+      // selector: (row) => (
+      //   <Tooltip text={"View Additional Fee"} className={"w-40"}>
+      //     <MdRemoveRedEye
+      //       onClick={handleViewAddnl}
+      //       className="cursor-pointer text-base"
+      //     />
+      //   </Tooltip>
+      // ),
+      selector: (row) => {
+        // Ensure at least one field has a valid value
+        if (
+          (Number(row?.set_up_fee) || 0) > 0 ||
+          (Number(row?.transaction_fee) || 0) > 0 ||
+          (Number(row?.other_cost) || 0) > 0
+        ) {
+          return (
+            <Tooltip text={"View Additional Fee"} className={"w-40"}>
+              <MdRemoveRedEye
+                onClick={() => handleViewAddnl(row)}
+                className="cursor-pointer text-base"
+              />
+            </Tooltip>
+          );
+        }
+        return null;
+      },
       width: "80px",
       reorder: true,
     },
     {
       name: "Project Value",
       selector: (row) => {
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            trailingZeroDisplay: 'stripIfInteger'  
+        const formatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          trailingZeroDisplay: "stripIfInteger",
         });
-        const result = formatter.format(Number(row.initial_sample_size || 0) * Number(row.cpi || 0));
+        const result =
+          row.project_samples.length > 1
+            ? formatter.format(
+                row.project_samples.reduce(
+                  (acc, item) => acc + Number(item.sample) * Number(item.cpi),
+                  0
+                )
+              )
+            : formatter.format(
+                Number(row.initial_sample_size || 0) * Number(row.cpi || 0)
+              );
+
         return result;
-    },
+      },
       width: "100px",
       reorder: true,
     },
-     {
+    {
       name: "UniMrkt PM",
       selector: (row) => row?.assigned_to?.name,
       sortable: true,
@@ -190,10 +225,10 @@ export const TableColumnReport = ({
       selector: (row) => {
         // Ensure at least one field has a valid value
         if (
-          row?.other_cost?.toString().trim() || 
-          row?.transaction_fee?.toString().trim() || 
-          row?.set_up_fee?.toString().trim()
-        ) {    
+          (Number(row?.set_up_fee) || 0) > 0 ||
+          (Number(row?.transaction_fee) || 0) > 0 ||
+          (Number(row?.other_cost) || 0) > 0
+        ) {
           return (
             <Tooltip text={"View Additional Fee"} className={"w-40"}>
               <MdRemoveRedEye
@@ -207,37 +242,60 @@ export const TableColumnReport = ({
       },
       width: "80px",
       reorder: true,
-    }
-    ,    
+    },
     {
       name: "Actual Value",
       selector: (row) => {
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            trailingZeroDisplay: 'stripIfInteger'  
+        const formatter = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          trailingZeroDisplay: "stripIfInteger",
         });
-        const result = formatter.format(Number(row.total_achievement || 0) * Number(row.cpi || 0));
+        const result =
+          row.project_samples.length > 1
+            ? (() => {
+                const cpiAvg =
+                  row.project_samples.reduce(
+                    (acc, item) => acc + Number(item.cpi),
+                    0
+                  ) / row.project_samples.length;
+
+                const totalCost =
+                  Number(row?.transaction_fee || 0) +
+                  Number(row?.set_up_fee || 0) +
+                  Number(row?.other_cost || 0);
+
+                return formatter.format(
+                  row.total_achievement * cpiAvg + totalCost
+                );
+              })()
+            : formatter.format(
+                Number(row.total_achievement || 0) * Number(row.cpi || 0) +
+                  Number(row?.transaction_fee || 0) +
+                  Number(row?.set_up_fee || 0) +
+                  Number(row?.other_cost || 0)
+              );
         return result;
-    },
+      },
       width: "100px",
       reorder: true,
     },
-     
-    isFinanceDept && invoice_generated.length>0 && {
-      name: "View Invoice",
-      selector: (row) => (
-        <Tooltip text={"View Invoice"} className={"w-40"}>
-          <img
-            alt="invoice"
-            src={viewInvoice}
-            className="w-4 h-4 cursor-pointer"
-          />
-        </Tooltip>
-      ),
-      width: "80px",
-      reorder: true,
-    },
+
+    isFinanceDept &&
+      invoice_generated.length > 0 && {
+        name: "View Invoice",
+        selector: (row) => (
+          <Tooltip text={"View Invoice"} className={"w-40"}>
+            <img
+              alt="invoice"
+              src={viewInvoice}
+              className="w-4 h-4 cursor-pointer"
+            />
+          </Tooltip>
+        ),
+        width: "80px",
+        reorder: true,
+      },
     {
       name: "Progress",
       selector: (row) => {
@@ -308,55 +366,59 @@ export const TableColumnReport = ({
               />
             </Tooltip>
           );
-        }else if (row.status === "CBR Raised" || row.status === "CBR Raised"){
-          return (<>
-            <Tooltip text={"View CBR"} className={"w-40"}>
-              <img
-                alt="ABR"
-                src={viewCBR}
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => handleGetInvoice(row)}
-              />
-            </Tooltip>
-             <Tooltip text={"View CBR"} className={"w-40"}>
-             <img
-               alt="CBR"
-               src={viewCBR}
-               className="w-4 h-4 cursor-pointer"
-               onClick={() => handleGetInvoice(row)}
-             />
-           </Tooltip></>
-          );
-        }else if(row.status === "CBR Raised" || row.status === "CBR Raised" || row.status === "CBR Raised"){
+        } else if (row.status === "CBR Raised" || row.status === "CBR Raised") {
           return (
             <>
-            <Tooltip text={"View CBR"} className={"w-40"}>
-              <img
-                alt="ABR"
-                src={viewCBR}
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => handleGetInvoice(row)}
-              />
-            </Tooltip>
-             <Tooltip text={"View CBR"} className={"w-40"}>
-             <img
-               alt="CBR"
-               src={viewCBR}
-               className="w-4 h-4 cursor-pointer"
-               onClick={() => handleGetInvoice(row)}
-             />
-             
-           </Tooltip>
-           <Tooltip text={"View CBR"} className={"w-40"}>
-             <img
-               alt="CBR"
-               src={viewCBR}
-               className="w-4 h-4 cursor-pointer"
-               onClick={() => handleGetInvoice(row)}
-             />
-             
-           </Tooltip>
-           </>
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <img
+                  alt="ABR"
+                  src={viewCBR}
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleGetInvoice(row)}
+                />
+              </Tooltip>
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <img
+                  alt="CBR"
+                  src={viewCBR}
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleGetInvoice(row)}
+                />
+              </Tooltip>
+            </>
+          );
+        } else if (
+          row.status === "CBR Raised" ||
+          row.status === "CBR Raised" ||
+          row.status === "CBR Raised"
+        ) {
+          return (
+            <>
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <img
+                  alt="ABR"
+                  src={viewCBR}
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleGetInvoice(row)}
+                />
+              </Tooltip>
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <img
+                  alt="CBR"
+                  src={viewCBR}
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleGetInvoice(row)}
+                />
+              </Tooltip>
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <img
+                  alt="CBR"
+                  src={viewCBR}
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => handleGetInvoice(row)}
+                />
+              </Tooltip>
+            </>
           );
         }
         return null; // Ensure a valid return
@@ -364,7 +426,7 @@ export const TableColumnReport = ({
 
       width: "140px",
       reorder: true,
-    },    
+    },
     {
       name: "SOW",
       selector: (row) =>

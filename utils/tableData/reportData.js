@@ -41,6 +41,7 @@ export const ReportData = () => {
     other_cost: item?.other_cost,
     project_code: item?.project_code,
     set_up_fee: item?.set_up_fee,
+    transaction_fee:item?.transaction_fee,
     tentative_end_date: item?.tentative_end_date,
     tentative_start_date:item?.tentative_start_date?.split("T")[0],
     tentative_end_date:item?.tentative_end_date?.split("T")[0],
