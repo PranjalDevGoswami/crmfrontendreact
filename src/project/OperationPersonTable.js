@@ -1,11 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  customStyles,
-  Dummycolumns,
-  DummyData,
-} from "../../utils/tableData/DataTablesData";
+import { customStyles } from "../../utils/tableData/DataTablesData";
 import Button from "../Atom/Button";
 import AddManDaysInduvisual from "./projectCRUDOperations/AddManDaysInduvisual";
 import UpdateStatus from "./projectCRUDOperations/UpdateStatus";
@@ -33,7 +29,6 @@ const OperationPersonTable = ({
   isOperationPerson,
   desabledRowData,
 }) => {
-  const tableRef = useRef(null);
 
   const {
     isEdit,
@@ -112,6 +107,8 @@ const OperationPersonTable = ({
   const handlePageChange = (e) => {
     dispatch(addPageNumber(e));
   };
+  console.log("oprn");
+  
 
   // useEffect(() => {
   //   const element = document.getElementById("dataTable");
@@ -174,18 +171,16 @@ const OperationPersonTable = ({
         <div>
           <DataTable
             columns={
-              data?.length > 0
-                ? TableColumn({
-                    buttonRef,
-                    handleViewCpi,
-                    setShowSowList,
-                    setSowList,
-                    navigate,
-                    desabledRowData,
-                  })
-                : Dummycolumns
+              TableColumn({
+                buttonRef,
+                handleViewCpi,
+                setShowSowList,
+                setSowList,
+                navigate,
+                desabledRowData,
+              })
             }
-            data={data?.length > 0 ? desabledRowData : DummyData}
+            data={desabledRowData}
             pagination
             paginationServer
             onChangeRowsPerPage={handlePerRowsChange}
@@ -203,7 +198,8 @@ const OperationPersonTable = ({
             paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
             theme={darkMode ? "dark" : "default"}
             paginationPerPage={page_size}
-
+            persistTableHead={true}
+            loading={"Loading...."}
           />
         </div>
       ) : (isSuperUserDepartment.includes(department) && isSuperUserRole) ||
@@ -223,18 +219,16 @@ const OperationPersonTable = ({
           </Link>
           <DataTable
             columns={
-              data?.length > 0
-                ? TableColumn({
-                    buttonRef,
-                    handleViewCpi,
-                    setShowSowList,
-                    setSowList,
-                    navigate,
-                    desabledRowData,
-                  })
-                : Dummycolumns
+              TableColumn({
+                buttonRef,
+                handleViewCpi,
+                setShowSowList,
+                setSowList,
+                navigate,
+                desabledRowData,
+              })
             }
-            data={data?.length > 0 ? desabledRowData : DummyData}
+            data={desabledRowData}
             pagination
             paginationServer
             onChangeRowsPerPage={handlePerRowsChange}
@@ -253,76 +247,74 @@ const OperationPersonTable = ({
             fixedHeader={true}
             theme={darkMode ? "dark" : "default"}
             paginationPerPage={page_size}
-
+            persistTableHead={true}
+            loading={"Loading...."}
           />
         </div>
       ) : (
         <div>
-          {isDirectorRole || (department == isFinanceDept) ? (
-              <DataTable
-                columns={
-                  data?.length > 0
-                    ? TableColumn({
-                        buttonRef,
-                        handleViewCpi,
-                        setShowSowList,
-                        setSowList,
-                        navigate,
-                        desabledRowData,
-                      })
-                    : Dummycolumns
-                }
-                data={data?.length > 0 ? desabledRowData : DummyData}
-                pagination
-                paginationServer
-                onChangeRowsPerPage={handlePerRowsChange}
-                onChangePage={handlePageChange}
-                customStyles={customStyles}
-                onSelectedRowsChange={handleSelectedRowsChange}
-                enableMultiRowSelection
-                selectableRowDisabled={(row) => row.desabled}
-                actions={<FilterProject />}
-                clearSelectedRows={toggledClearRows} // Pass the toggle state here
-                striped={true}
-                paginationTotalRows={totalRows}
-                highlightOnHover={true}
-                paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
-                theme={darkMode ? "dark" : "default"}
-            paginationPerPage={page_size}
-
-              />
+          {isDirectorRole || department == isFinanceDept ? (
+            <DataTable
+              columns={
+                TableColumn({
+                  buttonRef,
+                  handleViewCpi,
+                  setShowSowList,
+                  setSowList,
+                  navigate,
+                  desabledRowData,
+                })
+              }
+              data={desabledRowData}
+              pagination
+              paginationServer
+              onChangeRowsPerPage={handlePerRowsChange}
+              onChangePage={handlePageChange}
+              customStyles={customStyles}
+              onSelectedRowsChange={handleSelectedRowsChange}
+              enableMultiRowSelection
+              selectableRowDisabled={(row) => row.desabled}
+              actions={<FilterProject />}
+              clearSelectedRows={toggledClearRows} // Pass the toggle state here
+              striped={true}
+              paginationTotalRows={totalRows}
+              highlightOnHover={true}
+              paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
+              theme={darkMode ? "dark" : "default"}
+              paginationPerPage={page_size}
+              persistTableHead={true}
+              loading={"Loading...."}
+            />
           ) : (
             <div>
               {isViewerUserRole && (
-                  <Link to={"/entry-page"}>
-                    <Button
-                      name={
-                        <Tooltip text="Add New Project" position="top">
-                          <MdAddTask className="text-white text-xl" />
-                        </Tooltip>
-                      }
-                      className={`${
-                        darkMode
-                          ? "bg-black text-white border-white"
-                          : " border-black"
-                      } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
-                    />
-                  </Link>
-                )}
+                <Link to={"/entry-page"}>
+                  <Button
+                    name={
+                      <Tooltip text="Add New Project" position="top">
+                        <MdAddTask className="text-white text-xl" />
+                      </Tooltip>
+                    }
+                    className={`${
+                      darkMode
+                        ? "bg-black text-white border-white"
+                        : " border-black"
+                    } p-1.5 border border-gray-200 bg-green-600 rounded-sm text-sm flex items-center justify-around text-blue-400 absolute right-11 -top-8 z-20 hover:scale-110`}
+                  />
+                </Link>
+              )}
               <DataTable
                 columns={
-                  data?.length > 0
-                    ? TableColumn({
-                        buttonRef,
-                        handleViewCpi,
-                        setShowSowList,
-                        setSowList,
-                        navigate,
-                        desabledRowData,
-                      })
-                    : Dummycolumns
+                  TableColumn({
+                    buttonRef,
+                    handleViewCpi,
+                    setShowSowList,
+                    setSowList,
+                    navigate,
+                    desabledRowData,
+                  })
                 }
-                data={data?.length > 0 ? desabledRowData : DummyData}
+                data={desabledRowData}
                 pagination
                 paginationServer
                 onChangeRowsPerPage={handlePerRowsChange}
@@ -338,8 +330,9 @@ const OperationPersonTable = ({
                 highlightOnHover={true}
                 paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                 theme={darkMode ? "dark" : "default"}
-            paginationPerPage={page_size}
-
+                paginationPerPage={page_size}
+                persistTableHead={true}
+                loading={"Loading...."}
               />
             </div>
           )}

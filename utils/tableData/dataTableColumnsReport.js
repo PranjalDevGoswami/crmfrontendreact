@@ -1,470 +1,455 @@
-import { allManagerRolesRole } from "../../src/config/Role";
-import ActionsButton from "../../src/project/projectCRUDOperations/ActionsButton";
 import { MdDownload, MdFileDownloadOff, MdRemoveRedEye } from "react-icons/md";
 import Tooltip from "../../src/components/Tooltip";
 import { isFinanceDept } from "../../src/config/Departments";
 import viewInvoice from "../../src/assets/invoice.png";
 import viewCBR from "../..//src/assets/bill_requisition.png";
+import { createColumnHelper } from "@tanstack/react-table";
 
-export const TableColumnReport = ({
-  buttonRef,
+const columnHelper = createColumnHelper();
+const columns1 = ({
   handleViewCpi,
-  setShowSowList,
-  setSowList,
-  navigate,
-  desabledRowData,
-  handleViewAddnl
-}) => {
-  const invoice_generated = desabledRowData.filter(
-    (item) => item?.status === "Invoice generated"
-  );
-
-  const handleGetInvoice = (selectedRecord) => {
-    // e.preventDefault();
-    // setIsInvoice(true);
-    navigate("/view-cbr", { state: selectedRecord });
-  };
-
-  // const handleViewAddnl = () => {
-  //   console.log("");
-  // };
-  const columns = [
-    {
-      name: "Project Code",
-      selector: (row) => row?.project_code?.toUpperCase(),
-      sortable: true,
-      width: "120px",
-      rowspan: "2",
-      reorder: true,
-    },
-    {
-      name: "Project Name",
-      selector: (row) => row?.name,
-      sortable: true,
-      width: "180px",
-      overflow: "wrap !important",
-      whiteSpace: "pre-wrap !important",
-      reorder: true,
-    },
-    {
-      name: "Project Type",
-      selector: (row) => row?.project_type,
-      sortable: true,
-      width: "85px",
-      reorder: true,
-    },
-    {
-      name: "Client Name",
-      selector: (row) => row?.clients,
-      sortable: true,
-      width: "120px",
-      reorder: true,
-    },
-    {
-      name: "Sales Executive",
-      selector: (row) => row?.created_by.name,
-      sortable: true,
-      width: "130px",
-      reorder: true,
-    },
-    {
-      name: "Month",
-      selector: (row) =>
-        new Date(row?.created_at).toLocaleString("default", { month: "long" }),
-      sortable: true,
-      width: "110px",
-      reorder: true,
-    },
-
-    {
-      name: "Week Of",
-      selector: (row) => {
-        const date = new Date(row?.created_at);
-        const startOfWeek =
-          date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-
-        return `${startOfWeek}-${month}-${year}`;
-      },
-      sortable: true,
-      width: "110px",
-      reorder: true,
-    },
-    {
-      name: "Initial Sample",
-      selector: (row) => row?.initial_sample_size,
-      width: "80px",
-      reorder: true,
-    },
-    {
-      name: "CPI",
-      selector: (row) =>
-        row?.cpi == 0 ? (
-          <Tooltip text={"View Multiple CPI"} className={"w-40"}>
-            <MdRemoveRedEye
-              onClick={() => handleViewCpi(row)}
-              className="cursor-pointer text-base"
-            />
-          </Tooltip>
-        ) : (
-          row?.cpi
-        ),
-      sortable: true,
-      width: "85px",
-      reorder: true,
-    },
-    {
-      name: "Addnl. Fee",
-      // selector: (row) => (
-      //   <Tooltip text={"View Additional Fee"} className={"w-40"}>
-      //     <MdRemoveRedEye
-      //       onClick={handleViewAddnl}
-      //       className="cursor-pointer text-base"
-      //     />
-      //   </Tooltip>
-      // ),
-      selector: (row) => {
-        // Ensure at least one field has a valid value
-        if (
-          (Number(row?.set_up_fee) || 0) > 0 ||
-          (Number(row?.transaction_fee) || 0) > 0 ||
-          (Number(row?.other_cost) || 0) > 0
-        ) {
-          return (
-            <Tooltip text={"View Additional Fee"} className={"w-40"}>
-              <MdRemoveRedEye
-                onClick={() => handleViewAddnl(row)}
-                className="cursor-pointer text-base"
-              />
+  handleViewAddnl,
+  handleViewSow,
+  handleGetInvoice,
+}) => [
+  columnHelper.group({
+    id: "##",
+    header: () => <span className="text-center flex justify-center"></span>,
+    columns: [
+      columnHelper.accessor("project_code", {
+        id: "project_code",
+        header: "Project Code",
+        cell: (info) => info.getValue()?.toUpperCase(),
+      }),
+      columnHelper.accessor("name", {
+        id: "project_name",
+        header: "Project Name",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("project_type", {
+        id: "project_type",
+        header: "Project Type",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("clients", {
+        id: "client_name",
+        header: "Client Name",
+        cell: (info) => info.getValue(),
+      }),
+    ],
+  }),
+  columnHelper.group({
+    id: "Sales Data",
+    header: () => (
+      <span className="text-center flex justify-center">Sales Data</span>
+    ),
+    columns: [
+      columnHelper.accessor("created_by.name", {
+        id: "sales_executive",
+        header: "Sales Executive",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("created_at", {
+        id: "month",
+        header: "Month",
+        cell: (info) =>
+          new Date(info.getValue()).toLocaleString("default", {
+            month: "long",
+          }),
+      }),
+      columnHelper.accessor("created_at", {
+        id: "week_of",
+        header: "Week Of",
+        cell: (info) => {
+          const date = new Date(info.getValue());
+          const startOfWeek =
+            date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+          const month = date.getMonth() + 1;
+          const year = date.getFullYear();
+          return `${startOfWeek}-${month}-${year}`;
+        },
+      }),
+      columnHelper.accessor("initial_sample_size", {
+        id: "initial_sample",
+        header: "Initial Sample",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("cpi", {
+        id: "cpi",
+        header: "CPI",
+        cell: (info) => {
+          const value = info.getValue();
+          return value == 0 ? (
+            <Tooltip text={"View Multiple CPI"} className={"w-40"}>
+              <button
+                onClick={() => handleViewCpi(info.row.original)}
+                className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+              >
+                <MdRemoveRedEye />
+              </button>
             </Tooltip>
+          ) : (
+            value
           );
-        }
-        return null;
-      },
-      width: "80px",
-      reorder: true,
-    },
-    {
-      name: "Project Value",
-      selector: (row) => {
-        const formatter = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-          trailingZeroDisplay: "stripIfInteger",
-        });
-        const result =
-          row.project_samples.length > 1
-            ? formatter.format(
-                row.project_samples.reduce(
-                  (acc, item) => acc + Number(item.sample) * Number(item.cpi),
-                  0
-                )
-              )
-            : formatter.format(
-                Number(row.initial_sample_size || 0) * Number(row.cpi || 0)
-              );
+        },
+      }),
 
-        return result;
-      },
-      width: "100px",
-      reorder: true,
-    },
-    {
-      name: "UniMrkt PM",
-      selector: (row) => row?.assigned_to?.name,
-      sortable: true,
-      width: "130px",
-      reorder: true,
-    },
-    {
-      name: "Act. Start Date",
-      selector: (row) => row?.project_actual_start_date?.split("T")[0],
-      sortable: true,
-      width: "130px",
-      reorder: true,
-    },
-    {
-      name: "Act. End Date",
-      selector: (row) => row?.project_actual_end_date?.split("T")[0],
-      sortable: true,
-      width: "130px",
-      reorder: true,
-    },
-    {
-      name: "Revised Sample",
-      selector: (row) => row?.sample,
-      width: "80px",
-      reorder: true,
-    },
-    {
-      name: "Sample Achieved",
-      selector: (row) => row?.total_achievement,
-      width: "80px",
-      reorder: true,
-    },
-    {
-      name: "CPI",
-      selector: (row) =>
-        row?.cpi == 0 ? (
-          <Tooltip text={"View Multiple CPI"} className={"w-40"}>
-            <MdRemoveRedEye
-              onClick={() => handleViewCpi(row)}
-              className="cursor-pointer text-base"
-            />
-          </Tooltip>
-        ) : (
-          row?.cpi
-        ),
-      sortable: true,
-      width: "85px",
-      reorder: true,
-    },
-    {
-      name: "Addnl. Fee",
-      selector: (row) => {
-        // Ensure at least one field has a valid value
-        if (
-          (Number(row?.set_up_fee) || 0) > 0 ||
-          (Number(row?.transaction_fee) || 0) > 0 ||
-          (Number(row?.other_cost) || 0) > 0
-        ) {
-          return (
-            <Tooltip text={"View Additional Fee"} className={"w-40"}>
-              <MdRemoveRedEye
-                onClick={() => handleViewAddnl(row)}
-                className="cursor-pointer text-base"
-              />
-            </Tooltip>
-          );
-        }
-        return null;
-      },
-      width: "80px",
-      reorder: true,
-    },
-    {
-      name: "Actual Value",
-      selector: (row) => {
-        const formatter = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-          trailingZeroDisplay: "stripIfInteger",
-        });
-        const result =
-          row.project_samples.length > 1
-            ? (() => {
-                const cpiAvg =
+      columnHelper.accessor("project_type", {
+        id: "addnl_fee",
+        header: "Addnl. Fee1",
+        cell: ({ row }) => {
+          const rowData = row.original; // Get the original row data
+          if (
+            (Number(rowData?.set_up_fee) || 0) > 0 ||
+            (Number(rowData?.transaction_fee) || 0) > 0 ||
+            (Number(rowData?.other_cost) || 0) > 0
+          ) {
+            return (
+              <div className="relative flex items-center">
+                {/* Ensure Tooltip wraps correctly */}
+                <Tooltip text="View Additional Fee" className="w-40">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent row click interference
+                      handleViewAddnl(rowData); // Call your function
+                    }}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <MdRemoveRedEye />
+                  </button>
+                </Tooltip>
+              </div>
+            );
+          }
+          return null;
+        },
+      }),
+      // { cell: ({row}) => <div onClick={() => openAction('View', row.original)} title={row.original.desc}>{row.original.name}</div>, accessorKey: 'name', minSize: 200, header: 'Name', enableMultiSort: true }
+
+      columnHelper.accessor("total_achievement", {
+        id: "project_value",
+        header: "Project Value",
+        cell: (info) => {
+          const row = info.row.original;
+          const formatter = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            trailingZeroDisplay: "stripIfInteger",
+          });
+
+          const result =
+            row.project_samples.length > 1
+              ? formatter.format(
                   row.project_samples.reduce(
-                    (acc, item) => acc + Number(item.cpi),
+                    (acc, item) => acc + Number(item.sample) * Number(item.cpi),
                     0
-                  ) / row.project_samples.length;
-
-                const totalCost =
-                  Number(row?.transaction_fee || 0) +
-                  Number(row?.set_up_fee || 0) +
-                  Number(row?.other_cost || 0);
-
-                return formatter.format(
-                  row.total_achievement * cpiAvg + totalCost
+                  )
+                )
+              : formatter.format(
+                  Number(row.initial_sample_size || 0) * Number(row.cpi || 0)
                 );
-              })()
-            : formatter.format(
-                Number(row.total_achievement || 0) * Number(row.cpi || 0) +
-                  Number(row?.transaction_fee || 0) +
-                  Number(row?.set_up_fee || 0) +
-                  Number(row?.other_cost || 0)
-              );
-        return result;
-      },
-      width: "100px",
-      reorder: true,
-    },
 
-    isFinanceDept &&
-      invoice_generated.length > 0 && {
-        name: "View Invoice",
-        selector: (row) => (
-          <Tooltip text={"View Invoice"} className={"w-40"}>
-            <img
-              alt="invoice"
-              src={viewInvoice}
-              className="w-4 h-4 cursor-pointer"
-            />
-          </Tooltip>
-        ),
-        width: "80px",
-        reorder: true,
-      },
-    {
-      name: "Progress",
-      selector: (row) => {
-        const progressPercentage =
-          row?.sample && parseFloat(row?.sample) !== 0
-            ? (parseFloat(row?.total_achievement || 0) /
-                parseFloat(row?.sample)) *
-              100
-            : 0;
+          return result;
+        },
+      }),
+    ],
+  }),
+  columnHelper.group({
+    id: "Operation Data",
+    header: () => (
+      <span className="text-center flex justify-center">Operation Data</span>
+    ),
+    columns: [
+      columnHelper.accessor("assigned_to.name", {
+        id: "unimrkt_pm",
+        header: "UniMrkt PM",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("project_actual_start_date", {
+        id: "actual_start_date",
+        header: "Act. Start Date",
+        cell: (info) => info.getValue()?.split("T")[0],
+      }),
+      columnHelper.accessor("project_actual_end_date", {
+        id: "actual_end_date",
+        header: "Act. End Date",
+        cell: (info) => info.getValue()?.split("T")[0],
+      }),
+      columnHelper.accessor("sample", {
+        id: "revised_sample",
+        header: "Revised Sample",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("total_achievement", {
+        id: "sample_achieved",
+        header: "Sample Achieved",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("cpi", {
+        id: "cpi1",
+        header: "CPI",
+        cell: (info) => {
+          const value = info.getValue();
+          return value == 0 ? (
+            <Tooltip text={"View Multiple CPI"} className={"w-40"}>
+              <button
+                onClick={() => handleViewCpi(info.row.original)}
+                className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+              >
+                <MdRemoveRedEye />
+              </button>
+            </Tooltip>
+          ) : (
+            value
+          );
+        },
+      }),
+      columnHelper.accessor("set_up_fee", {
+        id: "addnl_fee1",
+        header: "Addnl. Fee",
+        cell: (info) => {
+          const row = info.row.original;
+          if (
+            (Number(row?.set_up_fee) || 0) > 0 ||
+            (Number(row?.transaction_fee) || 0) > 0 ||
+            (Number(row?.other_cost) || 0) > 0
+          ) {
+            return (
+              <Tooltip text={"View Additional Fee"} className={"w-40"}>
+                <button
+                  onClick={() => handleViewAddnl(info.row.original)}
+                  className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                >
+                  <MdRemoveRedEye />
+                </button>
+              </Tooltip>
+            );
+          }
+          return null;
+        },
+      }),
+      columnHelper.accessor("total_achievement", {
+        id: "total_achievement1",
+        header: "Actual Value",
+        cell: (info) => {
+          const row = info.row.original;
+          const formatter = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            trailingZeroDisplay: "stripIfInteger",
+          });
 
-        return (
-          <div className="w-full">
-            <div className="relative w-full h-4 bg-gray-200 border border-gray-400 overflow-hidden">
-              <div
-                className="h-full"
-                style={{
-                  width: `${progressPercentage}%`,
-                  background:
-                    progressPercentage <= 100
-                      ? `hsl(${60 + progressPercentage * 0.6}, 100%, 50%)`
-                      : `hsl(${
-                          120 - (progressPercentage - 100) * 1.2
-                        }, 100%, 50%)`,
-                  color: "#fff",
-                  textAlign: "center",
-                  padding: "5px 0",
-                  borderRadius: "8px",
-                  transition:
-                    "width 0.5s ease-in-out, background 0.5s ease-in-out",
-                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                }}
-              ></div>
+          const result =
+            row.project_samples.length > 1
+              ? (() => {
+                  const cpiAvg =
+                    row.project_samples.reduce(
+                      (acc, item) => acc + Number(item.cpi),
+                      0
+                    ) / row.project_samples.length;
+
+                  const totalCost =
+                    Number(row?.transaction_fee || 0) +
+                    Number(row?.set_up_fee || 0) +
+                    Number(row?.other_cost || 0);
+
+                  return formatter.format(
+                    row.total_achievement * cpiAvg + totalCost
+                  );
+                })()
+              : formatter.format(
+                  Number(row.total_achievement || 0) * Number(row.cpi || 0) +
+                    Number(row?.transaction_fee || 0) +
+                    Number(row?.set_up_fee || 0) +
+                    Number(row?.other_cost || 0)
+                );
+          return result;
+        },
+      }),
+      columnHelper.accessor("invoice_generated", {
+        id: "invoice_generated",
+        header: "View Invoice",
+
+        cell: (info) => {
+          return (
+            isFinanceDept &&
+            info.row.original?.invoice_generated.length > 0 && (
+              <Tooltip text={"View Invoice"} className={"w-40"}>
+                <img
+                  alt="invoice"
+                  src={viewInvoice}
+                  className="w-4 h-4 cursor-pointer"
+                />
+              </Tooltip>
+            )
+          );
+        },
+      }),
+    ],
+  }),
+  columnHelper.group({
+    id: "#",
+    header: () => <span className="text-center flex justify-center"></span>,
+    columns: [
+      columnHelper.accessor("Progress", {
+        id: "Progress",
+        header: "Progress",
+
+        cell: (info) => {
+          const progressPercentage =
+            info.row.original?.sample &&
+            parseFloat(info.row.original?.sample) !== 0
+              ? (parseFloat(info.row.original?.total_achievement || 0) /
+                  parseFloat(info.row.original?.sample)) *
+                100
+              : 0;
+
+          return (
+            <div className="w-full">
+              <div className="relative w-full h-4 bg-gray-200 border border-gray-400 overflow-hidden">
+                <div
+                  className="h-full"
+                  style={{
+                    width: `${progressPercentage}%`,
+                    background:
+                      progressPercentage <= 100
+                        ? `hsl(${60 + progressPercentage * 0.6}, 100%, 50%)`
+                        : `hsl(${
+                            120 - (progressPercentage - 100) * 1.2
+                          }, 100%, 50%)`,
+                    color: "#fff",
+                    textAlign: "center",
+                    padding: "5px 0",
+                    borderRadius: "8px",
+                    transition:
+                      "width 0.5s ease-in-out, background 0.5s ease-in-out",
+                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  }}
+                ></div>
+              </div>
+              <span className="text-gray-700">
+                {progressPercentage.toFixed(2)}%
+              </span>
             </div>
-            <span className="text-gray-700">
-              {progressPercentage.toFixed(2)}%
+          );
+        },
+      }),
+      columnHelper.accessor("man_days", {
+        id: "man_days",
+        header: "Man Days",
+        cell: (info) => info.getValue(),
+      }),
+
+      columnHelper.accessor("status", {
+        id: "status",
+        header: "Status",
+        cell: (info) => info.getValue(),
+        meta: {
+          filterVariant: "select",
+        },
+      }),
+      columnHelper.accessor("View ABR/CBR/Invoice", {
+        id: "View ABR/CBR/Invoice",
+        header: "View ABR/CBR/Invoice",
+        cell: (info) => {
+          if (info.row.original.status === "CBR Raised") {
+            return (
+              <Tooltip text={"View CBR"} className={"w-40"}>
+                <button
+                  onClick={() => handleGetInvoice(info.row.original)}
+                  className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                >
+                  <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                </button>
+              </Tooltip>
+            );
+          } else if (
+            info.row.original.status === "CBR Raised" ||
+            info.row.original.status === "CBR Raised"
+          ) {
+            return (
+              <>
+                <Tooltip text={"View CBR"} className={"w-40"}>
+                  <button
+                    onClick={() => handleGetInvoice(info.row.original)}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip text={"View CBR"} className={"w-40"}>
+                  <button
+                    onClick={() => handleGetInvoice(info.row.original)}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                  </button>
+                </Tooltip>
+              </>
+            );
+          } else if (
+            info.row.original.status === "CBR Raised" ||
+            info.row.original.status === "CBR Raised" ||
+            info.row.original.status === "CBR Raised"
+          ) {
+            return (
+              <>
+                <Tooltip text={"View CBR"} className={"w-40"}>
+                  <button
+                    onClick={() => handleGetInvoice(info.row.original)}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip text={"View CBR"} className={"w-40"}>
+                  <button
+                    onClick={() => handleGetInvoice(info.row.original)}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                  </button>
+                </Tooltip>
+                <Tooltip text={"View CBR"} className={"w-40"}>
+                  <button
+                    onClick={() => handleGetInvoice(info.row.original)}
+                    className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  >
+                    <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
+                  </button>
+                </Tooltip>
+              </>
+            );
+          }
+          return null; // Ensure a valid return
+        },
+        meta: {
+          filterVariant: "select",
+        },
+      }),
+      columnHelper.accessor("sow", {
+        id: "sow",
+        header: "SOW",
+        cell: (info) =>
+          info.row.original?.documents?.length > 0 ? (
+            <span className="text-blue-600 cursor-pointer text-base">
+              <Tooltip text={"Download SOW"} className={"w-32"}>
+                <button
+                  onClick={() => handleViewSow(info.row.original)}
+                  className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                >
+                  <MdRemoveRedEye />
+                </button>
+              </Tooltip>
             </span>
-          </div>
-        );
-      },
-      sortable: true,
-      width: "100px",
-      reorder: true,
-    },
-    {
-      name: "Man Days",
-      selector: (row) => row?.man_days,
-      sortable: true,
-      reorder: true,
-    },
-    {
-      name: "Status",
-      selector: (row) => row?.status,
-      sortable: true,
-      width: "125px",
-      reorder: true,
-    },
-    {
-      name: "View ABR/CBR/Invoice",
-      selector: (row) => {
-        if (row.status === "CBR Raised") {
-          return (
-            <Tooltip text={"View CBR"} className={"w-40"}>
-              <img
-                alt="CBR"
-                src={viewCBR}
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => handleGetInvoice(row)}
-              />
-            </Tooltip>
-          );
-        } else if (row.status === "CBR Raised" || row.status === "CBR Raised") {
-          return (
-            <>
-              <Tooltip text={"View CBR"} className={"w-40"}>
-                <img
-                  alt="ABR"
-                  src={viewCBR}
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleGetInvoice(row)}
-                />
-              </Tooltip>
-              <Tooltip text={"View CBR"} className={"w-40"}>
-                <img
-                  alt="CBR"
-                  src={viewCBR}
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleGetInvoice(row)}
-                />
-              </Tooltip>
-            </>
-          );
-        } else if (
-          row.status === "CBR Raised" ||
-          row.status === "CBR Raised" ||
-          row.status === "CBR Raised"
-        ) {
-          return (
-            <>
-              <Tooltip text={"View CBR"} className={"w-40"}>
-                <img
-                  alt="ABR"
-                  src={viewCBR}
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleGetInvoice(row)}
-                />
-              </Tooltip>
-              <Tooltip text={"View CBR"} className={"w-40"}>
-                <img
-                  alt="CBR"
-                  src={viewCBR}
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleGetInvoice(row)}
-                />
-              </Tooltip>
-              <Tooltip text={"View CBR"} className={"w-40"}>
-                <img
-                  alt="CBR"
-                  src={viewCBR}
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => handleGetInvoice(row)}
-                />
-              </Tooltip>
-            </>
-          );
-        }
-        return null; // Ensure a valid return
-      },
+          ) : (
+            <p className="text-base">
+              <MdFileDownloadOff />
+            </p>
+          ),
+      }),
+    ],
+  }),
+];
 
-      width: "140px",
-      reorder: true,
-    },
-    {
-      name: "SOW",
-      selector: (row) =>
-        row?.documents?.length > 0 ? (
-          <span className="text-blue-600 cursor-pointer text-base">
-            <Tooltip text={"Download SOW"} className={"w-32"}>
-              <MdDownload
-                onClick={() => {
-                  setShowSowList(true);
-                  setSowList(row);
-                }}
-              />
-            </Tooltip>
-          </span>
-        ) : (
-          <p className="text-base">
-            <MdFileDownloadOff />
-          </p>
-        ),
-      sortable: true,
-      width: "60px",
-      reorder: true,
-    },
-    // {
-    //   name: "Actions",
-    //   key: "action",
-    //   text: "Action",
-    //   className: "action",
-    //   align: "left",
-    //   sortable: false,
-    //   width: "60px",
-    //   cell: (record, index) => {
-    //     return (
-    //       <ActionsButton record={record} index={index} buttonRef={buttonRef} />
-    //     );
-    //   },
-    // },
-  ].filter(Boolean); // This removes all falsy values (false, null, undefined)
-
-  return columns;
-};
+export default columns1;

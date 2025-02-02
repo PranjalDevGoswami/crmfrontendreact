@@ -5,8 +5,6 @@ import { Data } from "../../utils/tableData/data";
 import FilterProject from "../project/FilterProject";
 import {
   customStyles,
-  Dummycolumns,
-  DummyData,
 } from "../../utils/tableData/DataTablesData";
 import { useDispatch, useSelector } from "react-redux";
 import { DataTableContext } from "../ContextApi/DataTableContext";
@@ -98,9 +96,7 @@ const CbrDashboard = () => {
           </div>
 
           <DataTable
-            columns={
-              data?.length > 0
-                ? TableColumn({
+            columns={TableColumn({
                     buttonRef,
                     //   handleViewCpi,
                     setShowSowList,
@@ -108,9 +104,8 @@ const CbrDashboard = () => {
                     navigate,
                     desabledRowData,
                   })
-                : Dummycolumns
             }
-            data={data?.length > 0 ? desabledRowData : DummyData}
+            data={desabledRowData}
             pagination
             paginationServer
             onChangeRowsPerPage={handlePerRowsChange}
@@ -124,6 +119,8 @@ const CbrDashboard = () => {
             highlightOnHover={true}
             paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
             theme={darkMode ? "dark" : "default"}
+            persistTableHead={true}
+            loading={"Loading...."}
           />
         </div>
       </div>

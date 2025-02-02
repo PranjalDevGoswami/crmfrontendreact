@@ -6,8 +6,6 @@ import { DataTableContext } from "../ContextApi/DataTableContext";
 import { Data } from "../../utils/tableData/data";
 import {
   customStyles,
-  Dummycolumns,
-  DummyData,
 } from "../../utils/tableData/DataTablesData";
 import FilterProject from "../project/FilterProject";
 import ProjectNameAndFilter from "../project/ProjectNameAndFilter";
@@ -92,9 +90,7 @@ const AbrDashboard = () => {
           </div>
 
           <DataTable
-            columns={
-              data?.length > 0
-                ? TableColumn({
+            columns={TableColumn({
                     buttonRef,
                     //   handleViewCpi,
                     setShowSowList,
@@ -102,9 +98,8 @@ const AbrDashboard = () => {
                     navigate,
                     desabledRowData,
                   })
-                : Dummycolumns
             }
-            data={data?.length > 0 ? desabledRowData : DummyData}
+            data={desabledRowData}
             pagination
             paginationServer
             onChangeRowsPerPage={handlePerRowsChange}
@@ -118,6 +113,8 @@ const AbrDashboard = () => {
             highlightOnHover={true}
             paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
             theme={darkMode ? "dark" : "default"}
+            persistTableHead={true}
+                  loading={"Loading...."}
           />
         </div>
       </div>

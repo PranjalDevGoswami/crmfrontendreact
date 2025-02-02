@@ -81,25 +81,6 @@ const ProjectDataTable = ({ config, PersonDepartment }) => {
     document.body.classList.toggle("DrawerBody");
   };
 
-  const filteredData = filteredProjectData?.filter((item) =>
-    Object.values(item).some((val) => {
-      if (typeof val === "object" && val !== null) {
-        return Object.values(val).some((propVal) =>
-          propVal
-            ?.toString()
-            ?.toLowerCase()
-            ?.includes(searchTerm?.toLowerCase())
-        );
-      } else if (val) {
-        return val
-          ?.toString()
-          ?.toLowerCase()
-          ?.includes(searchTerm?.toLowerCase());
-      }
-      return false;
-    })
-  );
-
   const data = Data();
 
   const currentDate = new Date().toISOString().split("T")[0];

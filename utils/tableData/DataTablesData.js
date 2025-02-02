@@ -109,91 +109,91 @@ export const Data = [
   },
 ];
 
-export const Dummycolumns = [
-  {
-    name: "Project Code",
-    selector: (row) => row.project_code,
-    sortable: true,
-  },
-  {
-    name: "Client Name",
-    selector: (row) => row.clients,
-    sortable: true,
-  },
-  {
-    name: "Project Name",
-    selector: (row) => row.name,
-    sortable: true,
-  },
-  {
-    name: "Type",
-    selector: (row) => row.project_type,
-    sortable: true,
-  },
-  {
-    name: "Start Date",
-    selector: (row) => row.tentative_start_date,
-    sortable: true,
-  },
-  {
-    name: "End Date",
-    selector: (row) => row.tentative_end_date,
-    sortable: true,
-  },
-  {
-    name: "CPI",
-    selector: (row) => row.cpi,
-    sortable: true,
-  },
-  {
-    name: "Project Target",
-    selector: (row) => row.sample,
-    sortable: true,
-  },
-  {
-    name: "Achieved Target",
-    selector: (row) => row.achiev_Target,
-    sortable: true,
-  },
-  {
-    name: "Remaining Target",
-    selector: (row) => row.Remaining_Target,
-    sortable: true,
-  },
-  {
-    name: "T. Man Days",
-    selector: (row) => row.mandays,
-    sortable: true,
-  },
-  {
-    name: "Actions",
-    key: "action",
-    text: "Action",
-    className: "action",
-    width: 100,
-    align: "left",
-    sortable: false,
-  },
-];
+// export const Dummycolumns = [
+//   {
+//     name: "Project Code",
+//     selector: (row) => row.project_code,
+//     sortable: true,
+//   },
+//   {
+//     name: "Client Name",
+//     selector: (row) => row.clients,
+//     sortable: true,
+//   },
+//   {
+//     name: "Project Name",
+//     selector: (row) => row.name,
+//     sortable: true,
+//   },
+//   {
+//     name: "Type",
+//     selector: (row) => row.project_type,
+//     sortable: true,
+//   },
+//   {
+//     name: "Start Date",
+//     selector: (row) => row.tentative_start_date,
+//     sortable: true,
+//   },
+//   {
+//     name: "End Date",
+//     selector: (row) => row.tentative_end_date,
+//     sortable: true,
+//   },
+//   {
+//     name: "CPI",
+//     selector: (row) => row.cpi,
+//     sortable: true,
+//   },
+//   {
+//     name: "Project Target",
+//     selector: (row) => row.sample,
+//     sortable: true,
+//   },
+//   {
+//     name: "Achieved Target",
+//     selector: (row) => row.achiev_Target,
+//     sortable: true,
+//   },
+//   {
+//     name: "Remaining Target",
+//     selector: (row) => row.Remaining_Target,
+//     sortable: true,
+//   },
+//   {
+//     name: "T. Man Days",
+//     selector: (row) => row.mandays,
+//     sortable: true,
+//   },
+//   {
+//     name: "Actions",
+//     key: "action",
+//     text: "Action",
+//     className: "action",
+//     width: 100,
+//     align: "left",
+//     sortable: false,
+//   },
+// ];
 
-export const DummyData = [
-  {
-    id: "",
-    project_code: "",
-    cpi: "",
-    clients: "",
-    name: "No Record Found!",
-    operation_select: "",
-    project_type: "",
-    other_cost: "",
-    set_up_fee: "",
-    // tentative_start_date: "No Record Found!",
-    tentative_end_date: "",
-    sample: "",
-    // name: "",
-    status: "",
-  },
-];
+// export const DummyData = [
+//   {
+//     id: "",
+//     project_code: "",
+//     cpi: "",
+//     clients: "",
+//     name: "No Record Found!",
+//     operation_select: "",
+//     project_type: "",
+//     other_cost: "",
+//     set_up_fee: "",
+//     // tentative_start_date: "No Record Found!",
+//     tentative_end_date: "",
+//     sample: "",
+//     // name: "",
+//     status: "",
+//   },
+// ];
 
 export const customStyles = {
   rows: {
