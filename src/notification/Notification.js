@@ -77,7 +77,7 @@ const Notification = () => {
     }, []);  // No need for useMemo, just use useEffect
 
   const projectCode = projectList.length>0 && projectList?.filter((old_item)=>{
-   return notificationCount?.project_id?.some((item)=>item == old_item.id)
+    return notificationCount?.project_id?.some((item)=>item == old_item.id)
   })
 
 

@@ -2,18 +2,15 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import {
   customStyles,
-  Dummycolumns,
-  DummyData,
 } from "../../../utils/tableData/DataTablesData";
 import FilterProject from "../../project/FilterProject";
 import Shimmer from "../../Atom/Shimmer";
 import ProjectNameAndFilter from "../../project/ProjectNameAndFilter";
-import ProjectStatusTabs from "../../project/projectCRUDOperations/ProjectStatusTabs";
 import { FilterContext } from "../../ContextApi/FilterContext";
 import { DataTableContext } from "../../ContextApi/DataTableContext";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { TableColumnReport } from "../../../utils/tableData/dataTableColumnsReport";
+// import { TableColumnReport } from "../../../utils/tableData/dataTableColumnsReport";
 import { ReportData } from "../../../utils/tableData/reportData";
 import { toggleViewMultipleCpiSample } from "../../../utils/slices/MultipleSampleCpiRecordsSlice";
 import { useDispatch } from "react-redux";
@@ -21,6 +18,8 @@ import Popup from "../../Atom/Popup";
 import ViewMultipleSampleCpi from "../../project/projectCRUDOperations/ViewMultipleSampleCpi";
 import { addPageNumber, addPageSize } from "../../../utils/slices/ProjectSlice";
 import ViewAddlnFee from "../../project/projectCRUDOperations/ViewAddlnFee";
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { TableColumnReport } from "../../../utils/tableData/dataTableColumnsReport";
 
 const Report = () => {
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
@@ -87,6 +86,9 @@ const Report = () => {
     }
     return { ...item, desabled };
   });
+  
+  // const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+
 
   return (
     <div
@@ -113,9 +115,7 @@ const Report = () => {
             <div className="">
               <div className="relative">
                 <DataTable
-                  columns={
-                    data?.length > 0
-                      ? TableColumnReport({
+                  columns={TableColumnReport({
                           buttonRef,
                           handleViewCpi,
                           setShowSowList,
@@ -124,9 +124,8 @@ const Report = () => {
                           desabledRowData,
                           handleViewAddnl
                         })
-                      : Dummycolumns
                   }
-                  data={data?.length > 0 ? desabledRowData : DummyData}
+                  data={desabledRowData}
                   pagination
                   paginationServer
                   onChangeRowsPerPage={handlePerRowsChange}
@@ -141,7 +140,41 @@ const Report = () => {
                   paginationRowsPerPageOptions={[10, 15, 20, 25, 30, 50, 100]}
                   theme={darkMode ? "dark" : "default"}
                   paginationPerPage={page_size}
+                  persistTableHead={true}
+                  // responsive={true}
+                  loading={"Loading...."}
+                  // subHeader={true}
                 />
+                {/* <table>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+     
+      </table> */}
               </div>
             </div>
           </div>

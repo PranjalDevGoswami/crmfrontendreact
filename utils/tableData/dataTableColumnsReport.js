@@ -1,13 +1,12 @@
-import { allManagerRolesRole } from "../../src/config/Role";
-import ActionsButton from "../../src/project/projectCRUDOperations/ActionsButton";
+
 import { MdDownload, MdFileDownloadOff, MdRemoveRedEye } from "react-icons/md";
 import Tooltip from "../../src/components/Tooltip";
 import { isFinanceDept } from "../../src/config/Departments";
 import viewInvoice from "../../src/assets/invoice.png";
 import viewCBR from "../..//src/assets/bill_requisition.png";
+import { createColumnHelper } from "@tanstack/react-table";
 
 export const TableColumnReport = ({
-  buttonRef,
   handleViewCpi,
   setShowSowList,
   setSowList,
@@ -15,20 +14,15 @@ export const TableColumnReport = ({
   desabledRowData,
   handleViewAddnl
 }) => {
-  const invoice_generated = desabledRowData.filter(
-    (item) => item?.status === "Invoice generated"
-  );
+//   const invoice_generated = desabledRowData.filter(
+//     (item) => item?.status === "Invoice generated"
+//   );
 
   const handleGetInvoice = (selectedRecord) => {
-    // e.preventDefault();
-    // setIsInvoice(true);
     navigate("/view-cbr", { state: selectedRecord });
   };
 
-  // const handleViewAddnl = () => {
-  //   console.log("");
-  // };
-  const columns = [
+ const columns = [
     {
       name: "Project Code",
       selector: (row) => row?.project_code?.toUpperCase(),
@@ -41,11 +35,13 @@ export const TableColumnReport = ({
       name: "Project Name",
       selector: (row) => row?.name,
       sortable: true,
+      grow:2,
       width: "180px",
       overflow: "wrap !important",
       whiteSpace: "pre-wrap !important",
       reorder: true,
     },
+    
     {
       name: "Project Type",
       selector: (row) => row?.project_type,
