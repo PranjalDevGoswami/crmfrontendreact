@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Button from "../Atom/Button.js";
 import { useNavigate } from "react-router-dom";
 import CheckboxList from "../components/Checkbox.js";
@@ -26,19 +26,41 @@ import { usePostFormData } from "../../utils/hooks/usePostFormData.js";
 import Popup from "../Atom/Popup.js";
 import { useProjectEntryFormValidation } from "../../utils/hooks/useProjectEntryFormValidation.js";
 import { FilterContext } from "../ContextApi/FilterContext.js";
+import AdvancePayment from "../components/Form/AdvancePayment.js";
+import { userRole } from "../config/Role.js";
 
 const Form = () => {
+  const [abrData, setAbrData] = useState({
+    client: "",
+    client_address: "",
+    client_city: "",
+    client_country: "",
+    project: "",
+    contact_person_name: "",
+    contact_person_email: "",
+    cc_emails: "",
+    specific_billing_instruction: "",
+    total_project_cost: "",
+    advance_invoice_percentage: "",
+    advance_invoice_amount: "",
+    sales_owner: "",
+    project_manager: "",
+    created_by: userRole,
+    status: "Advanced Billing Raised",
+  });
   const {
     formData,
-    setAdvancePAyment,
+    advancePayment,
+    setAdvancePayment,
     isOtherFee,
     otherCost,
     translationCost,
     SetProjectAdded,
     setFormData,
   } = useContext(FormDataContext);
-  const {page_number,page_size} = useSelector(store=>store.projectData)
-    const {activeTabValue} = useContext(FilterContext);
+
+  const { page_number, page_size } = useSelector((store) => store.projectData);
+  const { activeTabValue } = useContext(FilterContext);
 
   const isMultipleSample = useSelector(
     (store) => store.addMultipleSampleCpi.isMultipleSample
@@ -54,8 +76,8 @@ const Form = () => {
   const navigate = useNavigate();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
 
-  const handleCheckboxChange = (name, checked) => {
-    setAdvancePAyment(checked);
+  const handleAdvancePayment = (name, checked) => {
+    setAdvancePayment(true);
   };
   const MultiSampleCpiRecord = useSelector(
     (store) => store.MultiSampleCpiRecord.sampleCpiRecord
@@ -100,9 +122,11 @@ const Form = () => {
         dispatchAddMultipleSampleCpiCheckbox,
         navigate,
         setFormData,
-        page_number,page_size,
+        page_number,
+        page_size,
         activeTabValue
       );
+      usePost;
     }
   };
 
@@ -185,9 +209,14 @@ const Form = () => {
         <div className="flex flex-col lg:w-[32%] w-full pt-8 pb-2">
           <CheckboxList
             InputItems={["Advanced Payment Required"]}
-            onCheckboxChange={handleCheckboxChange}
+            onCheckboxChange={handleAdvancePayment}
           />
         </div>
+        {advancePayment && (
+          <Popup className={"!w-8/12"}>
+            <AdvancePayment abrData={abrData} setAbrData={setAbrData} />
+          </Popup>
+        )}
         <div className="flex justify-around pt-2 pb-2 md:w-3/12 w-5/12 text-center">
           <Button
             className={`bg-[#10b981] p-2 mt-6 mr-2 md:w-5/12 w-full text-white font-bold rounded-md ${

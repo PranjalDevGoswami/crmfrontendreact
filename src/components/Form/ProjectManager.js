@@ -37,11 +37,11 @@ const ProjectManager = () => {
   const SelectOptionHandler = (name, value) => {
     setFormData({ ...formData, [name]: value });
     const selectedManager = managerList?.find(
-      (manager) => manager?.user?.name === value
+      (manager) => manager?.user_role?.name === value
     );
     setFormData({
       ...formData,
-      [name]: selectedManager?.user?.id,
+      [name]: selectedManager?.user_role?.id,
     });
   };
 

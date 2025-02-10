@@ -5,6 +5,7 @@ const FilterOptionSelected = ({
   handleClearAllSelection,
   setSelectedItems,
 }) => {
+  
   const handleSingleCrossOption = (option) => {
     const updatedSelectedItems = selectedItems.filter(
       (item) => item !== option

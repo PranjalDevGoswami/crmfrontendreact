@@ -86,7 +86,7 @@ const OpereationButton = () => {
   const handleGetInvoice = (selectedRecord) => {
     // e.preventDefault();
     setIsInvoice(true);
-    navigate("/invoice", { state: selectedRecord });
+    navigate("/create-invoice", { state: selectedRecord });
   };
   const PostRaiseCBR = async (id,data) => {
     console.log("id,data",id,data);
@@ -187,12 +187,12 @@ const OpereationButton = () => {
                       Raise CBR
                     </button>
                   )}
-                {isSuperUserRole && (
+                {isSuperUserRole || department == isFinanceDept && (
                   <button
                     className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
                     onClick={() => handleGetInvoice(selectedRecord)}
                   >
-                    Get Invoice
+                    Create Invoice
                   </button>
                 )}
               </>
@@ -210,14 +210,14 @@ const OpereationButton = () => {
                   }
               </button>
             )}
-             {/* {department == isFinanceDept && (
+             {department == isFinanceDept && (
           <button
             className="border-b border-black text-left bg-[#bd1d1d] z-50 p-2 hover:bg-yellow-200 hover:text-black rounded-sm w-full"
             onClick={() => handleGetInvoice(selectedRecord)}
           >
-            Get Invoice
+            Create Invoice
           </button>
-        )} */}
+        )}
           </div>
         </div>
        

@@ -19,28 +19,9 @@ const SalesReport = (props) => {
   if (!userList || !filteredData) {
     return <div>Loading data...</div>;
   }
-  // department
-  // : 
-  // {id: 1, name: 'Sales'}
-  // id
-  // : 
-  // 1
-  // reports_to
-  // : 
-  // {id: 27, name: 'James West'}
-  // role
-  // : 
-  // {id: 3, name: 'Team Lead'}
-  // user
-  // : 
-  // {id: 2, name: 'saranshsharma', email: 'saransh.sharma@unimrkt.com'}
-  // user_role
-  // : 
-  // {id: 1, name: 'saranshsharma'}
   const loggedInUserDept = userList.length>0 && userList.find(
     (user) => user.user_role.id == parseInt(userRole)
   )?.department?.id;
-  console.log("🚀 ~ SalesReport ~ loggedInUserDept:", loggedInUserDept)
 
   const isSalesHod = isHodRole && loggedInUserDept == isSalesDept; // Sales department
 
@@ -107,10 +88,9 @@ const SalesReport = (props) => {
             );
             const projectsUnderUser = filteredData.filter((project) =>
               usersUnder.some(
-                (u) => project.created_by?.id === parseInt(u.user_role.id)
-              )
+                (u) => project.created_by?.id == parseInt(u.user_role.id)
+              ) || project.created_by?.id == user.id
             );
-
             const totalRevenue = projectsUnderUser.reduce(
               (acc, curr) => acc + curr.cpi * curr.sample,
               0

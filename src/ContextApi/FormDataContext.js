@@ -1,12 +1,11 @@
 import { createContext, useState } from "react";
-// import { userRole } from "../config/Role";
 
 export const FormDataContext = createContext();
 
 export const FormDataValueProvider = ({ children }) => {
   const userRole = localStorage.getItem("userrole");
 
-  const [advancePAyment, setAdvancePAyment] = useState(false);
+  const [advancePayment, setAdvancePayment] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
@@ -31,7 +30,7 @@ export const FormDataValueProvider = ({ children }) => {
     created_by: userRole,
     project_manager: "",
     operation_select: true,
-    finance_select: advancePAyment,
+    finance_select: advancePayment,
     upload_document: [],
     project_samples: [],
     is_multiple_sample_cpi: null,
@@ -42,8 +41,8 @@ export const FormDataValueProvider = ({ children }) => {
       value={{
         formData,
         setFormData,
-        advancePAyment,
-        setAdvancePAyment,
+        advancePayment,
+        setAdvancePayment,
         isOtherFee,
         setIsOtherFee,
         otherCost,

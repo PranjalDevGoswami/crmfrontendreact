@@ -92,7 +92,7 @@ const FilterDrawer = ({
       setSelectedTl(null);
     }
 
-    if (selectedSrManager) {
+    if (selectedSrManager) {      
       filteredManagerList = userData.filter(
         (item) =>
           item?.role?.name === "Manager" &&
@@ -121,7 +121,6 @@ const FilterDrawer = ({
           item?.role?.name === "Team Lead" &&
           selectedAssManager?.includes(item?.reports_to?.name)
       );
-      // console.log("🚀 ~ useEffect ~ filteredTeamLeadList first:", filteredTeamLeadList)
       // Reset lower hierarchy if selected Ass. Manager changes
       setSelectedTl(null);
     }
@@ -131,10 +130,8 @@ const FilterDrawer = ({
     setFilteredSrManager(filteredSrManagerList);
     setFilteredManager(filteredManagerList);
     setFilteredAssManager(filteredAssManagerList);
-    // console.log("🚀 ~ useEffect ~ filteredTeamLeadList before:", filteredTeamLeadList,filteredTeamLeads)
 
     setFilteredTeamLeads(filteredTeamLeadList);
-    // console.log("🚀 ~ useEffect ~ filteredTeamLeadList after:", filteredTeamLeadList,filteredTeamLeads)
 
   }, [
     role,
@@ -149,8 +146,6 @@ const FilterDrawer = ({
 
 
   const handleOptionChange = (name, updatedOptions) => {
-    console.log(name, updatedOptions);
-
     const value = updatedOptions.value || null;
     switch (name) {
       case "Client":
@@ -216,6 +211,7 @@ const FilterDrawer = ({
     setSelectedOptions([]);
     setSelectedHod(null);
     setSelectedManager(null);
+    setSelectedClient("");
   };
 
   const accordionData = [

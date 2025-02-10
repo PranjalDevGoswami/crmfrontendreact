@@ -106,9 +106,7 @@ const OperationPersonTable = ({
   };
   const handlePageChange = (e) => {
     dispatch(addPageNumber(e));
-  };
-  console.log("oprn");
-  
+  };  
 
   // useEffect(() => {
   //   const element = document.getElementById("dataTable");

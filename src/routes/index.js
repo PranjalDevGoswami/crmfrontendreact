@@ -23,6 +23,7 @@ import AbrDashboard from "../dashboard/AbrDashboard.js";
 import CbrDashboard from "../dashboard/CbrDashboard.js";
 import ViewCBR from "../components/VIewCBR.js";
 import Report from "../page/report/Report.js";
+import CreateInvoice from "../project/projectCRUDOperations/CreateInvoice.js";
 
 const Routes = () => {
   const routesForPublic = [
@@ -143,6 +144,7 @@ const Routes = () => {
         { path: "/Management-Role", element: <ManagementPanel /> },
         { path: "/default-projects", element: <DefaultDashboard /> },
         { path: "/report", element: <Report /> },
+        { path: "/create-invoice", element: <CreateInvoice /> },
         {
           path: "/dashboard",
           element: (

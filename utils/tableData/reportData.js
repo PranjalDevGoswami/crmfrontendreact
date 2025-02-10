@@ -8,9 +8,7 @@ export const ReportData = () => {
   const { searchTerm, filteredProjectData } = useContext(FilterContext);
   const [projectData, setProjectData] = useState([]);
   useEffect(() => {
-    setProjectData(filteredProjectData);
-    console.log("fgh");
-    
+    setProjectData(filteredProjectData);    
   }, [filteredProjectData]);
   // ✅ Memoize filtered and mapped data
   const data = useMemo(() => {

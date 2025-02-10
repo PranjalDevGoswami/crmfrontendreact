@@ -273,7 +273,7 @@ const columns1 = ({
         cell: (info) => {
           return (
             isFinanceDept &&
-            info.row.original?.invoice_generated.length > 0 && (
+            info.row.original?.invoice_generated?.length > 0 && (
               <Tooltip text={"View Invoice"} className={"w-40"}>
                 <img
                   alt="invoice"
