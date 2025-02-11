@@ -88,5 +88,5 @@ export const GETCOMPANYDETAILS = (id) => {
   }
   return `${BASEURL}/api/user/entity/${id}`;
 };
-export const GETALLCOMPANYNAME =  BASEURL + "/api/user/entities";
-export const ADVANCEBILLING = BASEURL + 'finance/advance-billing'
+export const GETALLCOMPANYNAME = BASEURL + "/api/user/entities";
+export const ADVANCEBILLING = BASEURL + "/api/finance/advance-billing/";

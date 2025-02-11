@@ -30,24 +30,6 @@ import AdvancePayment from "../components/Form/AdvancePayment.js";
 import { userRole } from "../config/Role.js";
 
 const Form = () => {
-  const [abrData, setAbrData] = useState({
-    client: "",
-    client_address: "",
-    client_city: "",
-    client_country: "",
-    project: "",
-    contact_person_name: "",
-    contact_person_email: "",
-    cc_emails: "",
-    specific_billing_instruction: "",
-    total_project_cost: "",
-    advance_invoice_percentage: "",
-    advance_invoice_amount: "",
-    sales_owner: "",
-    project_manager: "",
-    created_by: userRole,
-    status: "Advanced Billing Raised",
-  });
   const {
     formData,
     advancePayment,
@@ -58,6 +40,36 @@ const Form = () => {
     SetProjectAdded,
     setFormData,
   } = useContext(FormDataContext);
+  
+  const [abrData, setAbrData] = useState({
+    client: "",
+    client_address: "",
+    client_city: "",
+    client_country: "",
+    project: "",
+    contact_person_name: "",
+    contact_person_email: "",
+    cc_emails: "",
+    specific_billing_instruction: "",
+    total_project_cost: null,
+    advance_invoice_percentage: "",
+    advance_invoice_amount: null,
+    sales_owner: Number(userRole),
+    project_manager: "",
+    created_by: Number(userRole),
+    status: "Advanced Billing Raised",
+  });
+  useEffect(() => {
+    if (formData) {
+      setAbrData((prev) => ({
+        ...prev,
+        client: formData.clients || "",
+        project_manager: formData.project_manager || "",
+      }));
+    }
+    console.log(formData.project_manager);
+    
+  }, [formData]);
 
   const { page_number, page_size } = useSelector((store) => store.projectData);
   const { activeTabValue } = useContext(FilterContext);
@@ -124,9 +136,11 @@ const Form = () => {
         setFormData,
         page_number,
         page_size,
-        activeTabValue
+        activeTabValue,  
+        setAbrData,     
+        abrData,
       );
-      usePost;
+      // usePostAbrData(abrData);
     }
   };
 

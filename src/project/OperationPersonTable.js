@@ -373,7 +373,7 @@ const OperationPersonTable = ({
         </Popup>
       )}
       {showRaiseCbr && (
-        <Popup>
+        <Popup className={"!w-6/12"}>
           <div className="flex">
             <RaisedCbr viewRecord={selectedRecord} />
           </div>
