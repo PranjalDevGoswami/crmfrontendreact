@@ -172,7 +172,7 @@
 //         </div>
 //         {/**
 //         new fields
-        
+
 //         ** */}
 //         <div className="ProjectOperationEdit mt-4 text-left rounded-md">
 //           <Label labelName={"Client"} className={"pb-2 mt-4"} />
@@ -320,11 +320,18 @@ import RaisedVpr from "./projectMultipleSampleTable/RaisedVpr";
 
 const RaisedCbr = ({ viewRecord }) => {
   const { projects } = useSelector((store) => store.projectData);
+  const currentProject =
+  projects.find((item) => item.id === viewRecord?.id) || {};
+  const projectSamples = currentProject.project_samples || [];
+  const totalNumberOfSurvey = currentProject?.project_samples.reduce((acc,item)=>{
+    return acc =  acc + Number(item.sample)
+  },0)
+  const NumberOfAddnSurvey = (Number(viewRecord?.initial_sample_size) - Number(totalNumberOfSurvey))
   const { setShowRaiseCbr } = useContext(DataTableContext);
   const [samplePopupOpen, setSamplePopupOpen] = useState(false);
   const [toggleVpr, setToggleVpr] = useState(false);
 
-   const [sampleData, setSampleData] = useState({
+  const [sampleData, setSampleData] = useState({
     project: viewRecord?.id,
     project_code: viewRecord?.project_code,
     project_name: viewRecord?.name,
@@ -335,13 +342,13 @@ const RaisedCbr = ({ viewRecord }) => {
     client_contact_person: "",
     client_email_address: "",
     client_purchase_order_no: "",
-    number_of_surveys_initial_sow: "",
-    number_of_additional_surveys: "",
+    number_of_surveys_initial_sow: viewRecord?.initial_sample_size,
+    number_of_additional_surveys: NumberOfAddnSurvey,
     total_surveys_to_be_billed: "",
     other_billing_instructions: "",
-    sales_owner: "",
-    project_manager_name: viewRecord?.project_manager,
-    purchase_order_number:""
+    sales_owner: viewRecord?.created_by?.id,
+    project_manager_name: currentProject?.assigned_to?.id,
+    purchase_order_number: "",
   });
   const [vprData, setVprData] = useState({
     project: viewRecord?.id,
@@ -356,18 +363,17 @@ const RaisedCbr = ({ viewRecord }) => {
     name_of_project_manager: "",
   });
 
-  const currentProject =
-    projects.find((item) => item.id === viewRecord?.id) || {};
-  const projectSamples = currentProject.project_samples || [];
+
 
   const handleCancelUpdate = () => {
     setShowRaiseCbr(false);
     document.body.classList.remove("DrawerBody");
   };
 
-  const handleSubmitData = async () => {
+  const handleSubmitData = async () => {    
     const response = await RaiseCBRPostApi(viewRecord?.id, sampleData);
-    if (response) {
+    console.log("🚀 ~ handleSubmitData ~ response:", response)
+    if (response=="true") {
       SweetAlert({
         title: "Success",
         text: response?.data?.message,
@@ -382,7 +388,7 @@ const RaisedCbr = ({ viewRecord }) => {
       });
     }
   };
-    const handleSampleClick = () => {
+  const handleSampleClick = () => {
     setSampleData({
       ...sampleData,
       samples: projectSamples.map(({ id, sample, cpi, target_group }) => ({
@@ -394,17 +400,18 @@ const RaisedCbr = ({ viewRecord }) => {
     });
     setSamplePopupOpen(true);
   };
-    const handlePopupSubmit = () => {
+  const handlePopupSubmit = () => {
     setSamplePopupOpen(false);
   };
   const handlePopupCancel = () => {
     setSamplePopupOpen(false);
   };
-    const handleSampleChange = (index, field, value) => {
+  const handleSampleChange = (index, field, value) => {
     const updatedSamples = [...sampleData.samples];
     updatedSamples[index][field] = value;
     setSampleData({ ...sampleData, samples: updatedSamples });
   };
+ 
 
   return (
     <div className="p-4">
@@ -413,7 +420,7 @@ const RaisedCbr = ({ viewRecord }) => {
       {/* Grid Layout */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <LableAndInput
-        labelClassName={'text-left'}
+          labelClassName={"text-left"}
           labelName="Project Code"
           Inputvalue={viewRecord?.project_code.toUpperCase()}
           disabled
@@ -421,22 +428,20 @@ const RaisedCbr = ({ viewRecord }) => {
         />
 
         <LableAndInput
-        labelClassName={'text-left'}
+          labelClassName={"text-left"}
           labelName="Project Name"
           Inputvalue={viewRecord?.name}
           disabled
           inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
         />
 
-        <div>
-          <LableAndInput
-          labelClassName={'text-left'}
+        <LableAndInput
+          labelClassName={"text-left"}
           labelName="Status"
           Inputvalue={"CBR Raised"}
           disabled
           inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
         />
-        </div>
 
         <div className="text-left">
           <Label labelName="Samples" className="pb-2" />
@@ -453,32 +458,103 @@ const RaisedCbr = ({ viewRecord }) => {
               : "Click to add Final Samples"}
           </div>
         </div>
-
-        <div>
         <LableAndInput
-        labelClassName={'text-left'}
+            labelClassName={"text-left"}
+            labelName="Project Manager"
+            Inputvalue={currentProject?.assigned_to?.name}
+            InputName="project_manager"
+           disabled
+            inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
+          />
+          <LableAndInput
+            labelClassName={"text-left"}
             labelName="Client"
             Inputvalue={viewRecord?.clients}
             InputName="clints"
-            inputChange={(e) =>
-              setVprData({ ...sampleData, client: e.target.value })
-            }
-            inputClassName="p-2 border bg-gray-100 rounded-md"
+            disabled
+            inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
           />
-        </div>
 
         <LableAndInput
-        labelClassName={'text-left'}
+          labelClassName={"text-left"}
           labelName="PO Number"
           Inputvalue={sampleData.purchase_order_number}
           inputChange={(e) =>
-            setSampleData({ ...sampleData, purchase_order_number: e.target.value })
+            setSampleData({
+              ...sampleData,
+              purchase_order_number: e.target.value,
+            })
           }
           inputClassName="p-2 border bg-white rounded-md"
         />
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Client Contact Person"
+          Inputvalue={sampleData?.client_contact_person}
+          inputClassName="p-2 border bg-white rounded-md"
+          inputChange={(e) =>
+            setSampleData({ ...sampleData, client_contact_person: e.target.value })
+          }
+        />
 
         <LableAndInput
-        labelClassName={'text-left'}
+          labelClassName="text-left"
+          labelName="Client Email Address"
+          Inputvalue={sampleData?.client_email_address}
+          inputClassName="p-2 border bg-white rounded-md"
+          inputChange={(e) =>
+            setSampleData({ ...sampleData, client_email_address: e.target.value })
+          }
+        />
+
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Client Purchase Order No"
+          Inputvalue={sampleData?.client_purchase_order_no}
+          inputClassName="p-2 border bg-white rounded-md"
+          inputChange={(e) =>
+            setSampleData({ ...sampleData, client_purchase_order_no: e.target.value })
+          }
+        />
+
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Number of Surveys (Initial SOW)"
+          Inputvalue={viewRecord?.initial_sample_size}
+          disabled
+          inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
+        />
+
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Number of Additional Surveys"
+          Inputvalue={NumberOfAddnSurvey}
+          disabled
+          inputClassName="cursor-not-allowed p-2 border bg-gray-100 rounded-md"
+        />
+
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Total Surveys to be Billed"
+          Inputvalue={sampleData?.total_surveys_to_be_billed}
+          inputClassName="p-2 border bg-white rounded-md"
+          inputChange={(e) =>
+            setSampleData({ ...sampleData, total_surveys_to_be_billed: e.target.value })
+          }
+        />
+
+        <LableAndInput
+          labelClassName="text-left"
+          labelName="Other Billing Instructions"
+          Inputvalue={sampleData?.other_billing_instructions}
+          inputClassName="p-2 border bg-white rounded-md"
+          inputChange={(e) =>
+            setSampleData({ ...sampleData, other_billing_instructions: e.target.value })
+          }
+        />
+
+        <LableAndInput
+          labelClassName={"text-left"}
           labelName="Remarks"
           Inputvalue={sampleData.remarks}
           inputChange={(e) =>
@@ -497,11 +573,13 @@ const RaisedCbr = ({ viewRecord }) => {
         </div>
       </div>
 
-      {toggleVpr &&  <RaisedVpr
+      {toggleVpr && (
+        <RaisedVpr
           viewRecord={viewRecord}
           vprData={vprData}
           setVprData={setVprData}
-        />}
+        />
+      )}
 
       {/* Buttons */}
       <div className="flex justify-center pt-10 gap-4">
@@ -531,8 +609,8 @@ const RaisedCbr = ({ viewRecord }) => {
                   className="mb-3 flex items-start space-x-4"
                 >
                   <LableAndInput
-                  labelClassName={'text-left'}
-                    labelName={'Final Sample'}
+                    labelClassName={"text-left"}
+                    labelName={"Final Sample"}
                     Inputvalue={sample.sample}
                     inputChange={(e) =>
                       handleSampleChange(index, "sample", e.target.value)
@@ -540,17 +618,19 @@ const RaisedCbr = ({ viewRecord }) => {
                     inputClassName={"p-2 border w-full rounded-md"}
                   />
                   <LableAndInput
-                  labelClassName={'text-left'}
+                    labelClassName={"text-left"}
                     labelName={"CPI"}
                     Inputvalue={sample.cpi}
                     inputChange={(e) =>
                       handleSampleChange(index, "cpi", e.target.value)
                     }
                     disabled
-                    inputClassName={"p-2 border w-full rounded-md cursor-not-allowed"}
+                    inputClassName={
+                      "p-2 border w-full rounded-md cursor-not-allowed"
+                    }
                   />
                   <LableAndInput
-                  labelClassName={'text-left'}
+                    labelClassName={"text-left"}
                     labelName={"Target Group"}
                     Inputvalue={sample.target_group}
                     inputChange={(e) =>

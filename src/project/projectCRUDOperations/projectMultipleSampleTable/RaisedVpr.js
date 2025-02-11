@@ -1,9 +1,7 @@
 import React from "react";
 import LableAndInput from "../../../Molecules/LableAndInput";
 
-const RaisedVpr = ({ viewRecord, vprData, setVprData }) => {
- console.log("🚀 ~ RaisedVpr ~ viewRecord:", viewRecord)
- 
+const RaisedVpr = ({ viewRecord, vprData, setVprData }) => { 
   return (
     <div className="p-4">
       <h3 className="text-2xl font-semibold underline pb-4">VPR Data</h3>
