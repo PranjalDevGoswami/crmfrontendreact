@@ -5,14 +5,15 @@ import { FilterContext } from "../../ContextApi/FilterContext";
 
 const AdvancePayment = ({ abrData, setAbrData }) => {
   const userName = localStorage.getItem('username')
-  const { formData, setAdvancePayment, managerList } =
+    
+    const { formData, setAdvancePayment, managerList,isAdvancePayment, setIsAdvancePayment } =
     useContext(FormDataContext);
   const { clientListDataWithId } = useContext(FilterContext);
   const [client, setClient] = useState("");
   const [managerName, setManagerName] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  useEffect(() => { 
     const selectedClient = clientListDataWithId.filter(
       (client) => client.id === formData?.clients
     );
@@ -20,7 +21,6 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
     const selectedManager = managerList?.filter(
       (manager) => manager.user.id == formData?.project_manager
     );
-    console.log("🚀 ~ useEffect ~ selectedManager:", selectedManager)
     const selectedManagerName = selectedManager?.map(
       (user) => user?.user?.name
     );
@@ -32,12 +32,16 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
     setAbrData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleABR = () => {
+  const handleABR = (e) => {
+    e.preventDefault();
+    console.log(abrData,"abr");
+    
     const errorMessage = validateForm();
     if (errorMessage) {
       setError(errorMessage);
     } else {
-      setAdvancePayment(false);
+      // setAdvancePayment(false);
+      setIsAdvancePayment(false)
     }
   };
 
@@ -64,7 +68,7 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
         </h1>
         <button
           className="bg-red-500 hover:bg-red-700 font-bold border border-gray-300 text-white px-2 py-2 rounded-md absolute top-0 right-0"
-          onClick={() => setAdvancePayment(false)}
+          onClick={() => {setAdvancePayment(false); setIsAdvancePayment(false)}}
         >
           X
         </button>

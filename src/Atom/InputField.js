@@ -47,9 +47,7 @@ const Input = ({
   return (
     <input
       type={type}
-      className={
-        `${darkMode && "bg-black text-white"} rounded-full ` + className
-      }
+      className={`${darkMode ? "bg-black text-white" : ""} rounded-full ${className}`}
       placeholder={placeholder}
       onChange={onchange}
       value={value}

@@ -15,7 +15,7 @@ export const TableColumn = ({
   desabledRowData
 }) => {
 
-  const invoice_generated = desabledRowData.filter((item)=>item.status === "Invoice generated")
+  const invoice_generated = desabledRowData?.filter((item)=>item.status === "Invoice generated")
 
   const handleGetInvoice = (selectedRecord) => {
     console.log("🚀 ~ handleGetInvoice ~ selectedRecord:", selectedRecord);
@@ -130,7 +130,7 @@ export const TableColumn = ({
       ),
       width: "100px",
     },
-    isFinanceDept && invoice_generated.length>0 && {
+    isFinanceDept && invoice_generated?.length>0 && {
       name: "View Invoice",
       selector: (row) => (
         <Tooltip text={"View Invoice"} className={"w-40"}>
@@ -156,7 +156,7 @@ export const TableColumn = ({
         </div>
       ),
       sortable: true,
-      width: "110px",
+      width: "150px",
     },
     !isFinanceDept && {
       name: "Progress",

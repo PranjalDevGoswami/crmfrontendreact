@@ -3,7 +3,7 @@ import ProjectDataTable from "../project/ProjectDataTable.js";
 
 const FinanceDashboard = () => {
   const [operationDepartment] = useState(true);
-
+ 
   return <ProjectDataTable PersonDepartment={operationDepartment} />;
 };
 

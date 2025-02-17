@@ -3,9 +3,7 @@ import DataTable from "react-data-table-component";
 import { TableColumn } from "../../utils/tableData/dataTableColumns";
 import { Data } from "../../utils/tableData/data";
 import FilterProject from "../project/FilterProject";
-import {
-  customStyles,
-} from "../../utils/tableData/DataTablesData";
+import { customStyles } from "../../utils/tableData/DataTablesData";
 import { useDispatch, useSelector } from "react-redux";
 import { DataTableContext } from "../ContextApi/DataTableContext";
 import ProjectNameAndFilter from "../project/ProjectNameAndFilter";
@@ -14,19 +12,18 @@ import { useNavigate } from "react-router-dom";
 import CBRStatusTabs from "../project/projectCRUDOperations/CBRStatusTabs";
 import { FilterContext } from "../ContextApi/FilterContext";
 import { ProjectData } from "../../utils/apis/projectData";
-import { addPageNumber, addPageSize, setProjects } from "../../utils/slices/ProjectSlice";
+import {
+  addPageNumber,
+  addPageSize,
+  setProjects,
+} from "../../utils/slices/ProjectSlice";
+import { FINANCEPROJECT } from "../../utils/constants/urls";
+import { getWithAuth } from "../provider/helper/axios";
 
 const CbrDashboard = () => {
   const dispatch = useDispatch();
   const { activeTabValue, setActiveTabValue } = useContext(FilterContext);
-  const { page_number, page_size } = useSelector((store) => store.projectData);
-
-  useEffect(() => {
-    setActiveTabValue("CBR Raised");
-    
-  }, []); 
-  console.log("🚀 ~ CbrDashboard ~ activeTabValue:", activeTabValue)
-
+  const { page_number, page_size } = useSelector((store) => store.projectData)
 
   const {
     setShowSowList,
@@ -40,7 +37,7 @@ const CbrDashboard = () => {
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const buttonRef = useRef(null);
 
-  const data = Data();
+  const data = Data()
   const currentDate = new Date().toISOString().split("T")[0];
 
   const desabledRowData = data?.map((item) => {
@@ -97,14 +94,13 @@ const CbrDashboard = () => {
 
           <DataTable
             columns={TableColumn({
-                    buttonRef,
-                    //   handleViewCpi,
-                    setShowSowList,
-                    setSowList,
-                    navigate,
-                    desabledRowData,
-                  })
-            }
+              buttonRef,
+              //   handleViewCpi,
+              setShowSowList,
+              setSowList,
+              navigate,
+              desabledRowData,
+            })}
             data={desabledRowData}
             pagination
             paginationServer

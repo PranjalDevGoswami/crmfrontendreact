@@ -21,7 +21,7 @@ const ViewSowUploadList = ({ viewRecord }) => {
   };
 
   return (
-    <div className="relative p-4">
+    <div className="relative p-4 overflow-auto">
       <table className="min-w-full bg-white">
         <thead className="bg-[#bd1d1d] text-white">
           <tr>

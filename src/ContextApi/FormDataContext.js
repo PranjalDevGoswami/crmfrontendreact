@@ -6,6 +6,7 @@ export const FormDataValueProvider = ({ children }) => {
   const userRole = localStorage.getItem("userrole");
 
   const [advancePayment, setAdvancePayment] = useState(false);
+  const [isAdvancePayment, setIsAdvancePayment] = useState(false);
   const [isOtherFee, setIsOtherFee] = useState(false);
   const [otherCost, setOtherCost] = useState(false);
   const [translationCost, setTranslationCost] = useState(false);
@@ -55,6 +56,7 @@ export const FormDataValueProvider = ({ children }) => {
         setManagerList,
         projectAdded,
         SetProjectAdded,
+        isAdvancePayment, setIsAdvancePayment
       }}
     >
       {children}

@@ -61,12 +61,14 @@ export const PROJECTSOWUPDATE = (id) => {
   return `${BASEURL}/api/project/${id}/get-update/sow/`;
 };
 export const NOTIFICATIONCOUNT = BASEURL + "/api/project/notifications/count/";
-export const RAISECBR = (id) => {
-  if (!id) {
-    throw new Error("ID is required to raised CBR!!");
-  }
-  return `${BASEURL}/api/finance/projects/${id}/cbr-raised/`;
-};
+// export const RAISECBR = (id) => {
+//   if (!id) {
+//     throw new Error("ID is required to raised CBR!!");
+//   }
+//   return `${BASEURL}/api/finance/projects/${id}/cbr-raised/`;
+// };
+export const RAISECBR = BASEURL + '/api/finance/cbr-create/'
+export const RAISEVPR = BASEURL + '/api/finance/vpr-create/'
 export const PROJECTDATAAPIS = (page_number, page_size, activeTabValue) => {
   if (!page_number) {
     throw new Error("Page Number is required to get the Project Data");
@@ -89,4 +91,14 @@ export const GETCOMPANYDETAILS = (id) => {
   return `${BASEURL}/api/user/entity/${id}`;
 };
 export const GETALLCOMPANYNAME = BASEURL + "/api/user/entities";
-export const ADVANCEBILLING = BASEURL + "/api/finance/advance-billing/";
+export const ADVANCEBILLING = BASEURL + "/api/finance/advance-billing/project-list/";
+// https://uaterpapi.unimrkt.com/api/advance-billing/<int:project_id>/   ------------> for specific project
+// https://uaterpapi.unimrkt.com/api/advance-billing/project-list/       -----------------> for all project
+ 
+export const GETABRDETAILS = (id) => {
+  if (!id) {
+    throw new Error("ID is required to get abr details!!");
+  }
+  return `${BASEURL}/api/finance/advance-billing/${id}`;
+};
+export const FINANCEPROJECT = BASEURL + '/api/finance/project-list/'

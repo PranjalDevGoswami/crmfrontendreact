@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
+import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCBRPostApi.js";
 import { useNavigate } from "react-router-dom";
 import { DataTableContext } from "../../ContextApi/DataTableContext.js";
 import { useSelector } from "react-redux";

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Button from "../Atom/Button.js";
 import { useNavigate } from "react-router-dom";
-import CheckboxList from "../components/Checkbox.js";
+import CheckboxList from "../components/AdvancePaymentCheckbox.js";
 import SweetAlert from "../components/SweetAlert.js";
 import ProjectTypeComponent from "../components/Form/ProjectType.js";
 import { FormDataContext } from "../ContextApi/FormDataContext.js";
@@ -28,6 +28,7 @@ import { useProjectEntryFormValidation } from "../../utils/hooks/useProjectEntry
 import { FilterContext } from "../ContextApi/FilterContext.js";
 import AdvancePayment from "../components/Form/AdvancePayment.js";
 import { userRole } from "../config/Role.js";
+import AdvancePaymentCheckbox from "../components/AdvancePaymentCheckbox.js";
 
 const Form = () => {
   const {
@@ -39,8 +40,10 @@ const Form = () => {
     translationCost,
     SetProjectAdded,
     setFormData,
+    isAdvancePayment,
+    setIsAdvancePayment,
   } = useContext(FormDataContext);
-  
+
   const [abrData, setAbrData] = useState({
     client: "",
     client_address: "",
@@ -59,6 +62,7 @@ const Form = () => {
     created_by: Number(userRole),
     status: "Advanced Billing Raised",
   });
+
   useEffect(() => {
     if (formData) {
       setAbrData((prev) => ({
@@ -67,8 +71,6 @@ const Form = () => {
         project_manager: formData.project_manager || "",
       }));
     }
-    console.log(formData.project_manager);
-    
   }, [formData]);
 
   const { page_number, page_size } = useSelector((store) => store.projectData);
@@ -90,6 +92,7 @@ const Form = () => {
 
   const handleAdvancePayment = (name, checked) => {
     setAdvancePayment(true);
+    setIsAdvancePayment(true);
   };
   const MultiSampleCpiRecord = useSelector(
     (store) => store.MultiSampleCpiRecord.sampleCpiRecord
@@ -136,9 +139,9 @@ const Form = () => {
         setFormData,
         page_number,
         page_size,
-        activeTabValue,  
-        setAbrData,     
-        abrData,
+        activeTabValue,
+        setAbrData,
+        abrData
       );
       // usePostAbrData(abrData);
     }
@@ -220,13 +223,15 @@ const Form = () => {
             </div>
           )}
         </div>
-        <div className="flex flex-col lg:w-[32%] w-full pt-8 pb-2">
-          <CheckboxList
-            InputItems={["Advanced Payment Required"]}
-            onCheckboxChange={handleAdvancePayment}
+        <div className="flex items-center lg:w-[32%] w-full pt-8 pb-2">
+          <AdvancePaymentCheckbox
+            checked={advancePayment}
+            onClick={handleAdvancePayment}
+            className={"w-8"}
           />
+          <label>Advanced Payment Required</label>
         </div>
-        {advancePayment && (
+        {isAdvancePayment && (
           <Popup className={"!w-8/12"}>
             <AdvancePayment abrData={abrData} setAbrData={setAbrData} />
           </Popup>
