@@ -20,6 +20,7 @@ import { setProjects } from "../../utils/slices/ProjectSlice.js";
 import useProjectData from "../../utils/hooks/useProjectData.js";
 import useNotificationCount from "../../utils/hooks/useNotificationCount.js";
 import useAssignedProject from "../../utils/hooks/useAssignedProject.js";
+import useCbrProjectData from "../../utils/hooks/useCbrProjectData.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();
@@ -28,6 +29,15 @@ const Header = () => {
   const headerBtn = useRef();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
   const dispatch = useDispatch();
+  const department = localStorage.getItem('department');
+  const isFinancialDepartment = department == 3;
+
+
+  if (isFinancialDepartment) {
+    useCbrProjectData();
+  } else {
+    useProjectData();
+  }
 
   useProjectData();
   useUserData();

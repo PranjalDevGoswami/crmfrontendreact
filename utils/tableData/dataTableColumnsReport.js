@@ -138,7 +138,7 @@ const columns1 = ({
           });
 
           const result =
-            row.project_samples.length > 1
+            row?.project_samples?.length > 1
               ? formatter.format(
                   row.project_samples.reduce(
                     (acc, item) => acc + Number(item.sample) * Number(item.cpi),
@@ -240,7 +240,7 @@ const columns1 = ({
           });
 
           const result =
-            row.project_samples.length > 1
+            row?.project_samples?.length > 1
               ? (() => {
                   const cpiAvg =
                     row.project_samples.reduce(

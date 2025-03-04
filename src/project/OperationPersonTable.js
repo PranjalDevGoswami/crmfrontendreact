@@ -21,7 +21,7 @@ import { useDispatch } from "react-redux";
 import ViewMultipleSampleCpi from "./projectCRUDOperations/ViewMultipleSampleCpi";
 import ViewSowUploadList from "./projectCRUDOperations/ViewSowUploadList";
 import { addPageNumber, addPageSize } from "../../utils/slices/ProjectSlice";
-import RaisedCbr from "./projectCRUDOperations/RaisedCbr";
+import RaisedCbr from "./projectCRUDOperations/raiseCbr/RaisedCbr";
 
 const OperationPersonTable = ({
   data,

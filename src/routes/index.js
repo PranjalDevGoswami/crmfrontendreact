@@ -23,7 +23,7 @@ import AbrDashboard from "../dashboard/AbrDashboard.js";
 import CbrDashboard from "../dashboard/CbrDashboard.js";
 import ViewCBR from "../components/VIewCBR.js";
 import Report from "../page/report/Report.js";
-import CreateInvoice from "../project/projectCRUDOperations/CreateInvoice.js";
+import CreateInvoice from "../project/projectCRUDOperations/invoice/CreateInvoice.js";
 
 const Routes = () => {
   const routesForPublic = [

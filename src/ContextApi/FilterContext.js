@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { isSalesDept,isFinanceDept } from "../config/Departments";
+import { isSalesDept, isFinanceDept } from "../config/Departments";
 
 export const FilterContext = createContext();
 
@@ -32,8 +32,12 @@ export const SearchFilterContext = ({ children }) => {
   // );
 
   const [activeTabValue, setActiveTabValue] = useState(
-    (department == isFinanceDept) ? "CBR Raised" : (department == isSalesDept) ? "all" : "In Progress"
-  );  
+    department == isFinanceDept
+      ? "CBR Raised"
+      : department == isSalesDept
+      ? "all"
+      : "In Progress"
+  );
   const [status, setStatus] = useState([
     activeTabValue,
     "All",
@@ -43,9 +47,9 @@ export const SearchFilterContext = ({ children }) => {
     "On Hold",
     "Invoice Generated",
     "Payment Received",
-  "Advanced Billing Raised",
-  "Advanced Invoice Generated",
-  "Advance Payment Received"
+    "Advanced Billing Raised",
+    "Advanced Invoice Generated",
+    "Advance Payment Received",
   ]);
   const [selectedStatus, setSelectedStatus] = useState(activeTabValue);
   const [clientsList, setClientsList] = useState([]);
@@ -56,7 +60,11 @@ export const SearchFilterContext = ({ children }) => {
   const [tlListArray, setTlListArray] = useState([]);
   const [projectData, setProjectData] = useState([]);
   const [filteredProjectData, setFilteredProjectData] = useState([]);
-  const [filteredProjectDataWithoutStatus, setFilteredProjectDataWithoutStatus] = useState([]);
+  const [financeProjectData, setFinanceProjectData] = useState([]);
+  const [
+    filteredProjectDataWithoutStatus,
+    setFilteredProjectDataWithoutStatus,
+  ] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [teamLeadAssiged, setTeamLeadAssiged] = useState();
   const [clientListDataWithId, setClientListDataWithId] = useState([]);
@@ -65,10 +73,9 @@ export const SearchFilterContext = ({ children }) => {
     "demo Cliet2",
   ]);
   const [dateRange, setDateRange] = useState({
-      startDate: "",
-      endDate: "",
-    });
-
+    startDate: "",
+    endDate: "",
+  });
 
   return (
     <FilterContext.Provider
@@ -81,10 +88,12 @@ export const SearchFilterContext = ({ children }) => {
         searchTerm,
         setSelectedHod,
         selectedHod,
-        srManagerListArray, setSrManagerListArray,
+        srManagerListArray,
+        setSrManagerListArray,
         selectedManager,
         setSelectedManager,
-        assManagerListArray, setAssManagerListArray,
+        assManagerListArray,
+        setAssManagerListArray,
         setSelectedTl,
         selectedTl,
         tlAssociates,
@@ -113,8 +122,12 @@ export const SearchFilterContext = ({ children }) => {
         setManagerListArray,
         tlListArray,
         setTlListArray,
-        dateRange, setDateRange,
-        filteredProjectDataWithoutStatus, setFilteredProjectDataWithoutStatus
+        dateRange,
+        setDateRange,
+        filteredProjectDataWithoutStatus,
+        setFilteredProjectDataWithoutStatus,
+        financeProjectData,
+        setFinanceProjectData,
       }}
     >
       {children}

@@ -45,7 +45,8 @@ const Form = () => {
   } = useContext(FormDataContext);
 
   const [abrData, setAbrData] = useState({
-    client: "",
+    client_name: "", // id
+    clientname:"",   //name
     client_address: "",
     client_city: "",
     client_country: "",
@@ -67,7 +68,7 @@ const Form = () => {
     if (formData) {
       setAbrData((prev) => ({
         ...prev,
-        client: formData.clients || "",
+        client_name: formData.clients || "",
         project_manager: formData.project_manager || "",
       }));
     }
@@ -98,7 +99,7 @@ const Form = () => {
     (store) => store.MultiSampleCpiRecord.sampleCpiRecord
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e) => {    
     e.preventDefault();
     let updatedSamples = formData.project_samples;
     if (MultiSampleCpiRecord.length === 0) {

@@ -7,7 +7,7 @@ import {
 } from "../slices/AddMutipleSampleCpiSlice";
 import { ProjectData } from "../apis/projectData";
 import { setProjects } from "../slices/ProjectSlice";
-import { ADVANCEBILLING } from "../constants/urls";
+import { ADVANCEBILLING, CREATEADVANCEPAYMENT } from "../constants/urls";
 import { postWithAuth } from "../../src/provider/helper/axios";
 
 // export const usePostFormData = async (
@@ -119,17 +119,13 @@ export const usePostFormData = async (
   setAbrData,
   abrData
 ) => {
-  console.log("🚀 ~ data:", data)
   try {
     const response = await PostFormData(data);
     
     if (response?.status == true) {
       const updatedAbrData = { ...abrData, project: response?.data?.id };
-
-      console.log("🚀 ~ updatedAbrData:", updatedAbrData)
       try {
-        const abrResponse = await postWithAuth(ADVANCEBILLING, updatedAbrData);
-        console.log("🚀 ~ abrResponse:", abrResponse);
+        const abrResponse = await postWithAuth(CREATEADVANCEPAYMENT, updatedAbrData);
       } catch (error) {
         SweetAlert({
           title: "Error",

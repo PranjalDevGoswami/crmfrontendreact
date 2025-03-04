@@ -89,8 +89,8 @@ const OpenNotification = ({ notification_btn_ref }) => {
   });
 
   const totalNewProjectSampleCount = notificationProjectList?.reduce(
-    (acc, item) => {
-      return (acc = acc + Number(item?.pending_changes?.sample)) || 0;
+    (acc, item) => {      
+      return (acc = acc + Number(item?.pending_changes?.sample || 0));
     },
     0
   );

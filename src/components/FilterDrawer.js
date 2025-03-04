@@ -142,7 +142,6 @@ const FilterDrawer = ({
     selectedManager,
     selectedAssManager,
   ]);
-  // console.log("🚀 ~ useEffect ~ filteredTeamLeadList after loop:",filteredTeamLeads)
 
 
   const handleOptionChange = (name, updatedOptions) => {

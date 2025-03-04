@@ -1,26 +1,26 @@
 import React, { useContext, useState } from "react";
-import LableAndInput from "../../Molecules/LableAndInput";
-import Label from "../../Atom/Label";
-import { DataTableContext } from "../../ContextApi/DataTableContext";
+import LableAndInput from "../../../Molecules/LableAndInput";
+import Label from "../../../Atom/Label";
+import { DataTableContext } from "../../../ContextApi/DataTableContext";
 import { useSelector } from "react-redux";
-import Popup from "../../Atom/Popup";
-import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCBRPostApi";
-import SweetAlert from "../../components/SweetAlert";
-import RaisedVpr from "./projectMultipleSampleTable/RaisedVpr";
-import { ProjectData } from "../../../utils/apis/projectData";
-import { setProjects } from "../../../utils/slices/ProjectSlice";
-import { FilterContext } from "../../ContextApi/FilterContext";
+import Popup from "../../../Atom/Popup";
+import { RaiseCBRPostApi } from "../../../fetchApis/projects/raiseCBR/RaiseCBRPostApi";
+import SweetAlert from "../../../components/SweetAlert";
+import RaisedVpr from "../projectMultipleSampleTable/RaisedVpr";
+import { ProjectData } from "../../../../utils/apis/projectData";
+import { setProjects } from "../../../../utils/slices/ProjectSlice";
+import { FilterContext } from "../../../ContextApi/FilterContext";
 import { useDispatch } from "react-redux";
-import { RaiseVPRPostApi } from "../../fetchApis/projects/raiseVPR/RaiseVPRPostApi";
+import { RaiseVPRPostApi } from "../../../fetchApis/projects/raiseVPR/RaiseVPRPostApi";
 
 const RaisedCbr = ({ viewRecord }) => {
   const { projects, page_number, page_size } = useSelector(
     (store) => store.projectData
   );
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { activeTabValue } = useContext(FilterContext);
   const currentProject =
-  projects.find((item) => item.id === viewRecord?.id) || {};
+    projects.find((item) => item.id === viewRecord?.id) || {};
   const projectSamples = currentProject.project_samples || [];
   const totalNumberOfSurvey = currentProject?.project_samples.reduce(
     (acc, item) => {
@@ -64,7 +64,7 @@ const RaisedCbr = ({ viewRecord }) => {
     invoice_amount: null,
     approved_amount: null,
     name_of_project_manager: currentProject?.assigned_to?.id,
-    other_cost:[]
+    other_cost: [],
   });
 
   const handleCancelUpdate = () => {
@@ -73,7 +73,11 @@ const RaisedCbr = ({ viewRecord }) => {
   };
 
   const handleSubmitData = async () => {
-    if (!sampleData.project || !sampleData.project_code || !sampleData.project_name) {
+    if (
+      !sampleData.project ||
+      !sampleData.project_code ||
+      !sampleData.project_name
+    ) {
       SweetAlert({
         title: "Error",
         text: "Project, Project Code, and Project Name are required!",
@@ -81,10 +85,10 @@ const RaisedCbr = ({ viewRecord }) => {
       });
       return;
     }
-      try {
+    try {
       const response = await RaiseCBRPostApi(sampleData);
-      console.log("🚀 ~ handleSubmitData ~ response:", response)
-  
+      console.log("🚀 ~ handleSubmitData ~ response:", response);
+
       if (!response?.status) {
         SweetAlert({
           title: "Error",
@@ -93,20 +97,23 @@ const RaisedCbr = ({ viewRecord }) => {
         });
         return;
       }
-  
+
       if (toggleVpr) {
-        if (!vprData.project || !vprData.vendor_name || !vprData.invoice_amount) {
+        if (
+          !vprData.project ||
+          !vprData.vendor_name ||
+          !vprData.invoice_amount
+        ) {
           SweetAlert({
             title: "Error",
             text: "Vendor Name and Invoice Amount are required for VPR!",
             icon: "error",
           });
-          return; 
+          return;
         }
-  
+
         const vprResponse = await RaiseVPRPostApi(vprData);
-        console.log("🚀 ~ handleSubmitData ~ vprResponse:", vprResponse)
-  
+
         if (!vprResponse?.status) {
           SweetAlert({
             title: "Error",
@@ -116,14 +123,18 @@ const RaisedCbr = ({ viewRecord }) => {
           return;
         }
       }
-        SweetAlert({
+      SweetAlert({
         title: "Success",
         text: response?.data?.message,
         icon: "success",
       });
-  
+
       setShowRaiseCbr(false);
-      const projectData = await ProjectData(page_number, page_size, activeTabValue);
+      const projectData = await ProjectData(
+        page_number,
+        page_size,
+        activeTabValue
+      );
       dispatch(setProjects(projectData?.results));
     } catch (error) {
       console.error("Error submitting data:", error);
@@ -134,7 +145,7 @@ const RaisedCbr = ({ viewRecord }) => {
       });
     }
   };
-  
+
   const handleSampleClick = () => {
     setSampleData({
       ...sampleData,
@@ -294,7 +305,7 @@ const RaisedCbr = ({ viewRecord }) => {
 
         <LableAndInput
           labelClassName="text-left"
-          InputType={'number'}
+          InputType={"number"}
           labelName="Total Surveys to be Billed"
           Inputvalue={sampleData?.total_surveys_to_be_billed}
           inputClassName="p-2 border bg-white rounded-md"

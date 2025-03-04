@@ -7,9 +7,11 @@ export const ReportData = () => {
   const isHodRole = role === "HOD";
   const { searchTerm, filteredProjectData } = useContext(FilterContext);
   const [projectData, setProjectData] = useState([]);
+
   useEffect(() => {
     setProjectData(filteredProjectData);    
   }, [filteredProjectData]);
+  
   // ✅ Memoize filtered and mapped data
   const data = useMemo(() => {
     const filteredData = projectData?.filter((item) =>

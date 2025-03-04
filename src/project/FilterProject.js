@@ -50,23 +50,32 @@ const FilterProject = () => {
   const isSalesDept = "1";
   const isOperationDept = "2";
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+  const department = localStorage.getItem('department');
+  const isFinancialDepartment = department == 3;
 
   const projectResponse = useSelector(
     (store) => store.projectDataFiltered.projects
   );
+  const {financeProjects} = useSelector(store=>store.projectData)
   const assignedProjectResponse = useAssignedProject();
   useClientList();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setProjectAssignedTo(assignedProjectResponse);
+        // if(isFinancialDepartment){
+        //   setProjectData(financeProjects)
+        // }else{
         setProjectData(projectResponse);
+        // }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, [role, closeAddClient, Token, projectResponse, selectedItems]);
+
   const userData = useSelector((store) => store.userData.users);
 
   useEffect(() => {
@@ -127,80 +136,6 @@ const FilterProject = () => {
       });
     }
 
-    // let AllManagerAndTl = [];
-    // let allUserUnderSelectedHod = [];
-    // const currentSelectHod = userData.find((item) =>
-    //   selectedOptions.includes(item?.user_role?.name)
-    // );
-    // console.log("🚀 ~ useEffect ~ userData:", userData)
-    // if (currentSelectHod) {
-    //   const AllMemberUnderCurrentHod = userData.filter(
-    //     (user) => user?.reports_to?.id === currentSelectHod?.id
-    //   );
-    //   filteredData = filteredData.filter((item) =>
-    //     AllMemberUnderCurrentHod.some((user) => {
-    //       const userId = user.user_role?.id; // Ensure proper ID extraction
-
-    //       // Handle case where `project_assigned_to_teamlead` is an array
-    //       const assignedTeamLeads =
-    //         item.project_assigned_to_teamlead?.map((tl) => tl.id) || [];
-
-    //       return (
-    //         item.project_assigned_by_manager?.id === userId || // Compare with ID inside object
-    //         assignedTeamLeads.includes(userId) || // Check if user ID exists in assigned TLs array
-    //         item.created_by?.id === userId // Check against created_by ID
-    //       );
-    //     })
-    //   );
-
-    //   console.log("🚀 ~ After filtering:", filteredData);
-
-    //   // Ensure that `AllManagerAndTl` stores user_role IDs correctly
-    //   AllManagerAndTl = AllMemberUnderCurrentHod.map((item) =>
-    //     Number(item?.user_role?.id)
-    //   );
-    // }
-
-    // if (selectedOptions.length > 0) {
-    //   // console.log(("managerListArray", managerListArray));
-
-    //   filteredData = filteredData.filter((item) => {
-    //     const includesSelectedOptions = selectedOptions.some(
-    //       (selected) =>
-    //         item?.clients?.name
-    //           ?.toLowerCase()
-    //           .includes(selected.toLowerCase()) ||
-    //         item?.project_assigned_to_teamlead?.name
-    //           ?.toLowerCase()
-    //           .includes(selected.toLowerCase()) ||
-    //         item?.project_assigned_by_manager?.name
-    //           ?.toLowerCase()
-    //           .includes(selected.toLowerCase()) ||
-    //         allUserUnderSelectedHod.includes(
-    //           item.project_assigned_by_manager?.name?.toLowerCase()
-    //         ) ||
-    //         allUserUnderSelectedHod.includes(
-    //           item.project_assigned_to_teamlead?.name?.toLowerCase()
-    //         )
-    //     );
-    //     const hodMatches =
-    //       AllManagerAndTl.length > 0 &&
-    //       (AllManagerAndTl.includes(
-    //         Number(item.project_assigned_by_manager?.id)
-    //       ) ||
-    //         AllManagerAndTl.includes(
-    //           Number(item.project_assigned_to_teamlead?.id)
-    //         ));
-
-    //     return includesSelectedOptions || hodMatches;
-    //   });
-    // }
-    const allManagerRoles = [
-      "Sr.Manager",
-      "Ass.Manager",
-      "Manager",
-      "Team Lead",
-    ];
 
     /**
      * Recursively fetch all users who report to the selected user (directly & indirectly).
@@ -219,30 +154,6 @@ const FilterProject = () => {
     };
    
     if (selectedOptions.length > 0) {
-      // changes dropdown for user under selected user 
-      // let AllManagerAndTl = [];
-      // let allUserUnderSelectedHod = [];
-      // const Hods = userData.filter((item) => item?.role?.name == isHod);
-      // const currentSelectHod = Hods.find((item) =>
-      //   selectedOptions.includes(item.user_role.name)
-      // );
-      // if (currentSelectHod) {
-      //   const AllMemberUnderCurrentHod = userData.filter(
-      //     (user) => user?.reports_to?.id == currentSelectHod?.id
-      //   );
-      //   allUserUnderSelectedHod = AllMemberUnderCurrentHod.map((user) =>
-      //     user?.user_role?.name?.toLowerCase()
-      //   );
-      //   const ManagerUnderSelectedHod = AllMemberUnderCurrentHod.filter((item) =>
-      //     allManagerRoles.includes(item.role.name)
-      //   ).map((item) => item.user_role);
-      //   console.log("🚀 ~ useEffect ~ ManagerUnderSelectedHod:", ManagerUnderSelectedHod)
-      //   setManagerListArray(ManagerUnderSelectedHod);
-      //   AllManagerAndTl = AllMemberUnderCurrentHod.map((item) =>
-      //     Number(item?.id)
-      //   );
-      // }
-      // end changes dropdown for user under selected user 
 
       const selectedUser = userData.find((user) =>
         selectedOptions.includes(user?.user_role?.name)
@@ -284,107 +195,6 @@ const FilterProject = () => {
     selectedOptions,
     activeTabValue,
   ]);
-
-  // useEffect(() => {
-  //   let filteredData = projectData?.length > 0 ? projectData : [];
-  //   const currentYear = new Date().getFullYear();
-  //   const startDate = new Date(`1 Jan ${currentYear}`);
-  //   const endDate = new Date(`31 Dec ${currentYear}`);
-
-  //   // Step 1: Filter `filteredData` for the current year considering overlapping date ranges
-  //   if (
-  //     !dateRange.startDate &&
-  //     !dateRange.endDate &&
-  //     !selectedOptions.length > 0
-  //   ) {
-  //     filteredData = filteredData.filter((item) => {
-  //       const projectStartDate = new Date(item?.tentative_start_date);
-  //       const projectEndDate = new Date(item?.tentative_end_date);
-
-  //       // Check if any part of the project lies within the date range
-  //       return (
-  //         (projectStartDate >= startDate && projectStartDate <= endDate) || // Start date is within the range
-  //         (projectEndDate >= startDate && projectEndDate <= endDate) || // End date is within the range
-  //         (projectStartDate <= startDate && projectEndDate >= endDate) // Project spans the entire range
-  //       );
-  //     });
-  //   }
-
-  //   if (dateRange.startDate && dateRange.endDate) {
-  //     filteredData = filteredData.filter((item) => {
-  //       const projectStartDate = new Date(item?.tentative_start_date);
-  //       const projectEndDate = new Date(item?.tentative_end_date);
-
-  //       const startDate = new Date(dateRange.startDate);
-  //       const endDate = new Date(dateRange.endDate);
-  //       return projectStartDate >= startDate && projectEndDate <= endDate;
-  //     });
-  //   }
-  //   let AllManagerAndTl = [];
-  //   let allUserUnderSelectedHod = [];
-  //   const Hods = userData.filter((item) => item?.role?.name == isHod);
-  //   const currentSelectHod = Hods.find((item) =>
-  //     selectedOptions.includes(item.user_role.name)
-  //   );
-  //   if (currentSelectHod) {
-  //     const AllMemberUnderCurrentHod = userData.filter(
-  //       (user) => user?.reports_to?.id == currentSelectHod?.id
-  //     );
-  //     allUserUnderSelectedHod = AllMemberUnderCurrentHod.map((user) =>
-  //       user?.user_role?.name?.toLowerCase()
-  //     );
-  //     const ManagerUnderSelectedHod = AllMemberUnderCurrentHod.filter((item) =>
-  //       allManagerRoles.includes(item.role.name)
-  //     ).map((item) => item.user_role);
-  //     setManagerListArray(ManagerUnderSelectedHod);
-  //     AllManagerAndTl = AllMemberUnderCurrentHod.map((item) =>
-  //       Number(item?.id)
-  //     );
-  //   }
-  //   if (selectedOptions.length > 0) {
-  //     filteredData = filteredData.filter((item) => {
-  //       const includesSelectedOptions = selectedOptions.some(
-  //         (selected) =>
-  //           item?.project_assigned_to_teamlead?.name
-  //             ?.toLowerCase()
-  //             .includes(selected.toLowerCase()) ||
-  //           item?.project_assigned_by_manager?.name
-  //             ?.toLowerCase()
-  //             .includes(selected.toLowerCase()) ||
-  //           allUserUnderSelectedHod.includes(
-  //             item.project_assigned_by_manager?.name?.toLowerCase()
-  //           ) ||
-  //           allUserUnderSelectedHod.includes(
-  //             item.project_assigned_to_teamlead?.name?.toLowerCase()
-  //           )
-  //       );
-
-  //       const hodMatches =
-  //       AllManagerAndTl.length > 0 &&
-  //       (AllManagerAndTl.includes(
-  //         Number(item.project_assigned_by_manager?.id)
-  //       ) ||
-  //       AllManagerAndTl.includes(
-  //         Number(item.project_assigned_to_teamlead?.id)
-  //       ));
-
-  //       console.log("🚀 ~ filteredData=filteredData.filter ~ filteredData:", includesSelectedOptions,hodMatches)
-  //       return includesSelectedOptions || hodMatches;
-  //     });
-  //   }
-
-  //   setFilteredProjectDataWithoutStatus(filteredData);
-  // }, [
-  //   projectData,
-  //   selectedStatus,
-  //   dateRange,
-  //   selectedHod,
-  //   selectedManager,
-  //   selectedTl,
-  //   selectedClient,
-  //   selectedOptions,
-  //   activeTabValue,
-  // ]);
 
   return (
     <div className="flex items-center">

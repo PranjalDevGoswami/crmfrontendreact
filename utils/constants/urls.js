@@ -77,10 +77,16 @@ export const PROJECTDATAAPIS = (page_number, page_size, activeTabValue) => {
 };
 export const POSTPROJECTDATAAPIS = BASEURL + "/api/project/projects/";
 
+// export const GETCBR = (id) => {
+//   if (!id) {
+//     throw new Error("ID is required to raised CBR!!");
+//   }
+//   return `${BASEURL}/api/finance/project-cbr-data/${id}/`;
+// };
 export const GETCBR = (id) => {
-  if (!id) {
-    throw new Error("ID is required to raised CBR!!");
-  }
+  // if (!id) {
+  //   throw new Error("ID is required to raised CBR!!");
+  // }
   return `${BASEURL}/api/finance/project-cbr-data/${id}/`;
 };
 export const DASHBOARDPROJECT = BASEURL + "/api/project/dashbord-projects/";
@@ -101,4 +107,7 @@ export const GETABRDETAILS = (id) => {
   }
   return `${BASEURL}/api/finance/advance-billing/${id}`;
 };
-export const FINANCEPROJECT = BASEURL + '/api/finance/project-list/'
+export const FINANCEPROJECT = BASEURL + '/api/finance/cbr/project-list/';
+export const ABRPROJECT = BASEURL + '/api/finance/abr/project-list/';
+export const CREATEADVANCEPAYMENT = BASEURL + '/api/finance/advance-billing/create/';
+export const GENERATEINVOICE = BASEURL + '/api/finance/generate-invoice/';

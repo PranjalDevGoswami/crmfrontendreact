@@ -6,18 +6,20 @@ import { isFinanceDept } from "../../src/config/Departments";
 import viewInvoice from "../../src/assets/invoice.png";
 import viewCBR from "../..//src/assets/bill_requisition.png";
 
-export const TableColumn = ({
+export const cbrTableColumn = ({
   buttonRef,
   handleViewCpi,
   setShowSowList,
   setSowList,
   navigate,
-  desabledRowData
+  desabledRowData,
+  handleViewAddnl
 }) => {
 
   const invoice_generated = desabledRowData?.filter((item)=>item.status === "Invoice generated")
 
   const handleGetInvoice = (selectedRecord) => {
+    console.log("🚀 ~ handleGetInvoice ~ selectedRecord:", selectedRecord);
     // e.preventDefault();
     // setIsInvoice(true);
     navigate("/view-cbr", { state: selectedRecord });
@@ -76,7 +78,7 @@ export const TableColumn = ({
     },
     {
       name: "Client PM",
-      selector: (row) => row?.project_client_pm?.name || "N/A",
+      selector: (row) => row?.project_client_pm?.name,
       sortable: true,
       width: "130px",
     },
@@ -88,6 +90,7 @@ export const TableColumn = ({
     {
       name: "CPI",
       selector: (row) =>
+        
         row?.cpi == 0 ? (
           <Tooltip text={"View Multiple CPI"} className={"w-40"}>
             <MdRemoveRedEye
@@ -100,6 +103,7 @@ export const TableColumn = ({
         ),
       sortable: true,
       width: "85px",
+      
     },
     isFinanceDept && {
       name: "Addnl. Fee",

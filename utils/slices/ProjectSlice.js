@@ -5,6 +5,7 @@ const initialState = {
   page_number:1,
   page_size: 30,
   totalRows:0,
+  financeProjects:[]
 };
 
 const projectSlice = createSlice({
@@ -30,10 +31,13 @@ const projectSlice = createSlice({
     },
     addTotalRows:(state,action) =>{
       state.totalRows = action.payload
+    },
+    addFinanceProject:(state,action)=>{
+      state.financeProjects = action.payload
     }
 
   },
 });
 
-export const { setProjects, addProject, removeProject,addPageNumber,addPageSize,addTotalRows } = projectSlice.actions;
+export const { setProjects, addProject, removeProject,addPageNumber,addPageSize,addTotalRows,addFinanceProject } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -32,7 +32,7 @@ export const useRedirectUser = async (navigate) => {
         navigate("/operation-projects");
       } 
       else if (department == 3) {
-        navigate("/report");
+        navigate("/cbr");
       } 
       else if (userDetails[0]?.email === "admin@unimrkt.com") {
         navigate("/Admin-projects");

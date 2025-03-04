@@ -21,6 +21,7 @@ import {
 } from "@tanstack/react-table";
 import columns1 from "../../../utils/tableData/dataTableColumnsReport";
 import ViewSowUploadList from "../../project/projectCRUDOperations/ViewSowUploadList";
+import useProjectData from "../../../utils/hooks/useProjectData";
 // import { TableColumnReport } from "../../../utils/tableData/dataTableColumnsReport";
 
 const Report = () => {
@@ -28,6 +29,7 @@ const Report = () => {
   const buttonRef = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useProjectData()
   const { isLoading, setIsLoading, setActiveTabValue } =
     useContext(FilterContext);
   const {
@@ -191,31 +193,4 @@ const Report = () => {
 };
 
 export default Report;
-{
-  /* <div
-                              {...{
-                                className: header.column.getCanSort()
-                                  ? "cursor-pointer select-none"
-                                  : "",
-                                onClick:
-                                  header.column.getToggleSortingHandler(),
-                              }}
-                            >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {{
-                                asc: " 🔼",
-                                desc: " 🔽",
-                              }[header.column.getIsSorted()] ?? null}
-                              {header.column.getCanFilter() ? (
-                                <div>
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                </div>
-                              ) : null}
-                            </div> */
-}
+

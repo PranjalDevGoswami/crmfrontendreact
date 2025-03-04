@@ -4,19 +4,26 @@ import LableAndInput from "../../Molecules/LableAndInput";
 import { FilterContext } from "../../ContextApi/FilterContext";
 
 const AdvancePayment = ({ abrData, setAbrData }) => {
-  const userName = localStorage.getItem('username')
-    
-    const { formData, setAdvancePayment, managerList,isAdvancePayment, setIsAdvancePayment } =
-    useContext(FormDataContext);
+  const userName = localStorage.getItem("username");
+
+  const {
+    formData,
+    setAdvancePayment,
+    managerList,
+    isAdvancePayment,
+    setIsAdvancePayment,
+  } = useContext(FormDataContext);
+
   const { clientListDataWithId } = useContext(FilterContext);
   const [client, setClient] = useState("");
   const [managerName, setManagerName] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
 
-  useEffect(() => { 
+  useEffect(() => {
     const selectedClient = clientListDataWithId.filter(
       (client) => client.id === formData?.clients
     );
+    setAbrData((prev)=>({...prev,clientname:selectedClient[0].name}))
     setClient(selectedClient[0]);
     const selectedManager = managerList?.filter(
       (manager) => manager.user.id == formData?.project_manager
@@ -34,29 +41,36 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
 
   const handleABR = (e) => {
     e.preventDefault();
-    console.log(abrData,"abr");
-    
     const errorMessage = validateForm();
-    if (errorMessage) {
+    if (Object.keys(errorMessage).length > 0) {
       setError(errorMessage);
     } else {
       // setAdvancePayment(false);
-      setIsAdvancePayment(false)
+      setIsAdvancePayment(false);
     }
   };
 
   const validateForm = () => {
-    if (!abrData?.total_project_cost)
-      return "Total Cost of Project is required.";
-    if (!abrData?.advance_invoice_percentage)
-      return "Advance Invoice Percentage is required.";
-    if (!abrData?.advance_invoice_amount)
-      return "Advance Invoice Amount is required.";
-    if (!abrData?.contact_person_name) return "Name Required.";
-    if (!abrData?.contact_person_email) return "Email Required.";
-    if (!abrData?.total_project_cost)
-      return "Total Cost of Project (Amount) Required.";
-    return "";
+    const newError = {};
+
+    if (!abrData?.advance_invoice_percentage) {
+      newError.advance_invoice_percentage =
+        "Advance Invoice Percentage is required.";
+    }
+    if (!abrData?.advance_invoice_amount) {
+      newError.advance_invoice_amount = "Advance Invoice Amount is required.";
+    }
+    if (!abrData?.contact_person_name && !client?.contact_person ) {
+      newError.contact_person_name = "Name Required.";
+    }
+    if (!abrData?.contact_person_email && !client?.email ) {
+      newError.contact_person_email = "Email Required.";
+    }
+    if (!abrData?.total_project_cost) {
+      newError.total_project_cost = "Total Cost of Project (Amount) Required.";
+    }
+
+    return newError;
   };
 
   return (
@@ -68,7 +82,10 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
         </h1>
         <button
           className="bg-red-500 hover:bg-red-700 font-bold border border-gray-300 text-white px-2 py-2 rounded-md absolute top-0 right-0"
-          onClick={() => {setAdvancePayment(false); setIsAdvancePayment(false)}}
+          onClick={() => {
+            setAdvancePayment(false);
+            setIsAdvancePayment(false);
+          }}
         >
           X
         </button>
@@ -247,7 +264,11 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
             inputClassName="border border-gray-300 rounded-md p-2 w-full min-w-[200px] break-words"
             inputChange={handleInputChange}
           />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mt-0 text-left">
+              {error.contact_person_name}
+            </p>
+          )}
         </div>
         <div>
           <LableAndInput
@@ -258,7 +279,11 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
             inputClassName="border border-gray-300 rounded-md p-2 w-full min-w-[200px] break-words"
             inputChange={handleInputChange}
           />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mt-0 text-left">
+              {error.contact_person_email}
+            </p>
+          )}{" "}
         </div>
         <LableAndInput
           labelClassName={"text-left"}
@@ -285,7 +310,11 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
             inputClassName="border border-gray-300 rounded-md p-2 w-full min-w-[200px] break-words"
             inputChange={handleInputChange}
           />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mt-0 text-left">
+              {error.total_project_cost}
+            </p>
+          )}{" "}
         </div>
         <div>
           <LableAndInput
@@ -296,7 +325,11 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
             inputClassName="border border-gray-300 rounded-md p-2 w-full min-w-[200px] break-words"
             inputChange={handleInputChange}
           />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mt-0 text-left">
+              {error.advance_invoice_percentage}
+            </p>
+          )}{" "}
         </div>
         <div>
           <LableAndInput
@@ -307,7 +340,11 @@ const AdvancePayment = ({ abrData, setAbrData }) => {
             inputClassName="border border-gray-300 rounded-md p-2 w-full min-w-[200px] break-words"
             inputChange={handleInputChange}
           />
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && (
+            <p className="text-red-500 text-sm mt-0 text-left">
+              {error.advance_invoice_amount}
+            </p>
+          )}{" "}
         </div>
         <LableAndInput
           labelClassName={"text-left"}

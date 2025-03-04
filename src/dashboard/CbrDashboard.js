@@ -1,71 +1,66 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
-import { TableColumn } from "../../utils/tableData/dataTableColumns";
-import { Data } from "../../utils/tableData/data";
 import FilterProject from "../project/FilterProject";
 import { customStyles } from "../../utils/tableData/DataTablesData";
 import { useDispatch, useSelector } from "react-redux";
 import { DataTableContext } from "../ContextApi/DataTableContext";
 import ProjectNameAndFilter from "../project/ProjectNameAndFilter";
-import ProjectStatusTabs from "../project/projectCRUDOperations/ProjectStatusTabs";
 import { useNavigate } from "react-router-dom";
 import CBRStatusTabs from "../project/projectCRUDOperations/CBRStatusTabs";
 import { FilterContext } from "../ContextApi/FilterContext";
-import { ProjectData } from "../../utils/apis/projectData";
-import {
-  addPageNumber,
-  addPageSize,
-  setProjects,
-} from "../../utils/slices/ProjectSlice";
-import { FINANCEPROJECT } from "../../utils/constants/urls";
-import { getWithAuth } from "../provider/helper/axios";
+import { addPageNumber, addPageSize } from "../../utils/slices/ProjectSlice";
+import { cbrTableColumn, financeTableColumn } from "../../utils/tableData/cbrTableColumn";
+import { Data } from "../../utils/tableData/data";
+import Popup from "../Atom/Popup";
+import ViewMultipleSampleCpi from "../project/projectCRUDOperations/ViewMultipleSampleCpi";
+import { toggleViewMultipleCpiSample } from "../../utils/slices/MultipleSampleCpiRecordsSlice";
+import { addFilterProjectData } from "../../utils/slices/FilterProjectDataSlice";
+import useCbrProjectData from "../../utils/hooks/useCbrProjectData";
 
 const CbrDashboard = () => {
-  const dispatch = useDispatch();
-  const { activeTabValue, setActiveTabValue } = useContext(FilterContext);
-  const { page_number, page_size } = useSelector((store) => store.projectData)
-
-  const {
-    setShowSowList,
-    setSowList,
-    toggledClearRows,
-    setToggleClearRows,
-    isDrawerOpen,
-  } = useContext(DataTableContext);
+  const ProjectData = useSelector((store) => store.projectData.projects);
+  const isMultipleCpiSample = useSelector(
+    (store) => store.MultiSampleCpiRecord.isViewMultipleSampleCpiRecords
+  );
   const totalRows = useSelector((store) => store.projectData.totalRows);
-  const navigate = useNavigate();
   const darkMode = useSelector((store) => store.darkMode.isDarkMode);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const buttonRef = useRef(null);
 
-  const data = Data()
-  const currentDate = new Date().toISOString().split("T")[0];
+  const { setActiveTabValue, financeProjectData } = useContext(FilterContext);
+  const [multipleCpiSample, setMultipleCpiSample] = useState([]);
+  const { setShowSowList, setSowList, toggledClearRows, isDrawerOpen } =
+    useContext(DataTableContext);
 
-  const desabledRowData = data?.map((item) => {
-    let desabled = false;
-    if (
-      item.status === "Completed" ||
-      item.status === "CBR Raised" ||
-      new Date(item.tentative_end_date) < new Date(currentDate)
-    ) {
-      desabled = true;
-    }
-    return { ...item, desabled };
-  });
-
-  const handleClearRows = () => {
-    setToggleClearRows(!toggledClearRows);
-  };
+  const finance = useCbrProjectData();
+  dispatch(addFilterProjectData(finance))
   useEffect(() => {
-    if (isDrawerOpen == false) {
-      handleClearRows(); // Call clear rows when new data is loaded
-    }
-  }, [isDrawerOpen]);
+    setActiveTabValue("CBR Raised");
+  }, []);
+
+  const data = Data();
 
   const handlePerRowsChange = (e) => {
     dispatch(addPageSize(e));
   };
   const handlePageChange = (e) => {
     dispatch(addPageNumber(e));
+  };
+
+  const handleViewCpi = (row) => {
+    const viewSampleCpi = financeProjectData.filter((item) => {
+      return item?.project?.id === row?.id;
+    });
+    setMultipleCpiSample(viewSampleCpi);
+    dispatch(toggleViewMultipleCpiSample(true));
+  };
+  const handleViewAddnl = (row) => {
+    console.log(row);
+    const viewSampleCpi = ProjectData.filter((item) => item?.id === row?.id);
+    setMultipleCpiSample(viewSampleCpi);
+    dispatch(toggleViewMultipleCpiSample(true));
   };
   return (
     <div
@@ -93,15 +88,16 @@ const CbrDashboard = () => {
           </div>
 
           <DataTable
-            columns={TableColumn({
+            columns={cbrTableColumn({
               buttonRef,
-              //   handleViewCpi,
+              handleViewCpi,
               setShowSowList,
               setSowList,
               navigate,
-              desabledRowData,
+              data,
+              handleViewAddnl,
             })}
-            data={desabledRowData}
+            data={data}
             pagination
             paginationServer
             onChangeRowsPerPage={handlePerRowsChange}
@@ -120,6 +116,11 @@ const CbrDashboard = () => {
           />
         </div>
       </div>
+      {isMultipleCpiSample && (
+        <Popup>
+          <ViewMultipleSampleCpi viewRecord={multipleCpiSample} />
+        </Popup>
+      )}
     </div>
   );
 };
