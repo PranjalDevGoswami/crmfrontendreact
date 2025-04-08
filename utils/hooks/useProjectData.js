@@ -6,15 +6,17 @@ import { useSelector } from "react-redux";
 
 const useProjectData = () => {
   const dispatch = useDispatch();
-  const {page_number,page_size,activeTab} = useSelector(Store=>Store.projectData)
+  const { page_number, page_size, activeTab } = useSelector(
+    (Store) => Store.projectData
+  );
   const [projectData, setProjectData] = useState([]);
 
-  const getProjectData = async () => { 
+  const getProjectData = async () => {
     try {
-      const response = await ProjectData(page_number,page_size,activeTab);
+      const response = await ProjectData(page_number, page_size, activeTab);
       if (response) {
         dispatch(setProjects(response?.results));
-        dispatch(addTotalRows(response?.count))
+        dispatch(addTotalRows(response?.count));
         setProjectData(response?.results);
       }
     } catch (error) {
@@ -24,7 +26,7 @@ const useProjectData = () => {
 
   useEffect(() => {
     getProjectData();
-  }, [page_number,page_size,activeTab]);
+  }, [page_number, page_size, activeTab]);
 
   return projectData;
 };

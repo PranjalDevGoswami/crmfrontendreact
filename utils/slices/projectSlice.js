@@ -30,8 +30,25 @@ const projectSlice = createSlice({
   initialState,
   reducers: {
     setProjects(state, action) {
-      state.projects = action.payload;
-    },
+      // If action.payload is an array (old usage), wrap it in the new format
+      const isOldFormat = Array.isArray(action.payload);
+      const data = isOldFormat ? action.payload : action.payload.data;
+      const reset = isOldFormat ? false : action.payload.reset || false;
+    
+      if (reset) {
+        // Reset mode: overwrite the project list
+        state.projects = data;
+      } else {
+        // Append mode with deduplication
+        const allProjects = [...state.projects, ...data];
+        const uniqueProjects = Array.from(
+          new Map(allProjects.map((project) => [project.id, project])).values()
+        );
+        state.projects = uniqueProjects;
+      }
+    }
+    
+,    
     addFilterProjectData: (state, action) => {
       state.filteredProjects = action.payload;
     },

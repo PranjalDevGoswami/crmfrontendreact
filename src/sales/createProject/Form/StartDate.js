@@ -30,7 +30,7 @@ const StartDate = () => {
   };
 
   return (
-    <>
+    <div>
       <LableAndInput
         labelName={"Start Date"}
         InputName={"tentative_start_date"}
@@ -39,9 +39,13 @@ const StartDate = () => {
         min={minDate.toISOString().split("T")[0]}
         inputClassName={"p-2 border bg-[#f3eded] rounded-md"}
         labelClassName={"pt-2 pb-2 pl-1"}
+        onKeyDown={(e) => {
+          e.preventDefault();
+          setErrorMessage("please select date from calender");
+        }}
       />
       {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-    </>
+    </div>
   );
 };
 

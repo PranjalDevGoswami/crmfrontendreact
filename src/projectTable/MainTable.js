@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { TableColumn } from "./TableColumn";
 import {
@@ -15,7 +15,7 @@ import ProjectSampleEditRequest from "../operation/projectSampleEditRequest/proj
 import AddManDaysInduvisual from "../operation/addManDays/AddManDaysInduvisual";
 import UpdateStatus from "../operation/updateStatus/UpdateStatus";
 import UpdateSow from "../sales/updateSow/UpdateSow";
-import { addPageSize } from "../../utils/slices/projectSlice";
+import { addPageNumber, addPageSize } from "../../utils/slices/projectSlice";
 import RaiseCbr from "../operation/raiseCbr/RaiseCbr";
 import ViewCbr from "../project/view/ViewCbr";
 
@@ -33,15 +33,21 @@ const MainTable = () => {
     isRaiseCbr,
     isViewCbr,
   } = useSelector((store) => store.dataTable);
-  const { page_size, page_number, projects } = useSelector(
+  const { page_size, page_number, projects, totalRows } = useSelector(
     (store) => store.projectData
+  );
+  const { selectedOptions, openFilterDrawer, filterOption } = useSelector(
+    (store) => store.filterSlice
   );
   const [pagination, setPagination] = useState({
     page_number,
     page_size,
   });
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const listInnerRef = useRef();
   const [rowSelection, setRowSelection] = useState([]);
+  const [tableHeight, setTableHeight] = useState(0);
 
   const currentDate = new Date().toISOString().split("T")[0];
 
@@ -83,24 +89,55 @@ const MainTable = () => {
     },
   });
 
-  const onScrollLoadProjectData = () => {
+  useEffect(() => {
+    const handleResize = () => {
+      const vh = window.innerHeight;
+      // Subtract some offset for pagination/footer (e.g., 100px)
+      const availableHeight = Math.max(vh - 200, 300); // min 300px
+      setTableHeight(availableHeight);
+    };
+
+    handleResize(); // set initially
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isFilterApplied =
+  !!filterOption.searchText ||
+  !!filterOption.selectedOption.length ||
+  !!filterOption.dateRange.startDate ||
+  !!filterOption.dateRange.endDate;
+
+const onScrollLoadProjectData = () => {
+  if (!isFilterApplied) {
     if (listInnerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
       if (scrollTop + clientHeight >= scrollHeight - 10) {
-        dispatch(addPageSize(page_size + 10));
+        if (totalRows !== projects.length) {
+          dispatch(addPageNumber(page_number + 1));
+        }
       }
     }
-  };
-console.log("asdf");
+  }
+};
+
 
   return (
     <div className="rounded-sm overflow-visible">
-      <div
-        className={`${
+      {/* <div
+        className={`mb-2 ${
           data.length > 20
-            ? "h-[800px] overflow-auto"
+            ? "h-[70vh] overflow-auto"
             : "h-auto overflow-visible"
         } `}
+        onScroll={onScrollLoadProjectData}
+        ref={listInnerRef}
+      > */}
+      <div
+        className="mb-2 overflow-auto"
+        style={{
+          height: data.length > 20 ? `${tableHeight}px` : "auto",
+        }}
         onScroll={onScrollLoadProjectData}
         ref={listInnerRef}
       >
@@ -150,7 +187,18 @@ console.log("asdf");
           </tbody>
         </table>
       </div>
-      {/* <Pagination /> */}
+      <Pagination />
+      {isLoadingMore && (
+        <div className="text-center py-4 text-sm text-gray-500">
+          Loading more...
+        </div>
+      )}
+      {totalRows === projects.length && (
+        <div className="text-center py-4 text-sm text-gray-500">
+          You’ve reached the end of the list!
+        </div>
+      )}
+
       {isViewMultipleSampleCpiRecords && (
         <Popup>
           <ViewMultipleSampleCpi />

@@ -3,16 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPageNumber, addPageSize } from "../../utils/slices/projectSlice";
 
 const Pagination = () => {
-  const { page_size, page_number, totalRows } = useSelector(
+  const { page_size, page_number, totalRows,projects } = useSelector(
     (store) => store.projectData
   );
   const dispatch = useDispatch();
   return (
     <div className="flex justify-end items-center gap-2 m-2 text-xs">
       <div>
-        Showing {page_size} of {totalRows} projects
+        Showing {projects.length} of {totalRows} projects
       </div>
-      <button
+      {/* <button
         className="border rounded p-1"
         onClick={() => dispatch(addPageNumber(1))}
         disabled={page_number === 1}
@@ -73,7 +73,7 @@ const Pagination = () => {
             Show {pageSize}
           </option>
         ))}
-      </select>
+      </select> */}
     </div>
   );
 };

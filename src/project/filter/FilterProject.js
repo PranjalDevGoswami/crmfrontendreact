@@ -13,7 +13,14 @@ import { setProjects } from "../../../utils/slices/projectSlice.js";
 
 const FilterProject = () => {
   const darkMode = useSelector((store) => store.themeSetting.isDarkMode);
-  const { projects } = useSelector((store) => store.projectData);
+  const {
+    projects,
+    projectsWithoutAnyFilter,
+    page_number,
+    page_size,
+    activeTab,
+  } = useSelector((store) => store.projectData);
+
   const { selectedOptions, openFilterDrawer, filterOption } = useSelector(
     (store) => store.filterSlice
   );
@@ -33,23 +40,83 @@ const FilterProject = () => {
   }, [projects]);
 
   useEffect(() => {
-    let filteredData =
-      originalProjects?.length > 0 ? [...originalProjects] : [];
+    const searchText = filterOption?.searchText?.toLowerCase()?.trim() || "";
+    const selectedOptions = filterOption?.selectedOption || [];
+    const { startDate, endDate } = filterOption?.dateRange || {};
 
-    if (filterOption.dateRange.startDate && filterOption.dateRange.endDate) {
-      filteredData = filteredData.filter((item) => {
-        const projectStartDate = new Date(item?.tentative_start_date);
-        const projectEndDate = new Date(item?.tentative_end_date);
+    const hasActiveFilters =
+      searchText ||
+      (Array.isArray(selectedOptions) && selectedOptions.length > 0) ||
+      (startDate && endDate);
 
-        const startDate = new Date(filterOption.dateRange.startDate);
-        const endDate = new Date(filterOption.dateRange.endDate);
-        return projectStartDate >= startDate && projectEndDate <= endDate;
-      });
-      dispatch(setProjects(filteredData));
-    } else {
-      dispatch(setProjects(originalProjects));
+    if (!hasActiveFilters) {
+      dispatch(setProjects({ data: originalProjects, reset: true }));
+      return;
     }
-  }, [filterOption.dateRange, originalProjects]);
+
+    let filteredData =
+      projectsWithoutAnyFilter?.length > 0 ? [...projectsWithoutAnyFilter] : [];
+
+    const searchInObject = (obj, searchText) => {
+      if (!obj || typeof obj !== "object") return false;
+
+      return Object.values(obj).some((value) => {
+        if (typeof value === "object" && value !== null) {
+          return searchInObject(value, searchText);
+        }
+        return value?.toString()?.toLowerCase().includes(searchText);
+      });
+    };
+
+    const matchesSelectedOption = (item) => {
+      if (!selectedOptions.length) return true;
+
+      return selectedOptions.some((option) => {
+        const opt = option.toLowerCase();
+        return (
+          item?.clients?.name?.toLowerCase().includes(opt) ||
+          item?.assigned_to?.name?.toLowerCase().includes(opt) ||
+          item?.project_assigned_to_teamlead?.some((user) =>
+            user.name?.toLowerCase().includes(opt)
+          )
+        );
+      });
+    };
+
+    const isInDateRange = (item) => {
+      if (!startDate || !endDate) return true;
+
+      const projectStart = new Date(item?.tentative_start_date);
+      const projectEnd = new Date(item?.tentative_end_date);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      return (
+        (projectStart >= start && projectStart <= end) ||
+        (projectEnd >= start && projectEnd <= end) ||
+        (projectStart <= start && projectEnd >= end)
+      );
+    };
+
+    filteredData = filteredData.filter(
+      (item) =>
+        (!searchText || searchInObject(item, searchText)) &&
+        matchesSelectedOption(item) &&
+        isInDateRange(item)
+    );
+
+    dispatch(setProjects({ data: filteredData, reset: true }));
+  }, [
+    projectsWithoutAnyFilter,
+    originalProjects,
+    filterOption?.searchText,
+    filterOption?.selectedOption,
+    filterOption?.dateRange?.startDate,
+    filterOption?.dateRange?.endDate,
+    page_number,
+    page_size,
+    activeTab,
+  ]);
 
   return (
     <div className="flex items-center">

@@ -2,51 +2,13 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 export const TableData = () => {
-  const projects = useSelector((store) => store.projectData.projects);
+  const { projects } = useSelector((store) => store.projectData);
   const { filterOption } = useSelector((store) => store.filterSlice);
 
   const data = useMemo(() => {
     if (!projects) return [];
 
-    const searchText = filterOption?.searchText?.toLowerCase() || "";
-    const selectedOptions = filterOption?.selectedOption || [];
-
-    const searchInObject = (obj, searchText) => {
-      if (!obj || typeof obj !== "object") return false;
-
-      return Object.values(obj).some((value) => {
-        if (typeof value === "object" && value !== null) {
-          return searchInObject(value, searchText);
-        }
-        return value?.toString()?.toLowerCase().includes(searchText);
-      });
-    };
-
-    const matchesSelectedOption = (item) => {
-      if (!selectedOptions.length) return true;
-
-      return selectedOptions.some((option) => {
-        return (
-          item?.clients?.name?.toLowerCase().includes(option.toLowerCase()) ||
-          item?.assigned_to?.name
-            ?.toLowerCase()
-            .includes(option.toLowerCase()) ||
-          // item?.assigned_to?.name?.toLowerCase().includes(option.toLowerCase())
-          item?.project_assigned_to_teamlead
-            ?.map((user) => user.name?.toLowerCase())
-            .includes(option.toLowerCase())
-          // item?.assigned_to?.name?.toLowerCase().includes(option.toLowerCase())
-        );
-      });
-    };
-
-    const filteredData = projects.filter(
-      (item) =>
-        (!searchText || searchInObject(item, searchText)) &&
-        matchesSelectedOption(item)
-    );
-
-    return filteredData.map((item) => ({
+    return projects.map((item) => ({
       id: item?.id,
       project_code: item?.project_code.toUpperCase(),
       name: item?.name,
@@ -79,7 +41,12 @@ export const TableData = () => {
       created_at: item?.created_at,
       purchase_order_no: item?.purchase_order_no,
     }));
-  }, [projects, filterOption?.searchText, filterOption?.selectedOption]);
+  }, [
+    projects,
+    filterOption?.searchText,
+    filterOption?.selectedOption,
+    filterOption?.dateRange,
+  ]);
 
   return data;
 };

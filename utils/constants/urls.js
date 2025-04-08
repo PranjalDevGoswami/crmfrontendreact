@@ -5,7 +5,8 @@ export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
 // export const BASEURL = "http://13.203.98.89" // new unimrkt india
 export const DEPARTMENTS_APIS = BASEURL + "/api/user/department/";
 export const CLIENT_DATA_APIS = BASEURL + "/api/project/clients/";
-export const UPDATE_TL_ASSIGNMENT = BASEURL + "/api/project/project-assignments/";
+export const UPDATE_TL_ASSIGNMENT =
+  BASEURL + "/api/project/project-assignments/";
 export const LOGIN_APIS = BASEURL + "/api/user/login/";
 export const POST_MAN_DAYS_DATA =
   BASEURL + "/api/operation/projects/add/man-days/";

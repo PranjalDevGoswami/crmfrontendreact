@@ -17,6 +17,7 @@ const Input = ({
   multiple,
   onfocus,
   onBlur,
+  onKeyDown,
   id,
 }) => {
   const darkMode = useSelector((store) => store.themeSetting.isDarkMode);
@@ -63,7 +64,7 @@ const Input = ({
       multiple={multiple}
       onFocus={onfocus}
       ref={inputRef}
-      onKeyDown={preventMinus}
+      onKeyDown={ onKeyDown || preventMinus}
       onBlur={onBlur}
       id={id}
     />

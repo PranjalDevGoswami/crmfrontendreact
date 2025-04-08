@@ -17,18 +17,23 @@ const CostPerInterview = () => {
       dispatch(addFormData({ cpi: 0 }));
     }
   }, [isMultipleSample, formData.cpi]);
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     dispatch(addFormData({ [name]: value }));
-
-    e.preventDefault();
-    if (/^\d*$/.test(value)) {
-      dispatch(addFormData({ [name]: value }));
+    if (value === "") {
       setErrorMsg();
-    } else {
-      setErrorMsg("Sample value can't be in decimal");
+      return;
     }
+    if (!isMultipleSample && value === "0") {
+      setErrorMsg("0 is not allowed in cpi");
+      return;
+    }
+    if (!/^\d*$/.test(value)) {
+      setErrorMsg("Sample value can't be in decimal");
+      return;
+    }
+    setErrorMsg();
   };
 
   return (
@@ -42,7 +47,8 @@ const CostPerInterview = () => {
             onChange={handleInputChange}
             className={"p-2 border bg-[#f3eded] w-full mt-2 rounded-md"}
             min={0}
-            value={!isMultipleSample ? formData?.cpi || "" : 0}
+            // value={!isMultipleSample ? formData?.cpi || "" : 0}
+            value={!isMultipleSample ? formData?.cpi ?? "" : 0}
           />
           {errorMsg && <p className="text-red-500 text-xs p-1">{errorMsg}</p>}
         </div>

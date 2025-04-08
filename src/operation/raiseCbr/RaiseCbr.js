@@ -16,9 +16,6 @@ import { setProjects } from "../../../utils/slices/projectSlice";
 import { RaiseCBRPostApi } from "../../fetchApis/projects/raiseCBR/RaiseCbr";
 import SweetAlert from "../../components/SweetAlert";
 import { RaiseVPRPostApi } from "../../fetchApis/projects/raiseVPR/RaiseVPRPostApi";
-// import { RaiseCBRPostApi } from "../../../fetchApis/projects/raiseCBR/RaiseCBRPostApi";
-// import RaisedVpr from "../projectMultipleSampleTable/RaisedVpr";
-// import { RaiseVPRPostApi } from "../../../fetchApis/projects/raiseVPR/RaiseVPRPostApi";
 
 const RaiseCbr = () => {
   const { projects, page_number, page_size, activeTab } = useSelector(

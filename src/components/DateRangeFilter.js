@@ -204,7 +204,7 @@ const DateRangeFilter = ({ dateRange, setDateRange }) => {
       endDate: endOfWeek,
     });
     dispatch(addStartDateRange(startOfWeek?._d?.toISOString()));
-    dispatch(addEndDateRange(startOfWeek?._d?.toISOString()));
+    dispatch(addEndDateRange(endOfWeek?._d?.toISOString()));
     setSelectedButton("thisWeek");
   };
 

@@ -19,6 +19,7 @@ const LableAndInput = ({
   inputClassName,
   max,
   inputOnFocus,
+  onKeyDown
 }) => {
   return (
     <div className="flex flex-col w-full">
@@ -38,6 +39,7 @@ const LableAndInput = ({
         disabled={disabled}
         max={max}
         onfocus={inputOnFocus}
+        onKeyDown={onKeyDown}
       />
     </div>
   );
