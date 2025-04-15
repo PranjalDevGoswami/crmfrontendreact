@@ -86,10 +86,9 @@ const UpdateSow = () => {
         dispatch(toggleIsUploadSow());
         const projectData = await ProjectData(
           page_number,
-          page_size,
-          activeTab
+          page_size
         );
-        dispatch(setProjects(projectData?.results));
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
       }
     } catch (error) {
       SweetAlert({

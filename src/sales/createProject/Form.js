@@ -41,12 +41,14 @@ const Form = () => {
   const darkMode = useSelector((store) => store.themeSetting.isDarkMode);
   const {
     form,
+    isOtherCostSelected,
     isAddOtherCost,
     isAddTranslationCost,
     isAdvancedPayment,
     isAdvancedPaymentHasData,
     abr,
   } = useSelector((store) => store.projectEntryForm);
+ 
   const { activeTab, page_number, page_size } = useSelector(
     (store) => store.projectData
   );
@@ -128,7 +130,7 @@ const Form = () => {
           )}
           <CostPerInterview />
           <SetupFee />
-          {isAddOtherCost && (
+          {isOtherCostSelected && (
             <Popup>
               <AddOtherCost />
             </Popup>

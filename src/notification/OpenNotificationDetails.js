@@ -44,8 +44,8 @@ const OpenNotification = ({ notification_btn_ref }) => {
       dispatch(toggleViewNotification());
       const notificationCountfreshData = await notificationCount();
       dispatch(addNotification(notificationCountfreshData));
-      const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData.results));
+      const projectData = await ProjectData(page_number, page_size);
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
     } else {
       SweetAlert({
         title: "Error",
@@ -96,8 +96,8 @@ const OpenNotification = ({ notification_btn_ref }) => {
       dispatch(toggleViewNotification());
       const notificationCountfreshData = await notificationCount();
       dispatch(addNotification(notificationCountfreshData));
-      const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData.results));
+      const projectData = await ProjectData(page_number, page_size);
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
     }
   };
   const combinedRemarks = notificationList

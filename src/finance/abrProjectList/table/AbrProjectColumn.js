@@ -9,7 +9,10 @@ import {
   setSowList,
   toggleShowSowList,
 } from "../../../../utils/slices/dataTableSlice";
-import { addMultipleSample, toggleViewMultipleCpiSample } from "../../../../utils/slices/addMutipleSampleCpiSlice";
+import {
+  addMultipleSample,
+  toggleViewMultipleCpiSample,
+} from "../../../../utils/slices/addMutipleSampleCpiSlice";
 import AbrTableActionButton from "./AbrTableActionButton";
 
 export const AbrProjectColumn = () => {
@@ -34,18 +37,37 @@ export const AbrProjectColumn = () => {
         columnHelper.accessor("name", {
           id: "name",
           header: "Project Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("project_type", {
           id: "project_type",
           header: "Type",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("clients", {
           id: "clients",
           header: "Client Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
+       
         columnHelper.accessor("tentative_start_date", {
           id: "start_date",
           header: "Start Date",
@@ -56,21 +78,50 @@ export const AbrProjectColumn = () => {
           header: "End Date",
           cell: (info) => info.getValue(),
         }),
+        columnHelper.accessor("ops_head", {
+          id: "ops_head",
+          header: "Ops Head",
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+        }),
         !allManagerRolesRole &&
           columnHelper.accessor("assigned_to", {
             id: "unimrkt_pm",
             header: "UniMrkt PM",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+              return (
+                <span className="text-left flex justify-start">
+                  {info.getValue()}
+                </span>
+              );
+            },
           }),
-        columnHelper.accessor("project_assigned_to_teamlead", {
-          id: "team_lead",
-          header: "Team Lead",
-          cell: (info) => info.getValue(),
-        }),
+        // columnHelper.accessor("project_assigned_to_teamlead", {
+        //   id: "team_lead",
+        //   header: "Team Lead",
+        //   cell: (info) => {
+        //     return (
+        //       <span className="text-left flex justify-start">
+        //         {info.getValue()}
+        //       </span>
+        //     );
+        //   },
+        // }),
         columnHelper.accessor("project_client_pm", {
           id: "client_pm",
           header: "Client PM",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("cpi", {
           id: "cpi",
@@ -88,7 +139,7 @@ export const AbrProjectColumn = () => {
                 />
               </Tooltip>
             ) : (
-              row?.cpi
+              <span className="flex justify-end text-right">{row?.cpi}</span>
             );
           },
         }),
@@ -98,7 +149,7 @@ export const AbrProjectColumn = () => {
           cell: (info) => {
             const row = info.row.original;
             return (
-              <div className="flex">
+              <div className="flex justify-end">
                 <Tooltip
                   position="top"
                   text={"Achieved Target"}
@@ -164,12 +215,27 @@ export const AbrProjectColumn = () => {
         columnHelper.accessor("man_days", {
           id: "man_days",
           header: "Man Days",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("status", {
           id: "status",
           header: "Status",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: 'select',
+          // },
         }),
         columnHelper.accessor("documents", {
           id: "sow",
@@ -199,7 +265,11 @@ export const AbrProjectColumn = () => {
           header: "Actions",
           cell: (info) => {
             const row = info?.row?.original;
-            return <div className="flex justify-center"><AbrTableActionButton record={row} index={info?.row?.id} /></div>;
+            return (
+              <div className="flex justify-center">
+                <AbrTableActionButton record={row} index={info?.row?.id} />
+              </div>
+            );
           },
         }),
       ].filter(Boolean),

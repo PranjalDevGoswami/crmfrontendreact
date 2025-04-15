@@ -46,6 +46,7 @@ export const CbrProjectTableData = () => {
       transaction_fee: item?.project?.transaction_fee,
       tentative_start_date: item?.project?.tentative_start_date?.split("T")[0],
       tentative_end_date: item?.project?.tentative_end_date?.split("T")[0],
+      ops_head:item?.operation_hod?.username,
       project_assigned_to_teamlead:
         item?.project_assigned_to_teamlead
           ?.map((user) => user.name)

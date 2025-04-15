@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import ProjectReportColumn from "./projectReport/ProjectReportColumn";
 import { ProjectReportData } from "./projectReport/ProjectReportData";
@@ -16,6 +16,7 @@ import ViewAddlnFee from "../project/view/VIewAddlnFee";
 import ProjectReportFilterAndName from "./projectReport/ProjectReportFilterAndName";
 import ProjectReportFilter from "./projectReport/ProjectReportFilter";
 import ViewCbr from "../project/view/ViewCbr";
+import TableColumnFilter from "../components/TableColumnFilter";
 
 const ProjectReport = () => {
   const darkMode = useSelector((store) => store.themeSetting.isDarkMode);
@@ -25,6 +26,8 @@ const ProjectReport = () => {
   const { showSowList, showAddlnFee, isViewCbr } = useSelector(
     (store) => store.dataTable
   );
+    const [columnFilters, setColumnFilters] = useState([]);
+  
 
   useProjectData();
 
@@ -38,6 +41,11 @@ const ProjectReport = () => {
     data,
     getCoreRowModel: useMemo(() => getCoreRowModel(), []),
     getFilteredRowModel: useMemo(() => getFilteredRowModel(), []),
+        filterFns: {},
+        onColumnFiltersChange: setColumnFilters,
+        state: {
+          columnFilters,
+        },
   });
 
   return (
@@ -74,10 +82,25 @@ const ProjectReport = () => {
                         >
                           {header.isPlaceholder
                             ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                            : 
+                            // flexRender(
+                            //     header.column.columnDef.header,
+                            //     header.getContext()
+                            //   )
+                            <>
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <TableColumnFilter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
+                              }
                         </th>
                       ))}
                     </tr>
@@ -94,7 +117,7 @@ const ProjectReport = () => {
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-4 py-2 border border-gray-300 text-sm text-gray-800"
+                          className="p-2 border border-gray-300 text-sm text-gray-800"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,

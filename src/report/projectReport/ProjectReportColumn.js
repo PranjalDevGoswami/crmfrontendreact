@@ -46,22 +46,46 @@ const ProjectReportColumn = () => {
         columnHelper.accessor("project_code", {
           id: "project_code",
           header: "Project Code",
-          cell: (info) => info.getValue()?.toUpperCase(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()?.toUpperCase()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("name", {
           id: "project_name",
           header: "Project Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("project_type", {
           id: "project_type",
           header: "Project Type",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("clients", {
           id: "client_name",
           header: "Client Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
       ],
     }),
@@ -71,6 +95,17 @@ const ProjectReportColumn = () => {
         <span className="text-center flex justify-center">Sales Data</span>
       ),
       columns: [
+        columnHelper.accessor("sales_head", {
+          id: "sales_head",
+          header: "Sales Head",
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+        }),
         columnHelper.accessor("created_by.name", {
           id: "sales_executive",
           header: "Sales Executive",
@@ -99,7 +134,13 @@ const ProjectReportColumn = () => {
         columnHelper.accessor("initial_sample_size", {
           id: "initial_sample",
           header: "Initial Sample",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("cpi", {
           id: "cpi",
@@ -107,16 +148,18 @@ const ProjectReportColumn = () => {
           cell: (info) => {
             const value = info.getValue();
             return value == 0 ? (
+              <div className="flex justify-center">
               <Tooltip text={"View Multiple CPI"} className={"w-40"}>
                 <button
                   onClick={() => handleViewCpi(info.row.original)}
-                  className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                  className="cursor-pointer text-lg text-blue-600 hover:text-blue-800 text-center"
                 >
                   <MdRemoveRedEye />
                 </button>
               </Tooltip>
+              </div>
             ) : (
-              value
+              <span className="text-right flex justify-end">{value}</span>
             );
           },
         }),
@@ -132,7 +175,7 @@ const ProjectReportColumn = () => {
               (Number(rowData?.other_cost) || 0) > 0
             ) {
               return (
-                <div className="relative flex items-center">
+                <div className="relative flex items-center justify-center">
                   <Tooltip text="View Additional Fee" className="w-40">
                     <button
                       onClick={(e) => {
@@ -176,7 +219,9 @@ const ProjectReportColumn = () => {
                     Number(row.initial_sample_size || 0) * Number(row.cpi || 0)
                   );
 
-            return result;
+            return (
+              <span className="text-right flex justify-end">{result}</span>
+            );
           },
         }),
       ],
@@ -187,10 +232,27 @@ const ProjectReportColumn = () => {
         <span className="text-center flex justify-center">Operation Data</span>
       ),
       columns: [
+        columnHelper.accessor("ops_head", {
+          id: "ops_head",
+          header: "Ops Head",
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+        }),
         columnHelper.accessor("assigned_to.name", {
           id: "unimrkt_pm",
           header: "UniMrkt PM",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("project_actual_start_date", {
           id: "actual_start_date",
@@ -205,12 +267,24 @@ const ProjectReportColumn = () => {
         columnHelper.accessor("sample", {
           id: "revised_sample",
           header: "Revised Sample",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("total_achievement", {
           id: "sample_achieved",
           header: "Sample Achieved",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
         columnHelper.accessor("cpi", {
           id: "cpi1",
@@ -218,6 +292,7 @@ const ProjectReportColumn = () => {
           cell: (info) => {
             const value = info.getValue();
             return value == 0 ? (
+              <div className="flex justify-center">
               <Tooltip text={"View Multiple CPI"} className={"w-40"}>
                 <button
                   onClick={() => handleViewCpi(info.row.original)}
@@ -226,8 +301,9 @@ const ProjectReportColumn = () => {
                   <MdRemoveRedEye />
                 </button>
               </Tooltip>
+              </div>
             ) : (
-              value
+              <span className="text-right flex justify-end">{value}</span>
             );
           },
         }),
@@ -242,6 +318,7 @@ const ProjectReportColumn = () => {
               (Number(row?.other_cost) || 0) > 0
             ) {
               return (
+              <div className="flex justify-center">
                 <Tooltip text={"View Additional Fee"} className={"w-40"}>
                   <button
                     onClick={() => handleViewAddnl(info.row.original)}
@@ -250,6 +327,7 @@ const ProjectReportColumn = () => {
                     <MdRemoveRedEye />
                   </button>
                 </Tooltip>
+                </div>
               );
             }
             return null;
@@ -281,7 +359,9 @@ const ProjectReportColumn = () => {
                       Number(row?.other_cost || 0);
 
                     return formatter.format(
-                      row.total_achievement * cpiAvg + totalCost
+                      <span className="right flex justify-end">
+                        {row.total_achievement * cpiAvg + totalCost}
+                      </span>
                     );
                   })()
                 : formatter.format(
@@ -290,7 +370,9 @@ const ProjectReportColumn = () => {
                       Number(row?.set_up_fee || 0) +
                       Number(row?.other_cost || 0)
                   );
-            return result;
+            return (
+              <span className="text-right flex justify-end">{result}</span>
+            );
           },
         }),
         columnHelper.accessor("invoice_generated", {
@@ -301,6 +383,7 @@ const ProjectReportColumn = () => {
             return (
               isFinanceDept &&
               info.row.original?.invoice_generated?.length > 0 && (
+              <div className="flex justify-center">
                 <Tooltip text={"View Invoice"} className={"w-40"}>
                   <img
                     alt="invoice"
@@ -308,6 +391,7 @@ const ProjectReportColumn = () => {
                     className="w-4 h-4 cursor-pointer"
                   />
                 </Tooltip>
+                </div>
               )
             );
           },
@@ -358,7 +442,13 @@ const ProjectReportColumn = () => {
         columnHelper.accessor("man_days", {
           id: "man_days",
           header: "Man Days",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
         }),
       ],
     }),
@@ -369,7 +459,13 @@ const ProjectReportColumn = () => {
         columnHelper.accessor("status", {
           id: "status",
           header: "Status",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
           meta: {
             filterVariant: "select",
           },
@@ -380,25 +476,29 @@ const ProjectReportColumn = () => {
           cell: (info) => {
             if (info.row.original.status === "CBR Raised") {
               return (
+              <div className="flex justify-center">
                 <Tooltip text={"View CBR"} className={"w-40"}>
                   <button
-                    onClick={() => {dispatch(setSelectedRecord(info.row.original)), dispatch(toggleViewCbr())
+                    onClick={() => {
+                      dispatch(setSelectedRecord(info.row.original)),
+                        dispatch(toggleViewCbr());
                     }}
-                        // dispatch(setSelectedRecord(record));
-                    
+                    // dispatch(setSelectedRecord(record));
+
                     className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
                   >
                     <img alt="CBR" src={viewCBR} className="text-xs w-4 h-4" />
                   </button>
                 </Tooltip>
+                </div>
               );
             } else if (
               info.row.original.status === "CBR Raised" ||
               info.row.original.status === "CBR Raised"
             ) {
               return (
-                <>
-                  <Tooltip text={"View CBR1"} className={"w-40"}>
+              <div className="flex justify-center">
+                  <Tooltip text={"View CBR"} className={"w-40"}>
                     <button
                       onClick={() => handleGetInvoice(info.row.original)}
                       className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
@@ -410,7 +510,7 @@ const ProjectReportColumn = () => {
                       />
                     </button>
                   </Tooltip>
-                  <Tooltip text={"View CBR2"} className={"w-40"}>
+                  <Tooltip text={"View CBR"} className={"w-40"}>
                     <button
                       onClick={() => handleGetInvoice(info.row.original)}
                       className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
@@ -422,7 +522,7 @@ const ProjectReportColumn = () => {
                       />
                     </button>
                   </Tooltip>
-                </>
+                </div>
               );
             } else if (
               info.row.original.status === "CBR Raised" ||
@@ -430,34 +530,8 @@ const ProjectReportColumn = () => {
               info.row.original.status === "CBR Raised"
             ) {
               return (
-                <>
-                  <Tooltip text={"View CBR3"} className={"w-40"}>
-                    <button
-onClick={() => {
-  dispatch(toggleViewCbr());
-}}                      className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
-                    >
-                      <img
-                        alt="CBR"
-                        src={viewCBR}
-                        className="text-xs w-4 h-4"
-                      />
-                    </button>
-                  </Tooltip>
-                  <Tooltip text={"View CBR4"} className={"w-40"}>
-                    <button
-onClick={() => {
-  dispatch(toggleViewCbr());
-}}                      className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
-                    >
-                      <img
-                        alt="CBR"
-                        src={viewCBR}
-                        className="text-xs w-4 h-4"
-                      />
-                    </button>
-                  </Tooltip>
-                  <Tooltip text={"View CBR5"} className={"w-40"}>
+                <div className="flex justify-center">
+                  <Tooltip text={"View CBR"} className={"w-40"}>
                     <button
                       onClick={() => {
                         dispatch(toggleViewCbr());
@@ -471,13 +545,41 @@ onClick={() => {
                       />
                     </button>
                   </Tooltip>
-                </>
+                  <Tooltip text={"View CBR"} className={"w-40"}>
+                    <button
+                      onClick={() => {
+                        dispatch(toggleViewCbr());
+                      }}
+                      className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                    >
+                      <img
+                        alt="CBR"
+                        src={viewCBR}
+                        className="text-xs w-4 h-4"
+                      />
+                    </button>
+                  </Tooltip>
+                  <Tooltip text={"View CBR"} className={"w-40"}>
+                    <button
+                      onClick={() => {
+                        dispatch(toggleViewCbr());
+                      }}
+                      className="cursor-pointer text-lg text-blue-600 hover:text-blue-800"
+                    >
+                      <img
+                        alt="CBR"
+                        src={viewCBR}
+                        className="text-xs w-4 h-4"
+                      />
+                    </button>
+                  </Tooltip>
+                </div>
               );
             }
             return null;
           },
           meta: {
-            filterVariant: "select",
+            filterVariant: "",
           },
         }),
         columnHelper.accessor("sow", {
@@ -485,7 +587,7 @@ onClick={() => {
           header: "SOW",
           cell: (info) =>
             info.row.original?.documents?.length > 0 ? (
-              <span className="text-blue-600 cursor-pointer text-base">
+              <div className="flex justify-center text-blue-600 cursor-pointer text-base">
                 <Tooltip text={"Download SOW"} className={"w-32"}>
                   <button
                     onClick={() => handleViewSow(info.row.original)}
@@ -494,7 +596,7 @@ onClick={() => {
                     <MdRemoveRedEye />
                   </button>
                 </Tooltip>
-              </span>
+                </div>
             ) : (
               <p className="text-base">
                 <MdFileDownloadOff />

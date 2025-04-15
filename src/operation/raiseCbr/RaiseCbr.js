@@ -145,10 +145,9 @@ const RaiseCbr = () => {
       dispatch(toggleIsVprHasData(false));
       const projectResponse = await ProjectData(
         page_number,
-        page_size,
-        activeTab
-      );
-      dispatch(setProjects(projectResponse?.results));
+        page_size      );
+      dispatch(setProjects({ data: projectResponse?.results, reset: true }));
+
     } catch (error) {
       SweetAlert({
         title: "Error",

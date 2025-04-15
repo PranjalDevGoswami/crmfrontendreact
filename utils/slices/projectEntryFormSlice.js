@@ -20,6 +20,8 @@ const initialState = {
     project_samples: [],
     is_multiple_sample_cpi: null,
   },
+  isOtherCostSelected:false,
+  isOtherCostSelectedOptions:[],
   isAddOtherCost: false,
   isAddTranslationCost: false,
   abr: {
@@ -52,11 +54,11 @@ const projectEntryForm = createSlice({
     addFormData: (state, action) => {
       state.form = { ...state.form, ...action.payload };
     },
-    addOtherCost: (state) => {
-      state.isAddOtherCost = !state.isAddOtherCost;
+    addOtherCost: (state,action) => {
+      state.isAddOtherCost = action.payload;
     },
-    addTranslationCost: (state) => {
-      state.isAddTranslationCost = !state.isAddTranslationCost;
+    addTranslationCost: (state,action) => {
+      state.isAddTranslationCost = action.payload;
     },
     addAbrData: (state, action) => {
       state.abr = { ...state.abr, ...action.payload };
@@ -67,6 +69,12 @@ const projectEntryForm = createSlice({
     toggleAdvancedPaymentHasData: (state, action) => {
       state.isAdvancedPaymentHasData = action.payload;
     },
+    addOtherCostSelected : (state,action)=>{
+      state.isOtherCostSelected = action.payload
+    },
+    addIsOtherCostSelectedOptions : (state,action)=>{
+      state.isOtherCostSelectedOptions = action.payload
+    },
   },
 });
 export const {
@@ -76,5 +84,7 @@ export const {
   addAbrData,
   toggleAdvancedPayment,
   toggleAdvancedPaymentHasData,
+  addOtherCostSelected,
+  addIsOtherCostSelectedOptions
 } = projectEntryForm.actions;
 export default projectEntryForm.reducer;

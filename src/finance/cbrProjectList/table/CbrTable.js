@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { CbrProjectTableData } from "./CbrProjectTableData";
@@ -12,6 +13,7 @@ import ViewSowUploadList from "../../../project/view/ViewSowUploadList";
 import ViewMultipleSampleCpi from "../../../project/view/ViewMultipleSampleCpi";
 import Popup from "../../../Atom/Popup";
 import ViewCbr from "../../../project/view/ViewCbr";
+import TableColumnFilter from "../../../components/TableColumnFilter";
 
 const CbrTable = () => {
   const { isViewMultipleSampleCpiRecords } = useSelector(
@@ -23,6 +25,8 @@ const CbrTable = () => {
     page_number,
     page_size,
   });
+    const [columnFilters, setColumnFilters] = useState([]);
+  
 
   const data = CbrProjectTableData();
   const columns = CbrProjectColumn();
@@ -34,8 +38,13 @@ const CbrTable = () => {
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
+        getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    
+    filterFns: {},
+    onColumnFiltersChange: setColumnFilters,
     state: {
       pagination,
+      columnFilters,
     },
   });
 
@@ -51,12 +60,31 @@ const CbrTable = () => {
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="border border-gray-300 p-3">
-                    {header.isPlaceholder
+                    {/* {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}
+                        )} */}
+                        {header.isPlaceholder ? null : (
+                      // flexRender(
+                      //     header.column.columnDef.header,
+                      //     header.getContext()
+                      //   )
+                      <>
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <TableColumnFilter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -75,12 +103,10 @@ const CbrTable = () => {
                     key={cell.id}
                     className="px-2 py-1 border border-gray-300 text-xs text-gray-800 "
                   >
-                    <span className="text-center flex justify-center items-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
-                    </span>
                   </td>
                 ))}
               </tr>

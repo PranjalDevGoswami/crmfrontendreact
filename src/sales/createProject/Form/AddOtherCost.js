@@ -1,43 +1,47 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Label from "../../../Atom/Label";
 import MultipleValueDropDown from "../../../components/MultipleValueDropDown";
 import Button from "../../../Atom/Button";
 import {
+  addIsOtherCostSelectedOptions,
   addOtherCost,
+  addOtherCostSelected,
   addTranslationCost,
 } from "../../../../utils/slices/projectEntryFormSlice";
 
 const AddOtherCost = () => {
+  const { isOtherCostSelectedOptions } = useSelector(
+    (store) => store.projectEntryForm
+  );
+
   const dispatch = useDispatch();
-  const formData = useSelector((store) => store.projectEntryForm.form);
 
-  const [selectedFees, setSelectedFees] = useState([]);
+  const handleFeeSelection = (updatedSelectedValues) => {
+    dispatch(addIsOtherCostSelectedOptions(updatedSelectedValues));
 
-  const handleFeeSelection = (selectedOptions) => {
-    const selectedValues = selectedOptions.map((option) => option.value);
-    const updatedFees = [...new Set([...selectedFees, ...selectedValues])];
-    setSelectedFees(updatedFees);
-
-    // Update Redux state based on selected values
-    dispatch(addOtherCost(updatedFees.includes("other_cost")));
-    dispatch(addTranslationCost(updatedFees.includes("transaction_fee")));
+    dispatch(addOtherCost(updatedSelectedValues.includes("other_cost")));
+    dispatch(
+      addTranslationCost(updatedSelectedValues.includes("transaction_fee"))
+    );
   };
 
   const handleClose = () => {
-    dispatch(addOtherCost()); // Reset 'Other Cost' when closing
-    dispatch(addTranslationCost()); // Reset 'Translation Cost' when closing
+    dispatch(addOtherCostSelected(false));
   };
+
+  const options = [
+    { value: "other_cost", label: "Other Cost" },
+    { value: "transaction_fee", label: "Translation Cost" },
+  ];
 
   return (
     <div className="bg-white flex justify-center text-center h-52 relative">
       <div className="relative w-1/2">
         <Label labelName={"Add Other Cost"} className={"pt-4 pb-2"} />
         <MultipleValueDropDown
-          options={[
-            { value: "other_cost", label: "Other Cost" },
-            { value: "transaction_fee", label: "Translation Cost" },
-          ]}
+          options={options}
+          value={isOtherCostSelectedOptions}
           onChange={handleFeeSelection}
           className={"w-full bg-[#f3eded] rounded-md mt-2"}
         />

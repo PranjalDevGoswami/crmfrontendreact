@@ -13,13 +13,9 @@ import { setProjects } from "../../../utils/slices/projectSlice.js";
 
 const FilterProject = () => {
   const darkMode = useSelector((store) => store.themeSetting.isDarkMode);
-  const {
-    projects,
-    projectsWithoutAnyFilter,
-    page_number,
-    page_size,
-    activeTab,
-  } = useSelector((store) => store.projectData);
+  const { projects, projectsWithoutAnyFilter, activeTab } = useSelector(
+    (store) => store.projectData
+  );
 
   const { selectedOptions, openFilterDrawer, filterOption } = useSelector(
     (store) => store.filterSlice
@@ -37,7 +33,7 @@ const FilterProject = () => {
     if (projects?.length > 0 && originalProjects.length === 0) {
       setOriginalProjects([...projects]);
     }
-  }, [projects]);
+  }, [projects, activeTab]);
 
   useEffect(() => {
     const searchText = filterOption?.searchText?.toLowerCase()?.trim() || "";
@@ -49,13 +45,23 @@ const FilterProject = () => {
       (Array.isArray(selectedOptions) && selectedOptions.length > 0) ||
       (startDate && endDate);
 
-    if (!hasActiveFilters) {
+    const shouldFilter = hasActiveFilters || activeTab?.toLowerCase() !== "all";
+
+    if (!shouldFilter) {
       dispatch(setProjects({ data: originalProjects, reset: true }));
       return;
     }
 
+    const tab = activeTab?.toLowerCase().trim();
+
     let filteredData =
       projectsWithoutAnyFilter?.length > 0 ? [...projectsWithoutAnyFilter] : [];
+
+    if (tab !== "all") {
+      filteredData = filteredData.filter(
+        (item) => item?.status?.toLowerCase() === tab
+      );
+    }
 
     const searchInObject = (obj, searchText) => {
       if (!obj || typeof obj !== "object") return false;
@@ -98,12 +104,14 @@ const FilterProject = () => {
       );
     };
 
-    filteredData = filteredData.filter(
-      (item) =>
-        (!searchText || searchInObject(item, searchText)) &&
-        matchesSelectedOption(item) &&
-        isInDateRange(item)
-    );
+    if (shouldFilter) {
+      filteredData = filteredData.filter(
+        (item) =>
+          (!searchText || searchInObject(item, searchText)) &&
+          matchesSelectedOption(item) &&
+          isInDateRange(item)
+      );
+    }
 
     dispatch(setProjects({ data: filteredData, reset: true }));
   }, [
@@ -113,8 +121,6 @@ const FilterProject = () => {
     filterOption?.selectedOption,
     filterOption?.dateRange?.startDate,
     filterOption?.dateRange?.endDate,
-    page_number,
-    page_size,
     activeTab,
   ]);
 

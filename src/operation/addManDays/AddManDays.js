@@ -77,17 +77,17 @@ export const AddManDays = ({ setMultiEditFieldOpen }) => {
       });
       closeDrawerRight();
       dispatch(setMultipleManDays([]));
-      const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData?.results));
+      const projectData = await ProjectData(page_number, page_size);
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
     } else {
-      const errorMessage =
+      const errorMessage = 
         response?.ex?.response?.data[0]?.non_field_errors?.[0] ||
         response?.ex?.response?.data?.error ||
-        "Something went wrong";
+        "Something went wrong"
       SweetAlert({
-        title: "Error",
+        title: "Info",
         text: errorMessage,
-        icon: "error",
+        icon: "info",
       });
     }
   };

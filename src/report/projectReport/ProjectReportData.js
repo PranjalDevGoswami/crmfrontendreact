@@ -110,6 +110,8 @@ export const ProjectReportData = () => {
       name: item?.name,
       cpi: item?.cpi ? Number(item?.cpi).toFixed(2) : "0.00",
       clients: item?.clients?.name,
+      ops_head : item?.operation_hod?.username,
+      sales_head : item?.sales_hod?.username,
       operation_select: item?.operation_select,
       project_type: item?.project_type?.name,
       other_cost: item?.other_cost,

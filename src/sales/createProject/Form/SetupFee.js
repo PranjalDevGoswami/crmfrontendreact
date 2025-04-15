@@ -3,7 +3,7 @@ import { TiPlus } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addFormData,
-  addOtherCost,
+  addOtherCostSelected,
 } from "../../../../utils/slices/projectEntryFormSlice";
 import Label from "../../../Atom/Label";
 import Input from "../../../Atom/InputField";
@@ -16,7 +16,7 @@ const SetupFee = () => {
 
   const OpenOtherFee = (e) => {
     e.preventDefault();
-    dispatch(addOtherCost(true));
+    dispatch(addOtherCostSelected(true));
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;

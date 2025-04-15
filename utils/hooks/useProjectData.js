@@ -13,9 +13,11 @@ const useProjectData = () => {
 
   const getProjectData = async () => {
     try {
-      const response = await ProjectData(page_number, page_size, activeTab);
+      const response = await ProjectData(page_number, page_size);
       if (response) {
-        dispatch(setProjects(response?.results));
+        // dispatch(setProjects(response?.results));
+        dispatch(setProjects({ data: response?.results, reset: false }));
+
         dispatch(addTotalRows(response?.count));
         setProjectData(response?.results);
       }
@@ -26,7 +28,7 @@ const useProjectData = () => {
 
   useEffect(() => {
     getProjectData();
-  }, [page_number, page_size, activeTab]);
+  }, [page_number, page_size]);
 
   return projectData;
 };

@@ -47,8 +47,8 @@ const UpdateStatus = () => {
         text: "Status Change Sucessfully!!",
         icon: "success",
       });
-      const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData?.results));
+      const projectData = await ProjectData(page_number, page_size);
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
       const response = await getDashboardProject();
       if (response.length > 0) {
         dispatch(addProjectWithoutAnyFilter(response));

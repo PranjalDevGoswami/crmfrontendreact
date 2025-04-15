@@ -121,48 +121,129 @@ export const TableColumn = () => {
         columnHelper.accessor("project_code", {
           id: "project_code",
           header: "Project Code",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("clients", {
           id: "clients",
           header: "Client Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("name", {
           id: "name",
           header: "Project Name",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("project_type", {
           id: "project_type",
           header: "Type",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("tentative_start_date", {
           id: "start_date",
           header: "Start Date",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("tentative_end_date", {
           id: "end_date",
           header: "End Date",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         !allManagerRolesRole &&
           columnHelper.accessor("assigned_to.name", {
             id: "unimrkt_pm",
             header: "UniMrkt PM",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+              return (
+                <span className="text-left flex justify-start">
+                  {info.getValue()}
+                </span>
+              );
+            },
+            meta: {
+              filterVariant: "",
+            },
           }),
         columnHelper.accessor("project_assigned_to_teamlead", {
           id: "team_lead",
           header: "Team Lead",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("project_client_pm", {
           id: "project_client_pm",
           header: "Client PM",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("cpi", {
           id: "cpi",
@@ -170,25 +251,39 @@ export const TableColumn = () => {
           cell: (info) => {
             const row = info.row.original;
             return row?.cpi == 0 ? (
-              <Tooltip text={"View Multiple CPI"} className={"w-40"}>
-                <MdRemoveRedEye
-                  onClick={() => {
-                    dispatch(addMultipleSample(row));
-                    dispatch(toggleViewMultipleCpiSample(true));
-                  }}
-                  className="cursor-pointer text-base text-blue-600"
-                />
-              </Tooltip>
+              <div className="flex justify-center">
+                <Tooltip text={"View Multiple CPI"} className={"w-40"}>
+                  <MdRemoveRedEye
+                    onClick={() => {
+                      dispatch(addMultipleSample(row));
+                      dispatch(toggleViewMultipleCpiSample(true));
+                    }}
+                    className="cursor-pointer text-base text-blue-600 text-center"
+                  />
+                </Tooltip>
+              </div>
             ) : (
-              row?.cpi
+              <span className="text-right flex justify-end"> {row?.cpi} </span>
             );
           },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         (isDirectorRole || isHodRole) &&
           columnHelper.accessor("initial_sample_size", {
             id: "initial_target",
             header: "Initial Target",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+              return (
+                <span className="text-right flex justify-end">
+                  {info.getValue()}
+                </span>
+              );
+            },
+            meta: {
+              filterVariant: "",
+            },
           }),
         columnHelper.accessor("sample", {
           id: "project_target",
@@ -196,26 +291,31 @@ export const TableColumn = () => {
           cell: (info) => {
             const row = info.row.original;
             return (
-              <div className="flex">
+              <div className="flex justify-end">
                 <Tooltip
                   position="top"
                   text={"Achieved Target"}
                   className={"w-40"}
                 >
-                  <span className="mr-1">{row?.total_achievement || 0}</span>
+                  <span className="mr-1 text-right flex flex-end">
+                    {row?.total_achievement || 0}
+                  </span>
                 </Tooltip>
                 <Tooltip
                   position="bottom"
                   text={"Total Target"}
                   className={"w-32"}
                 >
-                  <span className="text-gray-700 mr-2">{` / ${
+                  <span className="text-gray-700 mr-2 text-right flex flex-end">{` / ${
                     row?.sample || 0
                   }`}</span>
                 </Tooltip>
               </div>
             );
           },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("total_achievement", {
           id: "progress",
@@ -233,7 +333,7 @@ export const TableColumn = () => {
               <div className="w-full">
                 <div className="relative w-full h-4 border rounded-lg overflow-hidden">
                   <div
-                    className="h-full"
+                    className="h-full text-right"
                     style={{
                       width: `${Math.min(progressPercentage, 100)}%`,
                       backgroundColor:
@@ -258,16 +358,37 @@ export const TableColumn = () => {
               // <ProgressBar progress={progressPercentage} />
             );
           },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("man_days", {
           id: "man_days",
           header: "Man Days",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-right flex justify-end">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.accessor("status", {
           id: "status",
           header: "Status",
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return (
+              <span className="text-left flex justify-start">
+                {info.getValue()}
+              </span>
+            );
+          },
+          // meta: {
+          //   filterVariant: 'select',
+          // },
         }),
         columnHelper.accessor("documents", {
           id: "sow",
@@ -275,7 +396,7 @@ export const TableColumn = () => {
           cell: (info) => {
             const row = info.row.original;
             return row?.documents?.length > 0 ? (
-              <span className="text-blue-600 cursor-pointer text-base">
+              <div className="text-blue-600 cursor-pointer text-base flex justify-center">
                 <Tooltip text={"Download SOW"} className={"w-32"}>
                   <MdDownload
                     onClick={() => {
@@ -284,21 +405,32 @@ export const TableColumn = () => {
                     }}
                   />
                 </Tooltip>
-              </span>
+              </div>
             ) : (
-              <p className="text-base">
+              <div className="text-base flex justify-center">
                 <MdFileDownloadOff />
-              </p>
+              </div>
             );
           },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
         columnHelper.display({
           id: "actions",
           header: "Actions",
           cell: (info) => {
             const row = info?.row?.original;
-            return <TableActionsButton record={row} index={info?.row?.id} />;
+
+            return (
+              <div className="flex justify-center">
+                <TableActionsButton record={row} index={info?.row?.id} />
+              </div>
+            );
           },
+          // meta: {
+          //   filterVariant: "",
+          // },
         }),
       ].filter(Boolean),
     [selectedRowRecord, department, currentDate, dispatch]

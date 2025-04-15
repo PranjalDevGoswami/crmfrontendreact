@@ -1,5 +1,5 @@
-// export const BASEURL = "https://crmapi.unimrkt.com"; //live server
-export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
+export const BASEURL = "https://crmapi.unimrkt.com"; //live server
+// export const BASEURL = "https://uaterpapi.unimrkt.com"; //uat Server
 // export const BASEURL = "http://127.0.0.1:8000";
 // export const BASEURL = "http://65.0.180.82"; // new Uat Server //temp
 // export const BASEURL = "http://13.203.98.89" // new unimrkt india
@@ -67,7 +67,7 @@ export const PROJECT_DATA_APIS = (page_number, page_size, activeTabs) => {
   if (!page_number) {
     throw new Error("Page Number is required to get the Project Data");
   }
-  return `${BASEURL}/api/project/projects/?page=${page_number}&page_size=${page_size}&status=${activeTabs}`;
+  return `${BASEURL}/api/project/projects/?page=${page_number}&page_size=${page_size}`;
 };
 export const DASHBOARD_PROJECT = BASEURL + "/api/project/dashbord-projects/";
 export const PROJECT_ENTRY_APIS = BASEURL + "/api/project/projects/";

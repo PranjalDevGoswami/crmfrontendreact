@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { AbrProjectTableData } from "./AbrProjectTableData";
@@ -11,6 +12,7 @@ import Pagination from "../../../projectTable/Pagination";
 import ViewMultipleSampleCpi from "../../../project/view/ViewMultipleSampleCpi";
 import ViewSowUploadList from "../../../project/view/ViewSowUploadList";
 import Popup from "../../../Atom/Popup";
+import TableColumnFilter from "../../../components/TableColumnFilter";
 
 const AbrTable = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const AbrTable = () => {
     page_number,
     page_size,
   });
+  const [columnFilters, setColumnFilters] = useState([]);
 
   const data = AbrProjectTableData();
   const columns = AbrProjectColumn();
@@ -35,8 +38,12 @@ const AbrTable = () => {
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
+    getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    filterFns: {},
+    onColumnFiltersChange: setColumnFilters,
     state: {
       pagination,
+      columnFilters,
     },
   });
 
@@ -52,12 +59,31 @@ const AbrTable = () => {
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="border border-gray-300 p-3">
-                    {header.isPlaceholder
+                    {/* {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}
+                        )} */}
+                    {header.isPlaceholder ? null : (
+                      // flexRender(
+                      //     header.column.columnDef.header,
+                      //     header.getContext()
+                      //   )
+                      <>
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <TableColumnFilter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -76,12 +102,7 @@ const AbrTable = () => {
                     key={cell.id}
                     className="px-2 py-1 border border-gray-300 text-xs text-gray-800 "
                   >
-                    <span className="text-center flex justify-center items-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </span>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>
@@ -89,7 +110,7 @@ const AbrTable = () => {
           </tbody>
         </table>
       </div>
-       {/* <Pagination /> */}
+      {/* <Pagination /> */}
       {isViewMultipleSampleCpiRecords && (
         <Popup>
           <ViewMultipleSampleCpi />
@@ -100,7 +121,6 @@ const AbrTable = () => {
           <ViewSowUploadList />
         </Popup>
       )}
-      
     </div>
   );
 };

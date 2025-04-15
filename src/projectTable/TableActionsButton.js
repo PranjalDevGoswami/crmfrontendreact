@@ -40,7 +40,7 @@ const TableActionsButton = ({ record, index }) => {
 
   return (
     <div className="relative w-full overflow-y-visible">
-      <div className="flex items-center overflow-visible relative">
+      <div className="flex justify-center items-center overflow-visible relative">
         <button
           onClick={() => handleAddEditOperation(record, index)}
           className="border p-2 rounded-md mr-2 cursor-pointer"

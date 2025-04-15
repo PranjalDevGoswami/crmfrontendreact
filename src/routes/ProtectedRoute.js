@@ -13,7 +13,7 @@ export const ProtectedRoute = () => {
 
   return (
     <div
-      className={`h-full min-h-screen container mx-auto max-w-full w-full ${
+      className={`h-full min-h-screen container mx-auto max-w-full w-full !no-scrollbar ${
         themeSetting.isDarkMode ? "bg-black" : "bg-gray-50"
       }`}
     >

@@ -71,8 +71,8 @@ const AssignedProject = ({ setMultiEditFieldOpen }) => {
       dispatch(addProjectAssignment([]));
       closeDrawerRight();
 
-      const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData?.results));
+      const projectData = await ProjectData(page_number, page_size);
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
     } catch (error) {
       SweetAlert({
         title: "Error",

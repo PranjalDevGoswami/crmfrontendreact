@@ -39,6 +39,8 @@ export const AbrProjectTableData = () => {
       name: item?.project?.name,
       project_type: item?.project?.project_type?.name,
       clients: item?.project?.clients?.name,
+      ops_head:item?.operation_hod?.username,
+
       cpi: item?.cpi ? Number(item?.cpi).toFixed(2) : "0.00",
       operation_select: item?.operation_select,
       other_cost: item?.project?.other_cost,

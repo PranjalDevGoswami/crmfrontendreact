@@ -4,6 +4,7 @@ import { TableColumn } from "./TableColumn";
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { TableData } from "./TableData";
@@ -18,6 +19,8 @@ import UpdateSow from "../sales/updateSow/UpdateSow";
 import { addPageNumber, addPageSize } from "../../utils/slices/projectSlice";
 import RaiseCbr from "../operation/raiseCbr/RaiseCbr";
 import ViewCbr from "../project/view/ViewCbr";
+import TableColumnFilter from "../components/TableColumnFilter";
+import SpinnerLoader from "../components/SpinnerLoader";
 
 const MainTable = () => {
   const dispatch = useDispatch();
@@ -43,6 +46,7 @@ const MainTable = () => {
     page_number,
     page_size,
   });
+  const [columnFilters, setColumnFilters] = useState([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const listInnerRef = useRef();
@@ -71,14 +75,15 @@ const MainTable = () => {
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
-    state: {
-      pagination,
-    },
-
-    onRowSelectionChange: setRowSelection,
+    getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    filterFns: {},
+    onColumnFiltersChange: setColumnFilters,
     state: {
       rowSelection,
+      pagination,
+      columnFilters,
     },
+    onRowSelectionChange: setRowSelection,
     getRowCanSelect: (row) => {
       let enableDate =
         new Date(row.original.tentative_end_date) >= new Date(currentDate);
@@ -103,24 +108,28 @@ const MainTable = () => {
   }, []);
 
   const isFilterApplied =
-  !!filterOption.searchText ||
-  !!filterOption.selectedOption.length ||
-  !!filterOption.dateRange.startDate ||
-  !!filterOption.dateRange.endDate;
+    !!filterOption.searchText ||
+    !!filterOption.selectedOption.length ||
+    !!filterOption.dateRange.startDate ||
+    !!filterOption.dateRange.endDate;
 
-const onScrollLoadProjectData = () => {
-  if (!isFilterApplied) {
-    if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
-        if (totalRows !== projects.length) {
-          dispatch(addPageNumber(page_number + 1));
+  const onScrollLoadProjectData = () => {
+    if (!isFilterApplied) {
+
+      if (listInnerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 10) {
+          if (totalRows !== projects.length) {
+            dispatch(addPageNumber(page_number + 1));
+          }
         }
       }
     }
-  }
-};
+  };
 
+  if(projects.length === 0){
+    return <SpinnerLoader />
+  }
 
   return (
     <div className="rounded-sm overflow-visible">
@@ -150,12 +159,25 @@ const onScrollLoadProjectData = () => {
               >
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="border border-gray-300 p-3">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      // flexRender(
+                      //     header.column.columnDef.header,
+                      //     header.getContext()
+                      //   )
+                      <>
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <TableColumnFilter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
+                    )}
                   </th>
                 ))}
               </tr>
@@ -172,14 +194,9 @@ const onScrollLoadProjectData = () => {
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="px-2 py-1 border border-gray-300 text-xs text-gray-800 "
+                    className="px-2 py-1 border border-gray-300 text-xs text-gray-800"
                   >
-                    <span className="text-center flex justify-center items-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </span>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>

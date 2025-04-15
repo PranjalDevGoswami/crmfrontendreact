@@ -87,7 +87,7 @@ export const usePostFormData = async (
       );
 
       const projectData = await ProjectData(page_number, page_size, activeTab);
-      dispatch(setProjects(projectData?.results));
+      dispatch(setProjects({ data: projectData?.results, reset: true }));
 
       setTimeout(() => navigate("/sales-projects"), 500);
     } else {
