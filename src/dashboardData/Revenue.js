@@ -9,9 +9,11 @@ const Revenue = ({
   setProjectStatus,
 }) => {
   const CPI = filteredData.map((item) => item?.cpi);
+
   const unexecuted_Sample = filteredData.map(
     (item) => item?.remaining_interview || 0
   );
+
   const executed_Sample = filteredData.map(
     (item) => item?.total_achievement || 0
   );
@@ -19,13 +21,17 @@ const Revenue = ({
   const inPipeLine = filteredData.filter(
     (item) => item?.status === "To Be Started"
   );
+
   const PipeLineProject = inPipeLine.map((item) => item.sample);
+
   const PipeLineProjectCost = inPipeLine.map((item) => item.cpi);
 
   const RevenueBilled = filteredData.filter(
     (item) => item?.status === "CBR Raised"
   );
+
   const RevenueBilledProject = RevenueBilled.map((item) => item.sample);
+  
   const RevenueBilledProjectCost = RevenueBilled.map((item) => item.cpi);
 
   const totalRevenueInField = unexecuted_Sample.reduce(
@@ -87,17 +93,17 @@ const Revenue = ({
       color: "#00C49F",
     },
   ];
-  
+
   const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
-  const getArcLabel = (params) => {
-    const percent = params.value / TOTAL;
-    if (percent === 0) return "";
-    return {
-      text: `${(percent * 100).toFixed(0)}%`,
-      position: "outside", // Position the label outside the pie slice
-      distance: 10,
-    };
-  };
+  // const getArcLabel = (params) => {
+  //   const percent = params.value / TOTAL;
+  //   if (percent === 0) return "";
+  //   return {
+  //     text: `${(percent * 100).toFixed(0)}%`,
+  //     position: "outside", // Position the label outside the pie slice
+  //     distance: 10,
+  //   };
+  // };
   const options = {
     animationEnabled: true,
     subtitles: [
@@ -120,17 +126,19 @@ const Revenue = ({
         dataPoints: data.map((item) => ({
           name: item.label,
           y: ((item.value / TOTAL) * 100).toFixed(2),
-          
         })),
-        click: function(e){ setProjectType(e.dataPoint.name)          
-         },
+        click: function (e) {
+          setProjectType(e.dataPoint.name);
+        },
       },
     ],
   };
 
   return (
     <div className="w-full mt-2">
-         <div className="w-full overflow-scroll no-scrollbar">
+      {/* <div className="w-full overflow-scroll no-scrollbar"> */}
+      {/* <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+
           <table className="bg-white border border-gray-200 divide-y divide-gray-200 text-xs">
             <thead className="bg-gray-50">
               <tr>
@@ -180,10 +188,52 @@ const Revenue = ({
               </tr>
             </tbody>
           </table>
-        </div>       
-        <div id="chartContainer" style={{ height: "auto", width: "100%" }}>
-          <CanvasJSChart options={options} />
-        </div>
+        </div>   */}
+
+      <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+        <table className="min-w-full border-collapse border border-gray-200 text-xs">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 border border-gray-300">Category</th>
+              <th className="px-4 py-2 border border-gray-300">
+                {" "}
+                Revenue in Field
+              </th>
+              <th className="px-4 py-2 border border-gray-300">
+                Revenue Executed but Not Billed
+              </th>
+              <th className="px-4 py-2 border border-gray-300">
+                {" "}
+                Revenue In Progress
+              </th>
+              <th className="px-4 py-2 border border-gray-300">
+                {" "}
+                Revenue Billed
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="px-4 py-2 border border-gray-300">Amount</td>
+              <td className="px-4 py-2 border border-gray-300">
+                ${" " + totalRevenueInField.toFixed(2)}
+              </td>
+              <td className="px-4 py-2 border border-gray-300">
+                ${" " + revenueExecutedNotBilled.toFixed(2)}{" "}
+              </td>
+              <td className="px-4 py-2 border border-gray-300">
+                ${" " + RevenueInPipeLine.toFixed(2)}{" "}
+              </td>
+              <td className="px-4 py-2 border border-gray-300">
+                ${" " + BilledProject.toFixed(2)}{" "}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="chartContainer" style={{ height: "auto", width: "100%" }}>
+        <CanvasJSChart options={options} />
+      </div>
     </div>
   );
 };

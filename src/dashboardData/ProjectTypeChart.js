@@ -64,15 +64,24 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
         showInLegend: true,
         indexLabel: "{name}: {y}",
         yValueFormatString: "#,###'%'",
-        dataPoints: data.map((item) => ({
-          name: item.label,
-          y: (( item.value / TOTAL) * 100).toFixed(2),
-          
-        })),
-        click: function(e){ setProjectType(e.dataPoint.name)          
-         },
+        dataPoints: data
+          .map((item) => {
+            const percentage = (item.value / TOTAL) * 100;
+            if (percentage > 0) {
+              return {
+                name: item.label,
+                y: parseFloat(percentage.toFixed(2)),
+              };
+            }
+            return null;
+          })
+          .filter(Boolean),
+        click: function (e) {
+          setProjectType(e.dataPoint.name);
+        },
       },
     ],
+    
   };
 
   return (
@@ -106,22 +115,6 @@ const ProjectTypeChart = ({ projectData, setProjectType, projectType }) => {
                 {OnlineProject.length}
               </td>
             </tr>
-            {/* <tr>
-              <td className="px-4 py-2 border border-gray-300">Percentage</td>
-              <td className="px-4 py-2 border border-gray-300">100%</td>
-              <td className="px-4 py-2 border border-gray-300">
-                {getPercent(CawiProject.length)}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {getPercent(CatiProject.length)}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {getPercent(CapiProject.length)}
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {getPercent(OnlineProject.length)}
-              </td>
-            </tr> */}
           </tbody>
         </table>
       </div>

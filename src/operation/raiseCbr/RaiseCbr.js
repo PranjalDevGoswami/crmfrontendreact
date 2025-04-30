@@ -58,7 +58,7 @@ const RaiseCbr = () => {
     total_surveys_to_be_billed: "",
     other_billing_instructions: "",
     sales_owner: selectedRecord?.created_by?.id,
-    project_manager_name: currentProject?.assigned_to?.id,
+    project_manager_name: selectedRecord?.assigned_to?.id,
     purchase_order_number: "",
   });
 
@@ -72,7 +72,7 @@ const RaiseCbr = () => {
     type_of_services: selectedRecord?.project_type,
     invoice_amount: null,
     approved_amount: null,
-    name_of_project_manager: currentProject?.assigned_to?.id,
+    name_of_project_manager: currentProject?.assigned_to?.name,
     other_cost: [],
   });
 
@@ -110,27 +110,28 @@ const RaiseCbr = () => {
       }
 
       // Handle VPR Data if Available
-      if (isVprHasData && Array.isArray(vprData) && vprData.length > 0) {
-        for (const vpr of vprData) {
-          if (!vpr.project || !vpr.vendor_name || !vpr.invoice_amount) {
-            SweetAlert({
-              title: "Error",
-              text: "Vendor Name and Invoice Amount are required for VPR!",
-              icon: "error",
-            });
-            return;
-          }
-
-          const vprResponse = await RaiseVPRPostApi(vpr);
-          if (!vprResponse?.status) {
-            SweetAlert({
-              title: "Error",
-              text:
-                vprResponse?.ex?.response?.data?.[0] || "Failed to raise VPR!",
-              icon: "error",
-            });
-            return;
-          }
+      if (isVprHasData) {
+        // console.log(vprData)
+        // for (const vpr of vprData?.vprs) {
+        //   console.log(vpr)
+        //   if (!vpr.project || !vpr.vendor_name || !vpr.invoice_amount) {
+        //     SweetAlert({
+        //       title: "Error",
+        //       text: "Vendor Name and Invoice Amount are required for VPR!",
+        //       icon: "error",
+        //     });
+        //     return;
+        //   }
+        console.log("🚀 ~ handleSubmitData ~ vprData:", vprData)
+        const vprResponse = await RaiseVPRPostApi(vprData);
+        if (!vprResponse?.status) {
+          SweetAlert({
+            title: "Error",
+            text:
+              vprResponse?.ex?.response?.data?.[0] || "Failed to raise VPR!",
+            icon: "error",
+          });
+          return;
         }
       }
 
@@ -143,15 +144,12 @@ const RaiseCbr = () => {
 
       dispatch(toggleRaiseCbr());
       dispatch(toggleIsVprHasData(false));
-      const projectResponse = await ProjectData(
-        page_number,
-        page_size      );
+      const projectResponse = await ProjectData(page_number, page_size);
       dispatch(setProjects({ data: projectResponse?.results, reset: true }));
-
     } catch (error) {
       SweetAlert({
         title: "Error",
-        text: "An unexpected error occurred. Please try again.",
+        text: "An unexpected error occurred. Please try again." + error,
         icon: "error",
       });
     }

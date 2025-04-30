@@ -36,7 +36,7 @@ export const userDetails = () => {
   }
 };
  
-export const Profile = ({ profileDataUpdate }) => {
+ const Profile = ({ profileDataUpdate }) => {
   const [profilePic, setProfilePic] = useState("");
  
   const navigate = useNavigate();
@@ -218,4 +218,4 @@ export const Profile = ({ profileDataUpdate }) => {
     </div>
   );
 };
- 
+ export default Profile

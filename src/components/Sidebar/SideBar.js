@@ -10,6 +10,7 @@ import SidebarItem from "./SideBarItems";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../../utils/slices/themeSettingSlice";
 import { TbReportAnalytics } from "react-icons/tb";
+import { VERSION_NUMBER } from "../../../utils/constants/urls";
 
 const SideBar = () => {
   const themeSetting = useSelector((store) => store.themeSetting);
@@ -211,6 +212,7 @@ const SideBar = () => {
                 link={item.link}
               />
             ))}
+        <div className="fixed bottom-0 text-xs"> {VERSION_NUMBER}</div>
       </div>
       <div className="w-2/12">
         {themeSetting.isSidebarOpen ? (

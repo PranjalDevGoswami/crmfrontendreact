@@ -36,7 +36,7 @@ const MainTable = () => {
     isRaiseCbr,
     isViewCbr,
   } = useSelector((store) => store.dataTable);
-  const { page_size, page_number, projects, totalRows } = useSelector(
+  const { page_size, page_number, projects, totalRows,activeTab } = useSelector(
     (store) => store.projectData
   );
   const { selectedOptions, openFilterDrawer, filterOption } = useSelector(
@@ -48,6 +48,7 @@ const MainTable = () => {
   });
   const [columnFilters, setColumnFilters] = useState([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(false);
 
   const listInnerRef = useRef();
   const [rowSelection, setRowSelection] = useState([]);
@@ -107,43 +108,48 @@ const MainTable = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  
   const isFilterApplied =
-    !!filterOption.searchText ||
-    !!filterOption.selectedOption.length ||
-    !!filterOption.dateRange.startDate ||
-    !!filterOption.dateRange.endDate;
+  !!filterOption.searchText ||
+  !!filterOption.selectedOption.length ||
+  !!filterOption.dateRange.startDate ||
+  !!filterOption.dateRange.endDate ||
+  activeTab?.toLowerCase() !== "all";
+
 
   const onScrollLoadProjectData = () => {
     if (!isFilterApplied) {
-
       if (listInnerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
         if (scrollTop + clientHeight >= scrollHeight - 10) {
           if (totalRows !== projects.length) {
-            dispatch(addPageNumber(page_number + 1));
+            if (data.length > 15) {
+              dispatch(addPageNumber(page_number + 1));
+            }
           }
         }
       }
     }
   };
 
-  if(projects.length === 0){
-    return <SpinnerLoader />
+  useEffect(() => {
+    if (projects?.length === 0) {
+      const timeout = setTimeout(() => {
+        setIsDataLoading(true);
+      }, 5000);
+  
+      return () => clearTimeout(timeout); 
+    }
+  }, [projects]);
+
+  if (projects?.length === 0) {
+    return  isDataLoading ? <p className="p-2 m-2 text-red-500">No Data Found !</p> : <SpinnerLoader /> ;
   }
 
   return (
     <div className="rounded-sm overflow-visible">
-      {/* <div
-        className={`mb-2 ${
-          data.length > 20
-            ? "h-[70vh] overflow-auto"
-            : "h-auto overflow-visible"
-        } `}
-        onScroll={onScrollLoadProjectData}
-        ref={listInnerRef}
-      > */}
       <div
-        className="mb-2 overflow-auto"
+        className={`${data.length > 20 ? "overflow-auto" :"overflow-visible"} mb-2`}
         style={{
           height: data.length > 20 ? `${tableHeight}px` : "auto",
         }}
@@ -160,10 +166,6 @@ const MainTable = () => {
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} className="border border-gray-300 p-3">
                     {header.isPlaceholder ? null : (
-                      // flexRender(
-                      //     header.column.columnDef.header,
-                      //     header.getContext()
-                      //   )
                       <>
                         <div>
                           {flexRender(

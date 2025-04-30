@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleRaiseVpr } from "../../../utils/slices/dataTableSlice";
 import LableAndInput from "../../Molecules/LableAndInput";
 
-export const RaiseVprInputFields = ({ vprData, setVprData }) => {
+export const RaiseVprInputFields = ({ vprData, setVprData,setUploadInvoiceIndex,uploadInvoiceIndex }) => {
   const { projects, page_number, page_size, activeTab } = useSelector(
     (store) => store.projectData
   );
@@ -11,16 +11,6 @@ export const RaiseVprInputFields = ({ vprData, setVprData }) => {
 
   const currentProject =
     projects.find((item) => item.id === selectedRecord?.id) || {};
-
-  const totalNumberOfSurvey = currentProject?.project_samples.reduce(
-    (acc, item) => {
-      return (acc = acc + Number(item.sample));
-    },
-    0
-  );
-
-  const NumberOfAddnSurvey =
-    Number(selectedRecord?.initial_sample_size) - Number(totalNumberOfSurvey);
 
   const inputFields = [
     {
@@ -63,11 +53,41 @@ export const RaiseVprInputFields = ({ vprData, setVprData }) => {
         setVprData({ ...vprData, type_of_services: e.target.value }),
       inputClassName: "p-2 border bg-white rounded-md",
     },
+    {
+      labelName: "Upload Vendor Invoice",
+      // InputValue: vprData?.upload_vendor_invoice,
+      InputName: `upload_vendor_invoice_${uploadInvoiceIndex}`,
+      inputChange: (e) => {
+        const files = Array.from(e.target.files);
+        const key = `upload_vendor_invoice_${uploadInvoiceIndex}`;
+        const updated = {
+          ...vprData,
+          [key]: [...(vprData[key] || []), ...files],
+        };
+        setVprData(updated);
+      }
+,      
+      inputClassName: "p-2 border bg-white rounded-md",
+      type:"file"
+    },
+    
   ];
-
+  
   return (
     <>
       {inputFields.map((field, index) => (
+        field.type ? 
+         <LableAndInput
+         InputType={field.type}
+         key={index}
+         labelClassName="text-left"
+         labelName={field.labelName}
+         Inputvalue={field.InputValue}
+         InputName={field.InputName}
+         inputChange={field.inputChange}
+         inputClassName={field.inputClassName}
+         multiple
+       /> : 
         <LableAndInput
           key={index}
           labelClassName="text-left"

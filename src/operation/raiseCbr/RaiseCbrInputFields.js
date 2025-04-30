@@ -116,12 +116,12 @@ export const RaiseCbrInputFields = ({ sampleData, setSampleData }) => {
       inputChange: (e) =>
         setSampleData({ ...sampleData, remarks: e.target.value }),
     },
-    {
-      labelName: "Attach Mails",
-      InputValue: sampleData.attachMail,
-      inputChange: (e) =>
-        setSampleData({ ...sampleData, attachMail: e.target.value }),
-    },
+    // {
+    //   labelName: "Attach Mails",
+    //   InputValue: sampleData.attachMail,
+    //   inputChange: (e) =>
+    //     setSampleData({ ...sampleData, attachMail: e.target.value }),
+    // },
     {
       labelName: "Raised VPR",
       isCheckbox: true,

@@ -1,41 +1,47 @@
+import React, { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
-import Login from "../user/Login.js";
-import OperationDashboard from "../pages/OperationDashboard.js";
-import SignUp from "../user/SignUp.js";
-import SalesDashboard from "../pages/SalesDashboard.js";
-import AdminPanel from "../dashboard/AdminPanel.js";
-import Reset from "../user/Reset.js";
-import Error from "../pages/Error.js";
-import DefaultDashboard from "../dashboard/DefaultDashboard.js";
-// import FinanceDashboard from "../dashboard/FinanceDashboard.js";
-import Invoice from "../components/Invoice";
-import ResetPassword from "../user/ResetPassword.js";
-import ChangePassword from "../user/ChangePassword.js";
-import { Profile } from "../user/userProfile";
-import LogoutTimer from "../user/LogoutTimer.js";
-import ManagementPanel from "../dashboard/ManagementRole";
-// import Report from "../pages/ProjectDashboard.js";
 import RoleProtectedRoute from "./allowRoutes/index.js";
-import NotAuthorized from "../pages/NotAuthorized.js";
-import AddManDaysButton from "../projectOperationButtons/AddManDaysButton.js";
-import ViewProjectDetails from "../project/view/ViewProjectDetails.js";
-import SampleEdit from "../operation/projectSampleEditRequest/projectSampleEditRequest.js";
-import UpdateStatus from "../operation/updateStatus/UpdateStatus.js";
-import UpdateSow from "../sales/updateSow/UpdateSow.js";
-import Form from "../sales/createProject/Form.js";
 import { canAccessOperationProjects } from "../config/allowRole/canAccessOperationProjects.js";
 import { canAccessSalesProjects } from "../config/allowRole/canAccessSalesProjects.js";
 import { canAccessFinanceProjects } from "../config/allowRole/canAccessFinanceProjects.js";
 import { canAccessReportDashboard } from "../config/allowRole/canAccessReportDashboard.js";
 import { canAccessProjectEntry } from "../config/allowRole/canAccessProjectEntry.js";
-import CbrProjectList from "../finance/cbrProjectList/CbrProjectList.js";
-import AbrProjectList from "../finance/abrProjectList/AbrProjectList.js";
-import AbrDashboard from "../pages/AbrDashboard.js";
-import ProjectDashboard from "../pages/ProjectDashboard.js";
-import ProjectReport from "../report/ProjectReport.js";
-import CreateCbrInvoice from "../finance/invoice/CreateCbrInvoice.js";
-import CreateAbrInvoice from "../finance/invoice/CreateAbrInvoice.js";
+
+// Lazy loaded components
+const Login = lazy(() => import("../user/Login.js"));
+const SignUp = lazy(() => import("../user/SignUp.js"));
+const OperationDashboard = lazy(() => import("../pages/OperationDashboard.js"));
+const SalesDashboard = lazy(() => import("../pages/SalesDashboard.js"));
+const AdminPanel = lazy(() => import("../dashboard/AdminPanel.js"));
+const Reset = lazy(() => import("../user/Reset.js"));
+const Error = lazy(() => import("../pages/Error.js"));
+const DefaultDashboard = lazy(() => import("../dashboard/DefaultDashboard.js"));
+const Invoice = lazy(() => import("../components/Invoice"));
+const ResetPassword = lazy(() => import("../user/ResetPassword.js"));
+const ChangePassword = lazy(() => import("../user/ChangePassword.js"));
+const Profile = lazy(() => import("../user/userProfile"));
+const LogoutTimer = lazy(() => import("../user/LogoutTimer.js"));
+const ManagementPanel = lazy(() => import("../dashboard/ManagementRole"));
+const NotAuthorized = lazy(() => import("../pages/NotAuthorized.js"));
+const ViewProjectDetails = lazy(() =>
+  import("../project/view/ViewProjectDetails.js")
+);
+const Form = lazy(() => import("../sales/createProject/Form.js"));
+const CbrProjectList = lazy(() =>
+  import("../finance/cbrProjectList/CbrProjectList.js")
+);
+const AbrProjectList = lazy(() =>
+  import("../finance/abrProjectList/AbrProjectList.js")
+);
+const ProjectDashboard = lazy(() => import("../pages/ProjectDashboard.js"));
+const ProjectReport = lazy(() => import("../report/ProjectReport.js"));
+const CreateCbrInvoice = lazy(() =>
+  import("../finance/invoice/CreateCbrInvoice.js")
+);
+const CreateAbrInvoice = lazy(() =>
+  import("../finance/invoice/CreateAbrInvoice.js")
+);
 
 const Routes = () => {
   const routesForPublic = [
@@ -95,7 +101,7 @@ const Routes = () => {
         { path: "/Admin-panel", element: <AdminPanel /> },
         { path: "/Management-Role", element: <ManagementPanel /> },
         { path: "/default-panel", element: <DefaultDashboard /> },
-        
+
         {
           path: "/finance-projects/cbr",
           element: (
@@ -176,86 +182,6 @@ const Routes = () => {
             />
           ),
         },
-        // {
-        //   path: "/dashboard",
-        //   element: (
-        //     <RoleProtectedRoute
-        //       element={<Report />}
-        //       allowedRoles={canAccessReportDashboard.role}
-        //       allowDepartments={canAccessReportDashboard.department}
-        //     />
-        //   ),
-        // },
-        // {
-        //   path: "/edit",
-        //   element: (
-        //     <RoleProtectedRoute
-        //       element={<SampleEdit />}
-        //       allowedRoles={[
-        //         "Admin",
-        //         "Director",
-        //         "HOD",
-        //         "Ass.Manager",
-        //         "Manager",
-        //         "Sr.Manager",
-        //       ]}
-        //       allowDepartments={[1, 2, 3]}
-        //     />
-        //   ),
-        // },
-        // {
-        //   path: "/add-man-days",
-        //   element: (
-        //     <RoleProtectedRoute
-        //       element={<AddManDaysButton />}
-        //       allowedRoles={[
-        //         "Admin",
-        //         "Director",
-        //         "HOD",
-        //         "Ass.Manager",
-        //         "Manager",
-        //         "Sr.Manager",
-        //       ]}
-        //       allowDepartments={[2, 3]}
-        //     />
-        //   ),
-        // },
-        // {
-        //   path: "/change-status",
-        //   element: (
-        //     <RoleProtectedRoute
-        //       element={<UpdateStatus />}
-        //       allowedRoles={[
-        //         "Admin",
-        //         "Director",
-        //         "HOD",
-        //         "Ass.Manager",
-        //         "Manager",
-        //         "Sr.Manager",
-        //       ]}
-        //       allowDepartments={[2, 3]}
-        //     />
-        //   ),
-        // },
-        // {
-        //   path: "/update-sow",
-        //   element: (
-        //     <RoleProtectedRoute
-        //       element={<UpdateSow />}
-        //       allowedRoles={[
-        //         "Admin",
-        //         "Director",
-        //         "HOD",
-        //         "Ass.Manager",
-        //         "Manager",
-        //         "Sr.Manager",
-        //         "Team Lead",
-        //       ]}
-        //       allowDepartments={[1, 3]}
-        //     />
-        //   ),
-        // },
-
         { path: "*", element: <Error /> },
         { path: "/not-authorized", element: <NotAuthorized /> },
       ],
@@ -268,7 +194,11 @@ const Routes = () => {
   ]);
 
   // Provide the router configuration using RouterProvider
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 };
 
 export default Routes;

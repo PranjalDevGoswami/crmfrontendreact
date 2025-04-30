@@ -21,6 +21,7 @@ import useAssignedProject from "../../utils/hooks/useAssignedProject.js";
 import { getDashboardProject } from "../fetchApis/dashboard/index.js";
 import { addProjectWithoutAnyFilter } from "../../utils/slices/projectSlice.js";
 import { useDispatch } from "react-redux";
+import { addUserProfile } from "../../utils/slices/userProfileSlice.js";
 
 const Header = () => {
   const { token, setToken } = useAuth();
@@ -29,6 +30,7 @@ const Header = () => {
   const headerBtn = useRef();
   const dispatch = useDispatch();
   const themeSetting = useSelector((store) => store.themeSetting);
+  const profileDetails = useSelector(store=>store.userProfile)
 
   useProjectData();
   useUserData();
@@ -53,22 +55,20 @@ const Header = () => {
     localStorage.clear();
     navigate("/", { replace: true });
   };
-  const [profileDetails, setProfileDetails] = useState({
-    gender: "",
-    email: "",
-    phone: "",
-    profile_picture: "",
-  });
+
+  const GetProfileDetails = async () => {
+    if(profileDetails) return;    
+    const response = await getWithAuth(UPDATE_PROFILE);
+    if (response?.status == true) {
+      // setProfileDetails(response?.data);
+      dispatch(addUserProfile(response?.data))
+    }
+  };
 
   useEffect(() => {
-    const GetProfileDetails = async () => {
-      const response = await getWithAuth(UPDATE_PROFILE);
-      if (response?.status == true) {
-        setProfileDetails(response?.data);
-      }
-    };
     GetProfileDetails();
   }, []);
+
   const username = userDetails();
 
   const handleClose = () => {

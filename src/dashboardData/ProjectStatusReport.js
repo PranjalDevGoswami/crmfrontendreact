@@ -80,6 +80,7 @@ export default function ProjectStatusReport({
   ];
 
   const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
+
   const getArcLabel = (params) => {
     const percent = params.value / TOTAL;
     if (percent === 0) return "";
@@ -108,10 +109,22 @@ export default function ProjectStatusReport({
         showInLegend: true,
         indexLabel: "{name}: {y}",
         yValueFormatString: "#,###'%'",
-        dataPoints: data.map((item) => ({
-          name: item.label,
-          y: ((item.value / TOTAL) * 100).toFixed(2),
-        })),
+        // dataPoints: data.map((item) => ({
+        //   name: item.label,
+        //   y: ((item.value / TOTAL) * 100).toFixed(2),
+        // })),
+        dataPoints: data
+          .map((item) => {
+            const percentage = (item.value / TOTAL) * 100;
+            if (percentage > 0) {
+              return {
+                name: item.label,
+                y: parseFloat(percentage.toFixed(2)),
+              };
+            }
+            return null;
+          })
+          .filter(Boolean),
         click: function (e) {
           setProjectStatus(e.dataPoint.name);
         },
@@ -121,7 +134,7 @@ export default function ProjectStatusReport({
 
   return (
     <div className="w-full mt-2">
-      <div className="w-full overflow-scroll no-scrollbar">
+      <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
         <table className="min-w-full border-collapse border border-gray-200 text-xs">
           <thead>
             <tr>

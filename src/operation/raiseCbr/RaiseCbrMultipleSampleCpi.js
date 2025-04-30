@@ -12,7 +12,7 @@ const RaiseCbrMultipleSampleCpi = ({
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full bg-gray-900 bg-opacity-50">
         <div className="bg-white p-6 rounded-md  border shadow-md w-full">
           <h3 className="text-lg font-bold mb-4">Add Sample Details</h3>
-          {sampleData.samples.map((sample, index) => (
+          {sampleData?.samples.map((sample, index) => (
             <div key={sample.id} className="mb-3 flex items-start space-x-4">
               <LableAndInput
                 labelClassName={"text-left"}
@@ -26,7 +26,7 @@ const RaiseCbrMultipleSampleCpi = ({
               <LableAndInput
                 labelClassName={"text-left"}
                 labelName={"CPI"}
-                Inputvalue={sample.cpi}
+                inputValue={sample.cpi}
                 inputChange={(e) =>
                   handleSampleChange(index, "cpi", e.target.value)
                 }
@@ -38,7 +38,7 @@ const RaiseCbrMultipleSampleCpi = ({
               <LableAndInput
                 labelClassName={"text-left"}
                 labelName={"Target Group"}
-                Inputvalue={sample.target_group}
+                inputValue={sample.target_group}
                 inputChange={(e) =>
                   handleSampleChange(index, "target_group", e.target.value)
                 }
